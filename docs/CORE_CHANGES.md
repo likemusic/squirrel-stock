@@ -22,6 +22,9 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `db28160cf` | `www/app/entity/doc/document.php` `beforeSave()`/`afterSave()`, `www/app/widgets/docview.php` + template; new `www/app/sqs/docaudit.php`, table `sqs_doclog` | audit log of document edits; rows/date/store/customer of an executed document cannot be changed without cancelling | `tests/specs/doc-audit.spec.js` |
 | `6d6dd5883` | `www/app/pages/main.php` (one line), `www/templates/pages/main.html`; new `www/app/sqs/equipmentdue.php` | main page: reminder block for issued equipment whose term has expired or expires within 14 days (only template variables from `App\SQS\EquipmentDue`) | `tests/specs/equipment-due.spec.js` |
 | `99e5bbe88` | `www/app/pages/register/tasklist.php` + template, `www/templates/pages/timesheet.html` | FullCalendar locale (task list, time sheet) and moment locale (time sheet) follow the interface language; the framework bundle `zippy-bundle-ua.js` is not changed — these pages load their own FullCalendar over it | `tests/specs/i18n-ru.spec.js` |
+| `9cf10faec` | `www/assets/css/app.css` (end of file) | below 576 px the document button row (`d-flex justify-content-end`, 34 templates in `pages/doc/`) wraps; before: "Cancel" ran off the left edge of a phone screen | `tests/specs/mobile.spec.js` |
+| `107c25468` | `www/assets/css/app.css` (end of file) | below 768 px the opened sidebar pushes the page without shrinking it (`.main` min-width, `.wrapper` overflow-x hidden); before: the page shrank to ~60 px | `tests/specs/mobile.spec.js` |
+| `2352be760` | `www/assets/css/app.css` (end of file) | `#sidebar.collapsed { box-shadow: none }`: no grey band on the left edge when the menu is hidden | `tests/specs/mobile.spec.js` |
 
 ## Proposed upstream
 
