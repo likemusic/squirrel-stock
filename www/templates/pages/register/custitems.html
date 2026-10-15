@@ -493,10 +493,10 @@
                return true;
             }
             function check_deleteall() {
-                return confirm("Видалити?")
+                return confirm("{{#t}}common.vydalyty_2{{/t}}")
             }
             function check_delx() {
-                return confirm("Видалити?")
+                return confirm("{{#t}}common.vydalyty_2{{/t}}")
             }
        
         {{{import_func}}}  
@@ -526,7 +526,7 @@
             };   
             reader.readAsText(file);
         } else {
-           toastr.error("Не вибрано файл")  
+           toastr.error("{{#t}}register.custitems.ne_vybrano_fail{{/t}}")  
         }
     } 
        

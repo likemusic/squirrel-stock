@@ -239,7 +239,7 @@ var calendar
                 
                onFilter:function(){
                    if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Співробітника не обрано');
+                      alert('{{#t}}app.timesheet.spivrobitnyka_ne_obrano{{/t}}');
                       return;
                   }     
                     this.loaddata() ;       

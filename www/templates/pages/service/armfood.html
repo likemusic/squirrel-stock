@@ -1328,7 +1328,7 @@
 
 
             function check_brefuse() {
-                return confirm("Анулювати замовлення?")
+                return confirm("{{#t}}service.armfood.anuliuvaty_zamovlennia{{/t}}")
             }
  
 
@@ -1344,12 +1344,12 @@
                      
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
-                        $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
+                        $('#neworderscnt').text('{{#t}}service.armfood.novykh_zamovlen{{/t}} ' + answer.cntorder);
                         beep()
                     }
                     if (answer.tableno > 0) {
                         $('#tablenoalert').show();
-                        $('#tablenomsg').text('Виклик зі столу ' + answer.tableno);
+                        $('#tablenomsg').text('{{#t}}service.armfood.vyklyk_zi_stolu{{/t}} ' + answer.tableno);
                         beep()
                     }
                   
@@ -1439,13 +1439,13 @@
           }  
        
           function check_vbdel() {
-                return confirm("Видалити?")
+                return confirm("{{#t}}common.vydalyty_2{{/t}}")
           }
           function check_vbdetdel() {
-                return confirm("Видалити?")
+                return confirm("{{#t}}common.vydalyty_2{{/t}}")
           }
           function check_brrefuse() {
-                return confirm("Анулювати?")
+                return confirm("{{#t}}service.armfood.anuliuvaty{{/t}}")
           }
             
    

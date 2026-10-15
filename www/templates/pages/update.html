@@ -216,11 +216,11 @@
        
         } 
         function check_rollback(ele){
-           return confirm("Відкотити версію?")
+           return confirm("{{#t}}app.update.vidkotyty_versiiu{{/t}}")
         } 
  
         function check_reload(ele){
-           return confirm("Повторити оновлення?")
+           return confirm("{{#t}}app.update.povtoryty_onovlennia_2{{/t}}")
         } 
         
         function check_updatevendor(ele){
@@ -230,7 +230,7 @@
        
         }         
         function check_updatevendor(ele){
-            var b = confirm("Оновити vendor?")
+            var b = confirm("{{#t}}app.update.onovyty_vendor{{/t}}")
             if(b==true) {     
               document.getElementById('dialogwait').showModal()
               return true; 

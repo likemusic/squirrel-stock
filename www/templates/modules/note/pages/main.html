@@ -650,7 +650,7 @@
  
             }   ,
            onDelTopic:function(){
-               if(confirm(  this.selectedTopic.islink==true ? "Видалити лінк?" : "Видалити топік?") == false){
+               if(confirm(  this.selectedTopic.islink==true ? "{{#t}}mod.note.main.vydalyty_link{{/t}}" : "{{#t}}mod.note.main.vydalyty_topik{{/t}}") == false){
                    return;                                   
                }
                this.opTopic(["delete",this.selectedTopic.topic_id,this.selectedNode.id,this.selectedTopic.islink])                           
@@ -667,7 +667,7 @@
                this.cpn = null
             }   ,
             onDeleteNode:function(){
-                 if(confirm("Видалити вузол")){
+                 if(confirm("{{#t}}mod.note.main.vydalyty_vuzol{{/t}}")){
                      this.opTree(["delete",this.selectedNode.id])                           
     
                  }         

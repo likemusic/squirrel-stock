@@ -248,7 +248,7 @@
         methods: {
             del:function( project_id,name){    
                 
-               if(confirm("Видалити  проект '"+name+"'?"))
+               if(confirm("{{#t}}mod.issue.projectlist.vydalyty_proekt{{/t}}"+name+"'?"))
                {                
                   callPageMethod('del',[project_id], null,(data)=> 
                   {                                
@@ -335,7 +335,7 @@
             onsave:function(  ){    
                   if(this.editname==""){
 
-                     toastr.error("Не введено назву")
+                     toastr.error("{{#t}}common.ne_vvedeno_nazvu{{/t}}")
                       return;
                   }
                   var data = new  FormData();

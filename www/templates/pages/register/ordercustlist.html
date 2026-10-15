@@ -191,10 +191,10 @@
        function openexp(dtype){
            
            if(dtype==1) {
-               $("#titleexp").text("Створити ПН")
+               $("#titleexp").text("{{#t}}register.grlist.stvoryty_pn{{/t}}")
            }
            if(dtype==2) {
-               $("#titleexp").text("Створити РВ")
+               $("#titleexp").text("{{#t}}register.ordercustlist.stvoryty_rv{{/t}}")
            }
            
            $("#typeexp").val(dtype)  
@@ -216,7 +216,7 @@
                      var q=  parseVal(  $("[rn='q"+row+"']").val() )
                      var p=  parseVal(  $("[rn='p"+row+"']").val()  )
                      sum =  sum+(q*p)
-                     $("#total").text(  "Вибрано "+cnt+ " строка на  суму "+ fa( sum))                       
+                     $("#total").text(  "{{#t}}register.ordercustlist.vybrano{{/t}} "+cnt+ " {{#t}}register.ordercustlist.stroka_na_sumu{{/t}} "+ fa( sum))                       
                   }
                   
                  

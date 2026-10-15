@@ -429,12 +429,12 @@
  
                     
                    if(this.editproj==0) {
-                        toastr.error("Проект не обрано!" )
+                        toastr.error("{{#t}}mod.issue.issuelist.proekt_ne_obrano{{/t}}" )
                         return;
                    }
                     
                    if(this.editemp==0) {
-                        toastr.error("Виконавця не обрано!" )
+                        toastr.error("{{#t}}mod.issue.issuelist.vykonavtsia_ne_obrano{{/t}}" )
                         return;
                    }
               
@@ -480,7 +480,7 @@
                
                 } ,  
                 del:function ( ){
-                  if( confirm("Видалити завдання?")==false )  return
+                  if( confirm("{{#t}}mod.issue.issuelist.vydalyty_zavdannia{{/t}}")==false )  return
                    
                   callPageMethod('del',[this.issue], null,(data)=> 
                   {

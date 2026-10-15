@@ -141,7 +141,7 @@
               
                onMark:function(){
                    if(this.selectedDocs.length ==0) return;
-                   if(confirm("Позначити як відправлені?")==false)  return
+                   if(confirm("{{#t}}mod.vdoc.doclist.poznachyty_iak_vidpravleni_2{{/t}}")==false)  return
                    
                    this.showsp1 = true
                    
@@ -165,7 +165,7 @@
                } ,    
                onSend:function(){
                    if(this.selectedDocs.length ==0) return;
-                   if(confirm("Відправити ?")==false)  return
+                   if(confirm("{{#t}}mod.vdoc.doclist.vidpravyty{{/t}}")==false)  return
                    this.showsp2 = true
                    this.log = ""
                     

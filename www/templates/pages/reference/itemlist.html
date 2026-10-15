@@ -12,8 +12,7 @@
                 <h3>{{#t}}reference.itemlist.dovidnyk_nomenklatury{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
-                        data-bs-placement="bottom" data-bs-content="Довідник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
-                       У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
+                        data-bs-placement="bottom" data-bs-content="{{#t}}reference.itemlist.dovidnyk_tmts_z_mozhlyvistiu_stvorennia{{/t}} "></i>
                 </h3>
 
                 <div class="navbar">
@@ -1025,12 +1024,12 @@
        
        
          function check_deleteall() {
-            return confirm("Видалити ТМЦ?")
+            return confirm("{{#t}}reference.itemlist.vydalyty_tmts{{/t}}")
          }
        
         function check_delcf() {
 
-            return confirm("Видалити?")
+            return confirm("{{#t}}common.vydalyty_2{{/t}}")
 
         }   
         

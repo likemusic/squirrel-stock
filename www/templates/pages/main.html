@@ -224,7 +224,7 @@
         
         
         var psoptions = {
-          title: 'Структура видатків' ,
+          title: '{{#t}}app.main.struktura_vydatkiv{{/t}}' ,
           sliceVisibilityThreshold: 0.025,         
           backgroundColor: {
             "fill":bgcolor 
@@ -253,16 +253,16 @@
   
      
       var pcdata = new google.visualization.DataTable();
-      pcdata.addColumn('string', 'Місяць');
-      pcdata.addColumn('number', 'Прибутки');
-      pcdata.addColumn('number', 'Видатки');
+      pcdata.addColumn('string', '{{#t}}common.misiats{{/t}}');
+      pcdata.addColumn('number', '{{#t}}print.paybalance.prybutky{{/t}}');
+      pcdata.addColumn('number', '{{#t}}print.paybalance.vydatky{{/t}}');
 
       pcdata.addRows(
           {{{pc}}}
       );
 
       var pcoptions = {
-        title: 'Прибутки та видатки',
+        title: '{{#t}}print.paybalance.prybutky_ta_vydatky{{/t}}',
         legend:{
             position:"bottom"
         }  ,
@@ -303,9 +303,9 @@
           
          
         var tsdata = new google.visualization.DataTable();
-      tsdata.addColumn('string', 'Місяць');
-      tsdata.addColumn('number', 'Послуги');
-      tsdata.addColumn('number', 'Товари');
+      tsdata.addColumn('string', '{{#t}}common.misiats{{/t}}');
+      tsdata.addColumn('number', '{{#t}}app.main.posluhy{{/t}}');
+      tsdata.addColumn('number', '{{#t}}common.tovary{{/t}}');
 
       tsdata.addRows( 
        {{{ts}}}
@@ -314,7 +314,7 @@
         
         
         var tsoptions = {
-          title: 'Реалізація',
+          title: '{{#t}}common.realizatsiia{{/t}}',
           curveType: 'function',
           legend: { position: 'bottom' } ,
           chartArea : {

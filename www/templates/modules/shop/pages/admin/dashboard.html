@@ -112,8 +112,8 @@
      function drawChart() {
          
           var visdata = new google.visualization.DataTable();
-          visdata.addColumn('string', 'Дата');
-          visdata.addColumn('number', 'Кіл.');
+          visdata.addColumn('string', '{{#t}}common.data{{/t}}');
+          visdata.addColumn('number', '{{#t}}common.kil{{/t}}');
          
           visdata.addRows( 
            {{{vis}}}
@@ -122,7 +122,7 @@
         
         
         var visoptions = {
-          title: 'Відвідувачі сайту',
+          title: '{{#t}}mod.shop.dashboard.vidviduvachi_saitu{{/t}}',
           curveType: 'function',
           legend: { position: 'none' } ,
           backgroundColor: {
@@ -159,8 +159,8 @@
         
         
          var orddata = new google.visualization.DataTable();
-          orddata.addColumn('string', 'Дата');
-          orddata.addColumn('number', 'Кіл.');
+          orddata.addColumn('string', '{{#t}}common.data{{/t}}');
+          orddata.addColumn('number', '{{#t}}common.kil{{/t}}');
          
           orddata.addRows( 
            {{{ord}}}
@@ -169,7 +169,7 @@
         
         
         var ordoptions = {
-          title: 'Замовлення',
+          title: '{{#t}}common.zamovlennia{{/t}}',
           curveType: 'function',
           legend: { position: 'none' } ,
           backgroundColor: {
@@ -217,7 +217,7 @@
             
           callPageMethod('updateSiteMap',null,null,(data)=> 
           {
-             toastr.success('Оновлено','',{timeOut:2000})  
+             toastr.success('{{#t}}common.onovleno{{/t}}','',{timeOut:2000})  
           });           
       
    }

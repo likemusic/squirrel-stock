@@ -1180,7 +1180,7 @@ toggler.addEventListener("click",function(){
                 callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
                          
-                     toastr.success('Відправлено','',{timeOut:2000})     
+                     toastr.success('{{#t}}common.vidpravleno{{/t}}','',{timeOut:2000})     
                     
          
                 } )
@@ -1235,7 +1235,7 @@ toggler.addEventListener("click",function(){
       $(document).on("input", "input:file", function(e) {
         let size = e.target.files[0].size;
         if(size > 10000000){
-           alert("Файл більше  10МБ!");
+           alert("{{#t}}app.base.fail_bilshe_10mb{{/t}}");
            e.target.value = "";
         };
         
@@ -1292,7 +1292,7 @@ toggler.addEventListener("click",function(){
               })
               .then((data) => {
                  if(data == ""){
-                     toastr.success("Відправлено на принтер" )   
+                     toastr.success("{{#t}}app.base.vidpravleno_na_prynter{{/t}}" )   
                  }   else {
                     toastr.error(data )        
                  }
@@ -1325,7 +1325,7 @@ toggler.addEventListener("click",function(){
               })
               .then((data) => {
                  if(data == ""){
-                     toastr.success("Відправлено на принтер" )   
+                     toastr.success("{{#t}}app.base.vidpravleno_na_prynter{{/t}}" )   
                  }   else {
                     toastr.error(data )        
                  }
@@ -1374,7 +1374,7 @@ toggler.addEventListener("click",function(){
                 {
                     
                       if(data=="") {
-                         toastr.info('Додано' )              
+                         toastr.info('{{#t}}register.iostate.dodano{{/t}}' )              
                       } else {
                            toastr.error(data)   
                       }         
@@ -1390,7 +1390,7 @@ toggler.addEventListener("click",function(){
                     
                     
                   if(data=="") {
-                     toastr.info('Відправлено' )              
+                     toastr.info('{{#t}}common.vidpravleno{{/t}}' )              
                   } else {
                        toastr.error(data)   
                   }
@@ -1432,7 +1432,7 @@ toggler.addEventListener("click",function(){
             }
      
             function fiscFR(docid) {
-                toastr.info("Відправка на фіскальний реєстратор","",{timeOut:2000}) 
+                toastr.info("{{#t}}app.base.vidpravka_na_fiskalnyi_reiestrator{{/t}}","",{timeOut:2000}) 
                 
                 callPM('loadDocFR',[docid],null,(data)=> 
                 {
