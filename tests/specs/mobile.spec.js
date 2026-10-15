@@ -124,7 +124,7 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       await expect(page.locator('#iform [id^=unitlabel]')).toHaveCount(1);
       await shot(page, testInfo, 'equipmentissue');
       await tap(page, '#iform #issue');
-      expect((await messages(page)).join(' ')).toContain(number);
+      await expect(page.locator('.toast-message, .alert-success').first(), 'сообщение о выдаче').toContainText(number);   // ждать сообщение, а не читать сразу
       expect(Number(value(`select coalesce(sum(qty), 0) from store_stock where snumber = '${esc(inv)}'`)), 'единица выдана').toBe(0);
     });
 
