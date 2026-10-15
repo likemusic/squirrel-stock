@@ -7,8 +7,10 @@
 
         <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
         <script language="javascript" src="/assets/js/moment/locale/ua.js"></script>
+        {{#lang_ru}}<script language="javascript" src="/assets/js/moment/locale/ru.js"></script>{{/lang_ru}}
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
         <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
+        {{#lang_ru}}<script language="javascript" src="/assets/js/fullcalendar/locales/ru.js"></script>{{/lang_ru}}
 
 
     </head>
@@ -424,7 +426,7 @@ var calendar
            
 
   } ,        
-         locale: 'ua' 
+         locale: document.documentElement.lang == 'ru' ? 'ru' : 'ua'   // украинская локаль FullCalendar — ua 
        
     
       

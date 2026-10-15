@@ -52,3 +52,42 @@ test('страницы меню на русском без украинског�
     await context.close();
   }
 });
+
+// Календари (FullCalendar) и moment следуют языку интерфейса: в журнале нарядов локаль календаря задает
+// компонент фреймворка (ZCL\Calendar), в табеле — шаблон.
+test('календари и moment на русском', async ({ browser }) => {
+  const context = await browser.newContext({ storageState: undefined });
+  await blockExternal(context);
+  const page = await context.newPage();
+  await login(page);
+  await setLang(page, 'ru');
+  try {
+    const calendarText = async () => {
+      await page.locator('.fc-today-button').first().waitFor();
+      return {
+        today: (await page.locator('.fc-today-button').first().innerText()).trim(),
+        month: (await page.locator('.fc-dayGridMonth-button').first().innerText()).trim(),
+        title: (await page.locator('.fc-toolbar-title').first().innerText()).trim(),
+      };
+    };
+
+    await page.goto('/index.php?p=App/Pages/Register/TaskList');
+    await clickWait(page, '#tabc');
+    let cal = await calendarText();
+    expect(cal.today).toBe('Сегодня');
+    expect(cal.month).toBe('Месяц');
+    expect(cal.title).toMatch(/^[а-яё]+ \d{4}/i);
+    expect(cal.title).not.toMatch(UKRAINIAN);
+
+    await page.goto('/index.php?p=App/Pages/TimeSheet');
+    await page.evaluate(() => calendar.render());   // сам табель рисует календарь после выбора сотрудника
+    cal = await calendarText();
+    expect(cal.today).toBe('Сегодня');
+    expect(cal.month).toBe('Месяц');
+    expect(cal.title).toMatch(/^[а-яё]+ \d{4}/i);
+    expect(await page.evaluate(() => moment.locale())).toBe('ru');
+  } finally {
+    await setLang(page, 'uk');
+    await context.close();
+  }
+});
