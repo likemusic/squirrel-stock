@@ -98,6 +98,8 @@ if [[ $(mysql -uroot -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE
   HASH=$(printf '%s' "$ADMINPASS" | php -r 'echo password_hash(stream_get_contents(STDIN), PASSWORD_DEFAULT);')
   SALT=$(openssl rand -hex 32)
   mysql -uroot "$DB" -e "UPDATE users SET userpass = '$HASH' WHERE userlogin = 'admin'; REPLACE INTO keyval (keyd, vald) VALUES ('salt', '$SALT');"
+  # таблицы и пункты меню модулей (app/sqs/modules) — до профиля и перевода, чтобы те их видели
+  php "$DIR/cli/modules.php" >/dev/null
   if [[ $DEMO == 0 && $PROFILE == 1 ]]; then
     php "$DIR/cli/charity-profile.php" >/dev/null
     php "$DIR/cli/localize-db.php" ru >/dev/null
@@ -105,6 +107,7 @@ if [[ $(mysql -uroot -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE
 else
   # дополнения форка — безопасно повторять (новые таблицы и пункты меню после обновления кода)
   mysql -uroot "$DB" < "$REPO/db/squirrelstock.sql"
+  php "$DIR/cli/modules.php" >/dev/null   # новые таблицы и пункты меню модулей
 fi
 chown -R www-data:www-data "$DIR" "$BACKUP"
 chmod 640 "$CONF"
