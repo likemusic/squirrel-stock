@@ -42,6 +42,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `de8be3bf9` | `www/app/pages/userlogin.php` `onsubmit()` | after a correct password a user with two-factor login continues on `App\Pages\TwoFactorLogin` (new); "remember me" only after the code | `tests/specs/two-factor.spec.js` |
 | `397195b64` | `www/templates/pages/userprofile.html` | link to two-factor login settings (`App\Pages\TwoFactor`, new) | `tests/specs/two-factor.spec.js` |
 | `161768292` | `www/app/api/common.php` `token()`, `www/app/api/jsonrpc.php` (Basic), `www/app/chatbot.php` (login) | password-only logins go through `LoginGuard::passwordOnly()`: lock after repeated failures, refused for users with two-factor login | `tests/specs/two-factor.spec.js` |
+| `d51a86a38` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html` | action cell no-wrap only on desktop (`text-md-nowrap`), spacing before icons only on desktop: icons of a draft document stay on a phone screen | `tests/specs/mobile.spec.js` |
 
 ## Proposed upstream
 
