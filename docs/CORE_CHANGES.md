@@ -34,6 +34,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `dfaa29dd5` | `www/app/helper.php` `getSalt()` | a new installation gets a long random salt (`random_bytes`); existing salts kept | `tests/specs/login-security.spec.js` |
 | `3d6a53090` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | counterparty and item name cells `text-break`: long names wrap instead of widening the table on a phone | `tests/specs/mobile.spec.js` |
 | `f5b9deb22` | `www/app/pages/userlogin.php` `onsubmit()`; new `www/app/sqs/loginguard.php`, table `sqs_loginfail` | failed logins stored in the database; temporary lock after 5 failures per login or 20 per address in 15 minutes, independent of the session | `tests/specs/login-security.spec.js` |
+| `65cb5007c` | `www/init.php` (before `session_start()`) | session cookie HttpOnly, SameSite=Lax, Secure over HTTPS; `session.use_strict_mode` | `tests/specs/hosting-security.spec.js` |
 
 ## Proposed upstream
 
