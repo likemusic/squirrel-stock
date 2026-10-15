@@ -88,7 +88,7 @@ async function createCustomer(page, { name, type = 1, phone, address }) {
 
 // Документ через форму и проведение.
 // type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem
-// d: { date, customer, payment, contract, notes, rows: [{ code, qty, price, sn, sdate }], dblclick }
+// d: { date, customer, payment, contract, notes, rows: [{ code, qty, price, sn, sdate }], dblclick, draft }
 // dblclick — нажать «Провести» двойным щелчком (как делают торопливые пользователи)
 // Возвращает номер, сообщения и то, что форма сама подставила в строки (цена, партия).
 async function createDoc(page, type, d) {
@@ -125,6 +125,10 @@ async function createDoc(page, type, d) {
   const nrows = await page.locator('#docform a[id^=delete_]:visible').count();
   const uniq = new Set(d.rows.map(r => r.code + '|' + (r.sn || ''))).size;
   if (nrows !== uniq) throw new Error(`${type} ${number}: строк ${nrows}, ожидалось ${uniq}: ${(await messages(page)).join(' | ')}`);
+  if (d.draft) {   // сохранить без проведения
+    await clickWait(page, '#savedoc');
+    return { number, msgs: await messages(page), suggested };
+  }
   if (d.dblclick) {
     await page.locator('#execdoc').dblclick();
     await page.waitForTimeout(2000); // оба запроса и переход после проведения

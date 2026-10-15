@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.2fa.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                <h3>{{#t}}sqs.2fa.title{{/t}}</h3>
+                <p class="text-muted">{{#t}}sqs.2fa.help{{/t}}</p>
+
+                {{#hascodes}}
+                <div id="backup-codes-box" class="alert alert-warning">
+                    <b>{{#t}}sqs.2fa.codes_title{{/t}}</b>
+                    <p class="mb-1 small">{{#t}}sqs.2fa.codes_help{{/t}}</p>
+                    <ul id="backup-codes" class="list-unstyled font-monospace fs-5 mb-0">
+                        {{#backupcodes}}<li>{{code}}</li>{{/backupcodes}}
+                    </ul>
+                </div>
+                {{/hascodes}}
+
+                {{#enabled}}
+                <div class="alert alert-success" id="twofa-status">{{#t}}sqs.2fa.status_on{{/t}} {{#t}}sqs.2fa.backup_left{{/t}}: {{backupleft}}</div>
+                {{/enabled}}
+
+                <form zippy="enableform">
+                    <ol class="ps-3">
+                        <li class="mb-2">{{#t}}sqs.2fa.step_app{{/t}}</li>
+                        <li class="mb-2">{{#t}}sqs.2fa.step_scan{{/t}}<br>
+                            <img src="{{qr}}" alt="QR" width="220" height="220" class="my-2 border">
+                            <div class="small text-muted">{{#t}}sqs.2fa.manual_key{{/t}}</div>
+                            <div id="twofa-secret" class="font-monospace fs-5">{{secret}}</div>
+                        </li>
+                        <li class="mb-2">{{#t}}sqs.2fa.step_code{{/t}}</li>
+                    </ol>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-auto">
+                            <input zippy="enablecode" class="form-control" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="width: 9em">
+                        </div>
+                        <div class="col-auto">
+                            <input zippy="enable" type="submit" class="btn btn-primary" value="{{#t}}sqs.2fa.enable{{/t}}">
+                        </div>
+                    </div>
+                </form>
+
+                <form zippy="codeform">
+                    <label class="form-label" for="code">{{#t}}sqs.2fa.code_for_change{{/t}}</label>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-auto">
+                            <input zippy="code" class="form-control" type="text" autocomplete="one-time-code" style="width: 12em">
+                        </div>
+                        <div class="col-auto">
+                            <input zippy="newcodes" type="submit" class="btn btn-outline-primary" value="{{#t}}sqs.2fa.new_codes{{/t}}">
+                            <input zippy="disable" type="submit" class="btn btn-outline-danger ms-2" value="{{#t}}sqs.2fa.disable{{/t}}">
+                        </div>
+                    </div>
+                </form>
+
+                <form zippy="adminform" class="mt-5">
+                    <h5>{{#t}}sqs.2fa.admin_title{{/t}}</h5>
+                    <p class="small text-muted">{{#t}}sqs.2fa.admin_help{{/t}}</p>
+                    {{#nousers}}<p class="text-muted">{{#t}}sqs.2fa.admin_none{{/t}}</p>{{/nousers}}
+                    <div class="row g-2 align-items-end">
+                        <div class="col-auto">
+                            <select zippy="resetuser" class="form-select"></select>
+                        </div>
+                        <div class="col-auto">
+                            <input zippy="reset" type="submit" class="btn btn-outline-danger" value="{{#t}}sqs.2fa.reset{{/t}}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

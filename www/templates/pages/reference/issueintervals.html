@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.interval.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <h3>{{#t}}sqs.interval.title{{/t}}</h3>
+                <p class="text-muted">{{#t}}sqs.interval.help{{/t}}</p>
+
+                <form zippy="catform" class="row g-2 align-items-end mb-3">
+                    <div class="col-12 col-md">
+                        <label class="form-label" for="cat">{{#t}}common.katehoriia{{/t}}</label>
+                        <select zippy="cat" class="form-select">
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="catdays">{{#t}}sqs.interval.days{{/t}}</label>
+                        <input zippy="catdays" class="form-control" type="text" inputmode="numeric" style="max-width: 9em">
+                    </div>
+                    <div class="col-auto">
+                        <input zippy="catsave" type="submit" class="btn btn-primary" value="{{#t}}common.zberehty{{/t}}">
+                    </div>
+                </form>
+
+                <form zippy="itemform" class="row g-2 align-items-end mb-3">
+                    <div class="col-12 col-md">
+                        <label class="form-label" for="item">{{#t}}sqs.interval.item{{/t}}</label>
+                        <input zippy="item" class="form-control" type="text" autocomplete="off" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="itemdays">{{#t}}sqs.interval.days{{/t}}</label>
+                        <input zippy="itemdays" class="form-control" type="text" inputmode="numeric" style="max-width: 9em">
+                    </div>
+                    <div class="col-auto">
+                        <input zippy="itemsave" type="submit" class="btn btn-primary" value="{{#t}}common.zberehty{{/t}}">
+                    </div>
+                </form>
+
+                <table class="table table-sm" id="interval-rules">
+                    <tr>
+                        <th></th>
+                        <th>{{#t}}common.nazva{{/t}}</th>
+                        <th class="text-end">{{#t}}sqs.interval.days_short{{/t}}</th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="rules">
+                        <td zippy="rulekind" class="text-muted"></td>
+                        <td zippy="rulename"></td>
+                        <td zippy="ruledays" class="text-end"></td>
+                        <td class="text-end"><a zippy="ruledel" title="{{#t}}common.vyluchyty{{/t}}"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

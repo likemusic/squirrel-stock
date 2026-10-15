@@ -70,7 +70,7 @@ class BackupJob
             try {
                 if ($place == 'cloud') {
                     if ($s['password'] === '') {
-                        throw new \Exception(__('service.backup.cloud_no_password'));
+                        throw new BackupException('service.backup.cloud_no_password');
                     }
                     $enc = (new Backup())->create(_ROOT . 'upload', $s['password']);
                     try {
@@ -85,11 +85,14 @@ class BackupJob
                     $size = filesize($plain);
                     $removed = self::folderPut($s[$place], $plain, $name, $keep);
                 }
-                $result[$place] = ['ok' => true, 'message' => $removed ? __('service.backup.removed_old', ['n' => $removed]) : ''];
+                $result[$place] = ['ok' => true, 'message' => $removed ? __('service.backup.removed_old', ['n' => $removed]) : '',
+                                   'stored' => $removed ? BackupException::encode('service.backup.removed_old', ['n' => $removed]) : ''];
             } catch (\Throwable $e) {
-                $result[$place] = ['ok' => false, 'message' => $e->getMessage()];
+                $result[$place] = ['ok' => false, 'message' => $e->getMessage(),
+                                   'stored' => $e instanceof BackupException ? $e->stored() : $e->getMessage()];
             }
-            self::log($place, $result[$place]['ok'], $name, $size, $result[$place]['message'], microtime(true) - $started);
+            // в журнал — ключ перевода (BackupException), страница покажет его на языке того, кто смотрит
+            self::log($place, $result[$place]['ok'], $name, $size, $result[$place]['stored'], microtime(true) - $started);
         }
         if ($plain) {
             @unlink($plain);
@@ -127,19 +130,19 @@ class BackupJob
     private static function folderPut(string $dir, string $file, string $name, int $keep): int {
         $dir = rtrim($dir, '/\\');
         if ($dir === '') {
-            throw new \Exception(__('service.backup.no_folder'));
+            throw new BackupException('service.backup.no_folder');
         }
         if (!is_dir($dir) && !@mkdir($dir, 0770, true)) {
-            throw new \Exception(__('service.backup.folder_unavailable', ['dir' => $dir]));
+            throw new BackupException('service.backup.folder_unavailable', ['dir' => $dir]);
         }
         if (self::insideWebRoot($dir)) {
-            throw new \Exception(__('service.backup.folder_in_webroot', ['dir' => $dir]));
+            throw new BackupException('service.backup.folder_in_webroot', ['dir' => $dir]);
         }
         $target = $dir . DIRECTORY_SEPARATOR . $name;
         // сначала во временный файл: оборванная копия не выглядит как готовая
         if (!@copy($file, $target . '.part') || filesize($target . '.part') != filesize($file) || !@rename($target . '.part', $target)) {
             @unlink($target . '.part');
-            throw new \Exception(__('service.backup.write_failed', ['dir' => $dir]));
+            throw new BackupException('service.backup.write_failed', ['dir' => $dir]);
         }
         if ($keep <= 0) {
             return 0;
@@ -179,7 +182,7 @@ class BackupJob
                            ['--retries', '2', '--contimeout', '30s', '--timeout', '5m'], $args);
         $p = @proc_open($cmd, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
         if (!is_resource($p)) {
-            throw new \Exception(__('service.backup.rclone_missing', ['path' => $cmd[0]]));
+            throw new BackupException('service.backup.rclone_missing', ['path' => $cmd[0]]);
         }
         $out = stream_get_contents($pipes[1]);
         $err = stream_get_contents($pipes[2]);
@@ -188,7 +191,10 @@ class BackupJob
         $code = proc_close($p);
         if ($code !== 0) {
             $err = trim(preg_replace('/\s+/', ' ', $err));
-            throw new \Exception($code == 127 ? __('service.backup.rclone_missing', ['path' => $cmd[0]]) : 'rclone (' . $code . '): ' . mb_substr($err, -400));
+            if ($code == 127) {
+                throw new BackupException('service.backup.rclone_missing', ['path' => $cmd[0]]);
+            }
+            throw new \Exception('rclone (' . $code . '): ' . mb_substr($err, -400));
         }
         return $out;
     }

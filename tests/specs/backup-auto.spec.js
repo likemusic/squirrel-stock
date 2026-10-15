@@ -15,6 +15,12 @@ const cli = (...args) => spawnSync('docker', ['exec', '-u', 'www-data', '-w', '/
 const files = dir => sh(`ls ${dir} 2>/dev/null || true`).split('\n').filter(f => /^squirrelstock-.*\.zip$/.test(f));
 const tick = () => new Promise(r => setTimeout(r, 1100));   // имя копии — с точностью до секунды
 
+// после теста — без его записей журнала и настроек: иначе другие тесты (i18n-ru) видят их на странице
+test.afterAll(() => {
+  query("delete from sqs_backuplog; delete from keyval where keyd = 'sqs_backup'");
+  sh(`rm -rf ${T}`);
+});
+
 test('автоматическая копия в несколько мест', async ({ page }, testInfo) => {
   test.setTimeout(6 * 60_000);
   sh(`rm -rf ${T} && mkdir -p ${T}/local ${T}/net ${T}/cloud ${T}/usb && printf '[cloudtest]\\ntype = local\\n' > ${T}/rclone.conf`);
@@ -98,6 +104,8 @@ test('автоматическая копия в несколько мест', a
   // папка внутри сайта — открыта из браузера, туда нельзя
   r = cli('/var/www/html/upload');
   expect(r.stdout).toMatch(/local\s+ОШИБКА/);
+  // в журнале — ключ перевода, а не текст на языке запустившего: страница покажет его на языке того, кто смотрит
+  expect(query("select message from sqs_backuplog where place = 'local' order by id desc limit 1")[0][0]).toContain('"key":"service.backup.folder_in_webroot"');
 
   // флешка вручную
   await page.locator('#uform #usbpath').fill(`${T}/usb`);

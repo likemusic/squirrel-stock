@@ -64,6 +64,11 @@ class Remember
         self::setCookie('', 1);
     }
 
+    // все входы «Запомнить» пользователя (например, после включения двухфакторного входа)
+    public static function forgetUser(int $user_id): void {
+        \ZDB\DB::getConnect()->Execute('DELETE FROM sqs_remember WHERE user_id = ' . $user_id);
+    }
+
     // смена пароля меняет хеш в users.userpass — отпечаток перестает совпадать
     private static function passFingerprint(\App\Entity\User $user): string {
         return hash('sha256', 'sqs-remember|' . $user->user_id . '|' . $user->userpass);

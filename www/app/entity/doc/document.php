@@ -147,18 +147,8 @@ class Document extends \ZCL\DB\Entity
             }
         }
 
-        // SquirrelStock: журнал правок (App\SQS\DocAudit) и запрет менять содержимое проведенного документа:
-        // проводки остались бы от старого содержимого. Сначала — отменить проведение
-        if ($this->document_id > 0) {
-            $stored = Document::load($this->document_id);
-            if ($stored != null) {
-                $changes = \App\SQS\DocAudit::diff(\App\SQS\DocAudit::snapshot($stored), \App\SQS\DocAudit::snapshot($this));
-                if (\App\SQS\DocAudit::contentChanged($changes) && $this->isExecuted()) {
-                    throw new \Exception(__('sqs.doclog.executed_locked', ['number' => $stored->document_number]));
-                }
-                \App\SQS\DocAudit::setPending($this, $changes);
-            }
-        }
+        // SquirrelStock: точка расширения (App\SQS\Hooks): журнал правок DocAudit, обработчики модулей
+        \App\SQS\Hooks::run('beforeSave', $this);
 
         if ($this->parent_id > 0) {
             $p = Document::load($this->parent_id);
@@ -173,9 +163,7 @@ class Document extends \ZCL\DB\Entity
 
     protected function afterSave($update) {
         parent::afterSave($update);
-        if ($update) {
-            \App\SQS\DocAudit::writePending($this);   // журнал правок, см. beforeSave
-        }
+        \App\SQS\Hooks::run('afterSave', $this);   // SquirrelStock: точка расширения, см. beforeSave
     }
 
     /**
@@ -546,6 +534,7 @@ class Document extends \ZCL\DB\Entity
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
+                    \App\SQS\Hooks::run('beforeCancel', $this);   // SquirrelStock: до любых записей; исключение отменяет отмену
                     $this->headerdata['timeentry'] = 0;
                     $this->Cancel();
                 }
@@ -557,6 +546,7 @@ class Document extends \ZCL\DB\Entity
                         if ($this->isExecuted()) {
                             throw new \Exception(__('doc.document.dokument_vzhe_provedenyi_shchob_provesty', ['document_number' => $this->document_number]));
                         }
+                        \App\SQS\Hooks::run('beforeExecute', $this);   // SquirrelStock: до любых записей; исключение отменяет проведение
                         $this->Execute();
                     }
 
@@ -572,6 +562,10 @@ class Document extends \ZCL\DB\Entity
 
         $this->save();
         $this->insertLog($state);
+        // SquirrelStock: после проведения или отмены — один раз, при настоящей смене состояния
+        if ($oldstate != $state && $onlystate == false && in_array($state, [self::STATE_EXECUTED, self::STATE_CANCELED])) {
+            \App\SQS\Hooks::run($state == self::STATE_EXECUTED ? 'afterExecute' : 'afterCancel', $this);
+        }
         if ($oldstate != $state) {
                         
             

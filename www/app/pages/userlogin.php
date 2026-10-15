@@ -99,6 +99,12 @@ class UserLogin extends \Zippy\Html\WebPage
 
             if ($this->_user instanceof User) {
                 \App\SQS\LoginGuard::success($login);
+                // SquirrelStock: двухфакторный вход — после пароля код (App\Pages\TwoFactorLogin); «Запомнить» — только после кода
+                if (\App\SQS\TwoFactor::enabled(intval($this->_user->user_id))) {
+                    \App\SQS\TwoFactor::begin($this->_user, $this->loginform->remember->isChecked());
+                    App::Redirect('\\App\\Pages\\TwoFactorLogin');
+                    return;
+                }
                 $this->successLogin() ;
                 return;
             } 

@@ -100,7 +100,8 @@ class ChatBot
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }
-            $user = H::login($s[1], $s[2]);
+            // SquirrelStock: блокировка подбора, без двухфакторного входа (App\SQS\LoginGuard::passwordOnly)
+            $user = \App\SQS\LoginGuard::passwordOnly((string)$s[1], (string)$s[2], 'telegram:' . $chat_id);
 
             if ($user instanceof User) {
                 $user->chat_id = $chat_id;

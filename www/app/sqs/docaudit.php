@@ -17,6 +17,30 @@ class DocAudit
 
     private static array $pending = [];
 
+    /**
+     * Обработчик beforeSave (App\SQS\Hooks): изменения существующего документа; содержимое проведенного менять нельзя —
+     * проводки остались бы от старого содержимого, сначала отменить проведение
+     */
+    public static function beforeSave(Document $doc): void {
+        if ($doc->document_id <= 0) {
+            return;
+        }
+        $stored = Document::load($doc->document_id);
+        if ($stored == null) {
+            return;
+        }
+        $changes = self::diff(self::snapshot($stored), self::snapshot($doc));
+        if (self::contentChanged($changes) && $doc->isExecuted()) {
+            throw new \Exception(__('sqs.doclog.executed_locked', ['number' => $stored->document_number]));
+        }
+        self::setPending($doc, $changes);
+    }
+
+    // обработчик afterSave: изменения, найденные в beforeSave, — в журнал
+    public static function afterSave(Document $doc): void {
+        self::writePending($doc);
+    }
+
     public static function snapshot(Document $doc): array {
         $rows = [];
         foreach ($doc->unpackDetails('detaildata') as $r) {
