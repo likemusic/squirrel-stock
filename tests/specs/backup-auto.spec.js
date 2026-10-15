@@ -1,5 +1,6 @@
 // Автоматическая резервная копия (cli/backup.php, App\SQS\BackupJob): копия в несколько мест — папка этого компьютера,
-// сетевая папка, облако через rclone (в тесте — remote типа local на папку в контейнере, в настоящие облака ничего не уходит).
+// сетевая папка, несколько облаков через rclone (в тесте — remote типов local и alias на папки в контейнере, в настоящие облака
+// ничего не уходит).
 // Последние N копий в каждом месте; сбой одного места не мешает остальным; в облако — только зашифрованный архив;
 // предупреждение, если удачной копии нет больше 2 суток; копия на флешку вручную. ZIPPY_GAPS п. 33.
 const { execFileSync, spawnSync } = require('child_process');
@@ -23,13 +24,15 @@ test.afterAll(() => {
 
 test('автоматическая копия в несколько мест', async ({ page }, testInfo) => {
   test.setTimeout(6 * 60_000);
-  sh(`rm -rf ${T} && mkdir -p ${T}/local ${T}/net ${T}/cloud ${T}/usb && printf '[cloudtest]\\ntype = local\\n' > ${T}/rclone.conf`);
+  sh(`rm -rf ${T} && mkdir -p ${T}/local ${T}/net ${T}/cloud ${T}/cloud2 ${T}/usb && printf '[cloudtest]\\ntype = local\\n\\n[cloudtwo]\\ntype = alias\\nremote = ${T}/cloud2\\n' > ${T}/rclone.conf`);
   query("delete from sqs_backuplog; delete from keyval where keyd = 'sqs_backup'");
+  // два облака: каждое — своя строка статуса, своя попытка и ротация
+  const C1 = `cloudtest:${T}/cloud`, C2 = 'cloudtwo:sub', DIR2 = `${T}/cloud2/sub`;
   const status = async () => {
     await page.goto('/index.php?p=App/Pages/Service/Backup');
     const out = {};
-    for (const place of ['local', 'network', 'cloud']) {
-      out[place] = (await page.locator(`#backup-status tr[data-place=${place}] td`).allInnerTexts()).map(s => s.trim());
+    for (const [k, place] of [['local', 'local'], ['network', 'network'], ['cloud', 'cloud:' + C1], ['cloud2', 'cloud:' + C2]]) {
+      out[k] = (await page.locator(`#backup-status tr[data-place="${place}"] td`).allInnerTexts()).map(s => s.trim());
     }
     return out;
   };
@@ -41,7 +44,7 @@ test('автоматическая копия в несколько мест', a
   // настройки; облако без пароля — туда не отправляется, остальные места работают
   await page.locator('#sform #local').fill(`${T}/local`);
   await page.locator('#sform #network').fill(`${T}/net`);
-  await page.locator('#sform #cloud').fill(`cloudtest:${T}/cloud`);
+  await page.locator('#sform #cloud').fill(`${C1}\n${C2}`);
   await page.locator('#sform #rclone_conf').fill(`${T}/rclone.conf`);
   await page.locator('#sform #keep').fill('2');
   await clickWait(page, '#sform #runnow');
@@ -49,8 +52,10 @@ test('автоматическая копия в несколько мест', a
   expect(files(`${T}/local`)).toHaveLength(1);
   expect(files(`${T}/net`)).toHaveLength(1);
   expect(files(`${T}/cloud`)).toHaveLength(0);
+  expect(files(DIR2)).toHaveLength(0);
   let st = await status();
   expect(st.cloud[3]).toMatch(/пароль/);
+  expect(st.cloud2[3]).toMatch(/пароль/);
   expect(st.local[3]).toBe('');
 
   // пароль задан: три запуска планировщиком — в каждом месте остаются последние 2
@@ -65,30 +70,37 @@ test('автоматическая копия в несколько мест', a
   expect(files(`${T}/net`)).toHaveLength(2);
   const cloud = files(`${T}/cloud`);
   expect(cloud).toHaveLength(2);
+  expect(files(DIR2), 'второе облако — те же копии').toEqual(cloud);
   sh(`touch ${T}/cloud/other-file.zip`);   // чужие файлы в папке не удаляются
 
   // облачная копия зашифрована: без пароля не читается, с паролем — это копия базы
   const zipTest = pass => sh(`php -r '$z = new ZipArchive(); $z->open("${T}/cloud/${cloud[1]}"); ${pass ? `$z->setPassword("${pass}");` : ''} echo $z->getFromName("database.sql") === false ? "closed" : "open";'`);
   expect(zipTest('')).toBe('closed');
   expect(zipTest('Секрет-123')).toBe('open');
+  expect(sh(`php -r '$z = new ZipArchive(); $z->open("${DIR2}/${cloud[1]}"); echo $z->getFromName("database.sql") === false ? "closed" : "open";'`), 'второе облако зашифровано').toBe('closed');
   expect(sh(`php -r '$z = new ZipArchive(); $z->open("${T}/local/${files(`${T}/local`)[1]}"); echo $z->getFromName("database.sql") === false ? "closed" : "open";'`)).toBe('open');
 
   st = await status();
-  for (const p of ['local', 'network', 'cloud']) expect(st[p][3], p).toBe('');
+  for (const p of ['local', 'network', 'cloud', 'cloud2']) expect(st[p][3], p).toBe('');
   await expect(page.locator('#backup-stale')).toHaveCount(0);
 
-  // облако недоступно (нет такого remote) — ошибка только у облака, код возврата 1
+  // одно облако недоступно (нет такого remote) — ошибка только у него, второе облако получило копию, код возврата 1
   query(`update keyval set vald = replace(vald, 'cloudtest:', 'nosuchremote:') where keyd = 'sqs_backup'`);
   await tick();
+  const before2 = files(DIR2);
   let r = cli();
   expect(r.status).toBe(1);
   expect(r.stdout).toMatch(/local\s+OK/);
   expect(r.stdout).toMatch(/network\s+OK/);
-  expect(r.stdout).toMatch(/cloud\s+ОШИБКА: rclone/);
+  expect(r.stdout).toMatch(/cloud:nosuchremote:\S+\s+ОШИБКА: rclone/);
+  expect(r.stdout).toMatch(/cloud:cloudtwo:sub\s+OK/);
+  expect(files(DIR2)).toHaveLength(2);
+  expect(files(DIR2), 'во второе облако — новая копия').not.toEqual(before2);
   expect(files(`${T}/cloud`)).toHaveLength(2);
   expect(sh(`ls ${T}/cloud`)).toContain('other-file.zip');
-  st = await status();
-  expect(st.cloud[3]).toMatch(/rclone/);
+  await page.goto('/index.php?p=App/Pages/Service/Backup');
+  expect((await page.locator(`#backup-status tr[data-place="cloud:nosuchremote:${T}/cloud"] td`).allInnerTexts())[3]).toMatch(/rclone/);
+  expect((await page.locator(`#backup-status tr[data-place="cloud:${C2}"] td`).allInnerTexts())[3].trim()).toBe('');
   query(`update keyval set vald = replace(vald, 'nosuchremote:', 'cloudtest:') where keyd = 'sqs_backup'`);
 
   // запуск каждый час с --if-older: свежая копия есть — пропуск
@@ -96,10 +108,12 @@ test('автоматическая копия в несколько мест', a
   expect(r.status).toBe(0);
   expect(r.stdout).toMatch(/пропуск/);
 
-  // удачной копии в сетевую папку не было больше 2 суток — предупреждение
-  query("update sqs_backuplog set createdon = createdon - interval 3 day where place = 'network'");
+  // удачной копии в сетевую папку и во второе облако не было больше 2 суток — предупреждение называет их
+  query("update sqs_backuplog set createdon = createdon - interval 3 day where place = 'network' or file like 'cloudtwo:%'");
   await page.goto('/index.php?p=App/Pages/Service/Backup');
   await expect(page.locator('#backup-stale')).toContainText(/на іншому комп'ютері/);
+  await expect(page.locator('#backup-stale')).toContainText(C2);
+  await expect(page.locator('#backup-stale')).not.toContainText(C1);
 
   // папка внутри сайта — открыта из браузера, туда нельзя
   r = cli('/var/www/html/upload');

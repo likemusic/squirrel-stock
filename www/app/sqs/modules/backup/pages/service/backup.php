@@ -28,7 +28,7 @@ class Backup extends \App\Pages\Base
         $this->add(new Form('sform'));
         $this->sform->add(new TextInput('local', $s['local']));
         $this->sform->add(new TextInput('network', $s['network']));
-        $this->sform->add(new TextInput('cloud', $s['cloud']));
+        $this->sform->add(new \Zippy\Html\Form\TextArea('cloud', $s['cloud']));   // облака — по одному в строке
         $this->sform->add(new TextInput('rclone', $s['rclone']));
         $this->sform->add(new TextInput('rclone_conf', $s['rclone_conf']));
         $this->sform->add(new TextInput('password'));
@@ -53,19 +53,19 @@ class Backup extends \App\Pages\Base
         $s = BackupJob::settings();
         $places = [];
         $stale = [];
-        foreach (BackupJob::status() as $place => $st) {
+        foreach (BackupJob::status() as $key => $st) {
             $last = $st['last'];
             $places[] = [
-                'place'   => $place,
-                'name'    => __('service.backup.place_' . $place),
-                'target'  => $place == 'cloud' ? $s['cloud'] : $s[$place],
+                'place'   => $key,   // local, network, cloud (не настроено) или cloud:<remote> — по строке на облако
+                'name'    => __('service.backup.place_' . $st['place']),
+                'target'  => $st['target'],
                 'enabled' => $st['enabled'],
                 'last_ok' => $st['last_ok'] ? \App\Helper::fdt($st['last_ok']) : __('service.backup.never'),
                 'error'   => $last && !$last['ok'] ? \App\Helper::fdt(strtotime($last['createdon'])) . ': ' . \App\SQS\BackupException::text((string)$last['message']) : '',
                 'stale'   => $st['stale'],
             ];
             if ($st['stale']) {
-                $stale[] = __('service.backup.place_' . $place);
+                $stale[] = BackupJob::label($key);
             }
         }
         $this->_tvars['places'] = $places;
@@ -127,7 +127,7 @@ class Backup extends \App\Pages\Base
         $result = BackupJob::run();
         $lines = [];
         foreach ($result as $place => $r) {
-            $lines[] = __('service.backup.place_' . $place) . ': ' . ($r['ok'] ? __('service.backup.ok') : $r['message']);
+            $lines[] = BackupJob::label($place) . ': ' . ($r['ok'] ? __('service.backup.ok') : $r['message']);
         }
         if (array_filter($result, fn($r) => !$r['ok'])) {
             $this->setError(implode('; ', $lines));

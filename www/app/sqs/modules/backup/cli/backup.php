@@ -6,7 +6,7 @@
  * php cli/backup.php                   копия во все настроенные места
  * php cli/backup.php D:\Backup         папка на этом компьютере — эта, а не из настроек
  * php cli/backup.php --keep=N          хранить последние N копий в каждом месте (по умолчанию из настроек, 30)
- * php cli/backup.php --only=local,cloud  только эти места
+ * php cli/backup.php --only=local,cloud  только эти места (cloud — все облака из настройки)
  * php cli/backup.php --if-older=20     ничего не делать, если успешная копия в папку этого компьютера моложе 20 часов:
  *                                      так планировщик запускает скрипт каждый час, а копия делается раз в день,
  *                                      даже если в назначенное время компьютер был выключен
@@ -49,7 +49,7 @@ if ($ifOlder > 0 && \App\SQS\BackupJob::freshLocal($ifOlder)) {
 $result = \App\SQS\BackupJob::run($overrides, $only);
 $failed = 0;
 foreach ($result as $place => $r) {
-    echo str_pad($place, 8) . ($r['ok'] ? 'OK' : 'ОШИБКА') . ($r['message'] !== '' ? ': ' . $r['message'] : '') . "\n";
+    echo str_pad($place, 8) . ' ' . ($r['ok'] ? 'OK' : 'ОШИБКА') . ($r['message'] !== '' ? ': ' . $r['message'] : '') . "\n";
     $failed += $r['ok'] ? 0 : 1;
 }
 exit($failed ? 1 : 0);
