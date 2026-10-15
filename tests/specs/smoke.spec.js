@@ -13,8 +13,6 @@ const PAGES = [
 
 for (const [name, url] of PAGES) {
   test(`страница открывается: ${name}`, async ({ page }) => {
-    // ZIPPY_GAPS п. 25: графики главной берут Google Charts из интернета, без сети — «google is not defined»
-    test.fail(name === 'Главная', 'известная ошибка: работа без интернета (п. 25)');
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     const resp = await page.goto(url);
