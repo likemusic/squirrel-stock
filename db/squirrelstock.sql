@@ -107,3 +107,25 @@ CREATE TABLE IF NOT EXISTS sqs_item1c (
   PRIMARY KEY (item_id),
   KEY name1c (name1c)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Вход по cookie «Запомнить» (App\SQS\Remember): случайный токен; хранится хеш, срок и отпечаток пароля
+CREATE TABLE IF NOT EXISTS sqs_remember (
+  selector char(24) NOT NULL,
+  user_id int NOT NULL,
+  token_hash char(64) NOT NULL,
+  pass_fp char(64) NOT NULL,
+  expires datetime NOT NULL,
+  PRIMARY KEY (selector),
+  KEY user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Неудачные попытки входа (App\SQS\LoginGuard): временная блокировка подбора пароля по логину и по адресу
+CREATE TABLE IF NOT EXISTS sqs_loginfail (
+  id bigint NOT NULL AUTO_INCREMENT,
+  login varchar(100) NOT NULL,
+  ip varchar(45) NOT NULL,
+  createdon datetime NOT NULL,
+  PRIMARY KEY (id),
+  KEY login (login, createdon),
+  KEY ip (ip, createdon)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

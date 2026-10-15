@@ -240,7 +240,7 @@ class System
        
         $user = System::getUser() ;
         if ($user->userlogin == "admin") {
-                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                if ($user->userpass === "admin" || password_verify("admin", (string)$user->userpass)) {   // SquirrelStock: любой хеш пароля admin
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id;
                     $n->message = __('app.system.zminit_u_profili_parol_za') ;

@@ -87,17 +87,24 @@ class UserLogin extends \Zippy\Html\WebPage
         }
 
         if (strlen($login) > 0 && strlen($password) > 0) {
+            // SquirrelStock: после серии неудач вход временно не проверяется (App\SQS\LoginGuard)
+            $wait = \App\SQS\LoginGuard::blockedMinutes($login, (string)($_SERVER['REMOTE_ADDR'] ?? ''));
+            if ($wait > 0) {
+                $this->setError(__('sqs.login.blocked', ['min' => $wait]));
+                $sender->userpasswo->setText('');
+                return;
+            }
              
             $this->_user = Helper::login($login, $password);
 
             if ($this->_user instanceof User) {
-       
+                \App\SQS\LoginGuard::success($login);
                 $this->successLogin() ;
                 return;
             } 
             
             else {
-
+                \App\SQS\LoginGuard::fail($login, (string)($_SERVER['REMOTE_ADDR'] ?? ''));
                 $this->setError(__('app.userlogin.nevirnyi_lohin_abo_parol'));
 
                 $this->counter();
@@ -118,9 +125,9 @@ class UserLogin extends \Zippy\Html\WebPage
       //  $_SESSION['userlogin'] = $this->_user->userlogin; //для  использования  вне  Application
 
         if ($this->loginform->remember->isChecked()) {
-            setcookie("remember", $this->_user->user_id . '_' . md5($this->_user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 14);
+            \App\SQS\Remember::issue($this->_user);   // SquirrelStock: случайный токен, отзывается сменой пароля и выходом
         } else {
-            setcookie("remember", '', 0);
+            \App\SQS\Remember::forget();
         }
         if (($_COOKIE['branch_id'] ?? 0) > 0) {
             System::getSession()->defbranch = $_COOKIE['branch_id'];

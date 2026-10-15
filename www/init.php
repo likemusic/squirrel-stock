@@ -85,6 +85,14 @@ function app_autoload($className) {
 
 spl_autoload_register('app_autoload');
 
+// SquirrelStock: cookie сессии недоступна скриптам страницы, не уходит с чужих сайтов, по HTTPS — только защищенным каналом;
+// идентификатор сессии принимается только выданный сервером
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.use_strict_mode', '1');
+if ($http == 'https') {
+    ini_set('session.cookie_secure', '1');
+}
 session_start();
 
 

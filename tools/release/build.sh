@@ -14,6 +14,7 @@ trap 'rm -rf "$stage"; docker rm -f sqs-release >/dev/null 2>&1 || true' EXIT
 
 docker build -q -f docker/Dockerfile -t squirrelstock-web:release . >/dev/null
 git archive HEAD www | tar -x -C "$stage"
+rm -f "$stage/www/script_examples.zip"   # примеры скриптов автора Zippy на сайте не нужны
 docker create --name sqs-release squirrelstock-web:release >/dev/null
 docker cp -q sqs-release:/var/www/html/vendor "$stage/www/vendor"
 cp tools/release/config.php "$stage/www/config/config.php"
@@ -34,5 +35,17 @@ with zipfile.ZipFile(dst, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
 PY
 cat db/db.sql db/squirrelstock.sql > "$out/squirrel-stock-$ver-empty.sql"
 unzip -p db/demo/squirrelstock-demo.zip database.sql > "$out/squirrel-stock-$ver-demo.sql"
+
+# пакет ставится в интернет: вместо admin / admin — случайный пароль (печатается один раз) и длинная случайная «соль»
+# (в db/demo пароль остается admin — для знакомства на своем компьютере)
+pass=$(python3 -I -c 'import secrets; print(secrets.token_urlsafe(12))')
+hash=$(printf '%s' "$pass" | docker run --rm -i squirrelstock-web:release php -r 'echo password_hash(stream_get_contents(STDIN), PASSWORD_DEFAULT);')
+salt=$(python3 -I -c 'import secrets; print(secrets.token_hex(32))')
+for f in "$out/squirrel-stock-$ver-empty.sql" "$out/squirrel-stock-$ver-demo.sql"; do
+  printf "\n-- пакет: пароль admin и соль, созданные при сборке\nUPDATE users SET userpass = '%s' WHERE userlogin = 'admin';\nREPLACE INTO keyval (keyd, vald) VALUES ('salt', '%s');\n" "$hash" "$salt" >> "$f"
+done
 (cd "$out" && sha256sum "squirrel-stock-$ver.zip" "squirrel-stock-$ver-empty.sql" "squirrel-stock-$ver-demo.sql" > "squirrel-stock-$ver.sha256")
 ls -lh "$out"/squirrel-stock-"$ver"*
+echo
+echo "Пароль admin в пакете (обе базы): $pass"
+echo "Запишите его: он нигде не сохраняется и больше не показывается."
