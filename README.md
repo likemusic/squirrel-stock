@@ -39,6 +39,19 @@ npm test                                          # SQS_BASE=http://127.0.0.1:80
 
 Tests create their own data with unique names and can run against a non-empty database. Bugs are reproduced with a test first, then fixed.
 
+## Interface languages
+
+Interface texts are English keys: `__('key')` in PHP, `{{#t}}key{{/t}}` in templates (`{|#t|}key{|/t|}` where a template switches Mustache delimiters for Vue). Texts are in `www/lang/<lang>.json`: `uk` (the original Ukrainian text of Zippy) and `ru`. The language is chosen in the user profile; the default is `$_config['common']['lang']` in `config/config.php` (Docker stand: `SQS_LANG`).
+
+Default names stored in the database (documents and menu items, main store, cash desk, price types) are translated once per installation:
+
+```bash
+php cli/localize-db.php ru          # in Docker: docker exec squirrelstock-web-1 php cli/localize-db.php ru
+php cli/localize-db.php ru --back   # back to Ukrainian
+```
+
+Tools in `tools/i18n/`: `convert.php` replaces Ukrainian strings with keys (used on every upstream update), `pairs.php` collects translation pairs from the Russian edition of Zippy, `merge_tsv.py` builds a dictionary from `key<TAB>text` files and checks placeholders and quotes.
+
 ## Русский
 
 SquirrelStock — неофициальный форк складской программы Zippy (leon-mbs/zstore, лицензия MIT) для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование. Первый пользователь — детский хоспис. В планах: исправления надёжности учёта, перевод интерфейса на русский (ключи на английском), работа без интернета, учёт выдачи оборудования по договорам, отчёты для бухгалтерии, автотесты.
