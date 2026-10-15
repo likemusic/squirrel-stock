@@ -79,3 +79,16 @@ CREATE TABLE IF NOT EXISTS sqs_backuplog (
   PRIMARY KEY (id),
   KEY place (place, createdon)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Импорт истории выдачи оборудования из Google-таблиц (App\SQS\EqHistory); что уже импортировано — по ключу события
+-- «вид|договор|единица|дата», чтобы повторный импорт не дублировал
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 5, 'Імпорт історії видачі обладнання', 'ImportEquipmentHistory', '', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'ImportEquipmentHistory');
+
+CREATE TABLE IF NOT EXISTS sqs_eqhistory (
+  eventkey varchar(255) NOT NULL,
+  document_id int NOT NULL,
+  createdon datetime NOT NULL,
+  PRIMARY KEY (eventkey)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
