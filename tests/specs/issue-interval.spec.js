@@ -49,6 +49,7 @@ test('повторная выдача раньше интервала — пре
   expect(await issue('2026-06-10', who), 'через 4 месяца после последней').toBe('');
 
   // штатная «Расходная накладная»: предупреждение после проведения
-  const { msgs } = await createDoc(page, 'GoodsIssue', { date: '2026-06-20', customer: who, payment: 0, rows: [{ code, qty: 1, price: 0 }] });
-  expect(msgs.join(' ')).toContain('10.06.2026');
+  await createDoc(page, 'GoodsIssue', { date: '2026-06-20', customer: who, payment: 0, rows: [{ code, qty: 1, price: 0 }] });
+  // текст — в вызове toastr.warning на странице после проведения: всплывающее окно живет 4 с, на медленной машине его можно не застать
+  expect(await page.content()).toContain('10.06.2026 (10 дн.');   // не просто дата: в журнале есть документ от 10.06.2026
 });

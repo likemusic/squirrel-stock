@@ -9,7 +9,7 @@ use App\Entity\Doc\Document;
  * События: beforeSave, afterSave, beforeExecute, afterExecute, beforeCancel, afterCancel.
  * Обработчик: function (Document $doc, string $event): void. Общие события (не документ) — listen()/emit(). Исключение в before* отменяет сохранение или проведение,
  * текст исключения видит пользователь. Вызовы — в Document::beforeSave/afterSave/updateStatus.
- * Встроенные обработчики форка (журнал правок DocAudit, интервал выдачи IssueInterval) регистрируются здесь же, модули — в своем module.php (App\SQS\Modules).
+ * Встроенные обработчики форка (журнал правок DocAudit) регистрируются здесь же, модули — в своем module.php (App\SQS\Modules).
  */
 class Hooks
 {
@@ -66,7 +66,6 @@ class Hooks
         self::$booted = true;
         self::on('beforeSave', '*', [DocAudit::class, 'beforeSave']);
         self::on('afterSave', '*', [DocAudit::class, 'afterSave']);
-        self::on('afterExecute', 'GoodsIssue', [IssueInterval::class, 'afterExecute']);   // интервал выдачи: предупреждение
         self::listen('mainBlocks', [BackupJob::class, 'mainBlock']);      // до переноса в модули
         self::listen('mainBlocks', [EquipmentDue::class, 'mainBlock']);
         self::listen('itemSaved', [Item1C::class, 'itemSaved']);

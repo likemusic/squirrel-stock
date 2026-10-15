@@ -40,11 +40,6 @@ CREATE TABLE IF NOT EXISTS sqs_unit (
   KEY factory_no (factory_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Выдача расходников одной короткой формой (основная ежедневная операция): проведенная расходная накладная по цене 0
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 5, 'Видача витратних матеріалів', 'ConsumablesIssue', '', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'ConsumablesIssue');
-
 -- Выдача оборудования одной формой: договор + расходная накладная
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 5, 'Видача обладнання за договором', 'EquipmentIssue', '', 0 FROM DUAL
@@ -113,18 +108,6 @@ CREATE TABLE IF NOT EXISTS sqs_loginfail (
   KEY login (login, createdon),
   KEY ip (ip, createdon)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Интервал выдачи (App\SQS\IssueInterval): «не чаще раза в N дней» для категории (kind = 'cat') или позиции ('item')
-CREATE TABLE IF NOT EXISTS sqs_issue_interval (
-  kind varchar(4) NOT NULL,
-  ref_id int NOT NULL,
-  days int NOT NULL,
-  PRIMARY KEY (kind, ref_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 4, 'Інтервали видачі', 'IssueIntervals', 'Товари', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'IssueIntervals');
 
 -- Двухфакторный вход (App\SQS\TwoFactor): ключ приложения-аутентификатора, последний принятый шаг; резервные коды — хешами
 CREATE TABLE IF NOT EXISTS sqs_2fa (
