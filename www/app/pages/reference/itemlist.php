@@ -1027,7 +1027,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function onAllCat($sender) {
-        $cat_id = $sender->getValue();
+        $cat_id = intval($sender->getValue());
         if ($cat_id == 0) {
             return;
         }
@@ -1436,8 +1436,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $type = trim(''.$form->searchtype->getValue());
-        $cat = $form->searchcat->getValue();
+        $type = intval($form->searchtype->getValue());
+        $cat = intval($form->searchcat->getValue());
 
 
         if ($cat != 0) {

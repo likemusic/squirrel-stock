@@ -391,7 +391,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $showdis = $form->showdis->isChecked();
-        $cust = $form->searchcust->getKey();
+        $cust = intval($form->searchcust->getKey());
 
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

@@ -1017,7 +1017,7 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         $type = $this->page->customertable->filter->searchtype->getValue();
-        $holding = $this->page->customertable->filter->searchholding->getValue();
+        $holding = intval($this->page->customertable->filter->searchholding->getValue());
         $search = trim($this->page->customertable->filter->searchkey->getText());
        
         $isleads = $this->page->customertable->leadf->chleads->isChecked();
