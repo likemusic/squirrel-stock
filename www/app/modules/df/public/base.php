@@ -13,6 +13,7 @@ class Base extends \Zippy\Html\WebPage
     public $_customer=null;
     public  $_store_id;   
     public function __construct( ) {
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         \Zippy\Html\WebPage::__construct();
         $modules = \App\System::getOptions("modules");

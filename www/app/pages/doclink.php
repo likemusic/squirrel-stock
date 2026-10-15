@@ -9,6 +9,7 @@ class Doclink extends \Zippy\Html\WebPage
 {
     public function __construct($hash) {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         if(strlen($hash)==0) {
             header("HTTP/1.0 404 Not Found");

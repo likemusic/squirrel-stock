@@ -9,6 +9,7 @@ class ShowDoc extends \Zippy\Html\WebPage
 {
     public function __construct($type, $docid) {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         $docid = intval($docid);
 

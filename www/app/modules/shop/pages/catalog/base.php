@@ -11,6 +11,7 @@ use Zippy\Html\Link\ClickLink;
 class Base extends \Zippy\Html\WebPage
 {
     public function __construct( ) {
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         \Zippy\Html\WebPage::__construct();
      

@@ -7,6 +7,7 @@ class ShowReport extends \Zippy\Html\WebPage
 {
     public function __construct($type, $filename="") {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         $common = \App\System::getOptions('common');
         $user = \App\System::getUser();

@@ -14,6 +14,7 @@ class UserLogin extends \Zippy\Html\WebPage
 {
     public function __construct() {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userphone'));

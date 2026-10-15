@@ -14,6 +14,7 @@ class UserLogin extends \Zippy\Html\WebPage
 {
     public function __construct() {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
         $modules = \App\System::getOptions("modules");
 
         if($modules['df'] != 1) {

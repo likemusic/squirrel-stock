@@ -12,6 +12,7 @@ class CChat extends \Zippy\Html\WebPage
 
     public function __construct($doc_id=0, $hash="") {
         parent::__construct();
+        $this->_tvars['t'] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
 
         if($hash=="" || $doc_id==0) {
             http_response_code(404) ;

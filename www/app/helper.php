@@ -293,6 +293,7 @@ class Helper
 
         $template = @file_get_contents($templatepath);
 
+        $keys['t'] = $keys['t'] ?? new \App\Translator();   // перевод в шаблонах писем: {{#t}}ключ{{/t}}
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
 
