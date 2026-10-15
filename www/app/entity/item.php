@@ -935,14 +935,15 @@ class Item extends \ZCL\DB\Entity
                 $cats = implode(",", $ch)  ;
 
 
-                $w =   " and cat_id in ({$cats})   ";
+                $w .=   " and cat_id in ({$cats})   ";   // SquirrelStock: было «=», затирало disabled = 0 (ошибка SQL)
             }            
             
             
             if($store_id > 0)  {
                 $item = Item::getFirst($w." and item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}   or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )");
             }   else {
-                $item = Item::getFirst($w." and  item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%'   ");
+                // SquirrelStock: варианты кода в скобках, иначе disabled = 0 относилось только к item_code
+                $item = Item::getFirst($w." and  (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )  ");
             }
             return $item;
     }
