@@ -80,8 +80,9 @@ class EquipmentWhere extends \App\Pages\Base
 
         $detail = [];
         $today = strtotime(date('Y-m-d'));
+        $factory = \App\SQS\Units::factoryMap();   // заводские номера единиц (sqs_unit)
         foreach ($units as $u) {
-            $row = ['itemname' => $u['itemname'], 'snumber' => $u['snumber'], 'where' => '', 'customer' => '', 'phone' => '', 'address' => '',
+            $row = ['itemname' => $u['itemname'], 'snumber' => $u['snumber'], 'factory' => $factory[\App\SQS\Units::key((int)$u['item_id'], $u['snumber'])] ?? '', 'where' => '', 'customer' => '', 'phone' => '', 'address' => '',
                     'contract' => '', 'date' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'document' => ''];
             $l = $last[$u['item_id'] . '|' . $u['snumber']] ?? null;
             $doc = $l ? \App\Entity\Doc\Document::load($l['document_id']) : null;
@@ -116,8 +117,8 @@ class EquipmentWhere extends \App\Pages\Base
             if ($state == 'active' && $kind == 'off' || $state != 'active' && $state != 'all' && $state != $kind) {
                 continue;
             }
-            // поиск: модель, инвентарный номер или получатель
-            if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['snumber'] . ' ' . $row['customer']), $text)) {
+            // поиск: модель, инвентарный или заводской номер, получатель
+            if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['snumber'] . ' ' . $row['factory'] . ' ' . $row['customer']), $text)) {
                 continue;
             }
             $row['order'] = ['out' => 0, 'store' => 1, 'off' => 2][$kind];

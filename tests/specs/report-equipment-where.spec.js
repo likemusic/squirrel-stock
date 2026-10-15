@@ -3,6 +3,7 @@
 const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, createContract, clickWait } = require('../helpers/zippy');
 const { query, value } = require('../helpers/db');
+const { xlsxText } = require('../helpers/xlsx');
 
 test('оборудование: выдано по договору, на складе, списано', async ({ page, uniq }) => {
   const code = 'EQ-' + uniq, name = 'Концентратор ' + uniq, r1 = 'Получатель ' + uniq;
@@ -42,6 +43,18 @@ test('оборудование: выдано по договору, на скл�
 
   r = await run(r1, 'all');   // поиск по получателю
   expect(Object.keys(r)).toEqual(['1']);
+
+  // заводской номер (ответ хосписа 1.1): колонка, поиск по нему, выгрузка в Excel
+  const item = value(`select item_id from items where item_code = '${code}'`);
+  const fno = n => `ZW${n}-${uniq}`;
+  query(`insert into sqs_unit (item_id, snumber, factory_no) values (${item}, '${inv(1)}', '${fno(1)}'), (${item}, '${inv(2)}', '${fno(2)}')`);
+  r = await run(fno(2), 'all');
+  expect(Object.keys(r), 'поиск по заводскому номеру').toEqual(['2']);
+  expect(r[2]['Заводський номер']).toBe(fno(2));
+  r = await run(uniq, 'all');
+  expect(r[1]['Заводський номер']).toBe(fno(1));
+  expect(r[3]['Заводський номер']).toBe('');
+  expect(await xlsxText(page.context().request, '/index.php?p=App/Pages/ShowReport&arg=xls/equipmentwhere'), 'в Excel').toContain(fno(1));
 
   // итог по моделям (над списком): выдано, по складам (склад «Ремонт» — состояние «в ремонте»), списано, всего
   const name2 = 'Кровать ' + uniq, code2 = 'EQB-' + uniq;

@@ -2,9 +2,11 @@
 // Второй взгляд на те же данные, что «Оборудование: где сейчас» (у хосписа это две таблицы со сверкой). ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, createContract, clickWait, messages } = require('../helpers/zippy');
-const { value, esc } = require('../helpers/db');
+const { query, value, esc } = require('../helpers/db');
+const { xlsxText } = require('../helpers/xlsx');
 
 test('журнал выдачи оборудования: выдача, возврат, повторная выдача', async ({ page, uniq }) => {
+  test.setTimeout(4 * 60_000);
   const code = 'EJ-' + uniq, name = 'Кровать ' + uniq, r1 = 'Получатель ' + uniq + ' один', r2 = 'Получатель ' + uniq + ' два';
   const inv = 'INV-' + uniq;
   await createItem(page, { name, code, serial: true });
@@ -33,4 +35,22 @@ test('журнал выдачи оборудования: выдача, возв
   };
   expect(await row(r1)).toMatchObject({ 'Договір': 'Ж1-' + uniq, 'Дата видачі': '02.08.2026', 'Строк': '30.09.2026', 'Дата повернення': '20.08.2026', 'Інв. №': inv, 'Ким направлено': 'Отделение 1' });
   expect(await row(r2)).toMatchObject({ 'Договір': 'Ж2-' + uniq, 'Дата видачі': '25.08.2026', 'Строк': 'до запитання', 'Дата повернення': '' });
+
+  // заводской номер: колонка, поиск по нему (и по инвентарному), выгрузка в Excel
+  const factory = 'ZJ-' + uniq;
+  query(`insert into sqs_unit (item_id, snumber, factory_no) values (${value(`select item_id from items where item_code = '${esc(code)}'`)}, '${esc(inv)}', '${esc(factory)}')`);
+  const search = async text => {
+    await page.goto('/index.php?p=App/Pages/Report/EquipmentJournal');
+    await page.locator('#filter #from').fill('2026-08-01');
+    await page.locator('#filter #to').fill('2026-08-31');
+    await page.locator('#filter #searchtext').fill(text);
+    await clickWait(page, '#filter #onreport');
+    return (await table.locator('tr', { hasText: inv }).count());
+  };
+  expect(await search(factory), 'поиск по заводскому номеру — обе выдачи единицы').toBe(2);
+  expect(await row(r1)).toMatchObject({ 'Заводський номер': factory });
+  expect(await search(inv), 'поиск по инвентарному').toBe(2);
+  expect(await search('NOSUCH-' + uniq)).toBe(0);
+  await search(factory);
+  expect(await xlsxText(page.context().request, '/index.php?p=App/Pages/ShowReport&arg=xls/equipmentjournal'), 'в Excel').toContain(factory);
 });

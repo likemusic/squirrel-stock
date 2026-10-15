@@ -27,6 +27,7 @@ class EquipmentJournal extends \App\Pages\Base
         $this->filter->add(new Date('from', strtotime(date('Y-01-01'))));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('cat', [0 => __('common.vsi')] + \App\Entity\Category::getList(true), 0));
+        $this->filter->add(new \Zippy\Html\Form\TextInput('searchtext'));   // модель, инвентарный или заводской номер
         $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -49,7 +50,9 @@ class EquipmentJournal extends \App\Pages\Base
         if ($cat > 0) {
             $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
-        $sql = "SELECT d.document_id, d.document_date, i.itemname, s.snumber,
+        $where .= ' AND ' . \App\SQS\Units::searchWhere((string)$this->filter->searchtext->getText());
+        $factory = \App\SQS\Units::factoryMap();
+        $sql = "SELECT d.document_id, d.document_date, i.item_id, i.itemname, s.snumber,
                        (SELECT MIN(rd.document_date)
                         FROM entrylist re
                         JOIN store_stock rs ON rs.stock_id = re.stock_id
@@ -85,6 +88,7 @@ class EquipmentJournal extends \App\Pages\Base
                 'sent'          => $contract->shortdesc ?? '',
                 'itemname'      => $r['itemname'],
                 'snumber'       => $r['snumber'],
+                'factory'       => $factory[\App\SQS\Units::key((int)$r['item_id'], $r['snumber'])] ?? '',
                 'date'          => H::fd(strtotime($r['document_date'])),
                 'term'          => $term,
                 'returned'      => $r['returned'] ? H::fd(strtotime($r['returned'])) : '',
