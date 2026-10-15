@@ -213,7 +213,7 @@ class Customer extends \ZCL\DB\Entity
             $where .= " and  (detail like '%<type>" . intval($type) . "</type>%'  or detail like '%<type>0</type>%' ) ";
         }
 
-        return Customer::findArray("concat(customer_name,' ',phone)", $where, "customer_name");
+        return Customer::findArray("concat(customer_name,' ',coalesce(phone,''))", $where, "customer_name");
     }
 
     public static function getHoldList($type = 0) {
