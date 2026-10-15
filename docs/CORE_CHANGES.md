@@ -35,6 +35,10 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `3d6a53090` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | counterparty and item name cells `text-break`: long names wrap instead of widening the table on a phone | `tests/specs/mobile.spec.js` |
 | `f5b9deb22` | `www/app/pages/userlogin.php` `onsubmit()`; new `www/app/sqs/loginguard.php`, table `sqs_loginfail` | failed logins stored in the database; temporary lock after 5 failures per login or 20 per address in 15 minutes, independent of the session | `tests/specs/login-security.spec.js` |
 | `65cb5007c` | `www/init.php` (before `session_start()`) | session cookie HttpOnly, SameSite=Lax, Secure over HTTPS; `session.use_strict_mode` | `tests/specs/hosting-security.spec.js` |
+| `99d63e1d3` | `www/app/entity/doc/document.php` `beforeSave()`/`afterSave()` | the inline audit log code (`db28160cf`) replaced with `App\SQS\Hooks::run('beforeSave'/'afterSave')`; the audit log is a built-in hook handler | `tests/specs/doc-audit.spec.js` |
+| `857e6214f` | `www/init.php` (after `session_start()`) | `App\SQS\Modules::load()`: modules from `app/sqs/modules` (docs/MODULES.md) | `tests/specs/hooks.spec.js` |
+| `03ab6eb88` | `www/app/entity/doc/document.php` `updateStatus()` | hooks `beforeExecute`/`beforeCancel` before any write, `afterExecute`/`afterCancel` once after the state is saved | `tests/specs/hooks.spec.js` |
+| `eaa5c3a9e` | `www/app/application.php` `getTemplate()` | page template from a module folder first | `tests/specs/hooks.spec.js` |
 
 ## Proposed upstream
 
