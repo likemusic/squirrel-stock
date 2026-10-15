@@ -41,7 +41,9 @@ async function pickAuto(page, sel, query, expect, firstMustContain) {
   let opt = page.locator('li a.dropdown-item:visible', { hasText: expect || '' }).first();
   if (firstMustContain) {
     opt = page.locator('li a.dropdown-item:visible').first();
-    for (let i = 0; i < 40 && !((await opt.innerText().catch(() => '')).includes(firstMustContain)); i++) await page.waitForTimeout(200);
+    // вариант выглядит как «название, код»: код «X-03» входит и в «X-030», поэтому сверяется окончание строки
+    const fits = t => t.endsWith(', ' + firstMustContain) || (!t.includes(', ') && t.includes(firstMustContain));
+    for (let i = 0; i < 40 && !fits((await opt.innerText().catch(() => '')).trim()); i++) await page.waitForTimeout(200);
   }
   await opt.waitFor({ timeout: 8000 });
   await Promise.all([page.waitForLoadState('networkidle'), opt.click()]);
