@@ -8,30 +8,50 @@ namespace App\SQS;
  * module.php возвращает массив:
  *   'name'     => название (для людей),
  *   'menu'     => [[тип, meta_name, описание, группа меню], ...] — пункты меню (тип как в metadata: 1 документ, 2 отчет,
- *                 3 журнал, 4 справочник, 5 сервис), страница — класс App\Pages\<Doc|Report|Register|Reference|Service>\<meta_name>,
- *   'register' => function () { Hooks::on(...); } — обработчики событий документа (App\SQS\Hooks).
- * Страницы модуля: <модуль>/pages/<тип>/<имя>.php, шаблоны: <модуль>/templates/pages/<тип>/<имя>.html (имена в нижнем регистре).
+ *                 3 журнал, 4 справочник, 5 сервис), страница — класс App\Pages\<Doc|Report|Register|Reference|Service>\<meta_name>;
+ *                 описание и группа — строка или ['uk' => ..., 'ru' => ...] (пишется на языке установки),
+ *   'register' => function () { Hooks::on(...); Hooks::listen(...); } — обработчики событий (App\SQS\Hooks).
+ * Файлы модуля (имена в нижнем регистре):
+ *   pages/<тип>/<имя>.php — класс App\Pages\<Тип>\<Имя>;  <имя>.php — класс App\SQS\<Имя>;
+ *   templates/pages/<тип>/<имя>.html — шаблон страницы;  templates/printforms/... — печатные формы (App\Report);
+ *   schema.sql — таблицы модуля (CREATE TABLE IF NOT EXISTS ...), применяется при изменении файла;
+ *   lang/<язык>.json — ключи перевода модуля;  cli/<скрипт>.php — консольные скрипты.
+ * Правило: код Zippy не вызывает классы модуля напрямую — только через точки расширения (App\SQS\Hooks), иначе выключенный
+ * модуль ронял бы программу (штатный автозагрузчик завершает работу, если файла класса нет).
  * Выключить модуль — удалить папку или переименовать с точкой в начале (.имя): его пункты меню выключаются (disabled = 1).
- * Загрузка — из init.php на каждый запрос: обход папок; база читается один раз за сессию и при смене набора пунктов меню,
- * metadata меняется только при смене набора.
- * Подробно — docs/MODULES.md.
+ * Загрузка — из init.php на каждый запрос (и в консольных скриптах): обход папок; база читается один раз за сессию и при
+ * смене набора модулей (пункты меню, схемы); metadata и таблицы меняются только при смене. Подробно — docs/MODULES.md.
  */
 class Modules
 {
     public const DIR = 'app/sqs/modules';
 
     private static ?array $modules = null;   // имя => ['dir' => путь, 'def' => массив module.php]
+    private static ?array $dirs = null;      // имя => путь: включенные модули, без чтения module.php
+
+    /**
+     * Папки включенных модулей — для переводчика и консольных скриптов, которым не нужен module.php
+     */
+    public static function dirs(): array {
+        if (self::$dirs === null) {
+            self::$dirs = [];
+            foreach (glob(_ROOT . self::DIR . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
+                $name = basename($dir);
+                if ($name[0] != '.' && is_file($dir . '/module.php')) {
+                    self::$dirs[$name] = $dir;
+                }
+            }
+            ksort(self::$dirs);
+        }
+        return self::$dirs;
+    }
 
     public static function load(): void {
         if (self::$modules !== null) {
             return;
         }
         self::$modules = [];
-        foreach (glob(_ROOT . self::DIR . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
-            $name = basename($dir);
-            if ($name[0] == '.' || !is_file($dir . '/module.php')) {
-                continue;
-            }
+        foreach (self::dirs() as $name => $dir) {
             $def = require $dir . '/module.php';
             if (is_array($def)) {
                 self::$modules[$name] = ['dir' => $dir, 'def' => $def];
@@ -41,27 +61,34 @@ class Modules
             // раньше штатного app_autoload: тот завершает работу, если файла класса нет в app/
             spl_autoload_register([self::class, 'autoload'], true, true);
         }
+        self::sync();
         foreach (self::$modules as $m) {
             if (is_callable($m['def']['register'] ?? null)) {
                 ($m['def']['register'])();
             }
         }
-        self::syncMenu();
     }
 
     public static function names(): array {
         return array_keys(self::$modules ?? []);
     }
 
-    // классы страниц модулей: App\Pages\Report\Hello → <модуль>/pages/report/hello.php
+    public static function dir(string $name): ?string {
+        return self::dirs()[$name] ?? null;
+    }
+
+    // App\Pages\Report\Hello → <модуль>/pages/report/hello.php; App\SQS\Units → <модуль>/units.php
     public static function autoload(string $class): void {
-        if (strpos($class, 'App\\Pages\\') !== 0) {
+        if (strpos($class, 'App\\Pages\\') === 0) {
+            $rel = 'pages/' . strtolower(str_replace('\\', '/', substr($class, strlen('App\\Pages\\')))) . '.php';
+        } elseif (strpos($class, 'App\\SQS\\') === 0 && substr_count($class, '\\') == 2) {
+            $rel = strtolower(substr($class, strlen('App\\SQS\\'))) . '.php';
+        } else {
             return;
         }
-        $rel = strtolower(str_replace('\\', '/', substr($class, strlen('App\\Pages\\')))) . '.php';
         foreach (self::$modules ?? [] as $m) {
-            if (is_file($m['dir'] . '/pages/' . $rel)) {
-                require_once $m['dir'] . '/pages/' . $rel;
+            if (is_file($m['dir'] . '/' . $rel)) {
+                require_once $m['dir'] . '/' . $rel;
                 return;
             }
         }
@@ -75,7 +102,20 @@ class Modules
         if (strpos($class, 'App/') !== 0) {
             return null;
         }
-        $rel = 'templates/' . strtolower(substr($class, 4)) . '.html';
+        return self::file('templates/' . strtolower(substr($class, 4)) . '.html');
+    }
+
+    /**
+     * Печатная форма из модуля (полный путь) или null — для App\Report: 'report/issueact.tpl'
+     */
+    public static function printform(string $template): ?string {
+        return self::file('templates/printforms/' . ltrim($template, '/'));
+    }
+
+    private static function file(string $rel): ?string {
+        if (strpos($rel, '..') !== false) {
+            return null;
+        }
         foreach (self::$modules ?? [] as $m) {
             if (is_file($m['dir'] . '/' . $rel)) {
                 return $m['dir'] . '/' . $rel;
@@ -85,46 +125,120 @@ class Modules
     }
 
     /**
-     * Пункты меню модулей в metadata. Новый пункт добавляется (или включается снова), пункт исчезнувшего модуля
-     * выключается; пункты, которые остались, не трогаются — их можно выключить вручную в «Налаштування меню».
+     * Словарь модулей для языка: ключ => текст (App\Translator домешивает его к lang/<язык>.json)
      */
-    private static function syncMenu(): void {
-        $items = [];
-        foreach (self::$modules as $m) {
-            foreach ($m['def']['menu'] ?? [] as $it) {
-                [$type, $name, $desc, $group] = array_pad($it, 4, '');
-                $items[intval($type) . '|' . $name] = [intval($type), (string)$name, (string)$desc, (string)$group];
+    public static function dictionary(string $lang): array {
+        $dict = [];
+        foreach (self::dirs() as $dir) {
+            $f = $dir . '/lang/' . $lang . '.json';
+            $data = is_file($f) ? json_decode((string)file_get_contents($f), true) : null;
+            if (is_array($data)) {
+                $dict += $data;
             }
         }
-        ksort($items);
-        // меню кэшируется в сессии (App\Pages\Base): при смене пунктов модулей кэш этой сессии сбрасывается
-        // в этой сессии набор уже сверен с базой — обычный запрос обходится без обращения к базе
-        $fp = md5(implode(',', array_keys($items)));
+        return $dict;
+    }
+
+    /**
+     * Пункты меню и таблицы модулей. В этой сессии набор уже сверен с базой — обычный запрос обходится без обращения к ней.
+     */
+    private static function sync(): void {
+        $items = self::menuItems();
+        $schemas = [];
+        foreach (self::$modules as $name => $m) {
+            if (is_file($m['dir'] . '/schema.sql')) {
+                $schemas[$name] = md5_file($m['dir'] . '/schema.sql');
+            }
+        }
+        $fp = md5(implode(',', array_keys($items)) . '|' . json_encode($schemas));
         if (session_status() == PHP_SESSION_ACTIVE) {
             if (($_SESSION['sqs_modules_fp'] ?? null) === $fp) {
                 return;
             }
+            // меню кэшируется в сессии (App\Pages\Base): при смене пунктов модулей кэш этой сессии сбрасывается
             \App\Session::getSession()->menu = [];
             $_SESSION['sqs_modules_fp'] = $fp;
         }
+        foreach ($schemas as $name => $hash) {
+            self::applySchema($name, $hash);
+        }
+        self::syncMenu($items);
+    }
+
+    // таблицы модуля: schema.sql выполняется, когда файл изменился (CREATE TABLE IF NOT EXISTS — повторно безопасно)
+    private static function applySchema(string $name, string $hash): void {
+        $key = 'sqs_schema_' . $name;
+        if (\App\Helper::getKeyVal($key) === $hash) {
+            return;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $sql = preg_replace('/^\s*--.*$/m', '', (string)file_get_contents(self::$modules[$name]['dir'] . '/schema.sql'));
+        try {
+            foreach (preg_split('/;\s*(\n|$)/', $sql) as $stmt) {
+                if (trim($stmt) !== '') {
+                    $conn->Execute($stmt);
+                }
+            }
+            \App\Helper::setKeyVal($key, $hash);
+        } catch (\Throwable $e) {
+            // нет права CREATE у пользователя базы и т. п.: модуль работать не будет — в журнал; попытка повторится
+            global $logger;
+            if ($logger) {
+                $logger->error("SquirrelStock module {$name}: schema.sql: " . $e->getMessage());
+            }
+        }
+    }
+
+    // пункты меню модулей: [ключ «тип|meta_name» => [тип, meta_name, описание, группа]] на языке установки
+    private static function menuItems(): array {
+        global $_config;
+        $lang = $_config['common']['lang'] ?? 'uk';
+        $pick = fn($v) => is_array($v) ? (string)($v[$lang] ?? $v['uk'] ?? reset($v)) : (string)$v;
+        $items = [];
+        foreach (self::$modules as $m) {
+            foreach ($m['def']['menu'] ?? [] as $it) {
+                [$type, $name, $desc, $group] = array_pad($it, 4, '');
+                $items[intval($type) . '|' . $name] = [intval($type), (string)$name, $pick($desc), $pick($group)];
+            }
+        }
+        ksort($items);
+        return $items;
+    }
+
+    /**
+     * Пункты меню модулей в metadata. Новый пункт добавляется; пункт исчезнувшего модуля выключается и запоминается —
+     * при возвращении модуля включается снова только он. Пункт, который уже был в metadata (перенос в модуль существующей
+     * страницы), не трогается: его могли выключить вручную или профилем.
+     */
+    private static function syncMenu(array $items): void {
         $prev = json_decode((string)\App\Helper::getKeyVal('sqs_modules_menu'), true);
         $prev = is_array($prev) ? $prev : [];
         if (array_keys($prev) === array_keys($items)) {
             return;
         }
+        $off = json_decode((string)\App\Helper::getKeyVal('sqs_modules_off'), true);
+        $off = is_array($off) ? $off : [];
         $conn = \ZDB\DB::getConnect();
-        foreach (array_diff_key($items, $prev) as [$type, $name, $desc, $group]) {
+        foreach (array_diff_key($items, $prev) as $key => [$type, $name, $desc, $group]) {
             $where = "meta_type = {$type} AND meta_name = " . $conn->qstr($name);
             if ($conn->GetOne("SELECT COUNT(*) FROM metadata WHERE {$where}") > 0) {
-                $conn->Execute("UPDATE metadata SET disabled = 0 WHERE {$where}");
+                if (isset($off[$key])) {
+                    $conn->Execute("UPDATE metadata SET disabled = 0 WHERE {$where}");
+                }
             } else {
                 $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES ({$type}, "
                     . $conn->qstr($desc) . ', ' . $conn->qstr($name) . ', ' . $conn->qstr($group) . ', 0)');
             }
+            unset($off[$key]);
         }
-        foreach (array_diff_key($prev, $items) as [$type, $name]) {
-            $conn->Execute("UPDATE metadata SET disabled = 1 WHERE meta_type = " . intval($type) . " AND meta_name = " . $conn->qstr($name));
+        foreach (array_diff_key($prev, $items) as $key => [$type, $name]) {
+            $where = "meta_type = " . intval($type) . " AND meta_name = " . $conn->qstr($name);
+            if (intval($conn->GetOne("SELECT disabled FROM metadata WHERE {$where}")) == 0) {
+                $conn->Execute("UPDATE metadata SET disabled = 1 WHERE {$where}");
+                $off[$key] = 1;
+            }
         }
         \App\Helper::setKeyVal('sqs_modules_menu', json_encode($items, JSON_UNESCAPED_UNICODE));
+        \App\Helper::setKeyVal('sqs_modules_off', json_encode($off));
     }
 }

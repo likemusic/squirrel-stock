@@ -11,3 +11,4 @@ dist/
 
 # временные модули тестов (tests/specs/hooks.spec.js)
 www/app/sqs/modules/zz-test-*/
+www/app/sqs/modules/.zz-test-*/
