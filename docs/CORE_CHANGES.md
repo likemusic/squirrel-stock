@@ -29,6 +29,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `9e0f28a35` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | below 768 px secondary columns hidden (`d-none d-md-table-cell`), row actions visible without horizontal scroll; desktop unchanged | `tests/specs/mobile.spec.js` |
 | `0642e6635` | `www/templates/pages/main.html`, `www/templates/pages/base.html`; `www/app/sqs/equipmentdue.php` | main page: backup warning for administrators (`App\SQS\BackupJob::status()`), `table-responsive` around the critical quantity table; `app.css?v=828-sqs1` | `tests/specs/backup-main-warning.spec.js`, `tests/specs/mobile.spec.js` |
 | `6a205b118` | `www/.htaccess` | service files (composer.json/lock, `lang/`, `cli/`, examples archive, `init.php`, non-static files under `vendor/`) are not served; security headers X-Frame-Options, X-Content-Type-Options, Referrer-Policy, no X-Powered-By | `tests/specs/hosting-security.spec.js` |
+| `04cf0e89f` | `www/app/helper.php` `login()`, `www/app/system.php` `checkUpdate()` | password checked only with `password_verify()`; a plain-text password from an old database is accepted once and re-hashed; default admin password reminder recognises any hash of it | `tests/specs/login-security.spec.js` |
 
 ## Proposed upstream
 
