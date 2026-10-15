@@ -95,6 +95,9 @@ if ($http == 'https') {
 }
 session_start();
 
+// SquirrelStock: модули из app/sqs/modules (хуки документов, пункты меню, свои страницы) — App\SQS\Modules
+\App\SQS\Modules::load();
+
 
 if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
 

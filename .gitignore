@@ -8,3 +8,6 @@ www/cron.cmd
 www/sitemap.xml
 .env
 dist/
+
+# временные модули тестов (tests/specs/hooks.spec.js)
+www/app/sqs/modules/zz-test-*/
