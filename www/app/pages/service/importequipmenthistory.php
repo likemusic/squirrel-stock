@@ -4,6 +4,7 @@ namespace App\Pages\Service;
 
 use App\Helper as H;
 use App\SQS\EqHistory;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\Form;
@@ -29,6 +30,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $form->add(new File('census'));
         $form->add(new File('journal'));
         $form->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $form->add(new CheckBox('liftperiod', false));
         $form->add(new SubmitButton('check'))->onClick($this, 'onCheck');
         $form->add(new SubmitButton('write'))->onClick($this, 'onWrite');
         $form->write->setVisible(false);
@@ -59,7 +61,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $eh = $this->analyze();
         if ($eh) {
             $this->report->setText($this->reportHtml($eh, null), true);
-            $this->iform->write->setVisible(count($eh->plan) > 0 && $eh->blocked == 0);
+            $this->iform->write->setVisible(count($eh->plan) > 0);
         }
     }
 
@@ -74,7 +76,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
             return;
         }
         try {
-            $res = $eh->apply($store);
+            $res = $eh->apply($store, $this->iform->liftperiod->isChecked());
         } catch (\Throwable $e) {
             $this->setError($e->getMessage());
             return;
@@ -129,6 +131,9 @@ class ImportEquipmentHistory extends \App\Pages\Base
             $h .= '<tr data-stat="' . $k . '"><td>' . __('sqs.eqhist.stat_' . $k) . '</td><td class="text-end">' . $v . '</td></tr>';
         }
         $h .= '</table>';
+        if (count($eh->period)) {
+            $h .= '<p class="text-warning" id="eqh-period">' . self::e(__('sqs.eqhist.period_log', EqHistory::periodParams($eh->period))) . '</p>';
+        }
 
         if (count($eh->missing)) {
             $h .= '<h6>' . __('sqs.eqhist.missing_title') . '</h6><table class="table table-sm w-auto" id="eqh-missing">';

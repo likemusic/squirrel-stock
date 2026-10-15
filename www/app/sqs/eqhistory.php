@@ -869,10 +869,45 @@ class EqHistory
      * Создать документы по плану в хронологическом порядке. Каждое событие — отдельная транзакция; если событие не
      * записалось, следующие события этой единицы пропускаются (ошибка в отчете).
      */
-    public function apply(int $store): array {
-        if ($this->blocked) {
+    public function apply(int $store, bool $liftPeriod = false): array {
+        if ($this->blocked && !$liftPeriod) {
             throw new \Exception(__('sqs.eqhist.actualdate', ['actual' => date('d.m.Y', $this->blocked), 'first' => date('d.m.Y', $this->plan[0]['date'])]));
         }
+        if (!$this->blocked) {
+            return $this->applyEvents($store);
+        }
+        // закрытый период снимается только на время записи: начало периода — на дату самой ранней записи, после — как было
+        $common = \App\System::getOptions('common', true);
+        $had = array_key_exists('actualdate', $common);
+        $was = $common['actualdate'] ?? null;
+        $common['actualdate'] = strtotime(date('Y-m-d', $this->plan[0]['date']));
+        \App\System::setOptions('common', $common);
+        $period = ['was' => $was, 'set' => $common['actualdate']];
+        try {
+            $res = $this->applyEvents($store);
+        } finally {
+            $common = \App\System::getOptions('common', true);
+            if ($had) {
+                $common['actualdate'] = $was;
+            } else {
+                unset($common['actualdate']);
+            }
+            \App\System::setOptions('common', $common);
+            $period['restored'] = \App\System::getOptions('common', true)['actualdate'] ?? null;
+            $this->period = $period;
+            \App\Helper::log(__('sqs.eqhist.period_log', self::periodParams($period)));
+        }
+        return $res;
+    }
+
+    public array $period = [];   // снятие закрытого периода при записи: was, set, restored
+
+    public static function periodParams(array $p): array {
+        $d = fn($v) => $v ? date('d.m.Y', $v) : '-';
+        return ['was' => $d($p['was']), 'set' => $d($p['set']), 'restored' => $d($p['restored'] ?? null)];
+    }
+
+    private function applyEvents(int $store): array {
         $conn = \ZDB\DB::getConnect();
         $res = ['income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'failed' => 0];
         $broken = [];

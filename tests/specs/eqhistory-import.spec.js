@@ -62,12 +62,8 @@ test('импорт истории оборудования: проверка, з
     if (button == 'write') await clickWait(page, '#iform #write');
   };
 
-  // актуальный период начинается позже первого документа импорта — записать нельзя, причина в отчете
+  // актуальный период начинается позже первого документа импорта (как будет у хосписа: история старше)
   await setActual('2025-01-01');
-  await run('check');
-  expect((await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n')).toMatch(/до початку актуального періоду .*01\.01\.2025.* від 05\.05\.2024/);
-  await expect(page.locator('#iform #write')).toHaveCount(0);
-  await setActual('2010-01-01');
 
   // проверка: ничего не записано, план и ошибки с причиной
   await run('check');
@@ -76,8 +72,9 @@ test('импорт истории оборудования: проверка, з
   expect(await stat('income')).toBe(1);      // кровать: только заводской номер
   expect(await stat('return')).toBe(2);      // 1 — возврат; 3 — возврат перед списанием
   expect(await stat('writeoff')).toBe(2);    // 3 — «списан» с датой; 6 — лист «СПИСАНО»
-  expect(await stat('errors')).toBe(5);
+  expect(await stat('errors')).toBe(6);      // 5 по строкам + закрытый период
   const problems = (await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n');
+  expect(problems).toMatch(/до початку актуального періоду .*01\.01\.2025.* від 05\.05\.2024/);
   expect(problems).toMatch(/Дату не розпізнано: весна/);
   expect(problems).toContain(`Інвентарного номера ${inv(99)} немає в базі`);
   expect(problems).toMatch(/Повернення без дати/);
@@ -92,9 +89,20 @@ test('импорт истории оборудования: проверка, з
   expect(qty(inv(2))).toBe(1);
   expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
 
-  // запись
+  // запись без галочки: отказ из-за закрытого периода, ничего не записано
+  await clickWait(page, '#iform #write');
+  expect(await page.locator('.toast-message, .alert-danger').allInnerTexts()).toEqual(expect.arrayContaining([expect.stringMatching(/до початку актуального періоду/)]));
+  expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
+  expect(qty(inv(2))).toBe(1);
+
+  // запись с галочкой: период снят на время записи и возвращен
+  await run('check');
+  await page.locator('#iform #liftperiod').check();
   await clickWait(page, '#iform #write');
   expect(await stat('failed')).toBe(0);
+  expect(await page.locator('#eqh-period').innerText()).toMatch(/був 01\.01\.2025, на час запису 05\.05\.2024, повернуто 01\.01\.2025/);
+  await page.goto('/index.php?p=App/Pages/Options');
+  expect(await page.locator('#business #actualdate').inputValue()).toBe('2025-01-01');
   expect(qty(inv(1))).toBe(1);                       // выдана и возвращена
   expect(contract(cn(1, '25'))).toEqual(['8', 'Поликлиника тестовая', who(1)]);   // закрыт; «кем направлен» — из журнала
   expect(qty(inv(2))).toBe(0);                       // у получателя, договор в работе
