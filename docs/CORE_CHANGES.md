@@ -20,6 +20,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `cdaa5674e` | `www/templates/pages/base.html`, `www/app/pages/base.php`; new `www/assets/js/select2-ru.js`, `www/assets/js/summernote/lang/summernote-ru-RU.js` | `<html lang>`, Select2 language and Summernote table follow the interface language | `tests/specs/i18n-ru.spec.js` |
 | `0f98beb22` | `www/app/util.php` `money2str()`, `www/app/pages/options.php` + template | currency of the amount in words from the settings (`common.money2str`), default hryvnia | `tests/specs/money-words.spec.js` |
 | `db28160cf` | `www/app/entity/doc/document.php` `beforeSave()`/`afterSave()`, `www/app/widgets/docview.php` + template; new `www/app/sqs/docaudit.php`, table `sqs_doclog` | audit log of document edits; rows/date/store/customer of an executed document cannot be changed without cancelling | `tests/specs/doc-audit.spec.js` |
+| `99e5bbe88` | `www/app/pages/register/tasklist.php` + template, `www/templates/pages/timesheet.html` | FullCalendar locale (task list, time sheet) and moment locale (time sheet) follow the interface language; the framework bundle `zippy-bundle-ua.js` is not changed — these pages load their own FullCalendar over it | `tests/specs/i18n-ru.spec.js` |
 
 ## Proposed upstream
 
