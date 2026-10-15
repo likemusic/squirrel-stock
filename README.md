@@ -24,6 +24,7 @@ Local stand (Docker, PHP 8.2 + MariaDB 10.11), code is taken from `www/` as is:
 ```bash
 cd docker && docker compose up -d --build        # http://127.0.0.1:8083, login admin / admin
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d   # mount www/app, templates, assets for live editing
+docker compose -f docker-compose.yml -f docker-compose.offline.yml up -d   # no internet for web and db (offline check)
 docker compose down -v                           # stop and drop the database
 ```
 

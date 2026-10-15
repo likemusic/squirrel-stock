@@ -1,0 +1,28 @@
+# Режим «без интернета»: web и db только во внутренней сети (internal: true — нет маршрута наружу).
+# Порт публикует отдельный прокси, подключённый к обеим сетям.
+# docker compose -f docker-compose.yml -f docker-compose.offline.yml up -d
+# Проверка: docker exec squirrelstock-web-1 curl -m 5 https://zippy.com.ua  → должно упасть
+services:
+  db:
+    networks: [isolated]
+  web:
+    networks: [isolated]
+    ports: !reset []
+  edge-proxy:
+    image: alpine/socat:1.8.0.0
+    command: ["tcp-listen:80,fork,reuseaddr", "tcp-connect:web:80"]
+    depends_on: [web]
+    ports:
+      - "127.0.0.1:${SQS_PORT:-8083}:80"
+    networks: [isolated, edge]
+
+networks:
+  isolated:
+    internal: true
+    ipam:
+      config:
+        - subnet: ${SQS_SUBNET_ISOLATED:-10.251.84.0/24}
+  edge:
+    ipam:
+      config:
+        - subnet: ${SQS_SUBNET_EDGE:-10.251.85.0/24}
