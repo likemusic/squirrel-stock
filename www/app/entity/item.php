@@ -587,7 +587,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
         if (strlen($doctype) > 0 && $doctype != '*' ) {
-            $sql .= " and  document_id in (select document_id from documents_view where  meta_name= '{$doctype}'  )  " ;
+            $sql .= " and  document_id in (select document_id from documents_view where  meta_name= " . $conn->qstr($doctype) . "  )  " ;
         }
      
      
@@ -611,10 +611,10 @@ class Item extends \ZCL\DB\Entity
         $sql = "  select coalesce(sum(partion*qty),0) as p,coalesce(sum(qty),0) as q from  store_stock st  where     st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
-            $sql = $sql . " and st.store_id=" . $store;
+            $sql = $sql . " and st.store_id=" . intval($store);
         }
         if ($emp > 0) {
-            $sql = $sql . " and st.emp_id=" . $emp;
+            $sql = $sql . " and st.emp_id=" . intval($emp);
         }
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
@@ -729,7 +729,7 @@ class Item extends \ZCL\DB\Entity
             $where .= " and store_id = " . $store_id;
         }
         if ($emp > 0) {
-            $where .= " and coalesce(emp_id,0) = " . $emp;
+            $where .= " and coalesce(emp_id,0) = " . intval($emp);
         }
         if (strlen($snumber) > 0) {
             $where .= " and  snumber = " . $conn->qstr($snumber);
@@ -782,7 +782,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
         if ($emp_id > 0) {
             $sql .= " and coalesce(emp_id,0) = " . intval( $emp_id);
@@ -820,7 +820,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
 
 
@@ -844,7 +844,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(snumber,'') as snumber   from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null   and (  sdate is   null  or sdate >=  now()  )   ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
 
         $limit =" limit 0,1";
@@ -867,6 +867,8 @@ class Item extends \ZCL\DB\Entity
     public static function findArrayAC($partname, $store = 0, $cat = 0,$where='') {
 
         $criteria = "  disabled <> 1 ";
+        $store = intval($store);
+        $cat = intval($cat);
         if ($store > 0) {
             $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})";
         }
@@ -915,6 +917,8 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $cat_id
     */
     public static function findBarCode($code, $store_id = 0,$cat_id=0) {
+            $store_id = intval($store_id);
+            $cat_id = intval($cat_id);
             $code0 = ltrim($code, '0');
             $codes = Item::qstr($code) ;
             $code0s = Item::qstr($code0) ;
