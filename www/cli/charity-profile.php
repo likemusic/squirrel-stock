@@ -25,7 +25,7 @@ const KEEP = [
     2 => ['StoreItems', 'ItemActivity', 'Income', 'NoLiq', 'EquipmentWhere', 'EquipmentJournal'],
     3 => ['DocList', 'GIList', 'GRList', 'ItemList'],
     4 => ['CategoryList', 'ItemList', 'StoreList', 'CustomerList', 'ContractList', 'EquipmentUnits'],
-    5 => ['Import', 'Export', 'Backup', 'EquipmentIssue', 'ImportEquipmentHistory'],
+    5 => ['Import', 'Export', 'EquipmentIssue', 'ImportEquipmentHistory'],
 ];
 const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1'];
 

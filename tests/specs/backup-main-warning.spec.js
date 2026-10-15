@@ -4,7 +4,7 @@ const { test, expect } = require('../fixtures');
 const { value } = require('../helpers/db');
 
 test('предупреждение о давней резервной копии на главной', async ({ page }) => {
-  const local = JSON.parse(require('fs').readFileSync(__dirname + '/../../www/lang/uk.json', 'utf8'))['service.backup.place_local'];
+  const local = JSON.parse(require('fs').readFileSync(__dirname + '/../../www/app/sqs/modules/backup/lang/uk.json', 'utf8'))['service.backup.place_local'];
   // время журнала копий пишет PHP по Минску, а now() базы стенда — UTC
   const id = value(`insert into sqs_backuplog (place, createdon, ok, file, message) values ('local', now() + interval 3 hour, 1, 'test.zip', 'тест предупреждения'); select last_insert_id()`);
   // прежние отметки времени удачных копий — вернуть после теста, иначе предупреждение останется для следующих тестов

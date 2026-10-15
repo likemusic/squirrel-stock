@@ -12,10 +12,6 @@ SELECT 2, 'Журнал видачі обладнання', 'EquipmentJournal', 
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'EquipmentJournal');
 
 -- Сервисные страницы
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 5, 'Резервна копія', 'Backup', '', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'Backup');
-
 -- Журнал правок документов (App\SQS\DocAudit): что изменилось при сохранении — было, стало, кто, когда
 CREATE TABLE IF NOT EXISTS sqs_doclog (
   id bigint NOT NULL AUTO_INCREMENT,
@@ -45,20 +41,6 @@ WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'Eq
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 4, 'Одиниці обладнання', 'EquipmentUnits', '', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'EquipmentUnits');
-
--- Журнал автоматических резервных копий (App\SQS\BackupJob, cli/backup.php): попытка по каждому месту — папка, сеть, облако
-CREATE TABLE IF NOT EXISTS sqs_backuplog (
-  id bigint NOT NULL AUTO_INCREMENT,
-  place varchar(20) NOT NULL,
-  createdon datetime NOT NULL,
-  ok tinyint(1) NOT NULL,
-  file varchar(255) NOT NULL DEFAULT '',
-  size bigint NOT NULL DEFAULT 0,
-  seconds int NOT NULL DEFAULT 0,
-  message text,
-  PRIMARY KEY (id),
-  KEY place (place, createdon)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Импорт истории выдачи оборудования из Google-таблиц (App\SQS\EqHistory); что уже импортировано — по ключу события
 -- «вид|договор|единица|дата», чтобы повторный импорт не дублировал
