@@ -48,9 +48,7 @@ class BelowMinimum extends \App\Pages\Base
 
         $where = 'i.disabled <> 1 AND i.minqty > 0';
         if ($cat > 0) {
-            $cats = \App\Entity\Category::load($cat)->getChildren();
-            $cats[] = $cat;
-            $where .= ' AND i.cat_id IN (' . implode(',', array_map('intval', $cats)) . ')';
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         $stockWhere = $store > 0 ? "WHERE store_id = {$store}" : '';
         $sql = "SELECT i.item_id, i.itemname, i.item_code, i.msr, i.minqty, c.cat_name, COALESCE(t.qty, 0) AS qty

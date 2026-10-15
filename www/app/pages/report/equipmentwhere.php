@@ -53,7 +53,7 @@ class EquipmentWhere extends \App\Pages\Base
         $text = mb_strtolower(trim($this->filter->searchtext->getText()));
         $cat = intval($this->filter->cat->getValue());
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         $state = $this->filter->state->getValue();
 

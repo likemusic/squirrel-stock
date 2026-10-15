@@ -67,7 +67,7 @@ class RecipientMonths extends \App\Pages\Base
 
         $where = "m.meta_name IN ('GoodsIssue', 'ReturnIssue') AND d.document_date BETWEEN '{$from}' AND '{$to}' AND d.customer_id > 0";
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         if ($item > 0) {
             $where .= " AND i.item_id = {$item}";

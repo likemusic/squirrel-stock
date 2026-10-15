@@ -61,7 +61,7 @@ class ItemTurnover extends \App\Pages\Base
 
         $where = '1 = 1';
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         if ($cust > 0) {
             $where .= " AND d.customer_id = {$cust} AND m.meta_name IN ('" . self::ISSUE . "', '" . self::RETURN . "')";

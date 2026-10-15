@@ -53,7 +53,7 @@ class IssueAct extends \App\Pages\Base
 
         $where = "m.meta_name IN ('GoodsIssue', 'ReturnIssue') AND d.document_date BETWEEN '{$from}' AND '{$to}'";
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         // возврат относится к колонке выдачи, на основании которой создан
         $sql = "SELECT COALESCE(base.document_date, d.document_date) AS issue_date,
@@ -101,7 +101,7 @@ class IssueAct extends \App\Pages\Base
         }
         ksort($cols);
         if ($this->filter->allitems->isChecked()) {
-            $iwhere = 'disabled <> 1' . ($cat > 0 ? " AND cat_id = {$cat}" : '');
+            $iwhere = 'disabled <> 1' . ($cat > 0 ? ' AND ' . \App\SQS\Categories::sqlIn($cat, 'cat_id') : '');
             foreach (\App\Entity\Item::find($iwhere) as $item) {
                 $names[$item->item_id] = $names[$item->item_id] ?? $item->itemname;
             }
