@@ -12,7 +12,8 @@ namespace App\SQS;
  *   'register' => function () { Hooks::on(...); } — обработчики событий документа (App\SQS\Hooks).
  * Страницы модуля: <модуль>/pages/<тип>/<имя>.php, шаблоны: <модуль>/templates/pages/<тип>/<имя>.html (имена в нижнем регистре).
  * Выключить модуль — удалить папку или переименовать с точкой в начале (.имя): его пункты меню выключаются (disabled = 1).
- * Загрузка — из init.php на каждый запрос: обход папок и чтение одного значения keyval; metadata меняется только при смене набора пунктов.
+ * Загрузка — из init.php на каждый запрос: обход папок; база читается один раз за сессию и при смене набора пунктов меню,
+ * metadata меняется только при смене набора.
  * Подробно — docs/MODULES.md.
  */
 class Modules
@@ -97,8 +98,12 @@ class Modules
         }
         ksort($items);
         // меню кэшируется в сессии (App\Pages\Base): при смене пунктов модулей кэш этой сессии сбрасывается
+        // в этой сессии набор уже сверен с базой — обычный запрос обходится без обращения к базе
         $fp = md5(implode(',', array_keys($items)));
-        if (session_status() == PHP_SESSION_ACTIVE && ($_SESSION['sqs_modules_fp'] ?? null) !== $fp) {
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            if (($_SESSION['sqs_modules_fp'] ?? null) === $fp) {
+                return;
+            }
             \App\Session::getSession()->menu = [];
             $_SESSION['sqs_modules_fp'] = $fp;
         }
