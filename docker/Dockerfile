@@ -15,9 +15,12 @@ WORKDIR /var/www/html
 # зависимости отдельным слоем: правка кода не запускает composer заново
 COPY www/composer.json www/composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --no-autoloader --no-scripts
+# rclone — копия в облако (App\SQS\BackupJob); отдельным слоем, после тяжелых слоев: расширения PHP и composer берутся из кэша
+RUN apt-get update && apt-get install -y --no-install-recommends rclone ca-certificates && rm -rf /var/lib/apt/lists/*
+
 COPY www/ ./
 RUN composer dump-autoload --no-dev --optimize \
- && mkdir -p upload logs \
- && chown -R www-data:www-data /var/www/html
+ && mkdir -p upload logs /var/www/squirrelstock-backup \
+ && chown -R www-data:www-data /var/www/html /var/www/squirrelstock-backup
 
 COPY docker/php.ini /usr/local/etc/php/conf.d/squirrelstock.ini

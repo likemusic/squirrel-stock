@@ -22,9 +22,10 @@ class Backup
     }
 
     /**
-     * Создать архив; возвращает путь к временному zip-файлу
+     * Создать архив; возвращает путь к временному zip-файлу.
+     * С паролем — каждый файл архива зашифрован AES-256 (открывается 7-Zip, WinRAR и этой же страницей восстановления).
      */
-    public function create(string $uploadDir): string {
+    public function create(string $uploadDir, string $password = ''): string {
         $sql = tempnam(sys_get_temp_dir(), 'sqs');
         $this->dump($sql);
         $zipFile = tempnam(sys_get_temp_dir(), 'sqs') . '.zip';
@@ -37,7 +38,14 @@ class Backup
                 $zip->addFile($f->getPathname(), 'upload/' . str_replace('\\', '/', substr($f->getPathname(), strlen(rtrim($uploadDir, '/\\')) + 1)));
             }
         }
-        $zip->close();
+        if ($password !== '') {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $zip->setEncryptionIndex($i, \ZipArchive::EM_AES_256, $password);
+            }
+        }
+        if (!$zip->close()) {
+            throw new \Exception('Не удалось записать архив ' . $zipFile);
+        }
         unlink($sql);
 
         return $zipFile;
@@ -112,16 +120,23 @@ class Backup
     }
 
     /**
-     * Восстановить из zip (database.sql + upload/) или из .sql; возвращает число выполненных операторов
+     * Восстановить из zip (database.sql + upload/) или из .sql; возвращает число выполненных операторов.
+     * $password — для зашифрованного архива (копия в облаке).
      */
-    public function restore(string $file, string $uploadDir): int {
+    public function restore(string $file, string $uploadDir, string $password = ''): int {
         $sqlFile = $file;
         $zip = new \ZipArchive();
         $isZip = $zip->open($file) === true;
         if ($isZip) {
+            if ($password !== '') {
+                $zip->setPassword($password);
+            }
+            if ($zip->locateName(self::SQL_NAME) === false) {
+                throw new \Exception('В архиве нет ' . self::SQL_NAME);
+            }
             $sql = $zip->getFromName(self::SQL_NAME);
             if ($sql === false) {
-                throw new \Exception('В архиве нет ' . self::SQL_NAME);
+                throw new \Exception(__('service.backup.bad_password'));
             }
             $sqlFile = tempnam(sys_get_temp_dir(), 'sqs');
             file_put_contents($sqlFile, $sql);
