@@ -7,3 +7,4 @@ www/cron.cmd
  
 www/sitemap.xml
 .env
+dist/
