@@ -1,7 +1,12 @@
 // При выдаче товара с сериями форма должна подставлять партию с БЛИЖАЙШИМ сроком годности
 // (иначе первыми истекают оставшиеся на складе). ZIPPY_GAPS п. 4.
+// Нужен режим «серии со сроком годности» (usesnumber = 2); хоспису он сейчас не нужен, поэтому режим
+// включается только на этот тест.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, pickAuto, clickWait } = require('../helpers/zippy');
+const { createItem, createCustomer, createDoc, pickAuto, clickWait, setUsesnumber, USESNUMBER_HOSPICE } = require('../helpers/zippy');
+
+test.beforeEach(async ({ page }) => setUsesnumber(page, 2));
+test.afterEach(async ({ page }) => setUsesnumber(page, USESNUMBER_HOSPICE));
 
 test('выдача подставляет партию с ближайшим сроком годности', async ({ page, uniq }) => {
   const code = 'BX-' + uniq;

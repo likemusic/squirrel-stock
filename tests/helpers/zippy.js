@@ -3,6 +3,10 @@
 
 const LOCAL = ['127.0.0.1', 'localhost'];
 
+// Режим учёта серий (настройка usesnumber): 2 — серии со сроком годности, 3 — серийные номера изделий.
+// Хоспису сроки годности не нужны (15.10.2026), основной режим тестов — 3.
+const USESNUMBER_HOSPICE = '3';
+
 // Все запросы не к стенду обрываются: так ловятся зависимости от интернета (CDN, шрифты, счётчики)
 async function blockExternal(context) {
   await context.route(u => !LOCAL.includes(new URL(u).hostname), r => r.abort());
@@ -65,7 +69,8 @@ async function createCustomer(page, { name, type = 1 }) {
 
 // Документ через форму и проведение.
 // type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem
-// d: { date, customer, payment, notes, rows: [{ code, qty, price, sn, sdate }] }
+// d: { date, customer, payment, notes, rows: [{ code, qty, price, sn, sdate }], dblclick }
+// dblclick — нажать «Провести» двойным щелчком (как делают торопливые пользователи)
 // Возвращает номер, сообщения и то, что форма сама подставила в строки (цена, партия).
 async function createDoc(page, type, d) {
   await page.goto('/index.php?p=App/Pages/Doc/' + type);
@@ -96,7 +101,11 @@ async function createDoc(page, type, d) {
   const nrows = await page.locator('#docform a[id^=delete_]:visible').count();
   const uniq = new Set(d.rows.map(r => r.code + '|' + (r.sn || ''))).size;
   if (nrows !== uniq) throw new Error(`${type} ${number}: строк ${nrows}, ожидалось ${uniq}: ${(await messages(page)).join(' | ')}`);
-  await clickWait(page, '#execdoc');
+  if (d.dblclick) {
+    await page.locator('#execdoc').dblclick();
+    await page.waitForTimeout(2000); // оба запроса и переход после проведения
+    await page.waitForLoadState('networkidle');
+  } else await clickWait(page, '#execdoc');
   const msgs = await messages(page);
   if (await page.locator('#docform #execdoc:visible').count()) throw new Error(`${type} ${number}: не проведён: ${msgs.join(' | ')}`);
   return { number, msgs, suggested };
@@ -122,8 +131,14 @@ async function runReport(page, path, f = {}) {
   await page.waitForTimeout(600);
 }
 
+async function setUsesnumber(page, value) {
+  await page.goto('/index.php?p=App/Pages/Options');
+  await page.locator('#business #usesnumber').selectOption(String(value));
+  await clickWait(page, '#business button[type=submit]');
+}
+
 async function bodyText(page) {
   return (await page.locator('body').innerText()).replace(/\s+/g, ' ');
 }
 
-module.exports = { blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };
+module.exports = { USESNUMBER_HOSPICE, setUsesnumber, blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };
