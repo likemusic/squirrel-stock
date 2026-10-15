@@ -4,16 +4,100 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-12 col-md-8 col-xl-6">
+            <div class="col-12 col-xl-9">
                 <h3>{{#t}}service.backup.title{{/t}}</h3>
+                {{#stale}}
+                <div class="alert alert-danger fs-5" id="backup-stale"><i class="fa fa-exclamation-triangle me-2"></i>{{stale}}</div>
+                {{/stale}}
                 <p class="text-muted">{{#t}}service.backup.help{{/t}}</p>
                 <form zippy="bform">
                     <input zippy="create" type="submit" class="btn btn-primary" value="{{#t}}service.backup.create{{/t}}">
                 </form>
+
+                <h4 class="mt-4">{{#t}}service.backup.auto_title{{/t}}</h4>
+                <p class="text-muted">{{#t}}service.backup.auto_help{{/t}}</p>
+                <table class="table table-sm table-bordered" id="backup-status">
+                    <tr>
+                        <th>{{#t}}service.backup.place{{/t}}</th>
+                        <th>{{#t}}service.backup.target{{/t}}</th>
+                        <th>{{#t}}service.backup.last_ok{{/t}}</th>
+                        <th>{{#t}}service.backup.last_error{{/t}}</th>
+                    </tr>
+                    {{#places}}
+                    <tr data-place="{{place}}" {{#stale}}class="table-danger"{{/stale}}>
+                        <td>{{name}}</td>
+                        <td>{{#enabled}}{{target}}{{/enabled}}{{^enabled}}<span class="text-muted">{{#t}}service.backup.not_set{{/t}}</span>{{/enabled}}</td>
+                        <td>{{#enabled}}{{last_ok}}{{/enabled}}</td>
+                        <td class="text-danger">{{error}}</td>
+                    </tr>
+                    {{/places}}
+                </table>
+
+                <form zippy="sform">
+                    <div class="mb-2">
+                        <label class="form-label" for="local">{{#t}}service.backup.place_local{{/t}}</label>
+                        <input zippy="local" class="form-control" type="text">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="network">{{#t}}service.backup.place_network{{/t}}</label>
+                        <input zippy="network" class="form-control" type="text" placeholder="\\server\share\squirrelstock">
+                        <small class="text-muted">{{#t}}service.backup.network_help{{/t}}</small>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="cloud">{{#t}}service.backup.place_cloud{{/t}}</label>
+                        <input zippy="cloud" class="form-control" type="text" placeholder="yandex:squirrelstock">
+                        <small class="text-muted">{{#t}}service.backup.cloud_help{{/t}}</small>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label" for="rclone">{{#t}}service.backup.rclone{{/t}}</label>
+                            <input zippy="rclone" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="rclone_conf">{{#t}}service.backup.rclone_conf{{/t}}</label>
+                            <input zippy="rclone_conf" class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="password">{{#t}}service.backup.password{{/t}}</label>
+                        <input zippy="password" class="form-control" type="password" autocomplete="new-password" placeholder="{{#haspassword}}{{#t}}service.backup.password_set{{/t}}{{/haspassword}}">
+                        <small class="text-danger">{{#t}}service.backup.password_warning{{/t}}</small>
+                        {{#cloudnopass}}<div class="alert alert-warning mt-1 mb-0">{{#t}}service.backup.cloud_no_password{{/t}}</div>{{/cloudnopass}}
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="keep">{{#t}}service.backup.keep{{/t}}</label>
+                        <input zippy="keep" class="form-control" type="number" min="1" style="width: 120px">
+                    </div>
+                    <input zippy="save" type="submit" class="btn btn-primary me-2" value="{{#t}}common.zberehty{{/t}}">
+                    <input zippy="runnow" type="submit" class="btn btn-outline-primary" value="{{#t}}service.backup.run_now{{/t}}">
+                </form>
+                <div class="mt-3">
+                    <p class="mb-1">{{#t}}service.backup.schedule_help{{/t}}</p>
+                    <p class="mb-1"><b>{{schedule_os}}</b>:</p>
+                    <pre class="bg-light p-2" style="white-space: pre-wrap; word-break: break-all;"><code id="schedule-cmd">{{schedule_cmd}}</code></pre>
+                </div>
+
+                <h4 class="mt-4">{{#t}}service.backup.usb_title{{/t}}</h4>
+                <form zippy="uform">
+                    <div class="row g-2 align-items-end">
+                        <div class="col">
+                            <label class="form-label" for="usbpath">{{#t}}service.backup.usb_path{{/t}}</label>
+                            <input zippy="usbpath" class="form-control" type="text" placeholder="E:\">
+                        </div>
+                        <div class="col-auto">
+                            <input zippy="copyto" type="submit" class="btn btn-outline-primary" value="{{#t}}service.backup.usb_copy{{/t}}">
+                        </div>
+                    </div>
+                </form>
+
                 <h4 class="mt-4">{{#t}}service.backup.restore_title{{/t}}</h4>
                 <form zippy="rform" enctype="multipart/form-data">
                     <div class="mb-2">
                         <input type="file" zippy="rfile" class="form-control" accept=".zip,.sql">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="rpassword">{{#t}}service.backup.restore_password{{/t}}</label>
+                        <input zippy="rpassword" class="form-control" type="password" autocomplete="off">
                     </div>
                     <div class="form-check mb-2">
                         <input zippy="confirm" type="checkbox" class="form-check-input">

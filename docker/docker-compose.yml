@@ -42,11 +42,13 @@ services:
       - ./config.php:/var/www/html/config/config.php:ro
       - uploads:/var/www/html/upload
       - logs:/var/www/html/logs
+      - backups:/var/www/squirrelstock-backup   # копии App\SQS\BackupJob (папка этого компьютера по умолчанию)
 
 volumes:
   dbdata:
   uploads:
   logs:
+  backups:
 
 # явная подсеть: стандартные пулы Docker на машине разработчика исчерпаны многими стендами
 networks:
