@@ -14,7 +14,7 @@ test('меню профиля для благотворительной орга
   await login(page);
   await page.goto('/');
   const hrefs = await page.locator('a[href*="index.php?p=App/Pages/"]').evaluateAll(as => as.map(a => a.getAttribute('href')));
-  for (const keep of ['Doc/GoodsIssue', 'Doc/GoodsReceipt', 'Doc/ReturnIssue', 'Doc/OutcomeItem', 'Doc/MoveItem', 'Report/IssueAct', 'Report/EquipmentWhere', 'Report/BelowMinimum', 'Reference/ContractList', 'Service/Backup']) {
+  for (const keep of ['Doc/GoodsIssue', 'Doc/GoodsReceipt', 'Doc/ReturnIssue', 'Doc/OutcomeItem', 'Doc/MoveItem', 'Report/IssueAct', 'Report/EquipmentWhere', 'Report/BelowMinimum', 'Service/ConsumablesIssue', 'Reference/ContractList', 'Service/Backup']) {
     expect(hrefs.some(h => h.includes(keep)), keep).toBe(true);
   }
   for (const off of ['Doc/POSCheck', 'Doc/Invoice', 'Doc/IncomeMoney', 'Doc/CalcSalary', 'Register/PayList']) {

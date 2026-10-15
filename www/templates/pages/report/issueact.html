@@ -3,6 +3,10 @@
         <title>{{#t}}report.issueact.title{{/t}}</title>
     </head>
     <body>
+        <style>
+            /* SquirrelStock: первая колонка (наименование, получатель) остается на месте при прокрутке широкой таблицы — на телефоне */
+            .sqs-sticky table tr > :first-child:not([colspan]) { position: sticky; left: 0; background: var(--bs-body-bg, #fff); z-index: 1; }
+        </style>
         <div class="row">
             <div class="col-12">
                 <h3>{{#t}}report.issueact.title{{/t}}</h3>
@@ -41,7 +45,7 @@
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
                         <a href="/index.php?p=App/Pages/ShowReport&arg=xls/issueact" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
                     </div>
-                    <div class="table-responsive mt-2" zippy="preview">
+                    <div class="table-responsive mt-2 sqs-sticky" zippy="preview">
                     </div>
                 </div>
             </div>

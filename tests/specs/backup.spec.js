@@ -28,7 +28,7 @@ test('копия и восстановление', async ({ page, uniq }, testIn
   await page.goto('/index.php?p=App/Pages/Service/Backup');
   await page.locator('#rform #rfile').setInputFiles(file);
   await clickWait(page, '#rform #restore');
-  await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/Підтвердіть/);   // без подтверждения не восстанавливает
+  await expect(page.locator('.toast-message, .alert-danger:not(#backup-stale)').first()).toContainText(/Підтвердіть/);   // без подтверждения не восстанавливает
   await page.locator('#rform #rfile').setInputFiles(file);
   await page.locator('#rform #confirm').setChecked(true);
   await clickWait(page, '#rform #restore');
