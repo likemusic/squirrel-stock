@@ -534,6 +534,7 @@ class Document extends \ZCL\DB\Entity
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
+                    \App\SQS\Hooks::run('beforeCancel', $this);   // SquirrelStock: до любых записей; исключение отменяет отмену
                     $this->headerdata['timeentry'] = 0;
                     $this->Cancel();
                 }
@@ -545,6 +546,7 @@ class Document extends \ZCL\DB\Entity
                         if ($this->isExecuted()) {
                             throw new \Exception(__('doc.document.dokument_vzhe_provedenyi_shchob_provesty', ['document_number' => $this->document_number]));
                         }
+                        \App\SQS\Hooks::run('beforeExecute', $this);   // SquirrelStock: до любых записей; исключение отменяет проведение
                         $this->Execute();
                     }
 
@@ -560,6 +562,10 @@ class Document extends \ZCL\DB\Entity
 
         $this->save();
         $this->insertLog($state);
+        // SquirrelStock: после проведения или отмены — один раз, при настоящей смене состояния
+        if ($oldstate != $state && $onlystate == false && in_array($state, [self::STATE_EXECUTED, self::STATE_CANCELED])) {
+            \App\SQS\Hooks::run($state == self::STATE_EXECUTED ? 'afterExecute' : 'afterCancel', $this);
+        }
         if ($oldstate != $state) {
                         
             
