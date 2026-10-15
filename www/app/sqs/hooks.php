@@ -66,7 +66,6 @@ class Hooks
         self::$booted = true;
         self::on('beforeSave', '*', [DocAudit::class, 'beforeSave']);
         self::on('afterSave', '*', [DocAudit::class, 'afterSave']);
-        self::listen('mainBlocks', [EquipmentDue::class, 'mainBlock']);   // до переноса в модули
         self::listen('itemSaved', [Item1C::class, 'itemSaved']);
     }
 }

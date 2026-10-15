@@ -1,17 +1,9 @@
 -- SquirrelStock: дополнения форка к базе Zippy (db/db.sql). Выполнять после db.sql; повторный запуск безопасен.
 -- Docker-стенд подключает файл автоматически при создании базы; на существующей базе:
 --   mariadb -u<пользователь> -p <база> < db/squirrelstock.sql
+-- Здесь — только таблицы платформы (вход, журнал правок, названия из 1С). Таблицы и пункты меню модулей
+-- (www/app/sqs/modules/<имя>/schema.sql и module.php) создаются самой программой при первом запросе (docs/MODULES.md).
 
--- Отчеты в меню «Звіти → Склад» (названия по-украински, как у остальных пунктов; на русский — cli/localize-db.php ru)
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 2, 'Обладнання: де зараз', 'EquipmentWhere', 'Склад', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'EquipmentWhere');
-
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 2, 'Журнал видачі обладнання', 'EquipmentJournal', 'Склад', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'EquipmentJournal');
-
--- Сервисные страницы
 -- Журнал правок документов (App\SQS\DocAudit): что изменилось при сохранении — было, стало, кто, когда
 CREATE TABLE IF NOT EXISTS sqs_doclog (
   id bigint NOT NULL AUTO_INCREMENT,
@@ -21,38 +13,6 @@ CREATE TABLE IF NOT EXISTS sqs_doclog (
   changes text NOT NULL,
   PRIMARY KEY (id),
   KEY document_id (document_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Единицы оборудования (App\SQS\Units): заводской номер к инвентарному (серийному номеру Zippy, store_stock.snumber)
-CREATE TABLE IF NOT EXISTS sqs_unit (
-  item_id int NOT NULL,
-  snumber varchar(255) NOT NULL,
-  factory_no varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (item_id, snumber),
-  KEY factory_no (factory_no)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Выдача оборудования одной формой: договор + расходная накладная
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 5, 'Видача обладнання за договором', 'EquipmentIssue', '', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'EquipmentIssue');
-
--- Справочник единиц оборудования: инвентарный и заводской номер, где сейчас
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 4, 'Одиниці обладнання', 'EquipmentUnits', '', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'EquipmentUnits');
-
--- Импорт истории выдачи оборудования из Google-таблиц (App\SQS\EqHistory); что уже импортировано — по ключу события
--- «вид|договор|единица|дата», чтобы повторный импорт не дублировал
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
-SELECT 5, 'Імпорт історії видачі обладнання', 'ImportEquipmentHistory', '', 0 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'ImportEquipmentHistory');
-
-CREATE TABLE IF NOT EXISTS sqs_eqhistory (
-  eventkey varchar(255) NOT NULL,
-  document_id int NOT NULL,
-  createdon datetime NOT NULL,
-  PRIMARY KEY (eventkey)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Позиции из 1С (App\SQS\Item1C): название, как в 1С (печатается в акте списания), и цена за единицу на последнем импорте
