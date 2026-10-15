@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>{{#t}}service.import1c.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                <h3>{{#t}}service.import1c.title{{/t}}</h3>
+                <p class="text-muted">{{#t}}service.import1c.help{{/t}}</p>
+                <form zippy="iform" enctype="multipart/form-data">
+                    <div class="mb-2">
+                        <label class="form-label" for="filename">{{#t}}common.fail_importu{{/t}}</label>
+                        <input type="file" zippy="filename" class="form-control" accept=".xls,.xlsx">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="store">{{#t}}common.sklad{{/t}}</label>
+                        <select zippy="store" class="form-select"></select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="date">{{#t}}common.data_dokumenta{{/t}}</label>
+                        <input zippy="date" class="form-control" type="text">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="cat">{{#t}}service.import1c.new_items_cat{{/t}}</label>
+                        <select zippy="cat" class="form-select"></select>
+                    </div>
+                    <input zippy="import" type="submit" class="btn btn-primary" value="{{#t}}common.importuvaty{{/t}}">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

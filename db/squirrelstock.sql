@@ -22,3 +22,8 @@ WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'Eq
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 2, 'Журнал видачі обладнання', 'EquipmentJournal', 'Склад', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'EquipmentJournal');
+
+-- Сервисные страницы
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 5, 'Імпорт відомості 1С', 'Import1C', '', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'Import1C');
