@@ -120,9 +120,11 @@ class EquipmentWhere extends \App\Pages\Base
             if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['snumber'] . ' ' . $row['customer']), $text)) {
                 continue;
             }
+            $row['order'] = ['out' => 0, 'store' => 1, 'off' => 2][$kind];
             $detail[] = $row;
         }
-        usort($detail, fn($a, $b) => [$a['where'], $a['customer'], $a['itemname'], $a['snumber']] <=> [$b['where'], $b['customer'], $b['itemname'], $b['snumber']]);
+        // сначала выданное (у кого что), затем склады, затем списанное
+        usort($detail, fn($a, $b) => [$a['order'], $a['where'], $a['customer'], $a['itemname'], $a['snumber']] <=> [$b['order'], $b['where'], $b['customer'], $b['itemname'], $b['snumber']]);
 
         $report = new \App\Report('report/equipmentwhere.tpl');
         return $report->generate(['_detail' => $detail, 'cnt' => count($detail), 'date' => H::fd(time())]);
