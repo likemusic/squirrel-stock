@@ -30,6 +30,9 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-simplexml": "*"
+  },
+  "scripts": {
+    "post-autoload-dump": ["@php cli/patch-vendor.php"]
   }
 }
            
