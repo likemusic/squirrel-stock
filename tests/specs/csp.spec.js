@@ -8,7 +8,11 @@ const { test, expect } = require('../fixtures');
 const { clickWait } = require('../helpers/zippy');
 
 const KEEP = [...fs.readFileSync(path.join(__dirname, '../../www/cli/charity-profile.php'), 'utf8')
-  .match(/const KEEP = \[([\s\S]*?)\];/)[1].matchAll(/'([A-Za-z0-9]+)'/g)].map(m => m[1]);
+  .match(/const KEEP = \[([\s\S]*?)\];/)[1].matchAll(/'([A-Za-z0-9]+)'/g)].map(m => m[1])
+  // пункты меню модулей профиль не выключает (cli/modules-menu.php): страницы из 'menu' в module.php включенных модулей
+  .concat(fs.readdirSync(path.join(__dirname, '../../www/app/sqs/modules')).filter(d => d[0] != '.')
+    .flatMap(d => [...fs.readFileSync(path.join(__dirname, '../../www/app/sqs/modules', d, 'module.php'), 'utf8')
+      .matchAll(/\[\d+, '([A-Za-z0-9]+)'/g)].map(m => m[1])));
 
 // нарушения политики: событие securitypolicyviolation в странице и сообщения консоли про Content Security Policy
 async function watch(page) {

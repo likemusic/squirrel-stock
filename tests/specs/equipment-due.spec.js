@@ -3,7 +3,8 @@
 const { test, expect } = require('../fixtures');
 const { createItem, createDoc, pickAuto, clickWait } = require('../helpers/zippy');
 
-const day = n => new Date(Date.now() + n * 86400000).toISOString().slice(0, 10);
+// дата по местному времени (стенд — Europe/Minsk): после полуночи по UTC еще вчерашний день
+const day = n => new Date(Date.now() + n * 86400000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
 test('напоминание о сроке пользования на главной', async ({ page, uniq }) => {
   const code = 'ED-' + uniq, name = 'Кровать ' + uniq;
