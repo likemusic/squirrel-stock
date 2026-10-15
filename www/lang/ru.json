@@ -3090,6 +3090,7 @@
     "report.recipientmonths.mode_qty": "Количество единиц",
     "report.recipientmonths.recipient": "Получатель",
     "report.recipientmonths.recipients_in_month": "Получателей в месяце",
+    "report.recipientmonths.tag": "Тег получателя",
     "report.recipientmonths.title": "Получатели по месяцам",
     "report.returnbayed.tovary_povernennia_po_kotrym_bilshe": "Товары, возвраты по которым больше 1%",
     "report.salaryrep.zvit_bazuietsia_na_dokumentakh_narakhuva": "Отчет строится по документам «Начисление зарплаты» и «Выплата зарплаты»",

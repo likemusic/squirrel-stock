@@ -2,6 +2,7 @@
 // с отбором по категории или позиции. ZIPPY_GAPS п. 15.
 const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, clickWait, pickAuto } = require('../helpers/zippy');
+const { query, value, esc } = require('../helpers/db');
 
 test('получатель × месяц: отметки и количества, отбор по позиции', async ({ page, uniq }) => {
   const a = 'RM-' + uniq + '-A', b = 'RM-' + uniq + '-B';
@@ -42,4 +43,22 @@ test('получатель × месяц: отметки и количества
   t = await run('mark', 'Позиция ' + b);   // отбор по позиции: первого получателя нет
   expect(t.r1).toBeNull();
   expect(t.r2.slice(1, 4).map(s => s.trim())).toEqual(['', '', 'х']);
+
+  // признак получателя — тег контрагента; с флажком «все контрагенты» видны и помеченные без выдач
+  const r3 = 'Получатель ' + uniq + ' три', tag = 'гастростома-' + uniq;
+  await createCustomer(page, { name: r3, type: 1 });
+  for (const who of [r2, r3]) {
+    const id = value(`select customer_id from customers where customer_name = '${esc(who)}'`);
+    query(`insert into taglist (tag_name, tag_type, item_id) values ('${esc(tag)}', 1, ${id})`);
+  }
+  await page.goto('/index.php?p=App/Pages/Report/RecipientMonths');
+  await page.locator('#filter #from').fill('2026-06-01');
+  await page.locator('#filter #to').fill('2026-08-31');
+  await page.locator('#filter #ctag').selectOption(tag);
+  await page.locator('#filter #allcust').setChecked(true);
+  await clickWait(page, '#filter #onreport');
+  const text = await page.locator('#preview table').innerText();
+  expect(text).toContain(r2);
+  expect(text).toContain(r3);
+  expect(text).not.toContain(r1);
 });

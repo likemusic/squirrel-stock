@@ -3616,6 +3616,7 @@
     "report.recipientmonths.mode_qty": "Кількість одиниць",
     "report.recipientmonths.recipient": "Отримувач",
     "report.recipientmonths.recipients_in_month": "Отримувачів у місяці",
+    "report.recipientmonths.tag": "Тег отримувача",
     "report.recipientmonths.title": "Отримувачі по місяцях",
     "report.returnbayed.tovary_povernennia_po_kotrym_bilshe": "Товари, повернення по котрим більше 1%",
     "report.salaryrep.zvit_bazuietsia_na_dokumentakh_narakhuva": "Звіт базується на документах Нарахування зарплати та Виплата зарплати",

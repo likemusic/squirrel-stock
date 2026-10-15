@@ -14,7 +14,8 @@ use Zippy\Html\Panel;
 
 /**
  * SquirrelStock: «Получатель × месяц» — кто в каком месяце получал (по расходным накладным за вычетом возвратов).
- * В ячейке отметка «х», количество единиц или число выдач. Отбор по категории или позиции (например, гастростомы).
+ * В ячейке отметка «х», количество единиц или число выдач. Отбор по категории или позиции (например, гастростомы)
+ * и по тегу получателя (признаки получателей — теги контрагента: «подопечный», «снят с опеки», «гастростома»...).
  */
 class RecipientMonths extends \App\Pages\Base
 {
@@ -29,6 +30,8 @@ class RecipientMonths extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('cat', [0 => __('common.vsi')] + \App\Entity\Category::getList(true), 0));
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
+        $tags = \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER);
+        $this->filter->add(new DropDownChoice('ctag', ['' => __('common.vsi')] + array_combine($tags, $tags), ''));
         $this->filter->add(new DropDownChoice('mode', [
             'mark' => __('report.recipientmonths.mode_mark'),
             'qty'  => __('report.recipientmonths.mode_qty'),
@@ -59,6 +62,8 @@ class RecipientMonths extends \App\Pages\Base
         $cat = intval($this->filter->cat->getValue());
         $item = intval($this->filter->item->getKey());
         $mode = $this->filter->mode->getValue();
+        $tag = (string)$this->filter->ctag->getValue();
+        $tagwhere = $tag === '' ? '' : ' AND {col} IN (SELECT item_id FROM taglist WHERE tag_type = ' . \App\Entity\Tag::TYPE_CUSTOMER . ' AND tag_name = ' . $conn->qstr($tag) . ')';
 
         $where = "m.meta_name IN ('GoodsIssue', 'ReturnIssue') AND d.document_date BETWEEN '{$from}' AND '{$to}' AND d.customer_id > 0";
         if ($cat > 0) {
@@ -67,6 +72,7 @@ class RecipientMonths extends \App\Pages\Base
         if ($item > 0) {
             $where .= " AND i.item_id = {$item}";
         }
+        $where .= str_replace('{col}', 'd.customer_id', $tagwhere);
         // возврат идет в месяц выдачи, на основании которой создан; число выдач — по расходным накладным
         $sql = "SELECT d.customer_id, DATE_FORMAT(COALESCE(base.document_date, d.document_date), '%Y-%m') AS ym,
                        SUM(-e.quantity) AS qty,
@@ -91,7 +97,7 @@ class RecipientMonths extends \App\Pages\Base
         }
         $names = [];
         if ($this->filter->allcust->isChecked()) {
-            foreach (\App\Entity\Customer::find('status = 0') as $c) {
+            foreach (\App\Entity\Customer::find('status = 0' . str_replace('{col}', 'customer_id', $tagwhere)) as $c) {
                 $names[$c->customer_id] = $c->customer_name;
             }
         }
@@ -121,7 +127,7 @@ class RecipientMonths extends \App\Pages\Base
         $report = new \App\Report('report/recipientmonths.tpl');
         return $report->generate([
             'period'  => \App\Helper::fd(strtotime($from)) . ' - ' . \App\Helper::fd(strtotime($to)),
-            'filter'  => $item > 0 ? $this->filter->item->getText() : ($cat > 0 ? $this->filter->cat->getValueName() : ''),
+            'filter'  => trim(($item > 0 ? $this->filter->item->getText() : ($cat > 0 ? $this->filter->cat->getValueName() : '')) . ($tag !== '' ? ' #' . $tag : '')),
             'months'  => array_map(fn($m) => ['m' => $m], array_values($months)),
             'rows'    => $rows,
             'totals'  => array_map(fn($n) => ['n' => $n], array_values($coltotal)),
