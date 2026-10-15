@@ -78,6 +78,9 @@ class Translator
         $list = [];
         foreach (glob(self::dir() . '*.json') as $file) {
             $code = basename($file, '.json');
+            if (!self::isAvailable($code)) {   // служебные файлы, например quoted-keys.json
+                continue;
+            }
             $list[$code] = self::dict($code)['lang.name'] ?? $code;
         }
         ksort($list);
