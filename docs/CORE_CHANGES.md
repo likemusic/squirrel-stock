@@ -25,6 +25,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `9cf10faec` | `www/assets/css/app.css` (end of file) | below 576 px the document button row (`d-flex justify-content-end`, 34 templates in `pages/doc/`) wraps; before: "Cancel" ran off the left edge of a phone screen | `tests/specs/mobile.spec.js` |
 | `107c25468` | `www/assets/css/app.css` (end of file) | below 768 px the opened sidebar pushes the page without shrinking it (`.main` min-width, `.wrapper` overflow-x hidden); before: the page shrank to ~60 px | `tests/specs/mobile.spec.js` |
 | `2352be760` | `www/assets/css/app.css` (end of file) | `#sidebar.collapsed { box-shadow: none }`: no grey band on the left edge when the menu is hidden | `tests/specs/mobile.spec.js` |
+| `9e0f28a35` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | below 768 px secondary columns hidden (`d-none d-md-table-cell`), row actions visible without horizontal scroll; desktop unchanged | `tests/specs/mobile.spec.js` |
 
 ## Proposed upstream
 
