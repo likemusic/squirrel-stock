@@ -18,3 +18,4 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `73a2d5bf9`, `8f54c4b8b` | `www/app/translator.php` | no recursion while the user is loaded; language list only from language dictionaries | `tests/specs/i18n.spec.js` |
 | `40400c70e` | 61 templates (automatic) | Ukrainian strings in template scripts (confirm/alert/toastr) and help popovers replaced with keys | `tests/specs/i18n-ru.spec.js` |
 | `cdaa5674e` | `www/templates/pages/base.html`, `www/app/pages/base.php`; new `www/assets/js/select2-ru.js`, `www/assets/js/summernote/lang/summernote-ru-RU.js` | `<html lang>`, Select2 language and Summernote table follow the interface language | `tests/specs/i18n-ru.spec.js` |
+| `0f98beb22` | `www/app/util.php` `money2str()`, `www/app/pages/options.php` + template | currency of the amount in words from the settings (`common.money2str`), default hryvnia | `tests/specs/money-words.spec.js` |
