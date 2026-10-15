@@ -8,6 +8,9 @@
     </head>
 
     <body>
+        {{#sqs_backup_stale}}
+        <div class="alert alert-danger" id="sqs-backup-stale">{{sqs_backup_stale}} <a href="/index.php?p=App/Pages/Service/Backup">{{#t}}sqs.due.backup_link{{/t}}</a></div>
+        {{/sqs_backup_stale}}
         {{#sqs_due_show}}
         <div class="card border-warning mb-3" id="sqs-due">
             <div class="card-body">
@@ -161,6 +164,7 @@
                         <h4>{{#t}}app.main.krytychna_kilkist{{/t}} </h4>
                         <small>{{#t}}app.main.tovary_dlia_iakykh_zadana_minimalna{{/t}}</small>
                         <br><a zippy="mqcsv">{{#t}}common.eksport_u_excel{{/t}}</a>
+                        <div class="table-responsive">
                         <table class="table   table-sm">
                             <tr>
                               
@@ -180,7 +184,8 @@
                                 <td zippy="wmq_qty" class="text-end"></td>
                                 <td zippy="wmq_minqty" class="text-end"></td>
                             </tr>
-                        </table>             
+                        </table>
+                        </div>
                         <div zippy="mqpag"></div>        
                     </div>
                 </div>

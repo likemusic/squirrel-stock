@@ -4024,6 +4024,7 @@
     "sqs.doclog.store": "Склад",
     "sqs.doclog.title": "Зміни вмісту",
     "sqs.due.all": "Усе обладнання",
+    "sqs.due.backup_link": "Резервна копія",
     "sqs.due.contract": "Договір",
     "sqs.due.customer": "Отримувач",
     "sqs.due.enddate": "Термін до",
