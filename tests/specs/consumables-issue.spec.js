@@ -94,9 +94,11 @@ test.describe('телефон 375 px', () => {
     await expect(page.locator('#cissue-rows tr')).toHaveCount(1);
     await page.screenshot({ path: testInfo.outputPath('consumables-375.png'), fullPage: true });
     await page.locator('#cform #issue').scrollIntoViewIfNeeded();
-    await Promise.all([page.waitForLoadState('networkidle'), page.locator('#cform #issue').tap()]);
-    await page.waitForTimeout(400);
-    expect(lastIssue(who), (await messages(page)).join(' ')).toHaveLength(1);
+    await page.locator('#cform #issue').tap();
+    // результат — по базе, без чтения страницы: после «Выдать» она перезагружается (POST → GET), и сообщения на ней
+    // можно запросить посреди перехода («Execution context was destroyed» на медленной машине)
+    await expect.poll(() => lastIssue(who).length, { timeout: 20000, message: 'накладная проведена' }).toBe(1);
+    await page.waitForLoadState('networkidle');
     expect(stockQty(a)).toBe(8);
   });
 });

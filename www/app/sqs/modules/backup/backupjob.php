@@ -6,14 +6,16 @@ namespace App\SQS;
  * SquirrelStock: автоматическая резервная копия в несколько мест — по расписанию (cli/backup.php из планировщика ОС).
  *  - local   — папка на этом компьютере (всегда);
  *  - network — папка на другом компьютере или сетевом хранилище (\\server\share, смонтированная папка);
- *  - cloud   — облако через rclone (remote настраивает установщик: Яндекс Диск, Google Drive, S3...), только зашифрованный архив.
+ *  - cloud   — облака через rclone (remote настраивает установщик: Яндекс Диск, Google Drive, S3...), по одному в строке настройки;
+ *              только зашифрованный архив (один на все облака), у каждого облака своя попытка, запись журнала и ротация.
+ * В журнале облако — place = 'cloud', file = «remote/имя файла» (по нему статус каждого облака).
  * В каждом месте хранятся последние N копий, старые удаляются (только файлы с именем squirrelstock-ГГГГ-ММ-ДД-ЧЧММСС.zip).
  * Ошибка в одном месте не мешает остальным. Попытки — в таблице sqs_backuplog, настройки — keyval 'sqs_backup'.
  * На флешку — вручную, кнопкой на странице «Резервная копия» (copyTo).
  */
 class BackupJob
 {
-    public const PLACES = ['local', 'network', 'cloud'];
+    public const PLACES = ['local', 'network', 'cloud'];   // виды мест (облаков может быть несколько)
     public const STALE_HOURS = 48;   // нет успешной копии дольше — предупреждение
     private const NAME_RE = '/^squirrelstock-\d{4}-\d{2}-\d{2}-\d{6}\.zip$/';
 
@@ -21,7 +23,7 @@ class BackupJob
         return [
             'local'        => dirname(rtrim(_ROOT, '/\\')) . DIRECTORY_SEPARATOR . 'squirrelstock-backup',
             'network'      => '',
-            'cloud'        => '',        // rclone remote:путь, например yandex:squirrelstock
+            'cloud'        => '',        // rclone remote:путь по одному в строке, например yandex:squirrelstock
             'rclone'       => 'rclone',  // путь к rclone (на Windows — C:\rclone\rclone.exe)
             'rclone_conf'  => '',        // файл настроек rclone, если не стандартный для пользователя планировщика
             'password'     => '',        // пароль шифрования копии в облаке
@@ -37,10 +39,38 @@ class BackupJob
     public static function saveSettings(array $s): void {
         $s = array_intersect_key(array_merge(self::settings(), $s), self::defaults());
         $s['keep'] = max(1, intval($s['keep']));
-        foreach (['local', 'network', 'cloud', 'rclone', 'rclone_conf'] as $k) {
+        foreach (['local', 'network', 'rclone', 'rclone_conf'] as $k) {
             $s[$k] = trim((string)$s[$k]);
         }
+        $s['cloud'] = implode("\n", self::cloudRemotes($s));
         \App\Helper::setKeyVal('sqs_backup', json_encode($s, JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * Облака из настройки: по одному remote в строке (старая настройка — одна строка — тоже список)
+     */
+    public static function cloudRemotes(array $s): array {
+        return array_values(array_unique(array_filter(array_map(fn($r) => rtrim(trim($r), '/'), preg_split('/\R/', (string)($s['cloud'] ?? ''))), 'strlen')));
+    }
+
+    /**
+     * Места копии: [ключ => ['place' => local|network|cloud, 'target' => папка или remote]]; ключ облака — «cloud:remote»
+     */
+    public static function places(array $s): array {
+        $ret = ['local' => ['place' => 'local', 'target' => $s['local']]];
+        if ($s['network'] !== '') {
+            $ret['network'] = ['place' => 'network', 'target' => $s['network']];
+        }
+        foreach (self::cloudRemotes($s) as $r) {
+            $ret['cloud:' . $r] = ['place' => 'cloud', 'target' => $r];
+        }
+        return $ret;
+    }
+
+    // подпись места для людей: «Папка на этом компьютере», «Облако (rclone) yandex:squirrelstock»
+    public static function label(string $key): string {
+        [$place, $remote] = array_pad(explode(':', $key, 2), 2, '');
+        return __('service.backup.place_' . $place) . ($remote !== '' ? ' ' . $remote : '');
     }
 
     /**
@@ -62,47 +92,47 @@ class BackupJob
         $name = 'squirrelstock-' . date('Y-m-d-His') . '.zip';
         $result = [];
         $plain = null;
-        $places = array_filter(self::PLACES, fn($p) => ($only === null || in_array($p, $only, true)) && ($p == 'local' || $s[$p] !== ''));
+        $enc = null;   // зашифрованный архив — один на все облака
+        $places = array_filter(self::places($s), fn($p) => $only === null || in_array($p['place'], $only, true));
 
-        foreach ($places as $place) {
+        foreach ($places as $key => ['place' => $place, 'target' => $target]) {
             $started = microtime(true);
             $size = 0;
+            $file = $place == 'cloud' ? $target . '/' . $name : $name;
             try {
                 if ($place == 'cloud') {
                     if ($s['password'] === '') {
                         throw new BackupException('service.backup.cloud_no_password');
                     }
-                    $enc = (new Backup())->create(_ROOT . 'upload', $s['password']);
-                    try {
-                        $size = filesize($enc);
-                        self::cloudUpload($s, $enc, $name);
-                        $removed = self::cloudRotate($s, $keep);
-                    } finally {
-                        @unlink($enc);
-                    }
+                    $enc ??= (new Backup())->create(_ROOT . 'upload', $s['password']);
+                    $size = filesize($enc);
+                    self::cloudUpload($s, $target, $enc, $name);
+                    $removed = self::cloudRotate($s, $target, $keep);
                 } else {
                     $plain ??= (new Backup())->create(_ROOT . 'upload');
                     $size = filesize($plain);
-                    $removed = self::folderPut($s[$place], $plain, $name, $keep);
+                    $removed = self::folderPut($target, $plain, $name, $keep);
                 }
-                $result[$place] = ['ok' => true, 'message' => $removed ? __('service.backup.removed_old', ['n' => $removed]) : '',
-                                   'stored' => $removed ? BackupException::encode('service.backup.removed_old', ['n' => $removed]) : ''];
+                $result[$key] = ['ok' => true, 'message' => $removed ? __('service.backup.removed_old', ['n' => $removed]) : '',
+                                 'stored' => $removed ? BackupException::encode('service.backup.removed_old', ['n' => $removed]) : ''];
             } catch (\Throwable $e) {
-                $result[$place] = ['ok' => false, 'message' => $e->getMessage(),
-                                   'stored' => $e instanceof BackupException ? $e->stored() : $e->getMessage()];
+                $result[$key] = ['ok' => false, 'message' => $e->getMessage(),
+                                 'stored' => $e instanceof BackupException ? $e->stored() : $e->getMessage()];
             }
             // в журнал — ключ перевода (BackupException), страница покажет его на языке того, кто смотрит
-            self::log($place, $result[$place]['ok'], $name, $size, $result[$place]['stored'], microtime(true) - $started);
+            self::log($place, $result[$key]['ok'], $file, $size, $result[$key]['stored'], microtime(true) - $started);
         }
-        if ($plain) {
-            @unlink($plain);
+        foreach ([$plain, $enc] as $tmp) {
+            if ($tmp) {
+                @unlink($tmp);
+            }
         }
 
         $failed = array_filter($result, fn($r) => !$r['ok']);
         if ($failed) {
             $lines = [];
-            foreach ($failed as $place => $r) {
-                $lines[] = __('service.backup.place_' . $place) . ': ' . $r['message'];
+            foreach ($failed as $key => $r) {
+                $lines[] = self::label($key) . ': ' . $r['message'];
             }
             self::notifyAdmins(__('service.backup.failed_notify') . "\n" . implode("\n", $lines));
         }
@@ -158,17 +188,17 @@ class BackupJob
         return $removed;
     }
 
-    private static function cloudUpload(array $s, string $file, string $name): void {
-        self::rclone($s, ['copyto', $file, rtrim($s['cloud'], '/') . '/' . $name]);
+    private static function cloudUpload(array $s, string $remote, string $file, string $name): void {
+        self::rclone($s, ['copyto', $file, $remote . '/' . $name]);
     }
 
-    private static function cloudRotate(array $s, int $keep): int {
-        $list = self::rclone($s, ['lsf', '--files-only', rtrim($s['cloud'], '/') . '/']);
+    private static function cloudRotate(array $s, string $remote, int $keep): int {
+        $list = self::rclone($s, ['lsf', '--files-only', $remote . '/']);
         $old = array_values(array_filter(array_map('trim', explode("\n", $list)), fn($f) => preg_match(self::NAME_RE, $f)));
         sort($old);
         $removed = 0;
         foreach (array_slice($old, 0, max(0, count($old) - $keep)) as $f) {
-            self::rclone($s, ['deletefile', rtrim($s['cloud'], '/') . '/' . $f]);
+            self::rclone($s, ['deletefile', $remote . '/' . $f]);
             $removed++;
         }
         return $removed;
@@ -218,19 +248,36 @@ class BackupJob
     }
 
     /**
-     * Состояние по местам: [место => ['enabled', 'last_ok' (метка времени или 0), 'last' (последняя попытка), 'stale']]
+     * Состояние по местам: [ключ места => ['place', 'target', 'enabled', 'last_ok' (метка времени или 0),
+     * 'last' (последняя попытка), 'stale']]. Не настроенные сеть и облако — строкой «не настроено».
      */
     public static function status(): array {
         $s = self::settings();
         $conn = \ZDB\DB::getConnect();
+        $places = self::places($s);
+        $places += ['network' => ['place' => 'network', 'target' => ''], 'cloud' => ['place' => 'cloud', 'target' => '']];
+        $remotes = self::cloudRemotes($s);
         $ret = [];
-        foreach (self::PLACES as $place) {
-            $q = $conn->qstr($place);
-            $lastOk = $conn->GetOne("SELECT MAX(createdon) FROM sqs_backuplog WHERE place = {$q} AND ok = 1");
-            $last = $conn->GetRow("SELECT createdon, ok, message FROM sqs_backuplog WHERE place = {$q} ORDER BY id DESC LIMIT 1");
-            $enabled = $place == 'local' || $s[$place] !== '';
+        foreach (['local', 'network'] as $k) {
+            $ret[$k] = $places[$k];
+        }
+        foreach ($places as $k => $p) {
+            if ($p['place'] == 'cloud' && ($k != 'cloud' || !$remotes)) {
+                $ret[$k] = $p;
+            }
+        }
+        foreach ($ret as $k => $p) {
+            $where = 'place = ' . $conn->qstr($p['place']);
+            if ($p['place'] == 'cloud' && $p['target'] !== '') {
+                // запись облака — file «remote/имя»; записи одного облака до списка (file — только имя) — первому облаку
+                $like = $conn->qstr(addcslashes($p['target'], '%_\\') . '/%');
+                $where .= " AND (file LIKE {$like}" . ($p['target'] === ($remotes[0] ?? '') ? " OR file NOT LIKE '%/%'" : '') . ')';
+            }
+            $lastOk = $conn->GetOne("SELECT MAX(createdon) FROM sqs_backuplog WHERE {$where} AND ok = 1");
+            $last = $conn->GetRow("SELECT createdon, ok, message FROM sqs_backuplog WHERE {$where} ORDER BY id DESC LIMIT 1");
+            $enabled = $p['place'] == 'local' || $p['target'] !== '';
             $lastOk = $lastOk ? strtotime($lastOk) : 0;
-            $ret[$place] = [
+            $ret[$k] += [
                 'enabled' => $enabled,
                 'last_ok' => $lastOk,
                 'last'    => $last ?: null,
@@ -257,9 +304,9 @@ class BackupJob
             return '';
         }
         $stale = [];
-        foreach (self::status() as $place => $st) {
+        foreach (self::status() as $key => $st) {
             if ($st['stale']) {
-                $stale[] = __('service.backup.place_' . $place);
+                $stale[] = self::label($key);
             }
         }
         if (!$stale) {
