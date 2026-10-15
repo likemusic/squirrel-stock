@@ -52,6 +52,8 @@ class Translator
         if (self::$lang === null) {
             global $_config;
             $lang = $_config['common']['lang'] ?? self::SOURCE;
+            // пока читается пользователь, язык — из конфига: код загрузки пользователя сам вызывает __()
+            self::$lang = self::isAvailable($lang) ? $lang : self::SOURCE;
             $userlang = session_status() == PHP_SESSION_ACTIVE ? (System::getUser()->lang ?? '') : '';
             if (strlen($userlang) > 0) {
                 $lang = $userlang;
