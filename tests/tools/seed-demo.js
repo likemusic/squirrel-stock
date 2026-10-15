@@ -38,6 +38,25 @@ const GASTRO_ITEMS = ['Зонд гастростомический 14 Fr', 'Уд
 
 const codeOf = name => value(`select item_code from items where itemname = '${esc(name)}'`);
 
+// выдача расходников короткой формой «Сервис → Выдача расходников»; возвращает номер созданной накладной
+async function consumablesIssue(page, { date, customer, notes, rows }) {
+  await page.goto('/index.php?p=App/Pages/Service/ConsumablesIssue');
+  await pickAuto(page, '#cform #customer', customer, customer);   // существующий получатель — из подсказки
+  await page.locator('#cform #date').fill(date);
+  for (const { code, qty } of rows) {
+    await pickAuto(page, '#cform #item', code, code);
+    await page.locator('#cform #qty').fill(String(qty));
+    await clickWait(page, '#cform #additem');
+  }
+  if (notes) await page.locator('#cform #notes').fill(notes);
+  const before = value("select coalesce(max(document_id), 0) from documents");
+  await clickWait(page, '#cform #issue');
+  const number = value(`select d.document_number from documents d join metadata m on m.meta_id = d.meta_id
+                        where m.meta_name = 'GoodsIssue' and d.document_id > ${before} and d.state = 5 order by d.document_id desc limit 1`);
+  if (!number) throw new Error(`выдача расходников ${customer} ${date}: ${(await messages(page)).join(' | ')}`);
+  return { number };
+}
+
 (async () => {
   const browser = await chromium.launch();
   let context = await browser.newContext({ baseURL: BASE });
@@ -102,7 +121,7 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
   query("delete from taglist where tag_name = ''");   // форма контрагента сохраняет пустую метку
   log('получатели', WARDS.length + ON_REQUEST.length + 1);
 
-  // 5. Выдачи расходников июль — октябрь 2026
+  // 5. Выдачи расходников июль — октябрь 2026 — через «Выдачу расходников»
   const issues = [];
   for (const month of ['07', '08', '09', '10']) {
     const days = month == '10' ? 14 : 28;
@@ -112,8 +131,8 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
       while (items.size < 2 + rnd(3)) items.add(pick(CONSUMABLES));
       if (GASTRO.has(who)) { items.add(GASTRO_ITEMS[2]); if (rnd(2)) items.add(pick(GASTRO_ITEMS)); }
       const date = `2026-${month}-${String(1 + Math.floor(k * days / 9) + rnd(2)).padStart(2, '0')}`;
-      const rows = [...items].map(n => ({ code: codeOf(n), qty: 1 + rnd(who == ORG ? 10 : 4), price: 0 }));
-      const r = await createDoc(page, 'GoodsIssue', { date, customer: who, payment: 0, notes: 'Выдача', rows });
+      const rows = [...items].map(n => ({ code: codeOf(n), qty: 1 + rnd(who == ORG ? 10 : 4) }));
+      const r = await consumablesIssue(page, { date, customer: who, rows });
       issues.push({ ...r, date, who });
     }
     log('выдачи', month);
@@ -121,7 +140,7 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
 
   // две позиции 1С с одним названием и разными ценами: в акте за сентябрь — одна строка с названием из 1С
   const gloves = query(`select item_code from items where itemname = 'Перчатки нитриловые нестерильные M, 100 шт' order by item_id`).map(r => r[0]);
-  await createDoc(page, 'GoodsIssue', { date: '2026-09-18', customer: ORG, payment: 0, notes: 'Выдача', rows: gloves.map((code, k) => ({ code, qty: 2 + k, price: 0 })) });
+  await consumablesIssue(page, { date: '2026-09-18', customer: ORG, rows: gloves.map((code, k) => ({ code, qty: 2 + k })) });
 
   // 6. Возвраты и списания с причинами
   for (const issue of [issues[3], issues[20]]) {
