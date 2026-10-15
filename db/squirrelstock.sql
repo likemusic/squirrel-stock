@@ -31,3 +31,14 @@ WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'Im
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 5, 'Резервна копія', 'Backup', '', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'Backup');
+
+-- Журнал правок документов (App\SQS\DocAudit): что изменилось при сохранении — было, стало, кто, когда
+CREATE TABLE IF NOT EXISTS sqs_doclog (
+  id bigint NOT NULL AUTO_INCREMENT,
+  document_id int NOT NULL,
+  user_id int NOT NULL,
+  createdon datetime NOT NULL,
+  changes text NOT NULL,
+  PRIMARY KEY (id),
+  KEY document_id (document_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

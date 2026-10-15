@@ -147,6 +147,19 @@ class Document extends \ZCL\DB\Entity
             }
         }
 
+        // SquirrelStock: журнал правок (App\SQS\DocAudit) и запрет менять содержимое проведенного документа:
+        // проводки остались бы от старого содержимого. Сначала — отменить проведение
+        if ($this->document_id > 0) {
+            $stored = Document::load($this->document_id);
+            if ($stored != null) {
+                $changes = \App\SQS\DocAudit::diff(\App\SQS\DocAudit::snapshot($stored), \App\SQS\DocAudit::snapshot($this));
+                if (\App\SQS\DocAudit::contentChanged($changes) && $this->isExecuted()) {
+                    throw new \Exception(__('sqs.doclog.executed_locked', ['number' => $stored->document_number]));
+                }
+                \App\SQS\DocAudit::setPending($this, $changes);
+            }
+        }
+
         if ($this->parent_id > 0) {
             $p = Document::load($this->parent_id);
             $this->headerdata['parent_number'] = $p->document_number;
@@ -156,6 +169,13 @@ class Document extends \ZCL\DB\Entity
 
             
 
+    }
+
+    protected function afterSave($update) {
+        parent::afterSave($update);
+        if ($update) {
+            \App\SQS\DocAudit::writePending($this);   // журнал правок, см. beforeSave
+        }
     }
 
     /**

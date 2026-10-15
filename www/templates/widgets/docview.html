@@ -178,6 +178,21 @@
                                 </tr>
                             </table>
                         </div>
+                        <div class="col-auto  " v-show="docdata.changelist && docdata.changelist.length >0">
+                            <h5>{|#t|}sqs.doclog.title{|/t|}</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>{|#t|}common.data{|/t|}</th>
+                                    <th>{|#t|}widgets.docview.zminyv{|/t|}</th>
+                                    <th></th>
+                                </tr>
+                                <tr v-for="item in docdata.changelist">
+                                    <td class="text-nowrap">{{item.date}}</td>
+                                    <td>{{item.user}}</td>
+                                    <td>{{item.text}}</td>
+                                </tr>
+                            </table>
+                        </div>
                         <div class="col-auto  " v-show="docdata.paylist.length >0">
                             <h5>{|#t|}print.compareact.oplaty{|/t|}</h5>
                             <table class="table table-sm">

@@ -132,6 +132,9 @@ class DocView extends \Zippy\Html\PageFragment
             $ret['loglist'][]= array('statedate'=> \App\Helper::fdt($st->createdon),'stateuser'=>$st->username,'statename'=>$statename ) ;
         }
 
+        // SquirrelStock: журнал правок содержимого
+        $ret['changelist'] = \App\SQS\DocAudit::getList(intval($doc->document_id));
+
         //оплаты
         $ret['paylist'] = array();
         foreach(\App\Entity\Pay::getPayments($doc->document_id) as $p) {
