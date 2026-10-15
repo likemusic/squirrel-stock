@@ -44,6 +44,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `161768292` | `www/app/api/common.php` `token()`, `www/app/api/jsonrpc.php` (Basic), `www/app/chatbot.php` (login) | password-only logins go through `LoginGuard::passwordOnly()`: lock after repeated failures, refused for users with two-factor login | `tests/specs/two-factor.spec.js` |
 | `d51a86a38` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html` | action cell no-wrap only on desktop (`text-md-nowrap`), spacing before icons only on desktop: icons of a draft document stay on a phone screen | `tests/specs/mobile.spec.js` |
 | `9723941ee` | `www/templates/pages/base.html`; new `www/assets/js/sqs-typeahead.js` | autocomplete race: answers to outdated requests are dropped, Enter/Tab on a stale list waits for the answer to the current text (layer over bootstrap3-typeahead from the framework, vendor not edited) | `tests/specs/item-autocomplete.spec.js` |
+| `f02b9a127` | `www/.htaccess` (block `mod_headers`) | Content-Security-Policy: only own address for loading and sending, own frames; inline scripts and eval allowed (framework needs them); shop pages excluded | `tests/specs/csp.spec.js` |
 
 ## Proposed upstream
 
