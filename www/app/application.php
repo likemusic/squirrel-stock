@@ -18,6 +18,12 @@ class Application extends \Zippy\WebApplication
         $cpath = '';
         $name = ltrim($name, '\\');
 
+        // SquirrelStock: шаблон страницы модуля из его папки (App\SQS\Modules)
+        $mpath = \App\SQS\Modules::template($name);
+        if ($mpath !== null) {
+            return file_get_contents($mpath);
+        }
+
         $templatepath = 'templates/';
 
         $className = str_replace("\\", "/", ltrim($name, '\\'));
