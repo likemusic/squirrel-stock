@@ -61,7 +61,7 @@ class Backup extends \App\Pages\Base
                 'target'  => $place == 'cloud' ? $s['cloud'] : $s[$place],
                 'enabled' => $st['enabled'],
                 'last_ok' => $st['last_ok'] ? \App\Helper::fdt($st['last_ok']) : __('service.backup.never'),
-                'error'   => $last && !$last['ok'] ? \App\Helper::fdt(strtotime($last['createdon'])) . ': ' . $last['message'] : '',
+                'error'   => $last && !$last['ok'] ? \App\Helper::fdt(strtotime($last['createdon'])) . ': ' . \App\SQS\BackupException::text((string)$last['message']) : '',
                 'stale'   => $st['stale'],
             ];
             if ($st['stale']) {
