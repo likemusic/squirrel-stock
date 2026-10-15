@@ -10,3 +10,7 @@ WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'Is
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 2, 'Отримувачі по місяцях', 'RecipientMonths', 'Склад', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'RecipientMonths');
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 2, 'Оборот по позиціях', 'ItemTurnover', 'Склад', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'ItemTurnover');
