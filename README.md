@@ -15,7 +15,14 @@ The fork is developed for charities and non-profits that hand out supplies and e
 - reports for free issue of supplies: write-off act, recipient × month, item and recipient movements for a period;
 - regression tests.
 
-Status: early stage, the code currently equals upstream commit `c74df59f4` (13.10.2026).
+Status (October 2026), based on upstream commit `c74df59f4` (13.10.2026):
+
+- fixed: double posting (repeated "Execute", browser "Back"), batch with the nearest expiry date, division by zero in the sales report, item autocomplete order, document date in import, amount in words currency;
+- interface by English keys with Ukrainian and Russian dictionaries, works offline;
+- for charities: monthly issue act for the accounting, recipients by month, item turnover, equipment by contracts ("where each unit is now", issue journal), import of the 1C trial balance, backup and restore in one click, a menu profile;
+- regression tests (Playwright) for all of the above; changes to upstream files are listed in [docs/CORE_CHANGES.md](docs/CORE_CHANGES.md).
+
+Not yet: Windows installer, audit log of document edits, extension hooks.
 
 ## Development
 
@@ -53,6 +60,8 @@ php cli/localize-db.php ru --back   # back to Ukrainian
 Tools in `tools/i18n/`: `convert.php` replaces Ukrainian strings with keys (used on every upstream update), `pairs.php` collects translation pairs from the Russian edition of Zippy, `merge_tsv.py` builds a dictionary from `key<TAB>text` files and checks placeholders and quotes.
 
 ## Русский
+
+Руководство по настройке и работе: [docs/GUIDE.ru.md](docs/GUIDE.ru.md).
 
 SquirrelStock — неофициальный форк складской программы Zippy (leon-mbs/zstore, лицензия MIT) для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование. Первый пользователь — детский хоспис. В планах: исправления надёжности учёта, перевод интерфейса на русский (ключи на английском), работа без интернета, учёт выдачи оборудования по договорам, отчёты для бухгалтерии, автотесты.
 
