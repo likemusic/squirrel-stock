@@ -47,3 +47,34 @@ test('после отмены проведения документ провод
   expect(stockQty(code), 'остаток после повторного проведения').toBe(5);
 });
 
+test('«назад» в браузере и повторное «Провести» не создают второго проведения', async ({ page, uniq }) => {
+  const code = 'DB-' + uniq, donor = 'Донор ' + uniq, notes = 'Тест кнопки назад ' + uniq;
+  await createItem(page, { name: 'Позиция ' + code, code });
+  await createCustomer(page, { name: donor, type: 2 });
+  await createDoc(page, 'GoodsReceipt', { date: '2026-10-01', customer: donor, payment: 0, notes, rows: [{ code, qty: 5, price: 0 }] });
+  await page.goBack();
+  await page.waitForLoadState('networkidle');
+  if (await page.locator('#execdoc:visible').count()) await clickWait(page, '#execdoc');
+  expect(stockQty(code), 'остаток').toBe(5);
+  expect(Number(value(`select count(*) from documents where notes = '${esc(notes)}'`)), 'документов').toBe(1);
+});
+
+test('копия документа из журнала сохраняется и проводится', async ({ page, uniq }) => {
+  const code = 'DK-' + uniq, donor = 'Донор ' + uniq, notes = 'Тест копии ' + uniq;
+  await createItem(page, { name: 'Позиция ' + code, code });
+  await createCustomer(page, { name: donor, type: 2 });
+  const { number } = await createDoc(page, 'GoodsReceipt', { date: '2026-10-01', customer: donor, payment: 0, notes, rows: [{ code, qty: 5, price: 0 }] });
+
+  await page.goto('/index.php?p=App/Pages/Register/DocList');
+  await page.locator('#filter #searchnumber').fill(number);
+  await Promise.all([page.waitForLoadState('networkidle'), page.locator('#filter #searchnumber').press('Enter')]);
+  await clickWait(page, 'a[id^=show_]:visible');
+  await clickWait(page, '#bcopy');
+  expect((await messages(page)).join(' ')).not.toMatch(/вже створено/i);
+  const ids = value(`select group_concat(document_id order by document_id) from documents where notes = '${esc(notes)}'`).split(',');
+  expect(ids, 'исходный документ и копия').toHaveLength(2);
+
+  await page.goto('/index.php?p=App/Pages/Doc/GoodsReceipt&arg=' + ids[1]);
+  await clickWait(page, '#execdoc');
+  expect(stockQty(code), 'остаток после проведения копии').toBe(10);
+});
