@@ -47,6 +47,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `f7f3901d5` | `www/app/report.php` `generate()` | print form from a module folder first (`App\SQS\Modules::printform`) | `tests/specs/hooks.spec.js` |
 | `d025f9370` | `www/app/pages/main.php`, `www/templates/pages/main.html` | blocks of modules (`Hooks::emit('mainBlocks')`, placeholder `{{{sqs_blocks}}}`) instead of fork markup and the direct `EquipmentDue` call (`6d6dd5883`, `0642e6635`) | `tests/specs/equipment-due.spec.js`, `tests/specs/backup-main-warning.spec.js` |
 | `64cf8834c` | `www/app/pages/reference/itemlist.php` (item save) | event `Hooks::emit('itemSaved')` instead of the direct `Item1C` call | `tests/specs/import-1c-same-name.spec.js` |
+| `f02b9a127` | `www/.htaccess` (block `mod_headers`) | Content-Security-Policy: only own address for loading and sending, own frames; inline scripts and eval allowed (framework needs them); shop pages excluded | `tests/specs/csp.spec.js` |
 
 ## Proposed upstream
 

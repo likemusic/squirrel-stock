@@ -9,3 +9,4 @@ services:
       - ../www/lang:/var/www/html/lang
       - ../www/cli:/var/www/html/cli
       - ../www/init.php:/var/www/html/init.php
+      - ../www/.htaccess:/var/www/html/.htaccess

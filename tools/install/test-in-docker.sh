@@ -33,6 +33,7 @@ for p in config/config.php logs/ cli/backup.php; do
   c=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/$p" || true)
   [[ $c == 403 || $c == 404 ]] && ok "/$p закрыт ($c)" || fail "/$p отдается ($c)"
 done
+curl -sI "http://127.0.0.1:$PORT/index.php?q=p:App/Pages/UserLogin" | grep -qi "^Content-Security-Policy: default-src 'self'" && ok "заголовок Content-Security-Policy (из .htaccess)" || fail "нет Content-Security-Policy"
 c=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js")
 [[ $c == 200 ]] && ok "скрипты фреймворка из vendor отдаются" || fail "vendor: $c"
 

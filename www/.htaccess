@@ -24,4 +24,10 @@ RewriteRule ^(\/index\.php.{0,}|[-#a-zA-Z0-9\/_]+)$ /index.php [L,QSA]
     Header always set Referrer-Policy "same-origin"
     Header always unset X-Powered-By
     Header unset X-Powered-By
+    # Content-Security-Policy: загружать и отправлять — только на свой адрес, встраивать — только в свои фреймы.
+    # 'unsafe-inline' и 'unsafe-eval' нужны фреймворку (onclick в ссылках, ответы AJAX выполняются через eval), шрифт data: — иконки FullCalendar в zippy-bundle.css.
+    # Магазин (модуль shop, вне профиля благотворительной организации) — без политики: платежные виджеты с чужих адресов.
+    <If "%{THE_REQUEST} !~ m#^\S+\s+/(shop|sp|pcat|scat|blog|menu|cchat)(/|\?|\s)|Modules/Shop/#">
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    </If>
 </IfModule>
