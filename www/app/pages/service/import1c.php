@@ -5,6 +5,7 @@ namespace App\Pages\Service;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Helper as H;
+use App\SQS\Item1C;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -32,6 +33,7 @@ class Import1C extends \App\Pages\Base
         $form->add(new Date('date', time()));
         $form->add(new DropDownChoice('cat', [0 => __('common.ne_vybrano')] + \App\Entity\Category::getList(true), 0));
         $form->add(new SubmitButton('import'))->onClick($this, 'onImport');
+        $this->add(new \Zippy\Html\Label('report', '', true));
     }
 
     public function onImport($sender) {
@@ -69,6 +71,7 @@ class Import1C extends \App\Pages\Base
             $msg = $account == '01' ? $this->importFixed($rows, $store, basename($file['name'])) : $this->importMaterials($rows, $store, basename($file['name']));
             $conn->CommitTrans();
             $this->setSuccess($msg);
+            $this->report->setText($this->reportHtml(), true);
         } catch (\Throwable $e) {
             $conn->RollbackTrans();
             $this->setError($e->getMessage());
@@ -111,23 +114,67 @@ class Import1C extends \App\Pages\Base
             $pending = count($list) - 1;
         }
 
+        // одноименные позиции 1С: строки ведомости с одинаковым названием сопоставляются позициям по цене (App\SQS\Item1C)
+        $groups = [];
+        foreach ($list as $i => $p) {
+            $p['price'] = ($p['qty'] ?? 0) > 0 ? H::fa(($p['sum'] ?? 0) / $p['qty']) : null;
+            $groups[$p['name']][$i] = $p;
+        }
         $created = 0;
         $details = [];
-        foreach ($list as $p) {
-            [$item, $new] = $this->findOrCreate($p['name'], false);
-            $created += $new ? 1 : 0;
-            if (($p['qty'] ?? 0) > 0) {
-                $item->quantity = $p['qty'];
-                $item->price = H::fa(($p['sum'] ?? 0) / $p['qty']);
-                $item->snumber = '';
-                $item->sdate = 0;
-                $details[] = $item;
+        $this->_ambiguous = [];
+        $this->_notes = [];
+        foreach ($groups as $name => $rows) {
+            $cands = Item1C::candidates($name);
+            if (count($cands) == 0) {
+                // позиция из импорта до отметок «из 1С» — по точному названию, если она одна на это название
+                $legacy = Item::find('itemname = ' . Item::qstr($name) . ' and disabled <> 1 and item_id not in (select item_id from sqs_item1c)');
+                if (count($legacy) == 1 && count($rows) == 1) {
+                    $cands = [['item_id' => (int)reset($legacy)->item_id, 'itemname' => $name, 'price1c' => null]];
+                } elseif (count($legacy) > 0) {
+                    $cands = array_map(fn($it) => ['item_id' => (int)$it->item_id, 'itemname' => $it->itemname, 'price1c' => null], array_values($legacy));
+                    $this->_ambiguous[] = ['name' => $name, 'rows' => $rows, 'cands' => $cands];
+                    continue;
+                }
+            }
+            $m = Item1C::match($rows, $cands);
+            if ($m['ambiguous']) {
+                $this->_ambiguous[] = ['name' => $name, 'rows' => $rows, 'cands' => $cands];
+                continue;
+            }
+            foreach ($m['match'] as $i => $item_id) {
+                $p = $rows[$i];
+                if ($item_id > 0) {
+                    $item = Item::load($item_id);
+                } else {
+                    $item = $this->newItem($name, false);
+                    $created++;
+                }
+                Item1C::set((int)$item->item_id, $name, $p['price']);
+                if ($item->itemname !== $name) {
+                    $this->_notes[] = __('service.import1c.renamed', ['name' => $item->itemname, 'name1c' => $name]);
+                }
+                if (in_array($i, $m['drift'], true)) {
+                    $old = array_values(array_filter($cands, fn($c) => $c['item_id'] == $item_id))[0]['price1c'] ?? 0;
+                    $this->_notes[] = __('service.import1c.price_drift', ['name' => $name, 'old' => H::fa($old), 'new' => $p['price']]);
+                }
+                if (($p['qty'] ?? 0) > 0) {
+                    $item->quantity = $p['qty'];
+                    $item->price = $p['price'];
+                    $item->snumber = '';
+                    $item->sdate = 0;
+                    $details[] = $item;
+                }
             }
         }
         $doc = $this->receipt($details, $store, $filename);
 
-        return __('service.import1c.done_materials', ['items' => count($list), 'created' => $created, 'received' => count($details), 'doc' => $doc]);
+        return __('service.import1c.done_materials', ['items' => count($list), 'created' => $created, 'received' => count($details), 'doc' => $doc])
+            . (count($this->_ambiguous) ? '. ' . __('service.import1c.ambiguous_count', ['n' => array_sum(array_map(fn($a) => count($a['rows']), $this->_ambiguous))]) : '');
     }
+
+    public array $_ambiguous = [];   // [['name', 'rows' => [строки ведомости], 'cands' => [позиции]]]
+    public array $_notes = [];
 
     private function importFixed(array $rows, int $store, string $filename): string {
         $conn = \ZDB\DB::getConnect();
@@ -161,25 +208,33 @@ class Import1C extends \App\Pages\Base
     }
 
     /**
-     * Позиция по точному названию; новая — с единицей «шт», категорией из формы и, для основных средств, учетом по серийным номерам
+     * Позиция основных средств по названию из 1С (отметка sqs_item1c), иначе по точному названию; новая — с учетом по серийным номерам
      */
     private function findOrCreate(string $name, bool $serial): array {
-        $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');
-        if ($item != null) {
-            if ($serial && $item->useserial != 1) {
-                $item->useserial = 1;
-                $item->save();
-            }
-            return [$item, false];
+        $cands = Item1C::candidates($name);
+        $item = count($cands) ? Item::load($cands[0]['item_id']) : Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');
+        $new = false;
+        if ($item == null) {
+            $item = $this->newItem($name, $serial);
+            $new = true;
+        } elseif ($serial && $item->useserial != 1) {
+            $item->useserial = 1;
+            $item->save();
         }
+        Item1C::set((int)$item->item_id, $name);
+
+        return [$item, $new];
+    }
+
+    // новая позиция: единица «шт», категория из формы
+    private function newItem(string $name, bool $serial): Item {
         $item = new Item();
         $item->itemname = $name;
         $item->msr = __('app.item.sht');
         $item->cat_id = intval($this->iform->cat->getValue());
         $item->useserial = $serial ? 1 : 0;
         $item->save();
-
-        return [$item, true];
+        return $item;
     }
 
     /**
@@ -212,5 +267,32 @@ class Import1C extends \App\Pages\Base
         $doc->updateStatus(Document::STATE_EXECUTED);
 
         return $doc->document_number;
+    }
+
+    private static function e($s): string {
+        return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
+    }
+
+    // неоднозначные одноименные позиции (не оприходованы) и заметки
+    private function reportHtml(): string {
+        $h = '';
+        if (count($this->_ambiguous)) {
+            $h .= '<h6>' . __('service.import1c.ambiguous_title') . '</h6><p class="text-muted">' . __('service.import1c.ambiguous_help') . '</p>';
+            $h .= '<table class="table table-sm w-auto" id="i1c-ambiguous">';
+            foreach ($this->_ambiguous as $a) {
+                $rows = implode('<br>', array_map(fn($p) => self::e(__('service.import1c.amb_row', ['qty' => $p['qty'] ?? '-', 'price' => $p['price'] ?? '-'])), $a['rows']));
+                $cands = implode('<br>', array_map(fn($c) => self::e(__('service.import1c.amb_cand', ['id' => $c['item_id'], 'name' => $c['itemname'], 'price' => $c['price1c'] === null ? '-' : H::fa($c['price1c'])])), $a['cands']));
+                $h .= '<tr><td>' . self::e($a['name']) . '</td><td>' . $rows . '</td><td>' . $cands . '</td></tr>';
+            }
+            $h .= '</table>';
+        }
+        if (count($this->_notes)) {
+            $h .= '<h6>' . __('service.import1c.notes_title') . '</h6><ul id="i1c-notes">';
+            foreach ($this->_notes as $n) {
+                $h .= '<li>' . self::e($n) . '</li>';
+            }
+            $h .= '</ul>';
+        }
+        return $h;
     }
 }

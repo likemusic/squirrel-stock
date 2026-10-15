@@ -92,3 +92,13 @@ CREATE TABLE IF NOT EXISTS sqs_eqhistory (
   createdon datetime NOT NULL,
   PRIMARY KEY (eventkey)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Позиции из 1С (App\SQS\Item1C): название, как в 1С (печатается в акте списания), и цена за единицу на последнем импорте
+-- ведомости — по ней различаются одноименные позиции при повторном импорте
+CREATE TABLE IF NOT EXISTS sqs_item1c (
+  item_id int NOT NULL,
+  name1c varchar(255) NOT NULL,
+  price1c decimal(12,2) DEFAULT NULL,
+  PRIMARY KEY (item_id),
+  KEY name1c (name1c)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -489,6 +489,7 @@ class ItemList extends \App\Pages\Base
             return;
         }
         $options = System::getOptions('common');
+        $oldname = (string)$this->_item->itemname;   // SquirrelStock: предупреждение о переименовании позиции из 1С
         
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->itemname = trim($this->_item->itemname);
@@ -634,6 +635,11 @@ class ItemList extends \App\Pages\Base
         $this->_item->savecf($v);        
         
         $this->_item->save();
+        // SquirrelStock: позиция из 1С переименована — акт списания печатает название из 1С (ZIPPY_GAPS п. 30)
+        $i1c = \App\SQS\Item1C::get((int)$this->_item->item_id);
+        if ($i1c && $oldname !== $this->_item->itemname && $i1c['name1c'] !== $this->_item->itemname) {
+            $this->setWarn(__('sqs.item1c.renamed', ['name1c' => $i1c['name1c']]));
+        }
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"] ??'') > 0) {
