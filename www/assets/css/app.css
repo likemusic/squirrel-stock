@@ -275,3 +275,10 @@ a.sidebar-link {
 
 }
   
+/* SquirrelStock: на телефоне ряд кнопок документа («Скасувати / Зберегти / Провести») переносится, а не уезжает за левый край */
+@media (max-width: 575.98px) {
+    form .d-flex.justify-content-end {
+        flex-wrap: wrap;
+        row-gap: .5rem;
+    }
+}

@@ -32,6 +32,18 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       await Promise.all([page.waitForURL(/EquipmentUnits/), link.tap()]);   // переход по пункту меню касанием
     });
 
+    test('кнопки документов целиком на экране', async ({ page }, testInfo) => {
+      const off = [];
+      for (const doc of ['GoodsIssue', 'IncomeItem', 'OutcomeItem', 'GoodsReceipt', 'MoveItem']) {
+        await page.goto('/index.php?p=App/Pages/Doc/' + doc);
+        for (const b of await page.locator('#docform input[type=submit]:visible, #docform input[type=button]:visible').all()) {
+          const box = await b.boundingBox();
+          if (box.x < 0 || box.x + box.width > width + 0.5) off.push(`${doc} ${await b.getAttribute('id')}: ${Math.round(box.x)}..${Math.round(box.x + box.width)}`);
+        }
+      }
+      expect(off, 'кнопки за краем экрана').toEqual([]);
+    });
+
     test('выдача расходной накладной с телефона', async ({ page, uniq }, testInfo) => {
       const code = 'MB-' + uniq, who = 'Получатель ' + uniq;
       await createItem(page, { name: 'Позиция ' + code, code });
