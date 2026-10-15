@@ -20,3 +20,16 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `cdaa5674e` | `www/templates/pages/base.html`, `www/app/pages/base.php`; new `www/assets/js/select2-ru.js`, `www/assets/js/summernote/lang/summernote-ru-RU.js` | `<html lang>`, Select2 language and Summernote table follow the interface language | `tests/specs/i18n-ru.spec.js` |
 | `0f98beb22` | `www/app/util.php` `money2str()`, `www/app/pages/options.php` + template | currency of the amount in words from the settings (`common.money2str`), default hryvnia | `tests/specs/money-words.spec.js` |
 | `db28160cf` | `www/app/entity/doc/document.php` `beforeSave()`/`afterSave()`, `www/app/widgets/docview.php` + template; new `www/app/sqs/docaudit.php`, table `sqs_doclog` | audit log of document edits; rows/date/store/customer of an executed document cannot be changed without cancelling | `tests/specs/doc-audit.spec.js` |
+
+## Proposed upstream
+
+Fixes offered to the author as pull requests (15.10.2026, branches in [likemusic/zstore](https://github.com/likemusic/zstore) from `master` `c74df59f4`, only the `www/` part of the commit). If a PR is merged, the change comes with the next upstream update and the row above needs no reapplying.
+
+| Commit | Pull request |
+|---|---|
+| `02221545c` | [#1107](https://github.com/leon-mbs/zstore/pull/1107) nearest expiry batch |
+| `9e9bcec26` | [#1108](https://github.com/leon-mbs/zstore/pull/1108) sales report, zero price |
+| `3c5f5f65c` | [#1109](https://github.com/leon-mbs/zstore/pull/1109) repeated Execute |
+| `3e01ce6d1` | [#1110](https://github.com/leon-mbs/zstore/pull/1110) browser Back duplicate |
+| `0b821c391` | [#1111](https://github.com/leon-mbs/zstore/pull/1111) autocomplete order |
+| `8e9021bf9` | [#1112](https://github.com/leon-mbs/zstore/pull/1112) import document date |

@@ -22,9 +22,12 @@ module.exports = async config => {
   await clickWait(page, '#common button[type=submit]');
 
   // тесты проверяют украинские тексты (язык автора): язык администратора задается явно, независимо от SQS_LANG стенда
+  // (выбора языка нет у Zippy автора: так те же тесты проверяют его код, например для PR)
   await page.goto('/index.php?p=App/Pages/UserProfile');
-  await page.locator('#profileform #lang').selectOption('uk');
-  await clickWait(page, '#profileform button[type=submit], #profileform input[type=submit]');
+  if (await page.locator('#profileform #lang').count()) {
+    await page.locator('#profileform #lang').selectOption('uk');
+    await clickWait(page, '#profileform button[type=submit], #profileform input[type=submit]');
+  }
 
   await context.storageState({ path: __dirname + '/.auth/admin.json' });
   await browser.close();
