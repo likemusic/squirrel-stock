@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>{{#t}}report.recipientmonths.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12">
+                <h3>{{#t}}report.recipientmonths.title{{/t}}</h3>
+                <div class="navbar">
+                    <form zippy="filter">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-auto">
+                                <label class="form-label" for="from">{{#t}}common.z{{/t}}</label>
+                                <input zippy="from" class="form-control" type="text">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="to">{{#t}}common.po_2{{/t}}</label>
+                                <input zippy="to" class="form-control" type="text">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="cat">{{#t}}common.katehoriia{{/t}}</label>
+                                <select zippy="cat" class="form-select"></select>
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="item">{{#t}}common.tovar{{/t}}</label>
+                                <input zippy="item" class="form-control" type="text" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="mode">{{#t}}report.recipientmonths.cell{{/t}}</label>
+                                <select zippy="mode" class="form-select"></select>
+                            </div>
+                            <div class="col-auto form-check mb-2 ms-2">
+                                <input zippy="allcust" class="form-check-input" type="checkbox">
+                                <label class="form-check-label" for="allcust">{{#t}}report.recipientmonths.all_customers{{/t}}</label>
+                            </div>
+                            <div class="col-auto">
+                                <input zippy="onreport" class="btn btn-primary" type="submit" value="{{#t}}common.ok{{/t}}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/recipientmonths" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                    </div>
+                    <div class="table-responsive mt-2" zippy="preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -6,3 +6,7 @@
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 2, 'Акт списання за місяць', 'IssueAct', 'Склад', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'IssueAct');
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 2, 'Отримувачі по місяцях', 'RecipientMonths', 'Склад', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'RecipientMonths');
