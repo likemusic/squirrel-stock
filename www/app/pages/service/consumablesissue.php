@@ -105,8 +105,13 @@ class ConsumablesIssue extends \App\Pages\Base
             $this->setError(__('sqs.cissue.not_enough', ['item' => $item->itemname, 'qty' => H::fqty($stock), 'msr' => $item->msr]));
             return;
         }
+        // интервал выдачи (App\SQS\IssueInterval): получатель уже получал эту позицию недавно — предупреждение, выдать можно
+        $warn = \App\SQS\IssueInterval::warning(intval($f->customer->getKey()), $item_id, intval($f->date->getDate()));
+        if ($warn !== null) {
+            $this->setWarn($warn);
+        }
         // та же позиция еще раз — количество складывается
-        $this->_rows[$item_id] = new \App\DataItem(['item_id' => $item_id, 'name' => $item->itemname, 'msr' => $item->msr, 'qty' => $total]);
+        $this->_rows[$item_id] = new \App\DataItem(['item_id' => $item_id, 'name' => $item->itemname, 'msr' => $item->msr, 'qty' => $total, 'warn' => $warn ?? '']);
         $f->item->setKey(0);
         $f->item->setText('');
         $f->qty->setText('1');
@@ -116,6 +121,7 @@ class ConsumablesIssue extends \App\Pages\Base
     public function rowOnRow($row) {
         $r = $row->getDataItem();
         $row->add(new Label('rowname', $r->name));
+        $row->add(new Label('rowwarn', $r->warn ?? ''))->setVisible(strlen($r->warn ?? '') > 0);
         $row->add(new Label('rowqty', H::fqty($r->qty) . ' ' . $r->msr));
         $row->add(new ClickLink('delrow', $this, 'onDelRow'));
     }
@@ -149,6 +155,15 @@ class ConsumablesIssue extends \App\Pages\Base
             }
         }
 
+        // интервал выдачи: получатель мог быть выбран после позиций — проверка всех строк; выдача не запрещается
+        $warnings = [];
+        foreach ($this->_rows as $r) {
+            $w = \App\SQS\IssueInterval::warning(intval($f->customer->getKey()), $r->item_id, intval($f->date->getDate()));
+            if ($w !== null) {
+                $warnings[] = $w;
+            }
+        }
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -171,6 +186,7 @@ class ConsumablesIssue extends \App\Pages\Base
             $doc->headerdata['payment'] = 0;
             $doc->headerdata['payed'] = 0;
             $doc->headerdata['pricetype'] = 'price1';
+            $doc->headerdata['sqs_interval_checked'] = 1;   // предупреждение показано здесь, хук после проведения его не повторяет
             $items = [];
             foreach (array_values($this->_rows) as $i => $r) {
                 $item = Item::load($r->item_id);
@@ -194,6 +210,9 @@ class ConsumablesIssue extends \App\Pages\Base
         }
 
         $this->setSuccess(__('sqs.cissue.done', ['doc' => $doc->document_number, 'customer' => $customer->customer_name, 'n' => count($this->_rows)]));
+        if ($warnings) {
+            $this->setWarn(implode('; ', $warnings));
+        }
         // дата и склад остаются: обычно выдают несколько получателей подряд
         $this->_rows = [];
         $f->rows->Reload();

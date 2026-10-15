@@ -129,3 +129,15 @@ CREATE TABLE IF NOT EXISTS sqs_loginfail (
   KEY login (login, createdon),
   KEY ip (ip, createdon)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Интервал выдачи (App\SQS\IssueInterval): «не чаще раза в N дней» для категории (kind = 'cat') или позиции ('item')
+CREATE TABLE IF NOT EXISTS sqs_issue_interval (
+  kind varchar(4) NOT NULL,
+  ref_id int NOT NULL,
+  days int NOT NULL,
+  PRIMARY KEY (kind, ref_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 4, 'Інтервали видачі', 'IssueIntervals', 'Товари', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'IssueIntervals');
