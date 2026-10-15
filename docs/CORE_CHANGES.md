@@ -82,3 +82,11 @@ When merging an upstream update, check these places first: modules (`www/app/sqs
 | `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()` | document hooks |
 | `www/app/pages/main.php`, `www/templates/pages/main.html` | `mainBlocks` |
 | `www/app/pages/reference/itemlist.php` | `itemSaved` |
+
+## Changes in vendor/
+
+`vendor/` is installed by composer and is not in the repository. Changes to it are exact text replacements in `www/cli/patch-vendor.php`, run by composer after the autoloader is built (`composer.json`, `scripts.post-autoload-dump`): `composer install` in `tools/install/linux.sh`, `composer dump-autoload` in `docker/Dockerfile`; `tools/release/build.sh` takes `vendor/` from the image. An applied patch is skipped; if the original text is not found (new package version), the script fails and so does the build. After a dependency update: check each patch against the new code, adjust or remove it.
+
+| Commit | Package, file | Change | Test |
+|---|---|---|---|
+| `d763acde2` | `leon-mbs/zippy` 2.8.2, `core/httprequest.php` | encoded page link (`index.php?r=`, RedirectLink/LinkList with encoding): unserialized without classes, must be `[page class, params]`, otherwise an invalid request (home page) | `tests/specs/vendor-patches.spec.js`, `tools/install/test-in-docker.sh` |
