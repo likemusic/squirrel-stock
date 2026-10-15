@@ -27,6 +27,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `107c25468` | `www/assets/css/app.css` (end of file) | below 768 px the opened sidebar pushes the page without shrinking it (`.main` min-width, `.wrapper` overflow-x hidden); before: the page shrank to ~60 px | `tests/specs/mobile.spec.js` |
 | `2352be760` | `www/assets/css/app.css` (end of file) | `#sidebar.collapsed { box-shadow: none }`: no grey band on the left edge when the menu is hidden | `tests/specs/mobile.spec.js` |
 | `9e0f28a35` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | below 768 px secondary columns hidden (`d-none d-md-table-cell`), row actions visible without horizontal scroll; desktop unchanged | `tests/specs/mobile.spec.js` |
+| `0642e6635` | `www/templates/pages/main.html`, `www/templates/pages/base.html`; `www/app/sqs/equipmentdue.php` | main page: backup warning for administrators (`App\SQS\BackupJob::status()`), `table-responsive` around the critical quantity table; `app.css?v=828-sqs1` | `tests/specs/backup-main-warning.spec.js`, `tests/specs/mobile.spec.js` |
 
 ## Proposed upstream
 
