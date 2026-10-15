@@ -139,8 +139,14 @@ async function setUsesnumber(page, value) {
   await clickWait(page, '#business button[type=submit]');
 }
 
+// Печатная форма документа (то, что уходит на принтер): текст страницы ShowDoc&arg=print/<id>
+async function printForm(page, documentId) {
+  await page.goto('/index.php?p=App/Pages/ShowDoc&arg=print/' + documentId);
+  return (await page.locator('body').innerText()).replace(/\s+/g, ' ');
+}
+
 async function bodyText(page) {
   return (await page.locator('body').innerText()).replace(/\s+/g, ' ');
 }
 
-module.exports = { USESNUMBER_HOSPICE, setUsesnumber, blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };
+module.exports = { printForm, USESNUMBER_HOSPICE, setUsesnumber, blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };

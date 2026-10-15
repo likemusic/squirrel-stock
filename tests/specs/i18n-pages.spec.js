@@ -2,6 +2,7 @@
 // и без ключей словаря вместо текста (так выглядел бы пропущенный перевод).
 const fs = require('fs');
 const { test, expect } = require('../fixtures');
+const { value } = require('../helpers/db');
 
 const UK = JSON.parse(fs.readFileSync(__dirname + '/../../www/lang/uk.json', 'utf8'));
 const KEYS = Object.keys(UK).filter(k => k.includes('.'));
@@ -27,12 +28,12 @@ test('страницы меню без сырых ключей перевода'
 });
 
 test('печатная форма документа без сырых ключей перевода', async ({ page }) => {
-  await page.goto('/index.php?p=App/Pages/Register/DocList');
-  await page.locator('a[id^=show_]').first().click();
-  await page.waitForLoadState('networkidle');
+  const id = value('select max(document_id) from documents where meta_id = (select meta_id from metadata where meta_name = \'GoodsIssue\')');
+  test.skip(!id, 'в базе нет расходных накладных');
+  await page.goto('/index.php?p=App/Pages/ShowDoc&arg=print/' + id);
   const html = await page.content();
   const text = await page.locator('body').innerText();
   expect(html).not.toMatch(/\{\{[#\/]t\}\}|\{\|[#\/]t\|\}/);
   expect(KEYS.filter(k => text.includes(k))).toEqual([]);
-  expect(text).toMatch(/Кількість|Найменування|Сума/);   // шапка таблицы печатной формы на украинском
+  expect(text).toMatch(/Видаткова накладна №/);   // заголовок печатной формы на украинском
 });
