@@ -293,3 +293,8 @@ a.sidebar-link {
         min-width: calc(100vw - 12px);
     }
 }
+
+/* SquirrelStock: у свернутого меню нет тени — раньше на левом краю страницы оставалась серая полоса */
+#sidebar.collapsed {
+    box-shadow: none;
+}

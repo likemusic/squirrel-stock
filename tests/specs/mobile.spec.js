@@ -19,6 +19,7 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
     test('меню открывается и закрывается', async ({ page }, testInfo) => {
       await page.goto('/');
       await expect(page.locator('#sidebar')).toHaveClass(/collapsed/);
+      expect(await page.locator('#sidebar').evaluate(e => getComputedStyle(e).boxShadow), 'у свернутого меню нет тени на краю экрана').toBe('none');
       await page.locator('#barbtn').tap();
       await expect(page.locator('#sidebar')).not.toHaveClass(/collapsed/);
       await expect.poll(async () => (await page.locator('#sidebar').boundingBox()).x, 'меню выехало на экран').toBeGreaterThanOrEqual(0);
