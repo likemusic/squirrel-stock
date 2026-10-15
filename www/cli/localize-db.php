@@ -23,6 +23,15 @@ if (!preg_match('/^[a-z]{2,3}$/', $lang) || !is_file($dictFile)) {
     exit(1);
 }
 $dict = json_decode(file_get_contents($dictFile), true);
+// названия и группы пунктов меню модулей — из их module.php ('desc' => ['uk' => ..., 'ru' => ...])
+require __DIR__ . '/modules-menu.php';
+foreach (sqs_modules_menu() as [$type, $name, $desc, $group]) {
+    foreach (['metadata.description' => $desc, 'metadata.menugroup' => $group] as $target => $v) {
+        if (is_array($v) && isset($v['uk'], $v[$lang]) && $v['uk'] !== $v[$lang]) {
+            $dict[$target][$v['uk']] = $v[$lang];
+        }
+    }
+}
 if (in_array('--back', $argv, true)) {
     foreach ($dict as $target => $pairs) {
         $dict[$target] = str_starts_with($target, 'options.') ? array_map('array_flip', $pairs) : array_flip($pairs);

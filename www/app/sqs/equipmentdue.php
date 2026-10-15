@@ -30,21 +30,12 @@ class EquipmentDue
                 'days'     => $days < 0 ? __('sqs.due.overdue', ['days' => -$days]) : ($days == 0 ? __('sqs.due.today') : __('sqs.due.left', ['days' => $days])),
             ];
         }
-        return ['sqs_due' => $rows, 'sqs_due_show' => count($rows) > 0, 'sqs_due_days' => self::DAYS] + self::backupTvars();
+        return ['sqs_due' => $rows, 'sqs_due_show' => count($rows) > 0, 'sqs_due_days' => self::DAYS];
     }
 
-    // предупреждение для администратора: в каком-то месте нет удачной резервной копии дольше BackupJob::STALE_HOURS
-    // (если планировщик не запущен вовсе, уведомление о сбое не придет — проверяет веб-сторона)
-    private static function backupTvars(): array {
-        if (\App\System::getUser()->rolename != 'admins') {
-            return ['sqs_backup_stale' => ''];
-        }
-        $stale = [];
-        foreach (BackupJob::status() as $place => $st) {
-            if ($st['stale']) {
-                $stale[] = __('service.backup.place_' . $place);
-            }
-        }
-        return ['sqs_backup_stale' => $stale ? __('service.backup.stale', ['places' => implode(', ', $stale), 'hours' => BackupJob::STALE_HOURS]) : ''];
+    // блок главной страницы (событие mainBlocks)
+    public static function mainBlock(): string {
+        $tv = self::tvars();
+        return $tv['sqs_due_show'] ? (new \App\Report('sqs/equipmentdue.tpl'))->generate($tv, false) : '';
     }
 }

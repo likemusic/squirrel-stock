@@ -249,4 +249,22 @@ class BackupJob
         $last = $conn->GetOne("SELECT MAX(createdon) FROM sqs_backuplog WHERE place = 'local' AND ok = 1");
         return $last && time() - strtotime($last) < $hours * 3600;
     }
+
+    // блок главной страницы (событие mainBlocks): администратору — предупреждение, если в каком-то месте нет удачной копии
+    // дольше STALE_HOURS (если планировщик не запущен вовсе, уведомление о сбое не придет — проверяет веб-сторона)
+    public static function mainBlock(): string {
+        if (\App\System::getUser()->rolename != 'admins') {
+            return '';
+        }
+        $stale = [];
+        foreach (self::status() as $place => $st) {
+            if ($st['stale']) {
+                $stale[] = __('service.backup.place_' . $place);
+            }
+        }
+        if (!$stale) {
+            return '';
+        }
+        return (new \App\Report('sqs/backupstale.tpl'))->generate(['sqs_backup_stale' => __('service.backup.stale', ['places' => implode(', ', $stale), 'hours' => self::STALE_HOURS])], false);
+    }
 }

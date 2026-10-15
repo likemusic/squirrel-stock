@@ -90,4 +90,12 @@ class Item1C
         }
         return $res;
     }
+
+    // событие itemSaved (справочник номенклатуры): позиция из 1С переименована — акт списания печатает название из 1С (ZIPPY_GAPS п. 30)
+    public static function itemSaved($item, $page, string $oldname): void {
+        $i1c = self::get((int)$item->item_id);
+        if ($i1c && $oldname !== $item->itemname && $i1c['name1c'] !== $item->itemname) {
+            $page->setWarn(__('sqs.item1c.renamed', ['name1c' => $i1c['name1c']]));
+        }
+    }
 }

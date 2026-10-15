@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { test, expect } = require('../fixtures');
 const { createItem, createDoc } = require('../helpers/zippy');
-const { value, stockQty } = require('../helpers/db');
+const { query, value, stockQty } = require('../helpers/db');
 
 const MODULES = path.join(__dirname, '../../www/app/sqs/modules');
 
@@ -77,4 +77,84 @@ test('модуль: хуки проведения и пункт меню', async
   await page.goto('/');
   expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('1');
   await expect(page.locator(`a[href*="Report/${cls}"]`)).toHaveCount(0);
+  query(`delete from metadata where meta_name = '${cls}'`);   // после себя — без строки меню
+});
+
+// Механизм модулей целиком: таблицы из schema.sql, словарь модуля, название пункта меню по языку, печатная форма и блок
+// главной из папки модуля; выключенный модуль (папка с точкой) не роняет страницы, его пункт выключается и при возврате
+// модуля включается снова; профиль благотворительной организации пункты модулей не выключает.
+test('модуль: таблицы, словарь, печатная форма, блок главной, выключение', async ({ page, uniq }) => {
+  const { webPhp } = require('../helpers/stand');
+  const u = uniq.toLowerCase(), cls = 'ZzMech' + uniq, table = 'zz_mech_' + u;
+  const dir = path.join(MODULES, 'zz-test-mech-' + u), off = path.join(MODULES, '.zz-test-mech-' + u);
+  fs.mkdirSync(path.join(dir, 'pages/report'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'templates/pages/report'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'templates/printforms/zz'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'lang'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'module.php'), `<?php
+use App\\SQS\\Hooks;
+
+return [
+    'name' => 'Механизм ${uniq}',
+    'menu' => [[2, '${cls}', ['uk' => 'Механізм ${uniq}', 'ru' => 'Механизм ${uniq}'], 'Склад']],
+    'register' => function () {
+        Hooks::listen('mainBlocks', fn() => '<div id="zz-block-${u}">' . __('zz.mech.${u}') . '</div>');
+    },
+];
+`);
+  fs.writeFileSync(path.join(dir, 'schema.sql'), `-- таблица модуля\nCREATE TABLE IF NOT EXISTS ${table} (id int NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB;\n`);
+  fs.writeFileSync(path.join(dir, 'lang/uk.json'), JSON.stringify({ ['zz.mech.' + u]: 'Текст модуля ' + uniq }));
+  fs.writeFileSync(path.join(dir, 'templates/printforms/zz', u + '.tpl'), '<b id="zz-print">{{#t}}zz.mech.' + u + '{{/t}} {{n}}</b>');
+  fs.writeFileSync(path.join(dir, 'pages/report', cls.toLowerCase() + '.php'), `<?php
+namespace App\\Pages\\Report;
+
+class ${cls} extends \\App\\Pages\\Base
+{
+    public function __construct() {
+        parent::__construct();
+        $this->_tvars['print'] = (new \\App\\Report('zz/${u}.tpl'))->generate(['n' => 42]);
+    }
+}
+`);
+  fs.writeFileSync(path.join(dir, 'templates/pages/report', cls.toLowerCase() + '.html'), '<html><head><title>t</title></head><body>{{{print}}}</body></html>\n');
+  try {
+    await page.goto('/');
+    await expect(page.locator('#zz-block-' + u), 'блок главной из модуля, текст из словаря модуля').toHaveText('Текст модуля ' + uniq);
+    expect(value(`select count(*) from information_schema.tables where table_schema = database() and table_name = '${table}'`), 'таблица из schema.sql').toBe('1');
+    expect(value(`select description from metadata where meta_type = 2 and meta_name = '${cls}'`), 'название на языке установки').toBe('Механізм ' + uniq);
+    await page.goto('/index.php?p=App/Pages/Report/' + cls);
+    await expect(page.locator('#zz-print'), 'печатная форма из модуля').toHaveText('Текст модуля ' + uniq + ' 42');
+
+    // перевод значений в базе: название пункта модуля — из его module.php
+    webPhp('cli/localize-db.php', 'ru');
+    try {
+      expect(value(`select description from metadata where meta_type = 2 and meta_name = '${cls}'`), 'localize-db ru').toBe('Механизм ' + uniq);
+    } finally {
+      webPhp('cli/localize-db.php', 'ru', '--back');
+    }
+    expect(value(`select description from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('Механізм ' + uniq);
+
+    // профиль благотворительной организации не выключает пункт модуля
+    webPhp('cli/charity-profile.php');
+    expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('0');
+    webPhp('cli/charity-profile.php', '--back');
+
+    // выключение: папка с точкой — страницы открываются, пункт выключен; возвращение — включен снова
+    fs.renameSync(dir, off);
+    await page.goto('/');
+    await expect(page.locator('#zz-block-' + u)).toHaveCount(0);
+    await expect(page.locator('a[href*="Report/Main"], #sidebar').first()).toBeAttached();
+    expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('1');
+    await page.goto('/index.php?p=App/Pages/Doc/GoodsIssue');
+    await expect(page.locator('#docform')).toBeAttached();
+    fs.renameSync(off, dir);
+    await page.goto('/');
+    expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`), 'модуль вернулся').toBe('0');
+  } finally {
+    for (const d of [dir, off]) fs.rmSync(d, { recursive: true, force: true });
+    query(`drop table if exists ${table}`);
+    await page.goto('/');   // синхронизация: пункт удаленного модуля выключен
+    // после себя — без строк меню и отпечатка схемы (иначе страница настройки меню показывает украинское название в ru)
+    query(`delete from metadata where meta_name = '${cls}'; delete from keyval where keyd = 'sqs_schema_zz-test-mech-${u}'`);
+  }
 });

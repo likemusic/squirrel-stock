@@ -5,7 +5,7 @@ namespace App;
 /**
  * SquirrelStock: перевод интерфейса по английским ключам.
  *
- * Словари — lang/<язык>.json, плоский объект «ключ → текст». Исходный язык — uk (тексты автора Zippy),
+ * Словари — lang/<язык>.json и lang/<язык>.json модулей (App\SQS\Modules::dictionary), плоский объект «ключ → текст». Исходный язык — uk (тексты автора Zippy),
  * если ключа нет в словаре выбранного языка, берётся uk, затем сам ключ; пропуск пишется в лог.
  * Язык: настройка пользователя (профиль), иначе $_config['common']['lang'], иначе uk.
  *
@@ -95,7 +95,8 @@ class Translator
     private static function dict(string $lang): array {
         if (!isset(self::$dicts[$lang])) {
             $data = self::isAvailable($lang) ? json_decode((string)file_get_contents(self::dir() . $lang . '.json'), true) : null;
-            self::$dicts[$lang] = is_array($data) ? $data : [];
+            // ключи модулей (app/sqs/modules/<имя>/lang/<язык>.json); при совпадении ключа главный словарь важнее
+            self::$dicts[$lang] = (is_array($data) ? $data : []) + \App\SQS\Modules::dictionary($lang);
         }
 
         return self::$dicts[$lang];

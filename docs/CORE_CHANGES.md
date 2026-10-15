@@ -44,6 +44,9 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `161768292` | `www/app/api/common.php` `token()`, `www/app/api/jsonrpc.php` (Basic), `www/app/chatbot.php` (login) | password-only logins go through `LoginGuard::passwordOnly()`: lock after repeated failures, refused for users with two-factor login | `tests/specs/two-factor.spec.js` |
 | `d51a86a38` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html` | action cell no-wrap only on desktop (`text-md-nowrap`), spacing before icons only on desktop: icons of a draft document stay on a phone screen | `tests/specs/mobile.spec.js` |
 | `9723941ee` | `www/templates/pages/base.html`; new `www/assets/js/sqs-typeahead.js` | autocomplete race: answers to outdated requests are dropped, Enter/Tab on a stale list waits for the answer to the current text (layer over bootstrap3-typeahead from the framework, vendor not edited) | `tests/specs/item-autocomplete.spec.js` |
+| `f7f3901d5` | `www/app/report.php` `generate()` | print form from a module folder first (`App\SQS\Modules::printform`) | `tests/specs/hooks.spec.js` |
+| `d025f9370` | `www/app/pages/main.php`, `www/templates/pages/main.html` | blocks of modules (`Hooks::emit('mainBlocks')`, placeholder `{{{sqs_blocks}}}`) instead of fork markup and the direct `EquipmentDue` call (`6d6dd5883`, `0642e6635`) | `tests/specs/equipment-due.spec.js`, `tests/specs/backup-main-warning.spec.js` |
+| `64cf8834c` | `www/app/pages/reference/itemlist.php` (item save) | event `Hooks::emit('itemSaved')` instead of the direct `Item1C` call | `tests/specs/import-1c-same-name.spec.js` |
 
 ## Proposed upstream
 
@@ -57,3 +60,16 @@ Fixes offered to the author as pull requests (15.10.2026, branches in [likemusic
 | `3e01ce6d1` | [#1110](https://github.com/leon-mbs/zstore/pull/1110) browser Back duplicate |
 | `0b821c391` | [#1111](https://github.com/leon-mbs/zstore/pull/1111) autocomplete order |
 | `8e9021bf9` | [#1112](https://github.com/leon-mbs/zstore/pull/1112) import document date |
+
+## Extension points used by modules
+
+When merging an upstream update, check these places first: modules (`www/app/sqs/modules`, docs/MODULES.md) depend on them.
+
+| Place | Point |
+|---|---|
+| `www/init.php` | `App\SQS\Modules::load()` after `session_start()` |
+| `www/app/application.php` `getTemplate()` | page template from a module |
+| `www/app/report.php` `generate()` | print form from a module |
+| `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()` | document hooks |
+| `www/app/pages/main.php`, `www/templates/pages/main.html` | `mainBlocks` |
+| `www/app/pages/reference/itemlist.php` | `itemSaved` |
