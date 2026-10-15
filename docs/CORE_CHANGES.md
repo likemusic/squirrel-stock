@@ -39,6 +39,9 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `857e6214f` | `www/init.php` (after `session_start()`) | `App\SQS\Modules::load()`: modules from `app/sqs/modules` (docs/MODULES.md) | `tests/specs/hooks.spec.js` |
 | `03ab6eb88` | `www/app/entity/doc/document.php` `updateStatus()` | hooks `beforeExecute`/`beforeCancel` before any write, `afterExecute`/`afterCancel` once after the state is saved | `tests/specs/hooks.spec.js` |
 | `eaa5c3a9e` | `www/app/application.php` `getTemplate()` | page template from a module folder first | `tests/specs/hooks.spec.js` |
+| `de8be3bf9` | `www/app/pages/userlogin.php` `onsubmit()` | after a correct password a user with two-factor login continues on `App\Pages\TwoFactorLogin` (new); "remember me" only after the code | `tests/specs/two-factor.spec.js` |
+| `397195b64` | `www/templates/pages/userprofile.html` | link to two-factor login settings (`App\Pages\TwoFactor`, new) | `tests/specs/two-factor.spec.js` |
+| `161768292` | `www/app/api/common.php` `token()`, `www/app/api/jsonrpc.php` (Basic), `www/app/chatbot.php` (login) | password-only logins go through `LoginGuard::passwordOnly()`: lock after repeated failures, refused for users with two-factor login | `tests/specs/two-factor.spec.js` |
 
 ## Proposed upstream
 
