@@ -12,6 +12,8 @@ class System
 {
     public const CURR_VERSION = "8.2.9"; // текущая  версия
     public const PREV_VERSION = "8.2.8"; // предыдущая версия (для отката кода в случае  проблем)
+    // SquirrelStock: не проверять и не ставить обновления Zippy с zippy.com.ua (они затёрли бы изменения форка)
+    public const FORK_NO_UPSTREAM_UPDATES = true;
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
      
 
@@ -294,7 +296,11 @@ class System
     * 
     */
     public static function checkVersion() {
- 
+        // SquirrelStock: обновления Zippy с zippy.com.ua затёрли бы изменения форка, обновления приходят через git
+        if (self::FORK_NO_UPSTREAM_UPDATES) {
+            return false;
+        }
+
         $url = "https://zippy.com.ua/updates/version.json";
         
         $response = Helper::getContent($url) ;

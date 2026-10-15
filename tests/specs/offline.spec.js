@@ -36,3 +36,12 @@ test('графики на главной рисуются без интерне�
   }
   expect(errors).toEqual([]);
 });
+
+// Обновления Zippy с zippy.com.ua в форке отключены: архив автора затёр бы изменения SquirrelStock
+test('обновления Zippy с сайта автора отключены', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('a[href*="App/Pages/Update"]')).toHaveCount(0);
+  await page.goto('/index.php?p=App/Pages/Update');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('body')).toContainText('вимкнено');
+});

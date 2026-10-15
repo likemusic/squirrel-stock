@@ -32,6 +32,11 @@ class Update extends \App\Pages\Base
             \App\Application::RedirectError();
             return  ;
         }  
+        if (System::FORK_NO_UPSTREAM_UPDATES) {
+            System::setErrorMsg('Оновлення Zippy з zippy.com.ua в SquirrelStock вимкнено: вони затерли б зміни форку');
+            \App\Application::RedirectError();
+            return  ;
+        }
         
         $t = '?t='.time(); 
  
