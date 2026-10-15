@@ -9,7 +9,7 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { chromium } = require('@playwright/test');
-const { blockExternal, login, clickWait, createCustomer, createDoc, createContract, messages } = require('../helpers/zippy');
+const { blockExternal, login, clickWait, createCustomer, createDoc, messages, pickAuto } = require('../helpers/zippy');
 const { query, value, esc } = require('../helpers/db');
 const { webPhp } = require('../helpers/stand');
 
@@ -24,8 +24,8 @@ const pick = a => a[rnd(a.length)];
 
 const WARDS = Array.from({ length: 16 }, (_, i) => `Подопечный ${String(i + 1).padStart(3, '0')}`);
 const ON_REQUEST = ['Семья по запросу 01', 'Семья по запросу 02'];
-const ORG = 'Пансионат (демо)';
-const GASTRO = new Set(['Подопечный 003', 'Подопечный 007', 'Подопечный 011', 'Подопечный 014']);
+const ORG = 'Пансионат (демо)';   // получает «по запросу»
+const GASTRO = new Set(['Подопечный 003', 'Подопечный 007', 'Подопечный 011', 'Подопечный 014']);   // получают питание для гастростомы
 const LEFT_CARE = new Set(['Подопечный 015', 'Подопечный 016']);
 const SENT_BY = ['Выездная служба', 'Врач-педиатр поликлиники', 'Социальный работник', 'Отделение паллиативной помощи'];
 
@@ -60,7 +60,7 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
   await clickWait(page, '#common button[type=submit]');
 
   // 2. Склады-состояния оборудования и категории
-  for (const name of ['Ремонт', 'К списанию']) {
+  for (const name of ['Ремонт', 'К списанию']) {   // «К списанию» — пустой, для показа
     await page.goto('/index.php?p=App/Pages/Reference/StoreList');
     await clickWait(page, '#storeadd');
     await page.locator('#storeeditname').fill(name);
@@ -92,14 +92,14 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
   // артикулы для подсказки при вводе: у импортированных позиций их нет
   query("update items set item_code = concat('П-', lpad(item_id, 4, '0')) where item_code is null or item_code = ''");
 
-  // 4. Получатели с признаками-тегами
+  // 4. Получатели с признаками-тегами: только «подопечный», «по запросу», «снят с опеки» (ответ хосписа)
   const tag = (name, t) => query(`insert into taglist (tag_name, tag_type, item_id) select '${esc(t)}', 1, customer_id from customers where customer_name = '${esc(name)}'`);
   for (const [i, name] of [...WARDS, ...ON_REQUEST, ORG].entries()) {
     await createCustomer(page, { name, type: 1, phone: `029${String(1000000 + i * 7919).slice(-7)}`, address: `г. Минск, ул. Демонстрационная, ${i + 1}` });
-    tag(name, WARDS.includes(name) ? 'подопечный' : name == ORG ? 'организация' : 'по запросу');
-    if (GASTRO.has(name)) tag(name, 'гастростома');
+    tag(name, WARDS.includes(name) ? 'подопечный' : 'по запросу');
     if (LEFT_CARE.has(name)) tag(name, 'снят с опеки');
   }
+  query("delete from taglist where tag_name = ''");   // форма контрагента сохраняет пустую метку
   log('получатели', WARDS.length + ON_REQUEST.length + 1);
 
   // 5. Выдачи расходников июль — октябрь 2026
@@ -119,6 +119,10 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
     log('выдачи', month);
   }
 
+  // две позиции 1С с одним названием и разными ценами: в акте за сентябрь — одна строка с названием из 1С
+  const gloves = query(`select item_code from items where itemname = 'Перчатки нитриловые нестерильные M, 100 шт' order by item_id`).map(r => r[0]);
+  await createDoc(page, 'GoodsIssue', { date: '2026-09-18', customer: ORG, payment: 0, notes: 'Выдача', rows: gloves.map((code, k) => ({ code, qty: 2 + k, price: 0 })) });
+
   // 6. Возвраты и списания с причинами
   for (const issue of [issues[3], issues[20]]) {
     const id = value(`select document_id from documents where document_number = '${esc(issue.number)}' order by document_id desc limit 1`);
@@ -135,20 +139,45 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
   }
   log('возвраты и списания');
 
-  // 7. Оборудование: договоры, выдачи, возврат, ремонт, к списанию
-  const unit = name => query(`select s.snumber from store_stock s join items i on i.item_id = s.item_id where i.itemname = '${esc(name)}' and s.qty > 0 and s.store_id = 1 order by s.snumber limit 1`)[0][0];
-  const eq = [['Концентратор кислорода 5 л', 'Подопечный 002', '2026-07-03', '2099-12-31'], ['Отсасыватель медицинский В-40', 'Подопечный 003', '2026-07-10', '2099-12-31'],
-    ['Кровать функциональная медицинская', 'Подопечный 005', '2026-07-21', '2026-12-31'], ['Концентратор кислорода 5 л', 'Подопечный 007', '2026-08-04', '2099-12-31'],
-    ['Пульсоксиметр', 'Семья по запросу 01', '2026-08-12', '2026-09-30'], ['Кресло-коляска детская', 'Подопечный 009', '2026-08-25', '2099-12-31'],
-    ['Аппарат НИВЛ', 'Подопечный 011', '2026-09-08', '2099-12-31'], ['Отсасыватель медицинский В-40', 'Подопечный 015', '2026-07-15', '2099-12-31']];
+  // 7. Оборудование через «Выдачу оборудования» (договор + выдача одной формой); у части единиц — заводской номер.
+  // Сроки трех договоров — от даты сборки: истек и истекают в ближайшие 14 дней, чтобы на главной было напоминание.
+  const units = name => query(`select s.item_id, s.snumber from store_stock s join items i on i.item_id = s.item_id
+                                where i.itemname = '${esc(name)}' and s.qty > 0 and s.store_id = 1 order by s.snumber`);
+  for (const name of ['Концентратор кислорода 5 л', 'Отсасыватель медицинский В-40', 'Аппарат НИВЛ', 'Кровать функциональная медицинская']) {
+    for (const [k, [item, sn]] of units(name).entries()) {
+      if (k % 2 == 0) query(`insert into sqs_unit (item_id, snumber, factory_no) values (${item}, '${esc(sn)}', 'ZV-${sn.slice(-4)}-${2020 + k}')`);
+    }
+  }
+  const day = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+  const eq = [['Концентратор кислорода 5 л', 'Подопечный 002', '2026-07-03', null], ['Отсасыватель медицинский В-40', 'Подопечный 003', '2026-07-10', null],
+    ['Кровать функциональная медицинская', 'Подопечный 005', day(-75), day(-3)], ['Концентратор кислорода 5 л', 'Подопечный 007', '2026-08-04', null],
+    ['Пульсоксиметр', 'Семья по запросу 01', day(-40), day(5)], ['Кресло-коляска детская', 'Подопечный 009', '2026-08-25', null],
+    ['Аппарат НИВЛ', 'Подопечный 011', day(-50), day(11)], ['Отсасыватель медицинский В-40', 'Подопечный 015', '2026-07-15', null]];
   const given = [];
   for (const [n, [name, who, date, to]] of eq.entries()) {
     const number = `${101 + n}/26`;
-    await createContract(page, { number, customer: who, from: date, to, note: pick(SENT_BY) });
-    const sn = unit(name);
-    const r = await createDoc(page, 'GoodsIssue', { date, customer: who, payment: 0, contract: number, notes: 'Выдача оборудования по договору', rows: [{ code: codeOf(name), qty: 1, price: 0, sn }] });
-    given.push({ ...r, sn, who });
+    const [, sn] = units(name)[0];
+    await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
+    await pickAuto(page, '#iform #customer', who, who);   // существующий получатель — из подсказки, иначе форма создаст нового
+    await page.waitForLoadState('networkidle');
+    await page.locator('#iform #contract_number').fill(number);
+    await page.locator('#iform #date').fill(date);
+    if (to) {
+      await page.locator('#iform #ondemand').setChecked(false);
+      await page.locator('#iform #enddate').fill(to);
+    }
+    await page.locator('#iform #referrer').fill(pick(SENT_BY));
+    await pickAuto(page, '#iform #unit', sn, sn);
+    await clickWait(page, '#iform #addunit');
+    await page.locator('#iform #notes').fill('Выдача оборудования по договору');
+    await clickWait(page, '#iform #issue');
+    // всплывающее сообщение бывает уже скрыто — проверка по базе
+    if (value(`select count(*) from contracts where contract_number = '${number}'`) != '1') throw new Error(`выдача ${number}: ${(await messages(page)).join(' | ')}`);
+    const doc = value(`select d.document_number from documents d join metadata m on m.meta_id = d.meta_id join customers c on c.customer_id = d.customer_id
+                       where m.meta_name = 'GoodsIssue' and c.customer_name = '${esc(who)}' order by d.document_id desc limit 1`);
+    given.push({ number: doc, sn, who });
   }
+  log('оборудование выдано', given.length);
   // снят с опеки — вернули оборудование
   const back = given[7];
   const backId = value(`select document_id from documents where document_number = '${esc(back.number)}' order by document_id desc limit 1`);
@@ -156,9 +185,9 @@ const codeOf = name => value(`select item_code from items where itemname = '${es
   await page.locator('#document_date').fill('2026-10-01');
   await page.locator('#notes').fill('Возврат оборудования: снят с опеки');
   await clickWait(page, '#execdoc');
-  // перемещение на склады «Ремонт» и «К списанию»
-  for (const [name, store, note] of [['Отсасыватель медицинский В-40', 'Ремонт', 'Не работает мотор'], ['Матрас противопролежневый', 'К списанию', 'Порван чехол, ремонт нецелесообразен']]) {
-    const sn = unit(name);
+  // единица в ремонт
+  for (const [name, store, note] of [['Отсасыватель медицинский В-40', 'Ремонт', 'Не работает мотор']]) {
+    const [, sn] = units(name)[0];
     const to = value(`select store_id from stores where storename = '${esc(store)}'`);
     await page.goto('/index.php?p=App/Pages/Doc/MoveItem');
     await page.locator('#document_date').fill('2026-10-05');
