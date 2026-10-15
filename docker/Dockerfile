@@ -15,8 +15,9 @@ WORKDIR /var/www/html
 # зависимости отдельным слоем: правка кода не запускает composer заново
 COPY www/composer.json www/composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --no-autoloader --no-scripts
-# rclone — копия в облако (App\SQS\BackupJob); отдельным слоем, после тяжелых слоев: расширения PHP и composer берутся из кэша
-RUN apt-get update && apt-get install -y --no-install-recommends rclone ca-certificates && rm -rf /var/lib/apt/lists/*
+# rclone — копия в облако (App\SQS\BackupJob), mod_headers — заголовки безопасности из .htaccess; отдельным слоем, после тяжелых слоев: расширения PHP и composer берутся из кэша
+RUN apt-get update && apt-get install -y --no-install-recommends rclone ca-certificates && rm -rf /var/lib/apt/lists/* \
+ && a2enmod headers
 
 COPY www/ ./
 RUN composer dump-autoload --no-dev --optimize \

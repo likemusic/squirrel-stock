@@ -6,7 +6,22 @@ DirectoryIndex index.php
 RewriteEngine on
 RewriteBase / 
 
+# SquirrelStock: служебные файлы не отдаются браузеру (списки библиотек и их версий, словари, консольные скрипты, примеры)
+RewriteRule ^(composer\.(json|lock)|script_examples\.zip|init\.php|[^/]*\.md)$ - [F,L]
+RewriteRule ^(lang|cli)(/|$) - [F,L]
+# из vendor/ — только статика, которую подключают страницы (css, js, картинки, шрифты)
+RewriteCond %{REQUEST_URI} !\.(css|js|png|gif|jpe?g|svg|ico|woff2?|ttf|eot|map)$ [NC]
+RewriteRule ^vendor/ - [F,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
  
 RewriteRule ^(\/index\.php.{0,}|[-#a-zA-Z0-9\/_]+)$ /index.php [L,QSA]
 
+# SquirrelStock: заголовки безопасности (нужен mod_headers; HSTS включайте только после перехода сайта на HTTPS)
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "same-origin"
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+</IfModule>
