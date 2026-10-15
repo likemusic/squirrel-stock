@@ -2,6 +2,9 @@
 // ответы с заголовками безопасности. Запросы без входа. ZIPPY_GAPS п. 36.
 const { test, expect } = require('@playwright/test');
 
+// запросы — как от нового посетителя: без общей сессии тестов (страница входа очищает сессию и разлогинила бы остальные тесты)
+test.use({ storageState: { cookies: [], origins: [] } });
+
 const closed = [
   'composer.json', 'composer.lock', 'vendor/composer/installed.json', 'vendor/autoload.php',
   'lang/uk.json', 'lang/ru.json', 'cli/i18n/ru.json', 'cli/backup.php', 'script_examples.zip',
@@ -29,4 +32,12 @@ test('заголовки безопасности, версия PHP не рас�
   expect(h['x-content-type-options']).toBe('nosniff');
   expect(h['referrer-policy']).toBe('same-origin');
   expect(h['x-powered-by'], 'версия PHP').toBeUndefined();
+});
+
+test('cookie сессии: HttpOnly и SameSite', async ({ request }) => {
+  const r = await request.get('/', { maxRedirects: 0 });
+  const cookie = r.headersArray().filter(h => h.name.toLowerCase() === 'set-cookie').map(h => h.value).find(v => v.startsWith('PHPSESSID='));
+  expect(cookie, 'сессия выдается').toBeTruthy();
+  expect(cookie).toMatch(/;\s*HttpOnly/i);
+  expect(cookie).toMatch(/;\s*SameSite=Lax/i);
 });
