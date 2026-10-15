@@ -30,7 +30,8 @@ class Report
         
         $dir = 'templates';
 
-        $fp = _ROOT . $dir . '/printforms/' . $this->_template ;
+        // SquirrelStock: печатная форма модуля из его папки (App\SQS\Modules)
+        $fp = \App\SQS\Modules::printform($this->_template) ?? (_ROOT . $dir . '/printforms/' . $this->_template);
         $fp_c = str_replace(".tpl", "_custom.tpl", $fp) ;    //кастомный  шаблон
         if(is_file($fp_c)) {
             $template = @file_get_contents($fp_c);
