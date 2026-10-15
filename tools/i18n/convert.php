@@ -33,7 +33,7 @@ foreach (array_slice($argv, 1) as $a) {
 }
 $root = realpath($opts['root']) or die("нет каталога {$opts['root']}\n");
 $paths = $paths ?: ['app', 'templates'];
-$exclude = ['templates/site/'];
+$exclude = ['templates/site/', 'app/translator.php', 'app/functions.php'];   // сайт автора Zippy; сам переводчик
 
 $files = [];
 foreach ($paths as $p) {
@@ -119,7 +119,7 @@ foreach ($found as $rel => $items) {
             }
             $code .= ')';
         } else {
-            $code = $it['before'] . '{{#t}}' . $key . '{{/t}}' . $it['after'];
+            $code = $it['before'] . $key . $it['after'];
         }
         $src = substr_replace($src, $code, $it['start'], $it['len']);
         $count++;
@@ -448,6 +448,21 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
         $chunks[] = ['text', substr($src, $pos), $pos];
     }
     $lineAt = fn($off) => substr_count($src, "\n", 0, $off) + 1;
+    // смена разделителей Mustache ({{={| |}=}} — чтобы {{ }} достались Vue): метки ставятся текущими разделителями
+    preg_match_all('/(?:\{\{|\{\|)=(\S+)\s+(\S+)=(?:\}\}|\|\})/', $src, $dm, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+    $delimAt = function ($off) use ($dm) {
+        $d = ['{{', '}}'];
+        foreach ($dm as $x) {
+            if ($x[0][1] < $off) {
+                $d = [$x[1][0], $x[2][0]];
+            }
+        }
+        return $d;
+    };
+    $mark = function ($off) use ($delimAt) {
+        [$o, $c] = $delimAt($off);
+        return [$o . '#t' . $c, $o . '/t' . $c];
+    };
 
     foreach ($chunks as [$kind, $text, $off]) {
         if (!hasCyr($text)) {
@@ -480,7 +495,8 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
                 }
                 $core = trim($val);
                 $lead = substr($val, 0, strlen($val) - strlen(ltrim($val)));
-                $out[] = ['start' => $off + $voff + strlen($lead), 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => '', 'after' => ''];
+                [$b, $e] = $mark($off);
+                $out[] = ['start' => $off + $voff + strlen($lead), 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => $b, 'after' => $e];
             }
             // остальной текст тега с кириллицей (например, в onclick) — руками
             $rest = preg_replace('#\s(placeholder|title|alt|aria-label|data-bs-original-title|data-original-title|value)\s*=\s*("[^"]*"|\'[^\']*\')#i', '', $text);
@@ -490,14 +506,15 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
             continue;
         }
         // текст: делим по управляющим тегам Mustache ({{#x}}, {{^x}}, {{/x}}, {{!x}}, {{>x}})
-        $parts = preg_split('/(\{\{[#^\/!>=][^}]*\}\})/', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE);
+        $parts = preg_split('/(\{\{[#^\/!>=][^}]*\}\}|\{\|[#^\/!>=][^|]*\|\})/', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE);
         foreach ($parts as [$seg, $soff]) {
-            if (!hasCyr($seg) || preg_match('/^\{\{[#^\/!>=]/', $seg)) {
+            if (!hasCyr($seg) || preg_match('/^(\{\{|\{\|)[#^\/!>=]/', $seg)) {
                 continue;
             }
             $core = trim($seg);
             $lead = strlen($seg) - strlen(ltrim($seg));
-            $out[] = ['start' => $off + $soff + $lead, 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => '', 'after' => ''];
+            [$b, $e] = $mark($off + $soff);
+            $out[] = ['start' => $off + $soff + $lead, 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => $b, 'after' => $e];
         }
     }
     return $out;
