@@ -30,6 +30,8 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `0642e6635` | `www/templates/pages/main.html`, `www/templates/pages/base.html`; `www/app/sqs/equipmentdue.php` | main page: backup warning for administrators (`App\SQS\BackupJob::status()`), `table-responsive` around the critical quantity table; `app.css?v=828-sqs1` | `tests/specs/backup-main-warning.spec.js`, `tests/specs/mobile.spec.js` |
 | `6a205b118` | `www/.htaccess` | service files (composer.json/lock, `lang/`, `cli/`, examples archive, `init.php`, non-static files under `vendor/`) are not served; security headers X-Frame-Options, X-Content-Type-Options, Referrer-Policy, no X-Powered-By | `tests/specs/hosting-security.spec.js` |
 | `04cf0e89f` | `www/app/helper.php` `login()`, `www/app/system.php` `checkUpdate()` | password checked only with `password_verify()`; a plain-text password from an old database is accepted once and re-hashed; default admin password reminder recognises any hash of it | `tests/specs/login-security.spec.js` |
+| `76a1b7639` | `www/index.php`, `www/app/pages/userlogin.php` `successLogin()`, `www/app/helper.php` `logout()`; new `www/app/sqs/remember.php`, table `sqs_remember` | "Remember me" cookie holds a random token; only its hash is stored, it expires, and stops working on password change and logout; cookie HttpOnly, SameSite=Lax, Secure over HTTPS | `tests/specs/login-security.spec.js` |
+| `dfaa29dd5` | `www/app/helper.php` `getSalt()` | a new installation gets a long random salt (`random_bytes`); existing salts kept | `tests/specs/login-security.spec.js` |
 
 ## Proposed upstream
 
