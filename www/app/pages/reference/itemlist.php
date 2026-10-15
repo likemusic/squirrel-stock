@@ -635,11 +635,8 @@ class ItemList extends \App\Pages\Base
         $this->_item->savecf($v);        
         
         $this->_item->save();
-        // SquirrelStock: позиция из 1С переименована — акт списания печатает название из 1С (ZIPPY_GAPS п. 30)
-        $i1c = \App\SQS\Item1C::get((int)$this->_item->item_id);
-        if ($i1c && $oldname !== $this->_item->itemname && $i1c['name1c'] !== $this->_item->itemname) {
-            $this->setWarn(__('sqs.item1c.renamed', ['name1c' => $i1c['name1c']]));
-        }
+        // SquirrelStock: точка расширения после сохранения позиции (App\SQS\Hooks), например предупреждение о названии из 1С
+        \App\SQS\Hooks::emit('itemSaved', $this->_item, $this, (string)$oldname);
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"] ??'') > 0) {
