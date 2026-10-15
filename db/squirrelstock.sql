@@ -141,3 +141,22 @@ CREATE TABLE IF NOT EXISTS sqs_issue_interval (
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 4, 'Інтервали видачі', 'IssueIntervals', 'Товари', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'IssueIntervals');
+
+-- Двухфакторный вход (App\SQS\TwoFactor): ключ приложения-аутентификатора, последний принятый шаг; резервные коды — хешами
+CREATE TABLE IF NOT EXISTS sqs_2fa (
+  user_id int NOT NULL,
+  secret varchar(64) NOT NULL,
+  enabled tinyint(1) NOT NULL DEFAULT 0,
+  last_step bigint NOT NULL DEFAULT 0,
+  updated datetime NOT NULL,
+  PRIMARY KEY (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS sqs_2fa_backup (
+  id int NOT NULL AUTO_INCREMENT,
+  user_id int NOT NULL,
+  code_hash varchar(255) NOT NULL,
+  used tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
