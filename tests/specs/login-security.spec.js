@@ -21,8 +21,10 @@ async function tryLogin(browser, login, pass) {
   await page.goto('/');
   await page.locator('#userlog').fill(login);
   await page.locator('input[type=password]').first().fill(pass);
-  await Promise.all([page.waitForLoadState('networkidle'), page.locator('button[type=submit], input[type=submit]').first().click()]);
-  const ok = (await page.locator('input[type=password]').count()) == 0;
+  await page.locator('button[type=submit], input[type=submit]').first().click();
+  // итог: страница программы (ссылка «Выход») или сообщение об ошибке на странице входа
+  await page.locator('#logout, .alert-danger:visible').first().waitFor({ state: 'attached', timeout: 15000 });
+  const ok = (await page.locator('#logout').count()) > 0;
   await context.close();
   return ok;
 }
@@ -76,8 +78,8 @@ async function loggedInBy(browser, cookie) {
   await context.addCookies([{ name: 'remember', value: cookie.value, domain: cookie.domain, path: '/' }]);
   const page = await context.newPage();
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  const ok = (await page.locator('input[type=password]').count()) == 0;
+  await page.locator('#logout, input[type=password]').first().waitFor({ state: 'attached', timeout: 15000 });
+  const ok = (await page.locator('#logout').count()) > 0;
   await context.close();
   return ok;
 }
@@ -122,4 +124,15 @@ test('новая установка получает длинную случай
     query("delete from keyval where keyd = 'salt'");
     if (saved !== null) query(`insert into keyval (keyd, vald) values ('salt', '${esc(saved)}')`);
   }
+});
+
+test('после 5 неудачных попыток вход по логину временно закрыт, даже в новой сессии', async ({ browser }) => {
+  const login = 'lock' + Date.now().toString(36), pass = 'Пароль-' + Date.now();
+  createUser(login, hashOf(pass));
+  for (let i = 0; i < 5; i++) expect(await tryLogin(browser, login, 'wrong-' + i)).toBe(false);   // каждая попытка — новая сессия
+  expect(await tryLogin(browser, login, pass), 'верный пароль во время блокировки').toBe(false);
+  // блокировка истекает (попытки 20 минут назад)
+  query(`update sqs_loginfail set createdon = createdon - interval 20 minute where login = '${esc(login)}'`);
+  expect(await tryLogin(browser, login, pass), 'после истечения блокировки').toBe(true);
+  expect(Number(value(`select count(*) from sqs_loginfail where login = '${esc(login)}'`)), 'удачный вход очищает счетчик').toBe(0);
 });

@@ -118,3 +118,14 @@ CREATE TABLE IF NOT EXISTS sqs_remember (
   PRIMARY KEY (selector),
   KEY user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Неудачные попытки входа (App\SQS\LoginGuard): временная блокировка подбора пароля по логину и по адресу
+CREATE TABLE IF NOT EXISTS sqs_loginfail (
+  id bigint NOT NULL AUTO_INCREMENT,
+  login varchar(100) NOT NULL,
+  ip varchar(45) NOT NULL,
+  createdon datetime NOT NULL,
+  PRIMARY KEY (id),
+  KEY login (login, createdon),
+  KEY ip (ip, createdon)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

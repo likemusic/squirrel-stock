@@ -87,17 +87,24 @@ class UserLogin extends \Zippy\Html\WebPage
         }
 
         if (strlen($login) > 0 && strlen($password) > 0) {
+            // SquirrelStock: после серии неудач вход временно не проверяется (App\SQS\LoginGuard)
+            $wait = \App\SQS\LoginGuard::blockedMinutes($login, (string)($_SERVER['REMOTE_ADDR'] ?? ''));
+            if ($wait > 0) {
+                $this->setError(__('sqs.login.blocked', ['min' => $wait]));
+                $sender->userpasswo->setText('');
+                return;
+            }
              
             $this->_user = Helper::login($login, $password);
 
             if ($this->_user instanceof User) {
-       
+                \App\SQS\LoginGuard::success($login);
                 $this->successLogin() ;
                 return;
             } 
             
             else {
-
+                \App\SQS\LoginGuard::fail($login, (string)($_SERVER['REMOTE_ADDR'] ?? ''));
                 $this->setError(__('app.userlogin.nevirnyi_lohin_abo_parol'));
 
                 $this->counter();
