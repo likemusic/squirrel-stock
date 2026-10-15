@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.cissue.title{{/t}}</title>
+    </head>
+    <body>
+        <style>
+            /* подсказка не шире экрана: длинное название переносится, остаток на складе виден (телефон) */
+            #cform .dropdown-menu { max-width: calc(100vw - 2rem); }
+            #cform .dropdown-item { white-space: normal; }
+        </style>
+        <div class="row">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+                <h3>{{#t}}sqs.cissue.title{{/t}}</h3>
+                <form zippy="cform">
+                    <div class="mb-2">
+                        <label class="form-label" for="customer">{{#t}}sqs.cissue.customer{{/t}}</label>
+                        <input zippy="customer" class="form-control" type="text" autocomplete="off" placeholder="{{#t}}sqs.cissue.customer_ph{{/t}}">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-2">
+                            <label class="form-label" for="date">{{#t}}sqs.cissue.date{{/t}}</label>
+                            <input zippy="date" class="form-control" type="text">
+                        </div>
+                        <div class="col-6 mb-2 {{#onestore}}d-none{{/onestore}}">
+                            <label class="form-label" for="store">{{#t}}common.sklad{{/t}}</label>
+                            <select zippy="store" class="form-select"></select>
+                        </div>
+                    </div>
+
+                    <label class="form-label mt-2" for="item">{{#t}}sqs.cissue.items{{/t}}</label>
+                    <div class="row g-2 mb-2">
+                        <div class="col-12 col-sm">
+                            <input zippy="item" class="form-control" type="text" autocomplete="off" placeholder="{{#t}}sqs.cissue.item_ph{{/t}}">
+                        </div>
+                        <div class="col">
+                            <input zippy="qty" class="form-control" type="text" inputmode="decimal" aria-label="{{#t}}sqs.cissue.qty{{/t}}" style="min-width: 5em">
+                        </div>
+                        <div class="col-auto">
+                            <input zippy="additem" type="submit" class="btn btn-outline-primary" value="{{#t}}sqs.cissue.add{{/t}}">
+                        </div>
+                    </div>
+                    <table class="table table-sm align-middle" id="cissue-rows">
+                        <tr zippy="rows">
+                            <td zippy="rowname"></td>
+                            <td zippy="rowqty" class="text-end text-nowrap"></td>
+                            <td class="text-end" style="width: 2.5em"><a zippy="delrow" class="p-2" title="{{#t}}sqs.cissue.remove{{/t}}"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </table>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="notes">{{#t}}sqs.cissue.notes{{/t}}</label>
+                        <textarea zippy="notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <input zippy="issue" type="submit" class="btn btn-success btn-lg w-100" value="{{#t}}sqs.cissue.do{{/t}}">
+                </form>
+                <p class="text-muted small mt-3">{{#t}}sqs.cissue.help{{/t}}</p>
+            </div>
+        </div>
+    </body>
+</html>
