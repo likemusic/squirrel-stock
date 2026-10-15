@@ -830,23 +830,23 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         }    
             
         if ($filter->doctype > 0) {
-            $where .= " and meta_id  ={$filter->doctype} ";
+            $where .= " and meta_id  =" . intval($filter->doctype) . " ";
         }
         if ($filter->status > 0) {
-            $where .= " and state  = {$filter->status} ";
+            $where .= " and state  = " . intval($filter->status) . " ";
         }
         if ($filter->customer > 0) {
-            $where .= " and customer_id  ={$filter->customer} ";
+            $where .= " and customer_id  =" . intval($filter->customer) . " ";
         }
 
         if ($filter->author > 0) {
-            $where .= " and user_id  ={$filter->author} ";
+            $where .= " and user_id  =" . intval($filter->author) . " ";
         }
         if ($filter->mfund > 0) {
-            $where .= " and document_id in(select document_id from paylist where mf_id = {$filter->mfund}   )  ";
+            $where .= " and document_id in(select document_id from paylist where mf_id = " . intval($filter->mfund) . "   )  ";
         }
         if ($filter->store > 0) {
-            $where .= " and ( document_id in(select document_id from entrylist where stock_id in ( select stock_id from store_stock  where   store_id= {$filter->store} )  ) or content like '%<store>{$filter->store}</store%' )   ";
+            $where .= " and ( document_id in(select document_id from entrylist where stock_id in ( select stock_id from store_stock  where   store_id= " . intval($filter->store) . " )  ) or content like '%<store>" . intval($filter->store) . "</store%' )   ";
         }
         $st = $filter->searchtext;
         if (strlen($st) > 2) {

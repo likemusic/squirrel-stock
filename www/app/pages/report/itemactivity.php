@@ -68,7 +68,7 @@ class ItemActivity extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $r = array();
-        $cat = $this->filter->searchcat->getValue();
+        $cat = intval($this->filter->searchcat->getValue());
 
         $text = Item::qstr('%' . $sender->getText() . '%');
         $list = Item::findArray('itemname', ($cat >0 ? "cat_id={$cat} and ":"" ).  " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
@@ -97,7 +97,7 @@ class ItemActivity extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-        $storeid = $this->filter->store->getValue();
+        $storeid = intval($this->filter->store->getValue());
         if(  intval($storeid) ==0) {
             return;
         }
@@ -116,11 +116,11 @@ class ItemActivity extends \App\Pages\Base
 
     private function generateReport() {
 
-        $storeid = $this->filter->store->getValue();
-        $itemid = $this->filter->item->getKey();
+        $storeid = intval($this->filter->store->getValue());
+        $itemid = intval($this->filter->item->getKey());
         $snumber = $this->filter->snumber->getText();
-        $emp = $this->filter->searchemp->getValue();
-        $cat = $this->filter->searchcat->getValue();
+        $emp = intval($this->filter->searchemp->getValue());
+        $cat = intval($this->filter->searchcat->getValue());
         $det = $this->filter->fdet->isChecked();
         $fitem = $this->filter->fitem->isChecked();
 

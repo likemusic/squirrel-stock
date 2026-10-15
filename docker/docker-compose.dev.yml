@@ -9,4 +9,5 @@ services:
       - ../www/lang:/var/www/html/lang
       - ../www/cli:/var/www/html/cli
       - ../www/init.php:/var/www/html/init.php
+      - ../www/index.php:/var/www/html/index.php
       - ../www/.htaccess:/var/www/html/.htaccess

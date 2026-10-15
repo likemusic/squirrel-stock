@@ -1136,7 +1136,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function OnCustomerFirm($sender) {
-        $c = $this->docform->customer->getKey();
+        $c = intval($this->docform->customer->getKey());
      
         $ar = \App\Entity\Contract::getList($c );
 
@@ -1185,7 +1185,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onOpenLast($sender) {
-        $cid = $this->docform->customer->getKey();
+        $cid = intval($this->docform->customer->getKey());
         if($cid == 0) {
             $this->setError(__('common.ne_obrano_postachalnyka'));
             return;

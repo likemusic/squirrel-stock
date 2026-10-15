@@ -226,7 +226,7 @@ class Inventory extends \App\Pages\Base
         $this->_doc->headerdata['reserved'] = $this->docform->reserved->isChecked() ? 1 : 0;
         $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
         $this->_doc->headerdata['brand'] = $this->docform->brand->getText();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store'] = intval($this->docform->store->getValue());
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
@@ -331,7 +331,7 @@ class Inventory extends \App\Pages\Base
     }
 
     public function OnChangeCat($sender) {
-        $cat_id = $sender->getValue();
+        $cat_id = intval($sender->getValue());
 
         if ($cat_id > 0) {
 
@@ -354,7 +354,7 @@ class Inventory extends \App\Pages\Base
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         $text = trim($sender->getText());
         $cat_id = intval($this->docform->category->getIntValue());
         $common = \App\System::getOptions('common')  ;
@@ -381,8 +381,8 @@ class Inventory extends \App\Pages\Base
 
     public function loadallOnClick($sender) {
         $this->_itemlist = array();
-        $store_id = $this->docform->store->getValue();
-        $storeemp_id = $this->docform->storeemp->getValue();
+        $store_id = intval($this->docform->store->getValue());
+        $storeemp_id = intval($this->docform->storeemp->getValue());
         $wemp="";
         if($storeemp_id > 0) {
            $wemp = " and emp_id = ".$storeemp_id ; 
@@ -394,7 +394,7 @@ class Inventory extends \App\Pages\Base
         if(strlen($brand) >0){
            $w = $w . " and manufacturer = " .Item::qstr($brand) ;
         }
-        $cat_id = $this->docform->category->getValue();
+        $cat_id = intval($this->docform->category->getValue());
         if ($cat_id > 0) {
 
             $c = Category::load($cat_id) ;

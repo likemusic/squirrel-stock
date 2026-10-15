@@ -422,7 +422,7 @@ class OutcomeItem extends \App\Pages\Base
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
@@ -432,7 +432,7 @@ class OutcomeItem extends \App\Pages\Base
         $code0 = $code;
         $code = ltrim($code, '0');
         $this->docform->barcode->setText('');
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         if ($store_id == 0) {
             $this->setError(__('common.ne_obrano_sklad'));
             return;

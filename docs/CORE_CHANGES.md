@@ -50,6 +50,12 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `f02b9a127` | `www/.htaccess` (block `mod_headers`) | Content-Security-Policy: only own address for loading and sending, own frames; inline scripts and eval allowed (framework needs them); shop pages excluded | `tests/specs/csp.spec.js` |
 | `89ff1f21b` | `www/app/entity/item.php` `findArrayAC()`, `findBarCode()`, `getPartion()`, `getQuantity()`, `getAmount()`, `getSerials()`, `getNearestSerie()`, `getLastPartion()` | store, employee and category ids cast to int, doc type quoted: the values come from the request (AJAX method `vonTextItem` on any page) and went into SQL as is | `tests/specs/sql-injection.spec.js` |
 | `65542ae73` | `www/app/entity/customer.php` `getList()`, `getHoldList()` | customer type cast to int: it comes from the AJAX method `vonTextCust` and went into the LIKE pattern as is | `tests/specs/sql-injection.spec.js` |
+| `d7681abc0` | `www/app/pages/register/doclist.php` `getWhere()`, `itemlist.php`, `gilist.php`, `grlist.php` | filter ids (doc type, status, customer, author, money fund, store, category, employee, item type, sale source) cast to int: drop-down and autocomplete values come from the request as is | `tests/specs/filters-int.spec.js` |
+| `4d9640430` | `www/app/pages/reference/itemlist.php` (filter, bulk category change), `contractlist.php`, `customerlist.php` (holding) | filter ids cast to int | `tests/specs/filters-int.spec.js` |
+| `47a161d51` | `www/app/pages/report/income.php`, `itemactivity.php` | filter ids (store, item, employee, category, customer) cast to int | `tests/specs/filters-int.spec.js` |
+| `eb9698c37` | `www/app/pages/service/export.php` | ids cast to int, document type quoted; `Item::qstr($$brand)` → `$brand`: the brand filter of the item export never matched | `tests/specs/filters-int.spec.js` |
+| `7db89d28f` | `www/app/pages/doc/goodsreceipt.php`, `goodsissue.php`, `outcomeitem.php`, `moveitem.php`, `inventory.php`, `retcustissue.php` | store, customer, employee and category ids from the form cast to int before queries | `tests/specs/filters-int.spec.js` (Inventory) |
+| `8480e1748` | `www/index.php` (one line before `Run`); new `www/app/sqs/pageguard.php` | a page of a disabled menu item (`metadata.disabled = 1`: profile, menu settings, disabled module) shows "no access" by direct URL too, for all roles; before: only hidden from the menu, a disabled module page stopped with "Невірний клас" | `tests/specs/menu-disabled.spec.js` |
 
 ## Proposed upstream
 
@@ -76,3 +82,11 @@ When merging an upstream update, check these places first: modules (`www/app/sqs
 | `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()` | document hooks |
 | `www/app/pages/main.php`, `www/templates/pages/main.html` | `mainBlocks` |
 | `www/app/pages/reference/itemlist.php` | `itemSaved` |
+
+## Changes in vendor/
+
+`vendor/` is installed by composer and is not in the repository. Changes to it are exact text replacements in `www/cli/patch-vendor.php`, run by composer after the autoloader is built (`composer.json`, `scripts.post-autoload-dump`): `composer install` in `tools/install/linux.sh`, `composer dump-autoload` in `docker/Dockerfile`; `tools/release/build.sh` takes `vendor/` from the image. An applied patch is skipped; if the original text is not found (new package version), the script fails and so does the build. After a dependency update: check each patch against the new code, adjust or remove it.
+
+| Commit | Package, file | Change | Test |
+|---|---|---|---|
+| `d763acde2` | `leon-mbs/zippy` 2.8.2, `core/httprequest.php` | encoded page link (`index.php?r=`, RedirectLink/LinkList with encoding): unserialized without classes, must be `[page class, params]`, otherwise an invalid request (home page) | `tests/specs/vendor-patches.spec.js`, `tools/install/test-in-docker.sh` |

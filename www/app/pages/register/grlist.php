@@ -260,12 +260,12 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
         }
 
       
-        $cust = $this->page->filter->searchcust->getKey();
+        $cust = intval($this->page->filter->searchcust->getKey());
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;
         }
 
-        $store_id = $this->page->filter->fstore->getValue();
+        $store_id = intval($this->page->filter->fstore->getValue());
         if ($store_id > 0) {
             $where .= " and   content like '%<store>{$store_id}</store>%' ";
         }

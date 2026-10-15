@@ -463,7 +463,7 @@ class GoodsIssue extends \App\Pages\Base
         
         $this->docform->barcode->setText('');
         
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         if ($store_id == 0) {
             $this->setError(__('common.ne_obrano_sklad'));
             return;
@@ -611,7 +611,7 @@ class GoodsIssue extends \App\Pages\Base
             return;
         }
         $item = Item::load($id);
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
 
         $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = trim($this->editdetail->editserial->getText());
@@ -983,7 +983,7 @@ class GoodsIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
 
 
         $customer_id = $this->docform->customer->getKey()  ;
@@ -1013,7 +1013,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
@@ -1120,7 +1120,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnCustomerFirm($sender) {
-        $c = $this->docform->customer->getKey();
+        $c = intval($this->docform->customer->getKey());
       
         $ar = \App\Entity\Contract::getList($c );
         $this->docform->contract->setOptionList($ar);

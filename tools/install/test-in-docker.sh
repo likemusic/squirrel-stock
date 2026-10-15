@@ -36,6 +36,7 @@ done
 curl -sI "http://127.0.0.1:$PORT/index.php?q=p:App/Pages/UserLogin" | grep -qi "^Content-Security-Policy: default-src 'self'" && ok "заголовок Content-Security-Policy (из .htaccess)" || fail "нет Content-Security-Policy"
 c=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js")
 [[ $c == 200 ]] && ok "скрипты фреймворка из vendor отдаются" || fail "vendor: $c"
+docker exec $NAME grep -q "allowed_classes" /var/www/squirrelstock/vendor/leon-mbs/zippy/core/httprequest.php && ok "исправления vendor наложены (cli/patch-vendor.php)" || fail "исправления vendor не наложены"
 
 login() {
   [[ -d tests/node_modules/@playwright ]] || { echo "SKIP вход через браузер: нет tests/node_modules"; return 0; }

@@ -443,11 +443,11 @@ class RetCustIssue extends \App\Pages\Base
 
 
     public function OnChangeItem($sender) {
-        $id = $sender->getKey();
+        $id = intval($sender->getKey());
         $item = Item::load($id);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
-        $cid = $this->docform->customer->getKey();
+        $cid = intval($this->docform->customer->getKey());
 
         $where = " document_id  in (select document_id from  documents_view where  meta_name='GoodsReceipt') and item_id=" . $id;
 

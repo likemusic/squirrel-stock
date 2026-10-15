@@ -83,8 +83,8 @@ class Income extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-        $cust_id = $this->filter->cust->getKey();
-        $cat_id = $this->filter->cat->getValue();
+        $cust_id = intval($this->filter->cust->getKey());
+        $cat_id = intval($this->filter->cat->getValue());
 
         $cust = "";
         $sql = "";
