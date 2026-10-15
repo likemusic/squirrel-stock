@@ -4,6 +4,7 @@
 $_config = array('common'=>[],'db'=>[],'smtp'=>[]) ;
 $_config['common']['loglevel'] = 200  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
 $_config['common']['timezone'] = 'Europe/Minsk';
+$_config['common']['lang'] = getenv('SQS_LANG') ?: 'uk';   // язык интерфейса по умолчанию: uk, ru (файлы www/lang/*.json)
 
 $_config['db']['host'] = getenv('DB_HOST') ?: 'db';
 $_config['db']['name'] = getenv('DB_NAME') ?: 'zstore';

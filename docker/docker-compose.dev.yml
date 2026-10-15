@@ -6,3 +6,5 @@ services:
       - ../www/app:/var/www/html/app
       - ../www/templates:/var/www/html/templates
       - ../www/assets:/var/www/html/assets
+      - ../www/lang:/var/www/html/lang
+      - ../www/init.php:/var/www/html/init.php

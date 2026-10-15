@@ -269,6 +269,8 @@ class Base extends \Zippy\Html\WebPage
       
 
         $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";
+        $this->_tvars["t"] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
+        $this->_tvars["lang"] = \App\Translator::lang();
         $this->_tvars["darkmodecss"] = $user->darkmode == 1 ?true:false;
      
 

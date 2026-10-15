@@ -31,6 +31,7 @@ date_default_timezone_set($_config['common']['timezone'] ?? 'Europe/Kiev');
 
 
 require_once _ROOT . 'vendor/autoload.php';
+require_once _ROOT . 'app/functions.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
 

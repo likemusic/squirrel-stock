@@ -109,6 +109,7 @@ class User extends \ZCL\DB\Entity
         $this->viber = $options['viber']?? '';
      
         $this->darkmode = $options['darkmode']?? 1;
+        $this->lang = $options['lang'] ?? '';   // язык интерфейса, пусто — из config.php
 
         $this->collapsesidebar =  $options['collapsesidebar'] ?? 1;
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
@@ -165,6 +166,7 @@ class User extends \ZCL\DB\Entity
         $options['collapsesidebar'] = $this->collapsesidebar;
         $options['usebotfornotify'] = $this->usebotfornotify;
         $options['darkmode'] = $this->darkmode;
+        $options['lang'] = $this->lang ?? '';
 
         $options['usemobileprinter'] = $this->usemobileprinter;
 

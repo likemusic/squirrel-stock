@@ -40,6 +40,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('viber', $this->user->viber));
 
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
+        $form->add(new DropDownChoice('lang', ['' => __('common.default')] + \App\Translator::getLanguages(), $this->user->lang ?? ''));
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('collapsesidebar', $this->user->collapsesidebar));
         $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
@@ -169,6 +170,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
 
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
+        $this->user->lang = $sender->lang->getValue();
         $this->user->collapsesidebar = $sender->collapsesidebar->isChecked() ? 1 : 0;
         $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
 
@@ -188,6 +190,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
+        \App\Translator::reset();
        
     }
 

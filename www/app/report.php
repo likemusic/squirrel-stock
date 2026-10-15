@@ -42,6 +42,7 @@ class Report
         if (strlen($template) == 0) {
             return "Файл  форми друку " . $this->_template . " не знайдений";
         }
+        $header['t'] = $header['t'] ?? new \App\Translator();   // перевод в печатных формах: {{#t}}ключ{{/t}}
         $m = new \Mustache_Engine();
         $html = $m->render($template, $header);
         if($removeendline) {
