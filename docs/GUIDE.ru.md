@@ -5,7 +5,7 @@
 ## Установка (Docker)
 
 ```bash
-git clone https://github.com/likemusic/squirrelstock.git && cd squirrelstock/docker
+git clone https://github.com/likemusic/squirrel-stock.git && cd squirrel-stock/docker
 SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход admin / admin
 ```
 
