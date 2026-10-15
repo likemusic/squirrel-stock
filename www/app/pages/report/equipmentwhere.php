@@ -53,7 +53,7 @@ class EquipmentWhere extends \App\Pages\Base
         $text = mb_strtolower(trim($this->filter->searchtext->getText()));
         $cat = intval($this->filter->cat->getValue());
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         $state = $this->filter->state->getValue();
 
@@ -127,6 +127,44 @@ class EquipmentWhere extends \App\Pages\Base
         usort($detail, fn($a, $b) => [$a['order'], $a['where'], $a['customer'], $a['itemname'], $a['snumber']] <=> [$b['order'], $b['where'], $b['customer'], $b['itemname'], $b['snumber']]);
 
         $report = new \App\Report('report/equipmentwhere.tpl');
-        return $report->generate(['_detail' => $detail, 'cnt' => count($detail), 'date' => H::fd(time())]);
+        return $report->generate(['_detail' => $detail, 'cnt' => count($detail), 'date' => H::fd(time())] + $this->summary($detail));
+    }
+
+    /**
+     * Итог по моделям: сколько единиц выдано, на каждом складе (склады «Ремонт», «К списанию» — состояние единицы), списано, всего.
+     * Считается по тем же строкам, что и список (с учетом состояния и поиска); колонки без единиц не показываются.
+     */
+    private function summary(array $detail): array {
+        $models = [];
+        $stores = [];
+        foreach ($detail as $row) {
+            $col = $row['order'] == 1 ? 'store:' . $row['where'] : ['issued', '', 'off'][$row['order']];
+            if ($row['order'] == 1) {
+                $stores[$col] = $row['where'];
+            }
+            $models[$row['itemname']][$col] = ($models[$row['itemname']][$col] ?? 0) + 1;
+        }
+        ksort($models, SORT_NATURAL | SORT_FLAG_CASE);
+        uasort($stores, 'strnatcasecmp');
+
+        $cols = [];
+        if (array_filter($models, fn($m) => isset($m['issued']))) {
+            $cols['issued'] = __('report.equipmentwhere.col_issued');
+        }
+        $cols += $stores;
+        if (array_filter($models, fn($m) => isset($m['off']))) {
+            $cols['off'] = __('report.equipmentwhere.col_off');
+        }
+
+        $rows = [];
+        foreach ($models as $name => $m) {
+            $cells = [];
+            foreach (array_keys($cols) as $c) {
+                $cells[] = ['v' => $m[$c] ?? ''];
+            }
+            $rows[] = ['name' => $name, 'cells' => $cells, 'total' => array_sum($m)];
+        }
+
+        return ['_scols' => array_map(fn($n) => ['name' => $n], array_values($cols)), '_srows' => $rows, 'scolspan' => count($cols) + 2, 'hassummary' => count($rows) > 0];
     }
 }

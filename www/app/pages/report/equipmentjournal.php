@@ -47,7 +47,7 @@ class EquipmentJournal extends \App\Pages\Base
         $cat = intval($this->filter->cat->getValue());
         $where = "m.meta_name = 'GoodsIssue' AND s.snumber <> '' AND d.document_date BETWEEN '{$from}' AND '{$to}'";
         if ($cat > 0) {
-            $where .= " AND i.cat_id = {$cat}";
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
         $sql = "SELECT d.document_id, d.document_date, i.itemname, s.snumber,
                        (SELECT MIN(rd.document_date)
