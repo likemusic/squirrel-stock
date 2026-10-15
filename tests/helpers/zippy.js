@@ -64,13 +64,14 @@ async function pickAuto(page, sel, query, expect, firstMustContain) {
   await page.waitForTimeout(300);
 }
 
-async function createItem(page, { name, code, msr = 'шт', serial = false }) {
+async function createItem(page, { name, code, msr = 'шт', serial = false, minqty }) {
   await page.goto('/index.php?p=App/Pages/Reference/ItemList');
   await clickWait(page, '#addnew');
   await page.locator('#editname').fill(name);
   await page.locator('#editcode').fill(code);
   await page.locator('#editmsr').fill(msr);
   if (serial) await page.locator('#edituseserial').setChecked(true);
+  if (minqty !== undefined) await page.locator('#editminqty').fill(String(minqty));
   await clickWait(page, '#save');
 }
 
