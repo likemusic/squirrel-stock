@@ -20,6 +20,9 @@ test('копия и восстановление', async ({ page, uniq }, testIn
   const file = testInfo.outputPath('backup.zip');
   await download.saveAs(file);
 
+  // журнал копий этой установки восстановление не трогает (в копию он не попадает)
+  const marker = 'marker-' + uniq;
+  value(`insert into sqs_backuplog (place, createdon, ok, file, message) values ('local', now(), 0, '', '${marker}')`);
   // изменения после копии
   await createDoc(page, 'IncomeItem', { date: '2026-10-02', rows: [{ code, qty: 3, price: 0 }] });
   await createItem(page, { name: 'Позиция ' + after, code: after });
@@ -37,4 +40,6 @@ test('копия и восстановление', async ({ page, uniq }, testIn
   expect(stockQty(code)).toBe(5);
   expect(Number(value(`select count(*) from items where item_code = '${after}'`))).toBe(0);
   expect(objects()).toBe(before);
+  expect(Number(value(`select count(*) from sqs_backuplog where message = '${marker}'`)), 'журнал копий после восстановления').toBe(1);
+  value(`delete from sqs_backuplog where message = '${marker}'`);
 });

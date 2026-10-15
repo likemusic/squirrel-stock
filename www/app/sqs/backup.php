@@ -11,6 +11,10 @@ class Backup
 {
     public const SQL_NAME = 'database.sql';
 
+    // таблицы, которые копия не переносит: журнал самих копий описывает эту установку, а не данные. В дампе — только
+    // CREATE TABLE IF NOT EXISTS (чтобы дамп годился для новой базы), при восстановлении они не удаляются
+    public const LOCAL_TABLES = ['sqs_backuplog'];
+
     private \mysqli $db;
 
     public function __construct() {
@@ -65,6 +69,10 @@ class Backup
         }
         foreach ($tables as $t) {
             $create = $this->db->query("SHOW CREATE TABLE `{$t}`")->fetch_row()[1];
+            if (in_array($t, self::LOCAL_TABLES, true)) {
+                fwrite($out, preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create) . ";\n");
+                continue;
+            }
             fwrite($out, "DROP TABLE IF EXISTS `{$t}`;\n{$create};\n");
             $res = $this->db->query("SELECT * FROM `{$t}`", MYSQLI_USE_RESULT);
             $batch = [];
@@ -144,6 +152,9 @@ class Backup
         // текущие таблицы и представления удаляются: база становится такой, какой была в копии
         $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
         foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
+            if (in_array($name, self::LOCAL_TABLES, true)) {
+                continue;
+            }
             $this->db->query(($type == 'VIEW' ? 'DROP VIEW' : 'DROP TABLE') . " IF EXISTS `{$name}`");
         }
         $n = $this->execute($sqlFile);
