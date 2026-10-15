@@ -2,8 +2,8 @@
 """Собрать lang/<язык>.json из файлов перевода «ключ<TAB>текст» (по одному на строку).
 
 Пробелы по краям берутся из исходного uk.json (в ключах по фразам из кода они значимы: " (Копія)").
-Проверка: плейсхолдеры {x}, {{x}}, {{{x}}} и HTML-теги в переводе те же, что в исходном тексте;
-расхождения печатаются, такие строки не записываются.
+Проверка: плейсхолдеры {x}, {{x}}, {{{x}}} и HTML-теги в переводе те же, что в исходном тексте; для ключей из
+строк в кавычках — атрибутов и строк JS (lang/quoted-keys.json) — в переводе нет этой кавычки. Расхождения печатаются, такие строки не записываются.
 
 python3 tools/i18n/merge_tsv.py www/lang/ru.json перевод1.tsv [перевод2.tsv ...]
 """
@@ -20,6 +20,10 @@ TOK = re.compile(r'\{\{\{?[^}]*\}?\}\}|\{[a-z_0-9]+\}|</?[a-zA-Z][^>]*>')
 def tokens(s):
     return sorted(TOK.findall(s))
 
+import os
+jsfile = target.rsplit('/', 1)[0] + '/quoted-keys.json'
+js_keys = json.load(open(jsfile, encoding='utf-8')) if os.path.exists(jsfile) else {}
+
 bad = 0
 added = 0
 for f in files:
@@ -33,6 +37,9 @@ for f in files:
         src = uk[key]
         if tokens(src) != tokens(text.strip()):
             print(f'{f}:{n}: {key}: плейсхолдеры/теги не совпадают: {tokens(src)} != {tokens(text)}'); bad += 1; continue
+        q = js_keys.get(key)
+        if q and (q in text or '\\' in text):
+            print(f'{f}:{n}: {key}: перевод в кавычках {q} содержит эту кавычку или обратную косую черту'); bad += 1; continue
         lead = src[:len(src) - len(src.lstrip())]
         trail = src[len(src.rstrip()):]
         out[key] = lead + text.strip() + trail

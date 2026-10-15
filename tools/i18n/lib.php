@@ -330,15 +330,32 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
             continue;
         }
         if ($kind === 'script') {
-            $manual[] = ['file' => $rel, 'line' => $lineAt($off), 'reason' => 'JavaScript в шаблоне', 'text' => mb_substr(trim(preg_replace('/\s+/', ' ', $text)), 0, 200)];
+            // строковые литералы JS: шаблон Mustache обрабатывает и <script>, метка внутри кавычек даёт перевод.
+            // Перевод не должен содержать кавычку литерала — проверяет tools/i18n/merge_tsv.py по lang/quoted-keys.json
+            preg_match_all('/\'(?:[^\'\\\\\n]|\\\\.)*\'|"(?:[^"\\\\\n]|\\\\.)*"|`(?:[^`\\\\]|\\\\.)*`/', $text, $lm, PREG_OFFSET_CAPTURE);
+            foreach ($lm[0] as [$lit, $loff]) {
+                $inner = substr($lit, 1, -1);
+                if (!hasCyr($inner)) {
+                    continue;
+                }
+                if ($lit[0] === '`' && str_contains($inner, '${')) {
+                    $manual[] = ['file' => $rel, 'line' => $lineAt($off + $loff), 'reason' => 'шаблонная строка JS', 'text' => mb_substr($lit, 0, 200)];
+                    continue;
+                }
+                $core = trim($inner);
+                $lead = strlen($inner) - strlen(ltrim($inner));
+                [$b, $e] = $mark($off + $loff);
+                $out[] = ['start' => $off + $loff + 1 + $lead, 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => stripcslashes($core), 'before' => $b, 'after' => $e, 'quote' => $lit[0]];
+            }
             continue;
         }
         if ($kind === 'tag') {
             $isButton = preg_match('#^<\s*(button|input[^>]*type\s*=\s*["\']?(submit|button|reset))#i', $text);
-            preg_match_all('#\s(placeholder|title|alt|aria-label|data-bs-original-title|data-original-title|value)\s*=\s*("([^"]*)"|\'([^\']*)\')#i', $text, $am, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+            preg_match_all('#\s(placeholder|title|alt|aria-label|data-bs-original-title|data-original-title|data-bs-content|data-content|value)\s*=\s*("([^"]*)"|\'([^\']*)\')#i', $text, $am, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
             foreach ($am as $a) {
                 $attr = strtolower($a[1][0]);
                 $val = $a[3][1] >= 0 ? $a[3][0] : $a[4][0];
+                $quote = $a[3][1] >= 0 ? '"' : "'";
                 $voff = $a[3][1] >= 0 ? $a[3][1] : $a[4][1];
                 if (!hasCyr($val)) {
                     continue;
@@ -354,10 +371,10 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
                 $core = trim($val);
                 $lead = substr($val, 0, strlen($val) - strlen(ltrim($val)));
                 [$b, $e] = $mark($off);
-                $out[] = ['start' => $off + $voff + strlen($lead), 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => $b, 'after' => $e];
+                $out[] = ['start' => $off + $voff + strlen($lead), 'len' => strlen($core), 'kind' => 'tpl', 'phrase' => preg_replace('/\s+/u', ' ', $core), 'before' => $b, 'after' => $e, 'quote' => $quote];
             }
             // остальной текст тега с кириллицей (например, в onclick) — руками
-            $rest = preg_replace('#\s(placeholder|title|alt|aria-label|data-bs-original-title|data-original-title|value)\s*=\s*("[^"]*"|\'[^\']*\')#i', '', $text);
+            $rest = preg_replace('#\s(placeholder|title|alt|aria-label|data-bs-original-title|data-original-title|data-bs-content|data-content|value)\s*=\s*("[^"]*"|\'[^\']*\')#i', '', $text);
             if (hasCyr($rest)) {
                 $manual[] = ['file' => $rel, 'line' => $lineAt($off), 'reason' => 'кириллица в другом атрибуте тега', 'text' => mb_substr($text, 0, 200)];
             }

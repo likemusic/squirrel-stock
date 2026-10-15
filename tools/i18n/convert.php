@@ -104,6 +104,7 @@ foreach ($areas as $phrase => $set) {
 // ---------- проход 2: замены ----------
 $changed = 0;
 $count = 0;
+$quoted = [];   // ключи внутри кавычек (атрибуты, строки JS): перевод не должен содержать эту кавычку
 foreach ($found as $rel => $items) {
     if (!$items) {
         continue;
@@ -120,6 +121,9 @@ foreach ($found as $rel => $items) {
             $code .= ')';
         } else {
             $code = $it['before'] . $key . $it['after'];
+            if (isset($it['quote'])) {
+                $quoted[$key] = $it['quote'];
+            }
         }
         $src = substr_replace($src, $code, $it['start'], $it['len']);
         $count++;
@@ -130,6 +134,10 @@ foreach ($found as $rel => $items) {
     }
 }
 if (!$opts['dry-run']) {
+    $qFile = $root . '/lang/quoted-keys.json';
+    $quoted += is_file($qFile) ? json_decode(file_get_contents($qFile), true) : [];
+    ksort($quoted);
+    file_put_contents($qFile, json_encode($quoted, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
     ksort($uk);
     file_put_contents($ukFile, json_encode($uk, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
 }
