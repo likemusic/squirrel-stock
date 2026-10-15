@@ -1,0 +1,11 @@
+{
+  "name": "squirrelstock-tests",
+  "private": true,
+  "description": "Регрессионные тесты SquirrelStock через интерфейс (Playwright)",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}

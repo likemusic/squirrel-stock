@@ -1,0 +1,8 @@
+# Режим разработки: код из www/ монтируется в контейнер, правки видны без пересборки образа.
+# docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+services:
+  web:
+    volumes:
+      - ../www/app:/var/www/html/app
+      - ../www/templates:/var/www/html/templates
+      - ../www/assets:/var/www/html/assets

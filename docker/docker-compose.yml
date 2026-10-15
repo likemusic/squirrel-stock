@@ -1,0 +1,54 @@
+# Стенд SquirrelStock: cd docker && docker compose up -d --build → http://127.0.0.1:8083 (admin / admin)
+name: squirrelstock
+
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: zstore
+      MARIADB_USER: zstore
+      MARIADB_PASSWORD: zstore
+    command: ["--character-set-server=utf8mb3", "--collation-server=utf8mb3_general_ci"]
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ../db/db.sql:/docker-entrypoint-initdb.d/01-db.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: squirrelstock-web:local
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: zstore
+      DB_USER: zstore
+      DB_PASS: zstore
+    ports:
+      - "127.0.0.1:${SQS_PORT:-8083}:80"
+    volumes:
+      - ./config.php:/var/www/html/config/config.php:ro
+      - uploads:/var/www/html/upload
+      - logs:/var/www/html/logs
+
+volumes:
+  dbdata:
+  uploads:
+  logs:
+
+# явная подсеть: стандартные пулы Docker на машине разработчика исчерпаны многими стендами
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${SQS_SUBNET:-10.251.83.0/24}

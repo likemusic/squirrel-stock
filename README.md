@@ -17,6 +17,27 @@ The fork is developed for charities and non-profits that hand out supplies and e
 
 Status: early stage, the code currently equals upstream commit `c74df59f4` (13.10.2026).
 
+## Development
+
+Local stand (Docker, PHP 8.2 + MariaDB 10.11), code is taken from `www/` as is:
+
+```bash
+cd docker && docker compose up -d --build        # http://127.0.0.1:8083, login admin / admin
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d   # mount www/app, templates, assets for live editing
+docker compose down -v                           # stop and drop the database
+```
+
+Port and Docker subnet can be changed with `SQS_PORT` and `SQS_SUBNET`.
+
+Regression tests (Playwright, through the UI; external requests are blocked so that offline problems show up):
+
+```bash
+cd tests && npm ci && npx playwright install chromium
+npm test                                          # SQS_BASE=http://127.0.0.1:8083 by default
+```
+
+Tests create their own data with unique names and can run against a non-empty database. Bugs are reproduced with a test first, then fixed.
+
 ## Русский
 
 SquirrelStock — неофициальный форк складской программы Zippy (leon-mbs/zstore, лицензия MIT) для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование. Первый пользователь — детский хоспис. В планах: исправления надёжности учёта, перевод интерфейса на русский (ключи на английском), работа без интернета, учёт выдачи оборудования по договорам, отчёты для бухгалтерии, автотесты.
