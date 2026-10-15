@@ -83,7 +83,8 @@ class Units
     /**
      * Где сейчас каждая единица: [['item_id', 'itemname', 'cat_id', 'snumber', 'factory_no', 'kind' (store|out|off), 'stores',
      *   'document_id', 'document_number', 'date', 'customer_id', 'contract_id', 'contract_number', 'contract_date', 'enddate' (0 — до востребования), 'referrer'], ...]
-     * На складе — есть остаток; иначе по последнему документу: списание (OutcomeItem) — списана, остальное — выдана.
+     * На складе — есть остаток; иначе по последнему расходному документу (движение со знаком минус): списание (OutcomeItem) — списана,
+     * остальное — выдана. Только расходные: приход единицы бывает датирован позже ее выдачи (ведомость 1С загружена после истории выдач).
      */
     public static function current(string $where = '1=1'): array {
         $conn = \ZDB\DB::getConnect();
@@ -104,7 +105,7 @@ class Units
                                      JOIN items i ON i.item_id = s.item_id
                                      JOIN documents d ON d.document_id = e.document_id
                                      JOIN metadata m ON m.meta_id = d.meta_id
-                                     WHERE s.snumber <> '' AND {$where}) x WHERE x.rn = 1") as $r) {
+                                     WHERE s.snumber <> '' AND e.quantity < 0 AND {$where}) x WHERE x.rn = 1") as $r) {
             $last[self::key((int)$r['item_id'], $r['snumber'])] = $r;
         }
         $list = [];

@@ -63,3 +63,19 @@ test('справочник единиц: заводской номер зада�
   const item = value(`select item_id from items where item_code = '${esc(code)}'`);
   expect(value(`select factory_no from sqs_unit where item_id = ${item} and snumber = '${esc(inv)}'`)).toBe(factory);
 });
+
+test('где сейчас: выдача раньше даты прихода (ОСВ 01 загружена после истории)', async ({ page, uniq }) => {
+  const code = 'EL-' + uniq, inv = 'INV-' + uniq, who = 'Получатель ' + uniq;
+  await createItem(page, { name: 'Ингалятор ' + uniq, code, serial: true });
+  await createDoc(page, 'IncomeItem', { date: '2026-10-10', rows: [{ code, qty: 1, price: 0, sn: inv }] });
+  await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
+  await page.locator('#iform #customer').fill(who);
+  await page.locator('#iform #date').fill('2026-09-01');
+  await pickAuto(page, '#iform #unit', inv, inv);
+  await clickWait(page, '#iform #issue');
+
+  await page.goto('/index.php?p=App/Pages/Reference/EquipmentUnits');
+  await page.locator('#filter #searchtext').fill(inv);
+  await clickWait(page, '#filter input[type=submit]');
+  await expect(page.locator('tr', { hasText: inv }).locator('td').nth(3)).toContainText(who);
+});
