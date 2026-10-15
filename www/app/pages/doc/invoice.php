@@ -202,7 +202,7 @@ class Invoice extends \App\Pages\Base
                         $this->docform->pricetype->setValue('price1');
 
 
-                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.invoice.rakhunok_dlia'). $basedoc->document_number);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->_itemlist = array_merge($this->_itemlist, $basedoc->unpackDetails('detail2data'));
@@ -218,7 +218,7 @@ class Invoice extends \App\Pages\Base
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
-                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.invoice.rakhunok_dlia'). $basedoc->document_number);
                         $this->docform->fop->setValue($basedoc->headerdata['fop']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -235,7 +235,7 @@ class Invoice extends \App\Pages\Base
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
-                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.invoice.rakhunok_dlia'). $basedoc->document_number);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                                         
@@ -335,7 +335,7 @@ class Invoice extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -392,7 +392,7 @@ class Invoice extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
   
@@ -597,27 +597,27 @@ class Invoice extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
         if (($this->docform->payment->getValue() > 0) == false) {
-            $this->setError("Не вказано банк");
+            $this->setError(__('doc.invoice.ne_vkazano_bank'));
         }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError(__('common.ne_zadano_kontrahenta'));
         }
 
         return !$this->isError();
@@ -695,11 +695,11 @@ class Invoice extends \App\Pages\Base
             $disctext = "";
             $d =  $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка " . " {$d}%";
+                $disctext = __('common.postiina_znyzhka_2') . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                    $disctext = __('common.narakhovano_bonusiv', ['bonus' => $bonus]);
                 }
             }
             $this->docform->phone->setText($cust->phone);
@@ -733,7 +733,7 @@ class Invoice extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -742,14 +742,14 @@ class Invoice extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }
@@ -811,7 +811,7 @@ class Invoice extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
 
@@ -821,7 +821,7 @@ class Invoice extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
@@ -837,7 +837,7 @@ class Invoice extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("Товару {$item->itemname} немає на складі");
+            $this->setWarn(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
 
@@ -858,7 +858,7 @@ class Invoice extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
+                $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 

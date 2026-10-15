@@ -95,7 +95,7 @@ class Firm extends \App\Pages\Base
          
         System::setOptions("firm", $firm);
       
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
      
     } 
    

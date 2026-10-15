@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title> Категорії товарів</title>
+            <title> {{#t}}reference.categorylist.katehorii_tovariv{{/t}}</title>
  
     </head>
 
@@ -13,29 +13,29 @@
                 <div class="col-12 col-md-10 col-xl-8">
                 {{/usecattree}}    
                     <div zippy="categorytable">
-                        <h3>Категорії (групи) товарів
+                        <h3>{{#t}}reference.categorylist.katehorii_hrupy_tovariv{{/t}}
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                                data-bs-toggle="popover"
                                data-bs-placement="bottom" data-bs-content="Категорії призначені для групування товарів в Прайсі, а також для
                                визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно. Ієрархія категорій вмикається  в довіднику Номенклатура"></i>
 
                         </h3>
-                        <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                        <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                         <table class="table table-bordered   table-sm">
                             <tr>
                                 {{#useimages}}
                                 <th></th>
                                 {{/useimages}}
-                                <th>Назва</th>
+                                <th>{{#t}}common.nazva{{/t}}</th>
                                 {{#usecattree}}
-                                <th > Батьківська</th>
+                                <th > {{#t}}reference.categorylist.batkivska{{/t}}</th>
                                 {{/usecattree}}
                                 <th colspan="2"  style="width:20px" >  
                                 &nbsp;&nbsp;<i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Порядок виводу в меню та онлайн каталозі "></i>
+                                   title=" {{#t}}reference.categorylist.poriadok_vyvodu_v_meniu_ta{{/t}} "></i>
 
                                  </th>
-                                <th class="text-end"> ТМЦ </th>
+                                <th class="text-end"> {{#t}}common.tmts{{/t}} </th>
 
                                 <th></th>
                                 <th></th>
@@ -60,10 +60,10 @@
                                   <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
                                  </td> 
                                 <td class="text-end"><span  zippy="qty" class="badge text-bg-success rounded-pill"></span></td>
-                                <td> <a zippy="prices" title="Змінити ціни">-<i class="fa fa-coins"></i>+ </a>   </td>
-                                <td> <a zippy="cfields" title="Кастомні поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
-                                <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
-                                    &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                                <td> <a zippy="prices" title="{{#t}}reference.categorylist.zminyty_tsiny{{/t}}">-<i class="fa fa-coins"></i>+ </a>   </td>
+                                <td> <a zippy="cfields" title="{{#t}}common.kastomni_polia{{/t}}">-<i class="fa fa-list-ul"></i>+ </a>   </td>
+                                <td style="width:75px"><a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a> 
+                                    &nbsp;&nbsp;&nbsp;<a zippy="delete" title="{{#t}}common.vyluchyty{{/t}}"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         </table>
                      <div   zippy="pag"></div>
@@ -80,78 +80,78 @@
 
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="mb-2">
-                            <label for="editcat_name">Назва</label>
+                            <label for="editcat_name">{{#t}}common.nazva{{/t}}</label>
                             <input autofocus="on"    required="on"  class="form-control" zippy="editcat_name"/>
                         </div>
                        <div class="mb-2">
-                            <label for="editcat_desc">Примітка</label>
+                            <label for="editcat_desc">{{#t}}common.prymitka{{/t}}</label>
                             <input   class="form-control" zippy="editcat_desc"/>
                         </div>
                         {{#usecattree}}
                         <div class="mb-2">
-                            <label for="editparent">Батьківська</label>
+                            <label for="editparent">{{#t}}reference.categorylist.batkivska{{/t}}</label>
                             <select   class="form-control" zippy="editparent">
-                                <option value="0">Не вказано</option>
+                                <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                             </select>
-                            <small>Категорія  не повинна мати ТМЦ</small>
+                            <small>{{#t}}reference.categorylist.katehoriia_ne_povynna_maty_tmts{{/t}}</small>
                         </div>
                         {{/usecattree}}
                         <div class="mb-2">
-                            <label for="editprice">Націнки в %</label>
+                            <label for="editprice">{{#t}}reference.categorylist.natsinky_v{{/t}}</label>
                             <div>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice1"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice2"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice3"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice4"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice5"/>
-                                <small class="form-text text-muted">Типи цін задаються в налаштуваннях </small>
+                                <small class="form-text text-muted">{{#t}}reference.categorylist.typy_tsin_zadaiutsia_v_nalashtuvanniakh{{/t}} </small>
                             </div>
                         </div>
                            {{#useimages}}
                         <div class="mb-2">
-                            <label for="editparent">Зображення</label>
+                            <label for="editparent">{{#t}}reference.categorylist.zobrazhennia{{/t}}</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
-                            <small>Зображення повинно бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M </small>
+                            <small>{{#t}}reference.categorylist.zobrazhennia_povynno_buty_kvadratnym_ina{{/t}} </small>
                         </div>
                         <div class="mb-2">
                             <img zippy="editimage" style="height:128px"><br>
                             <div class="form-check">
                                 <input zippy="editdelimage" type="checkbox" class="form-check-input">
 
-                                <span data-label="editdelimage" for="editdelimage">Видалити зображення</span>       
+                                <span data-label="editdelimage" for="editdelimage">{{#t}}reference.categorylist.vydalyty_zobrazhennia{{/t}}</span>       
                             </div> 
                         </div> 
                            {{/useimages}}
                         {{#shop}}   
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозі</label>
+                            <label class="form-check-label" for="editnoshop">{{#t}}reference.categorylist.ne_pokazuvaty_v_onlain_katalozi{{/t}}</label>
                         </div>
                          {{/shop}}
                             {{#usefood}}  
                         <div class="form-check">
                             <input zippy="editnofastfood" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnofastfood">Не показувати в кафе</label>
+                            <label class="form-check-label" for="editnofastfood">{{#t}}reference.categorylist.ne_pokazuvaty_v_kafe{{/t}}</label>
                         </div>
                          <div class="form-check">
                             <input zippy="editnofastfoodmenu" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnofastfoodmenu">Не показувати в онлайн меню кафе</label>
+                            <label class="form-check-label" for="editnofastfoodmenu">{{#t}}reference.categorylist.ne_pokazuvaty_v_onlain_meniu{{/t}}</label>
                         </div>
                           {{/usefood}}  
                            <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnoprice">Не показувати в прайсі</label>
+                                <label class="form-check-label" for="editnoprice">{{#t}}common.ne_pokazuvaty_v_praisi{{/t}}</label>
                             </div>
                           {{#usends}}    
                          <div class="mb-2">
-                            <label for="editnds">ПДВ,%</label>
+                            <label for="editnds">{{#t}}reference.categorylist.pdv{{/t}}</label>
                             <input style="width: 100px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
-                            <small>Якщо без  ПДВ залишити пустим</small>
+                            <small>{{#t}}reference.categorylist.iakshcho_bez_pdv_zalyshyty_pustym{{/t}}</small>
                         </div>  
                            {{/usends}}    
                         <div class="mb-2">
-                            <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
-                            <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                            <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">
+                            <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                             
                         </div>
                 </form>   
@@ -165,7 +165,7 @@
                     <h5 zippy="catprname"></h5>  
                         <div class="mb-2 row">
                             <div class="col-auto pt-1"> 
-                            <label for="ptype">Тип ціни</label>
+                            <label for="ptype">{{#t}}common.typ_tsiny{{/t}}</label>
                             </div>
                              <div class="col-auto"> 
                             <select   class="form-control" zippy="ptype">
@@ -174,17 +174,17 @@
                             </div>
                         </div>                     
                     <div class="mb-2">
-                         <label   for="editprice">Змінити на  суму або процент</label>
+                         <label   for="editprice">{{#t}}reference.categorylist.zminyty_na_sumu_abo_protsent{{/t}}</label>
                              <input  required="on"  style="width: 100px"   class="form-control" zippy="chprice"/>
 
-                             <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>
+                             <small class="form-text text-muted">{{#t}}reference.categorylist.napryklad_5_2_3_0{{/t}} </small>
 
                     </div>              
                      <div class="form-check">                    
-                           <input type="checkbox"  zippy="rnd">  <label   for="rnd">Закруглити до **9 </label>
+                           <input type="checkbox"  zippy="rnd">  <label   for="rnd">{{#t}}reference.categorylist.zakruhlyty_do_9{{/t}} </label>
                     </div> 
                     <div class="mb-2">
-                      <input  zippy="calccp"  type="submit" value="Перерахувати" class="btn btn-primary  ">
+                      <input  zippy="calccp"  type="submit" value="{{#t}}doc.calcsalary.pererakhuvaty{{/t}}" class="btn btn-primary  ">
                     </div> 
                      <table class="ctable"> 
                      <tr zippy="cplist">
@@ -197,8 +197,8 @@
                      </table> 
                      <div class="  mt-2 ">
                                  
-                    <a zippy="backprice" class="btn btn-secondary  ">Скасувати</a>
-                    &nbsp;&nbsp;<input zippy="savecp"  type="submit" value="Зберегти" class="btn btn-success  ">
+                    <a zippy="backprice" class="btn btn-secondary  ">{{#t}}common.skasuvaty{{/t}}</a>
+                    &nbsp;&nbsp;<input zippy="savecp"  type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-success  ">
                     </div> 
                     
  
@@ -211,21 +211,21 @@
                   
                  <form  zippy="cfform">
                     <h5 zippy="catprname2"></h5>  
-                    <b class="mt-2">Кастомні поля для ТМЦ  </b>                    
-                    <br><a  zippy="addnewcf"><b>Додати</b></a>
+                    <b class="mt-2">{{#t}}reference.categorylist.kastomni_polia_dlia_tmts{{/t}}  </b>                    
+                    <br><a  zippy="addnewcf"><b>{{#t}}common.dodaty{{/t}}</b></a>
 
                        <table class="ctable mt-2">
                         <tr zippy="cflist">
-                            <td>Код </td>
+                            <td>{{#t}}common.kod{{/t}} </td>
                             <td> <input pattern="[a-zA-Z0-9]+"   required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
-                            <td>Назва </td>
+                            <td>{{#t}}common.nazva{{/t}} </td>
                             <td><input required="on" class="form-control" style="width:250px;" zippy="cfname"  > </td>
                             <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
                          </tr>    
                       </table>                       
                         <div class="  mt-2">
-                                <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-secondary me-2 "> 
-                                <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                <input zippy="cancelc" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 "> 
+                                <input zippy="savec" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                                 
                       </div>
  

@@ -1,34 +1,34 @@
 <html>
     <head>
-          <title> Перекомплектація (розфасовка) </title>
+          <title> {{#t}}doc.transitem.perekomplektatsiia_rozfasovka{{/t}} </title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Перекомплектація (розфасовка) </h3>
+            <h3> {{#t}}doc.transitem.perekomplektatsiia_rozfasovka{{/t}} </h3>
             <div class="row">
                 <div class="col-12 col-md-3 col-xl-2">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="mb-2">
-                        <label for="store">Зі складу</label>
+                        <label for="store">{{#t}}common.zi_skladu{{/t}}</label>
                         <select class="form-control" zippy="store">
                         </select>
                     </div>
                      <div class="mb-2">
-                        <label for="tostore">На склад</label>
+                        <label for="tostore">{{#t}}common.na_sklad{{/t}}</label>
                         <select class="form-control" zippy="tostore">
                         </select>
                     </div>                      
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
                         <input class="form-control" type="text" zippy="notes">
                     </div>
 
@@ -36,17 +36,17 @@
 
                 <div class="col-12 col-md-8 col-xl-6">
                  <div class="mb-2 row">
-                   <label class="col-2 col-form-label">  Вхідний ТМЦ     </label>
+                   <label class="col-2 col-form-label">  {{#t}}doc.transitem.vkhidnyi_tmts{{/t}}     </label>
                     <div class="col-auto">
-                      <input class="form-control" zippy="fromitem" placeholder="Почніть вводити...">
+                      <input class="form-control" zippy="fromitem" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
                        </div>
-                             <label class="col-auto col-form-label ms-2">  Кіл.     </label>
+                             <label class="col-auto col-form-label ms-2">  {{#t}}common.kil{{/t}}     </label>
                                      
                         <div class="col-auto">
                             <input style="width:75px;" type="text" zippy="fromquantity" class="form-control qtyprice"
                                        pattern="[0-9,\.]+"/>
                         </div>                       
-                       <div class="col-auto">  <input zippy="addfrom" type="submit" value="Додати" class="btn btn-success"> </div>                         
+                       <div class="col-auto">  <input zippy="addfrom" type="submit" value="{{#t}}common.dodaty{{/t}}" class="btn btn-success"> </div>                         
                  </div>
                    <table class="table table-sm">
                        <tr zippy="fromlist">
@@ -57,22 +57,22 @@
                           <td style="width:30px;" ><a zippy="fromdel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
-                           <th colspan="3" class="text-end">На суму:</th>  <th class="text-end" zippy="fromtotal"></th>
+                           <th colspan="3" class="text-end">{{#t}}common.na_sumu_2{{/t}}</th>  <th class="text-end" zippy="fromtotal"></th>
                            <td></td>
                        </tr>
                    </table>
                   <div class="mb-2 row">
-                   <label class="col-2 col-form-label">  Вихідний ТМЦ     </label>
+                   <label class="col-2 col-form-label">  {{#t}}doc.transitem.vykhidnyi_tmts{{/t}}     </label>
                     <div class="col-auto">
-                      <input class="form-control" zippy="toitem" placeholder="Почніть вводити...">
+                      <input class="form-control" zippy="toitem" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
                        </div>
-                             <label class="col-auto col-form-label ms-2">  Кіл.     </label>
+                             <label class="col-auto col-form-label ms-2">  {{#t}}common.kil{{/t}}     </label>
                                      
                        <div class="col-auto">
                             <input style="width:75px;" type="text" zippy="toquantity" class="form-control qtyprice"
                                        pattern="[0-9,\.]+"/>
                         </div>                       
-                          <div class="col-auto">  <input zippy="addto" type="submit" value="Додати" class="btn btn-success"> </div>                         
+                          <div class="col-auto">  <input zippy="addto" type="submit" value="{{#t}}common.dodaty{{/t}}" class="btn btn-success"> </div>                         
              </div>
                  
                   <table class="table table-sm">
@@ -85,19 +85,19 @@
                             <td  style="width:30px;" ><a zippy="todel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
-                       <td colspan="2"  ><a  zippy="autoprice" >Взяти  ціни з останніх закупок</a></td> 
-                           <th   class="text-end">На суму:</th>  <th class="text-end" zippy="tototal"></th>
+                       <td colspan="2"  ><a  zippy="autoprice" >{{#t}}doc.transitem.vziaty_tsiny_z_ostannikh_zakupok{{/t}}</a></td> 
+                           <th   class="text-end">{{#t}}common.na_sumu_2{{/t}}</th>  <th class="text-end" zippy="tototal"></th>
                             <td></td>
                        </tr>
                    </table>
-                    <small ><i class="fa fa-exclamation-triangle"> Суми мають бути максимально однакові. Різниця буде зарахована відповідно в  витрати/прибутки</i><small>
+                    <small ><i class="fa fa-exclamation-triangle"> {{#t}}doc.transitem.sumy_maiut_buty_maksymalno_odnakovi{{/t}}</i><small>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>

@@ -77,7 +77,7 @@ class ManualEntry extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РП-000000';
+        return __('doc.manualentry.rp_000000');
     }
 
 }

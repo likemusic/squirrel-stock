@@ -90,14 +90,14 @@ class Issue extends \ZCL\DB\Entity
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = "Нове";
-        $list[self::STATUS_INPROCESS] = "В роботі";
-        $list[self::STATUS_QA] = "На перевірці";
-        $list[self::STATUS_REOPENED] = "Перевідкрите";
-        $list[self::STATUS_RETURNED] =  "Повернене на доопрацювання";
-        $list[self::STATUS_WA] = "На затвердженні";
-        $list[self::STATUS_SHIFTED] = "Відкладене";
-        $list[self::STATUS_CLOSED] = "Закрите";
+        $list[self::STATUS_NEW] = __('common.nove');
+        $list[self::STATUS_INPROCESS] = __('common.v_roboti');
+        $list[self::STATUS_QA] = __('mod.issue.issue.na_perevirtsi');
+        $list[self::STATUS_REOPENED] = __('mod.issue.issue.perevidkryte');
+        $list[self::STATUS_RETURNED] =  __('mod.issue.issue.povernene_na_doopratsiuvannia');
+        $list[self::STATUS_WA] = __('mod.issue.issue.na_zatverdzhenni');
+        $list[self::STATUS_SHIFTED] = __('mod.issue.issue.vidkladene');
+        $list[self::STATUS_CLOSED] = __('mod.issue.issue.zakryte');
 
         return $list;
     }
@@ -107,9 +107,9 @@ class Issue extends \ZCL\DB\Entity
 
 
 
-        $list[self::PRIORITY_HIGH] = "Високий";
-        $list[self::PRIORITY_NORMAL] = "Нормальний";
-        $list[self::PRIORITY_LOW] = "Низький";
+        $list[self::PRIORITY_HIGH] = __('mod.issue.issue.vysokyi');
+        $list[self::PRIORITY_NORMAL] = __('mod.issue.issue.normalnyi');
+        $list[self::PRIORITY_LOW] = __('mod.issue.issue.nyzkyi');
         return $list;
     }
 

@@ -92,12 +92,12 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменування";
-        $header['B1'] = "Телефон";
+        $header['A1'] = __('common.naimenuvannia');
+        $header['B1'] = __('common.telefon');
         $header['C1'] = "Email";
-        $header['D1'] = "Місто";
-        $header['E1'] = "Адреса";
-        $header['F1'] = "ЄДРПОУ";
+        $header['D1'] = __('common.misto');
+        $header['E1'] = __('common.adresa_2');
+        $header['F1'] = __('common.iedrpou');
         $root="<root>";
         $i = 1;
         foreach (Customer::find($sql, "customer_name asc") as $item) {
@@ -158,14 +158,14 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменування";
-        $header['B1'] = "Кор. назва";
-        $header['C1'] = "Од.";
-        $header['D1'] = "Категорія";
-        $header['E1'] = "Бренд";
-        $header['F1'] = "Артикул";
-        $header['G1'] = "Штрих код";
-        $header['H1'] = "Мін. кіл.";
+        $header['A1'] = __('common.naimenuvannia');
+        $header['B1'] = __('service.export.kor_nazva');
+        $header['C1'] = __('common.od');
+        $header['D1'] = __('common.katehoriia');
+        $header['E1'] = __('common.brend');
+        $header['F1'] = __('common.artykul');
+        $header['G1'] = __('common.shtrykh_kod_2');
+        $header['H1'] = __('common.min_kil');
         $header['I1'] = $option['price1'];
         $header['J1'] = $option['price2'];
         $header['K1'] = $option['price3'];
@@ -174,9 +174,9 @@ class Export extends \App\Pages\Base
 
         
         if ($t == 1) {
-            $header['N1'] = "Комірка";
-            $header['O1'] = "Кіл.";
-            $header['P1'] = "На суму";
+            $header['N1'] = __('common.komirka');
+            $header['O1'] = __('common.kil');
+            $header['P1'] = __('common.na_sumu');
         }
 
         $root="<root>";
@@ -304,7 +304,7 @@ class Export extends \App\Pages\Base
             }
 
             $i++;
-            $data['A' . $i] = array('value' => "Всього: ", 'bold' => true, 'align' => 'right');
+            $data['A' . $i] = array('value' => __('service.export.vsoho'), 'bold' => true, 'align' => 'right');
             $data['B' . $i] = array('value' => H::fa(doubleval($doc->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
 

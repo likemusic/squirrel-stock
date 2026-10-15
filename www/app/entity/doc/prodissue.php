@@ -101,7 +101,7 @@ class ProdIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'СВ-000000';
+        return __('doc.prodissue.sv_000000');
     }
 
     public function getRelationBased() {

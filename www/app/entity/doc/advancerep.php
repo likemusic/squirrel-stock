@@ -133,7 +133,7 @@ class AdvanceRep extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'АЗ-000000';
+        return __('doc.advancerep.az_000000');
     }
      
   

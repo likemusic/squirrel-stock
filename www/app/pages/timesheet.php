@@ -210,12 +210,12 @@ class TimeSheet extends \App\Pages\Base
         $time->emp_id = intval( $post->empid);
         if ($time->emp_id == 0) {
 
-            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);
+            return json_encode(__('common.ne_obrano_spivrobitnyka'), JSON_UNESCAPED_UNICODE);
         }
         $time->t_type = $post->type;
 
         if ($time->t_type == 0) {
-            return $this->jsonError("Не обрано тип") ;
+            return $this->jsonError(__('app.timesheet.ne_obrano_typ')) ;
      
            
         }
@@ -239,7 +239,7 @@ class TimeSheet extends \App\Pages\Base
             if ($this->branch_id == 0) {
 
              
-              return $this->jsonError("Виберіть філію") ;
+              return $this->jsonError(__('common.vyberit_filiiu')) ;
      
             }
             $time->branch_id = $this->branch_id;

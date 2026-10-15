@@ -42,23 +42,23 @@ class Outcome extends \App\Pages\Base
 
 
         $types = array();
-        $types[1] = "За товарами";
-        $types[6] = "Товари за покупцями";
-        $types[2] = "За покупцями";
-        $types[3] = "За датами";
-        $types[14] = "Товар за датами";
-        $types[4] = "Послуги, роботи";
-        $types[7] = "Послуги за покупцями";
-        $types[5] = "За категоріями";
+        $types[1] = __('report.income.za_tovaramy');
+        $types[6] = __('report.outcome.tovary_za_pokuptsiamy');
+        $types[2] = __('report.outcome.za_pokuptsiamy');
+        $types[3] = __('report.income.za_datamy');
+        $types[14] = __('print.outcome.tovar_za_datamy');
+        $types[4] = __('common.posluhy_roboty');
+        $types[7] = __('report.outcome.posluhy_za_pokuptsiamy');
+        $types[5] = __('report.income.za_katehoriiamy');
 
         if (count($hlist) > 0) {
-            $types[8] = "За холдінгами";
+            $types[8] = __('report.outcome.za_kholdinhamy');
         }
        
-        $types[10] = "За складами";
-        $types[11] = "За джерелами";
-        $types[12] = "За брендами" ;
-        $types[13] = "За постачальниками" ;
+        $types[10] = __('report.outcome.za_skladamy');
+        $types[11] = __('report.outcome.za_dzherelamy');
+        $types[12] = __('report.outcome.za_brendamy') ;
+        $types[13] = __('report.income.za_postachalnykamy') ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
         $this->filter->add(new CheckBox('shownotes' ))->setVisible(false) ;
@@ -189,7 +189,7 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 2) {  //по покупателям
-            $empty = "Фіз. особа";
+            $empty = __('report.outcome.fiz_osoba');
             $sql = "
           select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e

@@ -40,7 +40,7 @@ class IssueList extends \App\Pages\Base
 
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
             App::RedirectError();
             return;
         }
@@ -221,7 +221,7 @@ class IssueList extends \App\Pages\Base
 
         $issue->save();
         if ($post->id==0) {
-            $issue->addStatusLog("Створення завдання");
+            $issue->addStatusLog(__('mod.issue.issuelist.stvorennia_zavdannia'));
         }
         return "";
     }
@@ -235,23 +235,23 @@ class IssueList extends \App\Pages\Base
         if($issue->status != $post->status) {
             $issue->status = $post->status;
             $stlist = Issue::getStatusList()  ;
-            $desc="Статус змінено на  <b>" . $stlist[$issue->status] . "</b>"  ;
+            $desc=__('mod.issue.issuelist.status_zmineno_na') . $stlist[$issue->status] . "</b>"  ;
         }
 
         if($issue->priority != $post->priority) {
             $issue->priority = $post->priority;
             $prlist = Issue::getPriorityList() ;
-            $desc="Пріоритет змінено на  <b>" . $prlist[$issue->priority] . "</b>" ;
+            $desc=__('mod.issue.issuelist.priorytet_zmineno_na') . $prlist[$issue->priority] . "</b>" ;
         }
 
         if($issue->user_id != $post->user_id) {
             $issue->user_id = $post->user_id;
             $user = \App\Entity\User::load($issue->user_id) ;
-            $desc="Завдання переведено на  <b>" . $user->username . "</b>";
+            $desc=__('mod.issue.issuelist.zavdannia_perevedeno_na') . $user->username . "</b>";
             
             $n = new \App\Entity\Notify();
             $n->user_id = $user->user_id;
-            $n->message =  " На вас переведено завдання  #{$issue->issue_id} {$issue->issue_name} ";
+            $n->message =  __('mod.issue.issuelist.na_vas_perevedeno_zavdannia', ['issue_id' => $issue->issue_id, 'issue_name' => $issue->issue_name]);
             $n->sender_id = \App\Entity\Notify::SYSTEM;
             $n->save();
             
@@ -359,8 +359,8 @@ class IssueList extends \App\Pages\Base
             }
             $n = new \App\Entity\Notify();
             $n->user_id = $u;
-            $n->message =  "Коментар до завдання  #{$issue->issue_id} {$issue->issue_name} ";
-            $n->message .= "<br>  <a href=\"/issue/{$issue->issue_id}/{$issue->project_id}/#msgankor\">Відповісти</a> ";
+            $n->message =  __('mod.issue.issuelist.komentar_do_zavdannia', ['issue_id' => $issue->issue_id, 'issue_name' => $issue->issue_name]);
+            $n->message .= __('mod.issue.issuelist.vidpovisty', ['issue_id' => $issue->issue_id, 'project_id' => $issue->project_id]);
             $n->sender_id = System::getUser()->user_id;
             $n->save();
         }

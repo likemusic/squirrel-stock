@@ -201,7 +201,7 @@ class IncomeItem extends Base
       
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -211,12 +211,12 @@ class IncomeItem extends Base
         $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn(__('common.ne_vkazana_tsina'));
         }
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -224,7 +224,7 @@ class IncomeItem extends Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -339,18 +339,18 @@ class IncomeItem extends Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
      
@@ -396,14 +396,14 @@ class IncomeItem extends Base
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         
         $price = doubleVal($this->editsnitem->editsnprice->getText());
         if ($price == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError(__('common.ne_vkazana_tsina'));
             return;
         }
         $sns =  $this->editsnitem->editsn->getText();
@@ -417,7 +417,7 @@ class IncomeItem extends Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказані серійні номери");
+            $this->setError(__('common.ne_vkazani_seriini_nomery'));
             return;
         }
         
@@ -426,7 +426,7 @@ class IncomeItem extends Base
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
-                $this->setError("Серійний номер має бути унікальним для виробу");    
+                $this->setError(__('common.seriinyi_nomer_maie_buty_unikalnym'));    
                 return;
             }           
             
@@ -467,7 +467,7 @@ class IncomeItem extends Base
         $item = Item::findBarCode($code );
 
         if ($item == null) {
-            $this->setError('Не знайдено ТМЦ  з таким  кодом');
+            $this->setError(__('common.ne_znaideno_tmts_z_takym'));
             return;
         }
 
@@ -506,7 +506,7 @@ class IncomeItem extends Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $item = new Item();
@@ -517,7 +517,7 @@ class IncomeItem extends Base
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
               return;
         }  
 

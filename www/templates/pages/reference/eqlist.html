@@ -1,20 +1,20 @@
 <html>
     <head>
-           <title> Обладнання та основні засоби </title>
+           <title> {{#t}}reference.eqlist.obladnannia_ta_osnovni_zasoby{{/t}} </title>
    </head>
 
     <body>
         <div class="row">
         
             <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
-                <h3>Обладнання та основні засоби </h3>
+                <h3>{{#t}}reference.eqlist.obladnannia_ta_osnovni_zasoby{{/t}} </h3>
                   <div class="navbar  ">
                    
                     <form zippy="filter"  >
                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
-                         <label   for="searchkey">Пошук</label>
+                         <label   for="searchkey">{{#t}}common.poshuk{{/t}}</label>
                      
                         <input class="form-control  " type="text" zippy="searchkey">
                         
@@ -23,37 +23,37 @@
                            <div class="col-12">
                            <div class="input-group">
                      
-                        <label     for="searchtype">Тип</label>
+                        <label     for="searchtype">{{#t}}common.typ{{/t}}</label>
                       
                         <select class="form-select   " zippy="searchtype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                          </div>
                          </div>
                        <div class="col-12">
                            <div class="input-group">
                          
-                       <label   for="searchemp">мат. відповідальний</label>
+                       <label   for="searchemp">{{#t}}reference.eqlist.mat_vidpovidalnyi{{/t}}</label>
                          
                         <select class="form-select    " zippy="searchemp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                          </div>
                          </div>
                          <div class="col-12   ">
                         <div class="form-check pt-2">
 
-                            <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                            <label class="form-check-label me-sm-3" for="showdis">Всі</label>
+                            <input title="{{#t}}reference.eqlist.pokazaty_neaktualni{{/t}}" class="form-check-input" type="checkbox" zippy="showdis">
+                            <label class="form-check-label me-sm-3" for="showdis">{{#t}}common.vsi{{/t}}</label>
                         </div>
                         </div>
                           <div class="col-12  ">
-                           <input class="btn btn-success  " type="submit" value="ОК">
+                           <input class="btn btn-success  " type="submit" value="{{#t}}common.ok{{/t}}">
                          </div>
                        </div>
                     </form>
                     </div>
-                <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table table-bordered  table-sm  ">
            
                     <tr zippy="eqlist">
@@ -66,15 +66,15 @@
                         <td zippy="pa_name"></td>
                         <td ><small zippy="notes"></small></td>
                         <td  >
-                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-gavel"></i></a>
+                             <a zippy="view" title="{{#t}}reference.eqlist.perehliad_operatsii{{/t}}"><i class="fa fa-gavel"></i></a>
                        </td>
                         <td  >
-                             <a zippy="barcode" title="Друк штрих-коду інвентарного номеру"><i class="fa fa-barcode"></i></a>
+                             <a zippy="barcode" title="{{#t}}reference.eqlist.druk_shtrykh_kodu_inventarnoho_nomeru{{/t}}"><i class="fa fa-barcode"></i></a>
                        </td>
                         <td  >
                     
-                         <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                         &nbsp;    &nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
+                         <a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a>
+                         &nbsp;    &nbsp;<a zippy="delete" title="{{#t}}common.vyluchyty{{/t}}"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </table>
@@ -84,26 +84,26 @@
             <div class="col-12  ">
              
             <form zippy="itemdetail" >
-             <h4>Редагування </h4>
+             <h4>{{#t}}common.redahuvannia{{/t}} </h4>
               <div class="row">
                <div class="col-12 col-md-4 col-xl-3">
                 <div class="mb-2">
-                    <label   for="editname">Найменування</label>
+                    <label   for="editname">{{#t}}common.naimenuvannia{{/t}}</label>
                     <input  autofocus="on"    required="on"  class="form-control" zippy="editname"/>
                 </div>
               
              
                {{#usebranch}}
                 <div class="mb-2">
-                    <label for="editbranch">Філія</label>
+                    <label for="editbranch">{{#t}}common.filiia{{/t}}</label>
                     <select class="form-control" zippy="editbranch">
-                        <option value="0">Не обрано</option>
+                        <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                     </select>
                 </div>
                 {{/usebranch}}
                
                  <div class="mb-2">
-                    <label   for="edittype">Тип</label>
+                    <label   for="edittype">{{#t}}common.typ{{/t}}</label>
                     <select class="form-control  " zippy="edittype">
                       
                     </select>
@@ -111,39 +111,39 @@
     
 
                 <div class="mb-2">
-                    <label   for="editdescription">Опис</label>
+                    <label   for="editdescription">{{#t}}common.opys{{/t}}</label>
                     <textarea class="form-control" zippy="editdescription"></textarea>
                 </div>
                
                   
                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                    <label class="form-check-label" for="editdisabled">{{#t}}common.ne_vykorystovuietsia{{/t}}</label>
                 </div>
              
            
                </div> 
                <div class="col-12 col-md-3 col-xl-2">
                  <div class="mb-2">
-                    <label   for="editemp">Мат. відповідальний</label>
+                    <label   for="editemp">{{#t}}reference.eqlist.mat_vidpovidalnyi_2{{/t}}</label>
                     <select class="form-control  " zippy="editemp">
-                        <option value="0">Не вказано</option>
+                        <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                     </select>
                 </div>                 
                  <div class="mb-2">
-                    <label    for="editinvnumber">Інвентарний номер</label>
+                    <label    for="editinvnumber">{{#t}}reference.eqlist.inventarnyi_nomer{{/t}}</label>
                     <input required="on" class="form-control" zippy="editinvnumber"/>
                 </div>
                  <div class="mb-2">
-                    <label   for="editserial">Серійний номер</label>
+                    <label   for="editserial">{{#t}}common.seriinyi_nomer{{/t}}</label>
                     <input class="form-control" zippy="editserial"/>
                 </div>
                 
              </div>
               
               <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
-                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">
+                    <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                     
                 </div>    
                 </div>    
@@ -152,10 +152,10 @@
         
         <div class="w-100"></div>
         <div zippy="infopan" class="col-12 col-md-10 col-xl-8  ">
-          <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+          <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}reference.eqlist.do_spysku{{/t}}</a>
           <h5 zippy="oname"> </h5>
-          <a zippy="addop" class="btn  btn-info btn-sm" >  Додати</a>                 
-          <br><a zippy="showall"   >  Показати переміщення</a>                 
+          <a zippy="addop" class="btn  btn-info btn-sm" >  {{#t}}common.dodaty{{/t}}</a>                 
+          <br><a zippy="showall"   >  {{#t}}reference.eqlist.pokazaty_peremishchennia{{/t}}</a>                 
       
       
            <table class="ctable">
@@ -171,7 +171,7 @@
              </tr>
                {{/oplist}}
              <tr style="font-weight:bolder">
-                 <td align="right"   colspan="3">Балансова вартість: </td>  
+                 <td align="right"   colspan="3">{{#t}}reference.eqlist.balansova_vartist{{/t}} </td>  
                  <td align="right" >{{total}} </td>  
           
                  <td colspan="2">   </td>  

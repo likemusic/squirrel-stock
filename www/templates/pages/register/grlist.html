@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title>  Журнал закупівель </title>
+        <title>  {{#t}}register.grlist.zhurnal_zakupivel{{/t}} </title>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Журнал закупівель </h3>
+                <h3>{{#t}}register.grlist.zhurnal_zakupivel{{/t}} </h3>
 
 
              
@@ -26,7 +26,7 @@
                       
                          <div class="col-12">
                            <div class="input-group">
-                          <label   for="status"> Статус </label>
+                          <label   for="status"> {{#t}}common.status{{/t}} </label>
                             
 
                         <select class="form-select  " zippy="status">
@@ -38,10 +38,10 @@
                          <div class="col-12">
                            <div class="input-group">
                     
-                        <label   for="fstore"> склад </label>
+                        <label   for="fstore"> {{#t}}common.sklad_2{{/t}} </label>
                               
                          <select class="form-select  " zippy="fstore">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                             
                        </div>
@@ -50,9 +50,9 @@
                          <div class="col-12">
                            <div class="input-group">
                        
-                        <label     for="searchcust">Контрагент</label>
+                        <label     for="searchcust">{{#t}}common.kontrahent{{/t}}</label>
                           
-                            <input placeholder="Почніть вводити..."  class="form-control me-2" zippy="searchcust" >
+                            <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}"  class="form-control me-2" zippy="searchcust" >
                         
                         </div>
                        </div>
@@ -60,37 +60,37 @@
                        <div class="col-12">  
                           
 
-                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
+                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="{{#t}}common.poshuk_po_kontentu{{/t}}" ]>
                          </div>
                        
                          <div class="col-12">  
 
-                        <input type="submit" class="  btn btn-success  " value="ОК">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                         </div>
                        </div>
                       
                     </form>
                 
-                <a href="/index.php?p=App/Pages/Doc/GoodsReceipt" class="btn btn-primary mt-2 mb-3">Створити ПН</a>
-                <br><a zippy="csv">Експорт у Excel</a>
+                <a href="/index.php?p=App/Pages/Doc/GoodsReceipt" class="btn btn-primary mt-2 mb-3">{{#t}}register.grlist.stvoryty_pn{{/t}}</a>
+                <br><a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
 
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Номер</th>
-                        <th>Дата</th>
+                        <th>{{#t}}common.nomer{{/t}}</th>
+                        <th>{{#t}}common.data{{/t}}</th>
 
-                        <th>Постачальник</th>
+                        <th>{{#t}}common.postachalnyk{{/t}}</th>
 
                      
 
-                        <th class="text-end">Сума</th>
+                        <th class="text-end">{{#t}}common.suma{{/t}}</th>
 
-                        <th>Статус</th>
+                        <th>{{#t}}common.status{{/t}}</th>
                             <th> </th>
                         <th> </th>
 
-                        <th>Примітка</th>
+                        <th>{{#t}}common.prymitka{{/t}}</th>
                         <th></th>
 
 
@@ -107,15 +107,15 @@
                         <td zippy="amount" class="text-end"></td>
 
                         <td class="text-nowrap" zippy="state"></td>
-                        <td style="width:20px" ><i zippy="ispay" title="Очікує оплату" class="fa fa-credit-card"></i></td>
-                        <td style="width:20px" ><i zippy="istruck" title="Очікує поставку" class="fa fa-truck"></i></td>
+                        <td style="width:20px" ><i zippy="ispay" title="{{#t}}common.ochikuie_oplatu{{/t}}" class="fa fa-credit-card"></i></td>
+                        <td style="width:20px" ><i zippy="istruck" title="{{#t}}register.grlist.ochikuie_postavku{{/t}}" class="fa fa-truck"></i></td>
                                      
                         <td zippy="onotes"></td>
 
                         <td class="text-nowrap">
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
 
-                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i></a>
 
                         </td>
 
@@ -139,10 +139,10 @@
                     <form zippy="statusform"  >
                          <div class="row  ">
                         <div class="col-auto  ">  
-                          <button zippy="bttn" class="btn btn-primary  me-2">Створити прихід</button>
+                          <button zippy="bttn" class="btn btn-primary  me-2">{{#t}}register.grlist.stvoryty_prykhid{{/t}}</button>
                        </div>
                         <div class="col-auto  "> 
-                          <button zippy="bret" class="btn btn-primary  me-2">Створити повернення </button>
+                          <button zippy="bret" class="btn btn-primary  me-2">{{#t}}register.grlist.stvoryty_povernennia{{/t}} </button>
                       </div>
                        
                    </div>

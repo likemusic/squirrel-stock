@@ -47,7 +47,7 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові', 2 => 'Відправлені', 5 => 'Готові до відправки', 3 => 'Всі'), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.gilist.vidpravleni'), 5 => __('register.gilist.hotovi_do_vidpravky'), 3 => __('common.vsi')), 0));
 
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
@@ -217,7 +217,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-            $this->setSuccess('Відправлено');
+            $this->setSuccess(__('common.vidpravleno'));
         }
 
         if ($sender->id == "bdevivered") {
@@ -233,7 +233,7 @@ class GIList extends \App\Pages\Base
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
             $this->_doc->save();
-            $this->setSuccess("Збережено");
+            $this->setSuccess(__('common.zberezheno'));
             $this->statuspan->setVisible(false);
         }
         if ($sender->id == "bttn") {
@@ -439,10 +439,10 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppm->setOptionList($stlist);
         $this->nppan->npform->nppm->setValue('Cash');
         $bmlist = array();
-        $bmlist['0'] = 'Без доставки';
-        $bmlist['Cash'] = 'Готівка';
-        $bmlist['NonCash'] = 'Безготівка';
-        $bmlist['Control'] = 'Контроль доставки';
+        $bmlist['0'] = __('register.gilist.bez_dostavky');
+        $bmlist['Cash'] = __('common.hotivka');
+        $bmlist['NonCash'] = __('common.bezhotivka');
+        $bmlist['Control'] = __('register.gilist.kontrol_dostavky');
         $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('0');
         //кто оплачивает
@@ -508,7 +508,7 @@ class GIList extends \App\Pages\Base
             }
             if($desc =='') {
                 foreach ($list as $it) {
-                    $desc = $it->itemname." + " . (count($list)-1) . ' позицій'   ;
+                    $desc = $it->itemname." + " . (count($list)-1) . __('register.gilist.pozytsii')   ;
                 }
                 
             }
@@ -538,7 +538,7 @@ class GIList extends \App\Pages\Base
         }
 
         if($needopt) {
-            $this->setWarn("Не у всіх товарів звдвні вага або габарити ") ;
+            $this->setWarn(__('register.gilist.ne_u_vsikh_tovariv_zvdvni')) ;
         }
         
         
@@ -768,11 +768,11 @@ class GIList extends \App\Pages\Base
        
        //проверка  введеных параметров
         if (($params['Weight'] > 0) == false) {
-            $this->setError('Не вказано вагу');
+            $this->setError(__('register.gilist.ne_vkazano_vahu'));
             return;
         }
         if (strlen($params['Description']) == 0) {
-            $this->setError('Не вказано опис');
+            $this->setError(__('register.gilist.ne_vkazano_opys'));
             return;
         }     
         if($dt==1) {
@@ -796,7 +796,7 @@ class GIList extends \App\Pages\Base
             $back = $this->nppan->npform->nppmback->getValue();
 
             if ($back == '0') {
-                $this->setError('Не вказано тип оплати зворотньої доставки'); 
+                $this->setError(__('register.gilist.ne_vkazano_typ_oplaty_zvorotnoi')); 
                 return;
             }
             if ($back == 'Control') {
@@ -910,7 +910,7 @@ class GIList extends \App\Pages\Base
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
             $this->_doc->headerdata['moneyback'] = $moneyback;
             $this->_doc->save();
-            $this->setSuccess("Створено декларацію номер " . $this->_doc->headerdata['ship_number']);
+            $this->setSuccess(__('register.gilist.stvoreno_deklaratsiiu_nomer') . $this->_doc->headerdata['ship_number']);
 
 
             $order = Document::load($this->_doc->parent_id);
@@ -936,7 +936,7 @@ class GIList extends \App\Pages\Base
         } else {
             $error =" ". implode(";", $result['errors'] );
             if(strpos($error,'OptionsSeat')>0) {
-                $error= "Не вказано габарити для поштомата або невідповідний тип доставки";
+                $error= __('register.gilist.ne_vkazano_habaryty_dlia_poshtomata');
             }
             
             $this->setError($error) ;

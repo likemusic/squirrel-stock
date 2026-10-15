@@ -3,7 +3,7 @@
 
     <head>
       
-        <title>Онлайн каталог</title>
+        <title>{{#t}}common.onlain_kataloh{{/t}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
@@ -61,7 +61,7 @@
                                    
                               </li>  
                            <li class="nav-item active">
-                                <a class="nav-link" href="/shop">Каталог  </a>
+                                <a class="nav-link" href="/shop">{{#t}}mod.shop.base.kataloh{{/t}}  </a>
                               </li>  
                               
                                   
@@ -77,7 +77,7 @@
                         
                             
                                     <li class="nav-item  ">
-                                       <a class="nav-link" href="/blog" >Блог </a>  
+                                       <a class="nav-link" href="/blog" >{{#t}}mod.shop.base.bloh{{/t}} </a>  
                                    </li>
                                  {{/isblog}}   
                                     
@@ -98,7 +98,7 @@
                                     <form zippy="searchform" class="row justify-content-end my-2 my-lg-0 d-none  d-lg-block">
                                         
                                        <div class="input-group me-3">
-                                          <input    zippy="searchitem"   class="form-control" type="search" placeholder="Почніть вводити...">
+                                          <input    zippy="searchitem"   class="form-control" type="search" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
                                           
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                            
@@ -112,17 +112,17 @@
                                    </li>
                                      {{/phone}} 
                                <li class="nav-item">
-                                       <a class="nav-link" title="Порівняння"  zippy="showcompare"><i class="fas fa-balance-scale "></i></a> 
+                                       <a class="nav-link" title="{{#t}}mod.shop.base.porivniannia{{/t}}"  zippy="showcompare"><i class="fas fa-balance-scale "></i></a> 
                                         
                                    </li>   
                                   <li class="nav-item">
-                                     <a class="nav-link" title="Кошик"  zippy="shopcart"><i class="fa fa-shopping-cart"></i></a>  
+                                     <a class="nav-link" title="{{#t}}mod.shop.base.koshyk{{/t}}"  zippy="shopcart"><i class="fa fa-shopping-cart"></i></a>  
                                       
                                    </li>
                                  
                                    {{^islogined}}
                                    <li class="nav-item ">
-                                       <a  class="nav-link   "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="Мій кабінет"> <i class="fa fa-user"></i> </a>
+                                       <a  class="nav-link   "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="{{#t}}mod.shop.base.mii_kabinet{{/t}}"> <i class="fa fa-user"></i> </a>
                                         
                                    </li>
                                    {{/islogined}}    
@@ -133,15 +133,15 @@
                                   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-user"></i> <span> {{custname}} </span></a>
                                     <ul class="dropdown-menu dropdown-menu-right">                                         
                                         <li>
-                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> Мої замовлення</a>
+                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> {{#t}}mod.shop.base.moi_zamovlennia{{/t}}</a>
                                         </li>
                                      
                                         <li>
-                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/UserProfile">  Мій профіль</a>
+                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/UserProfile">  {{#t}}common.mii_profil{{/t}}</a>
                                         </li>
                                         <li class="dropdown-divider"></li>
                                         <li>
-                                            <a class="dropdown-item  " zippy="logout">  Вийти</a>
+                                            <a class="dropdown-item  " zippy="logout">  {{#t}}common.vyity{{/t}}</a>
                                         </li>     
                                     </ul>
                                 </li>
@@ -153,7 +153,7 @@
        <form zippy="searchformmob" class="row   ">
                                         
                                        <div class="input-group me-3">
-                                          <input    zippy="searchitemmob"   class="form-control" type="search" placeholder="Почніть вводити...">
+                                          <input    zippy="searchitemmob"   class="form-control" type="search" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}">
                                          
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           
@@ -183,9 +183,9 @@
                         <div  class="col-12 text-center mt-2 mb-2">
                                 <a href="https://zippy.com.ua/" target="_blank"> Zippy CRM</a> 
                              &nbsp;&nbsp;&nbsp;
-                               <a href="/"  >Каталог</a>  
+                               <a href="/"  >{{#t}}mod.shop.base.kataloh{{/t}}</a>  
                              &nbsp;&nbsp;&nbsp;
-                           <a href="/admin" target="_blank">Адмін панель</a>  
+                           <a href="/admin" target="_blank">{{#t}}mod.shop.base.admin_panel{{/t}}</a>  
                         </div>
                     </div>
                 </div>

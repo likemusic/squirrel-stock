@@ -64,7 +64,7 @@ class MovePart extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РТ-000000';
+        return __('doc.movepart.rt_000000');
     }
 
 }

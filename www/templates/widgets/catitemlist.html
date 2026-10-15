@@ -7,13 +7,13 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Вибір ТМЦ</h5>
+                            <h5 class="modal-title">{|#t|}widgets.catitemlist.vybir_tmts{|/t|}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
                         </div>
                         <div id="vcatitemlist" class="modal-body">    
-                             <a v-show="back"  v-on:click.prevent="oncat(-1)" > <i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+                             <a v-show="back"  v-on:click.prevent="oncat(-1)" > <i class="fa fa-arrow-alt-circle-left"></i> {|#t|}common.nazad{|/t|}</a>
                              <div v-show="cats.length > 0" class="row mt-2">
                              
                                      <div  v-for="cat in cats" class="col-12 col-sm-6 col-md-4  col-xl-3">

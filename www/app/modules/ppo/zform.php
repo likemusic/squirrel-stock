@@ -165,7 +165,7 @@ class ZForm extends \App\Pages\Base
                 $this->_pos->save();
                 $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
             } else {
-                $this->setError("Не повернено фіскальний номер");
+                $this->setError(__('common.ne_poverneno_fiskalnyi_nomer'));
 
                 return;
             }
@@ -187,7 +187,7 @@ class ZForm extends \App\Pages\Base
 
     public function OnClose($sender) {
         if ($this->_pos->pos_id == 0) {
-            $this->setError('Не вибраний термінал');
+            $this->setError(__('mod.ppo.zform.ne_vybranyi_terminal'));
             return;
         }
 
@@ -214,7 +214,7 @@ class ZForm extends \App\Pages\Base
                 $this->setErrorTopPage($ret['data']);
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-                $this->setSuccess('Зміна закрита');
+                $this->setSuccess(__('common.zmina_zakryta'));
                 $this->stat->clean();
                 $this->OnRefresh($this->filter) ;
                 $this->_pos->fiscdocnumber++;
@@ -268,7 +268,7 @@ class ZForm extends \App\Pages\Base
                 $this->_pos->save();
                 return true;
             } else {
-                $this->setError("Не повернено фіскальний номер");
+                $this->setError(__('common.ne_poverneno_fiskalnyi_nomer'));
                 return false;
             }
         }
@@ -281,7 +281,7 @@ class ZForm extends \App\Pages\Base
 
         $pos_id = $this->filter->pos->getValue();
         if ($pos_id == 0) {
-            $this->setError('Не вибраний термінал');
+            $this->setError(__('mod.ppo.zform.ne_vybranyi_terminal'));
             return;
         }
 
@@ -296,7 +296,7 @@ class ZForm extends \App\Pages\Base
         $this->ztres->setText("");
         $pos_id = $this->filter->pos->getValue();
         if ($pos_id == 0) {
-            $this->setError('Не вибраний термінал');
+            $this->setError(__('mod.ppo.zform.ne_vybranyi_terminal'));
 
             return;
         }
@@ -305,35 +305,35 @@ class ZForm extends \App\Pages\Base
      
         $ret = PPOHelper::shiftTotal(  $pos) ;
         if($ret == false) {
-            $this->setError("Сервер недоступний або зміна закрита");
+            $this->setError(__('mod.ppo.zform.server_nedostupnyi_abo_zmina_zakryta'));
             return ;
         }
         if(!is_array($ret['Totals'])) {
-            $this->setError("Сервер недоступний або зміна закрита") ;
+            $this->setError(__('mod.ppo.zform.server_nedostupnyi_abo_zmina_zakryta')) ;
             return ;
         }
         $zt="";
         if(is_array($ret['Totals']['Real']['PayForm'] ??null)) {
-            $zt .="<b>Реалізація</b><br>";
+            $zt .=__('mod.ppo.zform.realizatsiia');
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чеків ".$ret['Totals']['Real']['OrdersCount'] ;
+            $zt .= __('mod.ppo.zform.chekiv').$ret['Totals']['Real']['OrdersCount'] ;
         }
         if(is_array($ret['Totals']['Ret']['PayForm']??null)) {
-            $zt .="<br><b>Повернення</b><br>";
+            $zt .=__('mod.ppo.zform.povernennia');
             foreach($ret['Totals']['Ret']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чеків ".$ret['Totals']['Ret']['OrdersCount'] ;
+            $zt .= __('mod.ppo.zform.chekiv').$ret['Totals']['Ret']['OrdersCount'] ;
         }
         if( ($ret['Totals']['ServiceInput'] ??0) >0) {
-             $zt .= "<br> Службове внесення ".$ret['Totals']['ServiceInput'] ;
+             $zt .= __('mod.ppo.zform.sluzhbove_vnesennia').$ret['Totals']['ServiceInput'] ;
         }
         if( ($ret['Totals']['ServiceOutput'] ??0) >0) {
-             $zt .= "<br> Службова видача ".$ret['Totals']['ServiceOutput'] ;
+             $zt .= __('mod.ppo.zform.sluzhbova_vydacha').$ret['Totals']['ServiceOutput'] ;
         }
         $this->ztres->setText($zt, true);
 

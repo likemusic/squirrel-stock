@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title> Заміни та аналоги </title>
+        <title> {{#t}}register.substitems.zaminy_ta_analohy{{/t}} </title>
    </head>
 
     <body>
         <div class="row">
 
             <div class="col-12  col-xl-11" zippy="itemtable">
-                <h3>Заміни та аналоги ТМЦ               </h3>
+                <h3>{{#t}}register.substitems.zaminy_ta_analohy_tmts{{/t}}               </h3>
 
                  
 
@@ -15,38 +15,38 @@
                             <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
-                           <label   for="searchkey">Пошук</label>
+                           <label   for="searchkey">{{#t}}common.poshuk{{/t}}</label>
                          
                            <input required="on" class="form-control me-2" type="text" zippy="searchkey"   >
                          </div>
                          </div>
                           <div class="col-12  ">
-                           <input class="btn btn-success ms-4 " type="submit" value="ОК">
+                           <input class="btn btn-success ms-4 " type="submit" value="{{#t}}common.ok{{/t}}">
                         </div>
                      </div>
                     </form>
                  
                 <div class="navbar nav justify-content-start" >
                
-                <a zippy="addnew" class="btn btn-success   ms-2" >   Додати</a>
-                <a zippy="csv" class="ms-2 "><i  class="fa fa-upload" ></i> Експорт в CSV</a>   
-                <a zippy="imports" class="ms-2"><i  class="fa fa-download" ></i> Імпорт з Excel</a>
+                <a zippy="addnew" class="btn btn-success   ms-2" >   {{#t}}common.dodaty{{/t}}</a>
+                <a zippy="csv" class="ms-2 "><i  class="fa fa-upload" ></i> {{#t}}register.substitems.eksport_v_csv{{/t}}</a>   
+                <a zippy="imports" class="ms-2"><i  class="fa fa-download" ></i> {{#t}}common.import_z_excel{{/t}}</a>
                   </div>
                 <form zippy="listform">
 
                     <table class="table    table-sm ">
                         <tr>
                             <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"
                                     class="fa fa-check-double "></i></th>                    
                          
-                            <th>Найменування </th>
-                            <th>Код оригінала  </th>
-                            <th>Бренд оригінала  </th>
-                            <th>Код заміни</th>
-                            <th>Бренд заміни</th>
-                            <th>Номенклатура</th>
-                            <th>У постачальника</th>
+                            <th>{{#t}}common.naimenuvannia{{/t}} </th>
+                            <th>{{#t}}register.substitems.kod_oryhinala{{/t}}  </th>
+                            <th>{{#t}}register.substitems.brend_oryhinala{{/t}}  </th>
+                            <th>{{#t}}register.substitems.kod_zaminy{{/t}}</th>
+                            <th>{{#t}}register.substitems.brend_zaminy{{/t}}</th>
+                            <th>{{#t}}register.substitems.nomenklatura{{/t}}</th>
+                            <th>{{#t}}register.substitems.u_postachalnyka{{/t}}</th>
                          
                             
                            
@@ -65,7 +65,7 @@
                         </tr>
                         <tr>
                         <td  >
-                                <a   zippy="deleteall" title="Видалити"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
+                                <a   zippy="deleteall" title="{{#t}}common.vydalyty{{/t}}"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
                               </td>
                         <td colspan="7">
                                 
@@ -79,20 +79,20 @@
 
             <div class="col-12  ">
                 <form zippy="itemdetail"  >
-                    <h4>Редагування   </h4>
+                    <h4>{{#t}}common.redahuvannia{{/t}}   </h4>
                     <div class="row">
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
      
                           
                             <div class="mb-2 row">
-                                <label class="col-5 col-form-label" for="editname">Найменування</label>
+                                <label class="col-5 col-form-label" for="editname">{{#t}}common.naimenuvannia{{/t}}</label>
                                 <div class="col-7">
                                    <input required="on"     class="form-control" zippy="editname"/>
                                  
                                 </div>
                             </div>
                              <div class="mb-2 row">
-                                <label class="col-5 col-form-label" for="editorigcode">Код оригінала  </label>
+                                <label class="col-5 col-form-label" for="editorigcode">{{#t}}register.substitems.kod_oryhinala{{/t}}  </label>
                                 <div class="col-7">
                                    <input required="on"     class="form-control" zippy="editorigcode"/>
                                  
@@ -100,14 +100,14 @@
                             </div>
                          
                            <div class="mb-2 row">
-                                <label class="col-5 col-form-label" for="editorigbrand">Бренд оригінала</label>
+                                <label class="col-5 col-form-label" for="editorigbrand">{{#t}}register.substitems.brend_oryhinala{{/t}}</label>
                                 <div class="col-7">
                                    <input       class="form-control" zippy="editorigbrand"/>
                                  
                                 </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-5 col-form-label" for="editsubstcode">Код заміни</label>
+                                <label class="col-5 col-form-label" for="editsubstcode">{{#t}}register.substitems.kod_zaminy{{/t}}</label>
                                 <div class="col-7">
                                    <input   required="on"   class="form-control" zippy="editsubstcode"/>
                                  
@@ -115,7 +115,7 @@
                             </div>
 
                              <div class="mb-2 row">
-                                <label class="col-5 col-form-label" for="editsubstbrand">Бренд заміни</label>
+                                <label class="col-5 col-form-label" for="editsubstbrand">{{#t}}register.substitems.brend_zaminy{{/t}}</label>
                                 <div class="col-7">
                                    <input      class="form-control" zippy="editsubstbrand"/>
                                  
@@ -128,8 +128,8 @@
                         <div class="col-12  ">
 
                             <div class="mb-2">
-                                <input zippy="cancel" type="button" value="До переліку" class="btn btn-secondary ms-4 "> 
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                <input zippy="cancel" type="button" value="{{#t}}common.do_pereliku{{/t}}" class="btn btn-secondary ms-4 "> 
+                                <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
 
                             </div>
                         </div>
@@ -144,61 +144,61 @@
                 
                 <form zippy="importform" enctype="multipart/form-data"  >
                  
-                    <h4>Імпорт з Excel</h4>
-                         <small>Рядок  без артикулів пропускається </small>
+                    <h4>{{#t}}common.import_z_excel{{/t}}</h4>
+                         <small>{{#t}}register.substitems.riadok_bez_artykuliv_propuskaietsia{{/t}} </small>
                         <div class="row">
                          <div class="col-12 col-md-4 col-xl-3">
                           
                           
                         
                              <div class="mb-2">
-                                <label for="filename">Файл імпорту</label>
+                                <label for="filename">{{#t}}common.fail_importu{{/t}}</label>
                                 <input type="file" zippy="filename" class="form-control  "/>
                              </div>
                              <div class="  form-check">
                                 <input zippy="passfirst" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                                <label class="form-check-label" for="passfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                             </div>
                             <div class="  form-check">
                                 <input zippy="preview" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="preview">Попередній перегляд (до 10 строк)</label>
+                                <label class="form-check-label" for="preview">{{#t}}register.substitems.poperednii_perehliad_do_10_strok{{/t}}</label>
                             </div>
                          </div> 
                          
                         <div class="col-12 col-md-4 col-xl-3">
                       
                              <div class="mb-2">
-                                <label><b>Номери колонок Excel файлу</b> </label>
+                                <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                             </div>
                              <div class="mb-2 row">
-                                <label  class="col-6 col-form-label" for="colname">Найменування  </label>
+                                <label  class="col-6 col-form-label" for="colname">{{#t}}common.naimenuvannia{{/t}}  </label>
                                 <div class="col-3">
                                     <select   zippy="colname" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                     
                               <div class="mb-2 row">
-                                <label  class="col-6 col-form-label" for="colorigcode">Код оригінала  </label>
+                                <label  class="col-6 col-form-label" for="colorigcode">{{#t}}register.substitems.kod_oryhinala{{/t}}  </label>
                                 <div class="col-3">
                                     <select   zippy="colorigcode" class="form-control  ">
                                 </select>   </div> 
                             </div>                                                                                
                              <div class="mb-2 row">
-                                <label  class="col-6 col-form-label" for="colorigbrand">Бренд оригінала  </label>
+                                <label  class="col-6 col-form-label" for="colorigbrand">{{#t}}register.substitems.brend_oryhinala{{/t}}  </label>
                                 <div class="col-3">
                                     <select   zippy="colorigbrand" class="form-control  ">
                                 </select>   </div> 
                             </div>                                                                                
                             <div class="mb-2 row">
-                                <label  class="col-6 col-form-label" for="colsubstcode">Код заміни</label>
+                                <label  class="col-6 col-form-label" for="colsubstcode">{{#t}}register.substitems.kod_zaminy{{/t}}</label>
                                 <div class="col-3">
                                     <select   zippy="colsubstcode" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                     
                             <div class="mb-2 row">
-                                <label  class="col-6 col-form-label" for="colsubstbrand">Бренд заміни</label>
+                                <label  class="col-6 col-form-label" for="colsubstbrand">{{#t}}register.substitems.brend_zaminy{{/t}}</label>
                                 <div class="col-3">
                                     <select   zippy="colsubstbrand" class="form-control  ">
                                 </select>  
@@ -214,11 +214,11 @@
                         <tr>
                                        
                          
-                            <th>Найменування </th>
-                            <th>Код оригінала  </th>
-                            <th>Бренд оригінала  </th>
-                            <th>Код заміни</th>
-                            <th>Бренд заміни</th>
+                            <th>{{#t}}common.naimenuvannia{{/t}} </th>
+                            <th>{{#t}}register.substitems.kod_oryhinala{{/t}}  </th>
+                            <th>{{#t}}register.substitems.brend_oryhinala{{/t}}  </th>
+                            <th>{{#t}}register.substitems.kod_zaminy{{/t}}</th>
+                            <th>{{#t}}register.substitems.brend_zaminy{{/t}}</th>
                            
                         </tr>
                           {{#preview}}
@@ -234,9 +234,9 @@
                        </div>  
                         {{/ispreview}}
                        <div class="col-12">
-                       <a zippy="back" class="btn btn-secondary  ms-4 " >Скасувати</a>                          
+                       <a zippy="back" class="btn btn-secondary  ms-4 " >{{#t}}common.skasuvaty{{/t}}</a>                          
                             
-                        <input zippy="loadimport"    type="submit" value="Імпортувати" class="btn btn-primary  "> 
+                        <input zippy="loadimport"    type="submit" value="{{#t}}common.importuvaty{{/t}}" class="btn btn-primary  "> 
                      
                        </div>
                         </div>  

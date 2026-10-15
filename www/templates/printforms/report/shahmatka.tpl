@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="{{cols}}">
-          Шахова  відомість з {{from}} по {{to}}  
+          {{#t}}print.shahmatka.shakhova_vidomist_z_po{{/t}}  
         </td>
     </tr>
    

@@ -1,30 +1,30 @@
 <html>
    <head>
-          <title> Виплата зарплати</title>
+          <title> {{#t}}common.vyplata_zarplaty{{/t}}</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Виплата зарплати</h3>
+            <h3> {{#t}}common.vyplata_zarplaty{{/t}}</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-check">
                          <input zippy="advance" type="checkbox" class="form-check-input">
-                         <label class="form-check-label" for="advance">Виплата  авансу</label>
+                         <label class="form-check-label" for="advance">{{#t}}doc.outsalary.vyplata_avansu{{/t}}</label>
                     </div>
               
 
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -33,17 +33,17 @@
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="payment">З каси, рахунку </label>
+                        <label for="payment">{{#t}}doc.outcomemoney.z_kasy_rakhunku{{/t}} </label>
                         <select class="form-control" zippy="payment">
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="year">Рік</label>
+                        <label for="year">{{#t}}common.rik{{/t}}</label>
                         <select class="form-control" zippy="year">
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="month">Місяць</label>
+                        <label for="month">{{#t}}common.misiats{{/t}}</label>
                         <select class="form-control" zippy="month">
                         </select>
                     </div>
@@ -52,8 +52,8 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  me-2">
-                     <input zippy="tolist" type="submit" value="Далі " class="btn   btn-primary">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  me-2">
+                     <input zippy="tolist" type="submit" value="{{#t}}doc.calcsalary.dali{{/t}} " class="btn   btn-primary">
            
                 </div>
             </div>
@@ -67,15 +67,15 @@
                
             <div class="mb-2 row">
                 <div class="col-auto pt-2">
-                  <label   > Співробітник</label>
+                  <label   > {{#t}}common.spivrobitnyk{{/t}}</label>
                 </div>
                <div class="col-auto">
                   <select class="form-control"  zippy="newemp" >
-                     <option value="0">Не обрано</option>
+                     <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                 </div>
                <div class="col-auto pt-2">
-                     <a zippy="addemp" class="btn btn-info btn-sm  " >Додати</a>
+                     <a zippy="addemp" class="btn btn-info btn-sm  " >{{#t}}common.dodaty{{/t}}</a>
                 </div>
                 
                 
@@ -85,11 +85,11 @@
              <table class="table table-sm">
                    <tr>
                     <th style="width:20px"><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                style=";cursor:pointer" title="Зняти/виставити прапорець"
+                                style=";cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"
                                     class="fa fa-check-double "></i></th>
-                      <th>П I Б</th>
+                      <th>{{#t}}common.p_i_b{{/t}}</th>
                                   
-                      <th  >Сума</th>
+                      <th  >{{#t}}common.suma{{/t}}</th>
                     
                    </tr>
                   <tr zippy="elist">
@@ -106,8 +106,8 @@
                       <tr>
                        
                                      
-                      <th><a zippy="edel" title="Видалити" ><i class="fa fa-trash text-danger" ></i></a>                  </th>
-                      <th class="text-end">Всього:</th>
+                      <th><a zippy="edel" title="{{#t}}common.vydalyty{{/t}}" ><i class="fa fa-trash text-danger" ></i></a>                  </th>
+                      <th class="text-end">{{#t}}common.vsoho{{/t}}</th>
                       <th zippy="total"> </th>
                     
                    </tr>    
@@ -115,9 +115,9 @@
              
              
              <div class="col-11 col-md-7 col-xl-5 mt-4 d-flex justify-content-end pt-4">
-                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-secondary   ms-2">
-                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-info   ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="submit" value="{{#t}}common.nazad{{/t}}" zippy="todoc" class="btn   btn-secondary   ms-2">
+                     <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-info   ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
              </div>
          </div> </div>

@@ -61,19 +61,19 @@ class NotifyList extends \App\Pages\Base
 
         }
         if ($notify->sender_id == Notify::SYSTEM) {
-            $row->sender->setText("Системне повідомлення");
+            $row->sender->setText(__('app.notifylist.systemne_povidomlennia'));
             $row->sendericon->setAttribute('class', 'fa fa-cog');
         }
         if ($notify->sender_id == Notify::EVENT) {
-            $row->sender->setText("Нагадування про подію");
+            $row->sender->setText(__('app.notifylist.nahaduvannia_pro_podiiu'));
             $row->sendericon->setAttribute('class', 'fa fa-calendar');
         }
         if ($notify->sender_id == Notify::SUBSCRIBE) {
-            $row->sender->setText("Розсилка");
+            $row->sender->setText(__('app.notifylist.rozsylka'));
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
         if ($notify->sender_id == Notify::CRONTAB) {
-            $row->sender->setText("Планувальник");
+            $row->sender->setText(__('common.planuvalnyk'));
             $row->sendericon->setAttribute('class', 'fa fa-clock');
         }
 
@@ -113,17 +113,17 @@ class NotifyList extends \App\Pages\Base
         $n->sender_id = System::getUser()->user_id;
         
         if($n->user_id==0) {
-            $this->setError('Не вказано отримувача')  ;
+            $this->setError(__('app.notifylist.ne_vkazano_otrymuvacha'))  ;
             return;
         }
         if(strlen($n->message)==0) {
-            $this->setError('Не введено текст')  ;
+            $this->setError(__('app.notifylist.ne_vvedeno_tekst'))  ;
             return;
         }
         
         
         $n->save();  
-        $this->setSUccess('Відправлено')  ;
+        $this->setSUccess(__('common.vidpravleno'))  ;
         $sender->msgtext->setText('')       ;     
         $sender->msguser->setValue(0)       ;     
     }

@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Підписки на події  </title>
+        <title>  {{#t}}app.subscribes.pidpysky_na_podii{{/t}}  </title>
 
     </head>
 
@@ -8,15 +8,15 @@
         <div class="row">
             <div class="col-12 col-md-10 col-xl-8">
                 <div zippy="plist">
-                    <h3>Підписки на події </h3>
-                    <small>Для відправки  email та  підписок  за  роскладом слід ввімкнути <a href="/index.php?p=App/Pages/CronTab">планувальник</a></small>
+                    <h3>{{#t}}app.subscribes.pidpysky_na_podii{{/t}} </h3>
+                    <small>{{#t}}app.subscribes.dlia_vidpravky_email_ta_pidpysok{{/t}} <a href="/index.php?p=App/Pages/CronTab">{{#t}}app.poslist.planuvalnyk{{/t}}</a></small>
                     <br>
-                    <a  zippy="addnew" class="btn btn-success">Додати</a>
+                    <a  zippy="addnew" class="btn btn-success">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table  table-sm">
                         <tr>
-                            <th>Тип події</th>
-                            <th>Отримувач</th>
-                            <th>Тип повідомлення</th>
+                            <th>{{#t}}app.subscribes.typ_podii{{/t}}</th>
+                            <th>{{#t}}app.notifylist.otrymuvach{{/t}}</th>
+                            <th>{{#t}}app.subscribes.typ_povidomlennia{{/t}}</th>
                      
                             <th> </th>
                             <th> </th>
@@ -33,14 +33,14 @@
 
                     </table>
                     <br> <br>
-                    <h5>Історія </h5>
+                    <h5>{{#t}}common.istoriia{{/t}} </h5>
                     
                     <table class="table  table-sm">
                         <tr>
-                            <th>Дата</th>
-                            <th>Тип події</th>
-                            <th>Отримувач</th>
-                            <th>Тип повідомлення</th>
+                            <th>{{#t}}common.data{{/t}}</th>
+                            <th>{{#t}}app.subscribes.typ_podii{{/t}}</th>
+                            <th>{{#t}}app.notifylist.otrymuvach{{/t}}</th>
+                            <th>{{#t}}app.subscribes.typ_povidomlennia{{/t}}</th>
                      
                             <th> </th>
                            
@@ -63,28 +63,28 @@
         </div>
 
 
-        <form zippy="editform">      <h4>Редагування</h4>
+        <form zippy="editform">      <h4>{{#t}}common.redahuvannia{{/t}}</h4>
             <div class="row">
 
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="mb-2">
-                        <label for="editeventtype">Тип події</label>
+                        <label for="editeventtype">{{#t}}app.subscribes.typ_podii{{/t}}</label>
                         <select   class="form-control" zippy="editeventtype">
-                          <option value="0">Не обрано</option> 
+                          <option value="0">{{#t}}common.ne_obrano{{/t}}</option> 
 
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label data-label="editdoctype" for="editdoctype">Тип документа</label>
+                        <label data-label="editdoctype" for="editdoctype">{{#t}}common.typ_dokumenta{{/t}}</label>
                         <select   class="form-control" zippy="editdoctype">
-                            <option value="0">Не обрано</option> 
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option> 
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label data-label="editstate" for="editstate">Статус</label>
+                        <label data-label="editstate" for="editstate">{{#t}}common.status{{/t}}</label>
                         <select   class="form-control" zippy="editstate">
-                            <option value="0">Не обрано</option> 
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option> 
 
                         </select>
                     </div>
@@ -92,21 +92,21 @@
                       
                     
                     <div class="mb-2">
-                        <label for="editrecievertype">Отримувач</label>
+                        <label for="editrecievertype">{{#t}}app.notifylist.otrymuvach{{/t}}</label>
                         <select   class="form-control" zippy="editrecievertype">
-                          <option value="0">Не обрано</option> 
+                          <option value="0">{{#t}}common.ne_obrano{{/t}}</option> 
                         </select>
                     </div>           
  
                     <div class="mb-2">
-                        <label data-label="edituser" for="edituser">Користувач</label>
+                        <label data-label="edituser" for="edituser">{{#t}}app.subscribes.korystuvach{{/t}}</label>
                         <select   class="form-control" zippy="edituser">
-                            <option value="0">Не обрано</option>        
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>        
                         </select>
                     </div>           
                      <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Деактивовано</label>
+                        <label class="form-check-label" for="editdisabled">{{#t}}app.subscribes.deaktyvovano{{/t}}</label>
                     </div>               
 
                 </div>  
@@ -114,9 +114,9 @@
 
 
                     <div class="mb-2">
-                        <label for="editmsgtype">Тип повідомлення</label>
+                        <label for="editmsgtype">{{#t}}app.subscribes.typ_povidomlennia{{/t}}</label>
                         <select   class="form-control" zippy="editmsgtype">
-                           <option value="0">Не обрано</option> 
+                           <option value="0">{{#t}}common.ne_obrano{{/t}}</option> 
 
                         </select>
                     </div>  
@@ -127,20 +127,20 @@
                     </div>                    
                     
                     <div class="mb-2">
-                        <label data-label="editmsgsubject" for="editmsgsubject">Тема повідомлення</label>
+                        <label data-label="editmsgsubject" for="editmsgsubject">{{#t}}app.subscribes.tema_povidomlennia{{/t}}</label>
                         <input    class="form-control" zippy="editmsgsubject">
                     </div>
                     
                     <div class="mb-2">
                         <label data-label="editurl" for="editurl">URL</label>
                         <input type="url"   class="form-control" zippy="editurl">
-                         <small data-label="editurl">Якщо текст повідомлення не пустий запит відправляється методом POST</small>
+                         <small data-label="editurl">{{#t}}app.subscribes.iakshcho_tekst_povidomlennia_ne_pustyi{{/t}}</small>
 
                     </div>
               <div class="mb-2">
-                        <label data-label="editurlh" for="editurlh">Додатковий заголовок</label>
+                        <label data-label="editurlh" for="editurlh">{{#t}}app.subscribes.dodatkovyi_zaholovok{{/t}}</label>
                         <input     class="form-control" zippy="editurlh">
-                         <small data-label="editurlh">Наприклад Authorization: Bearer XXXXXX</small>
+                         <small data-label="editurlh">{{#t}}app.subscribes.napryklad_authorization_bearer_xxxxxx{{/t}}</small>
 
                     </div>
                     <div class="mb-2">
@@ -152,29 +152,29 @@
                     
               
                     <div class="mb-2">
-                        <label for="editmsgtext">Текст повідомлення</label>
+                        <label for="editmsgtext">{{#t}}app.subscribes.tekst_povidomlennia{{/t}}</label>
                         <textarea style="height:150px"   class="form-control" zippy="editmsgtext">
                     
                         </textarea>
                         <a href="javascript:void(0);" data-bs-toggle="modal"
-                           data-bs-target="#modaltag">Опис тегів <small><i class="fa fa-info-circle"></i></small></a>
+                           data-bs-target="#modaltag">{{#t}}app.subscribes.opys_tehiv{{/t}} <small><i class="fa fa-info-circle"></i></small></a>
                     </div>      
 
 
                     <div class="form-check">
                         <input data-label="editattach" zippy="editattach" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editattach">Приєднати pdf</label>
+                        <label class="form-check-label" for="editattach">{{#t}}app.subscribes.pryiednaty_pdf{{/t}}</label>
                     </div>               
                     <div class="form-check">
                         <input data-label="edithtml" zippy="edithtml" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="edithtml">HTML формат</label>
+                        <label class="form-check-label" for="edithtml">{{#t}}app.subscribes.html_format{{/t}}</label>
                     </div>               
                 </div> 
                 <div class="col-12  ">    
                     <div class="mb-2">
-                        <a zippy="cancel"     class="btn btn-secondary ms-4 ">Скасувати</a>
-                        <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary ms-4  ">
-                        <a zippy="delete"     class="btn btn-danger ms-4  "> Видалити</a>
+                        <a zippy="cancel"     class="btn btn-secondary ms-4 ">{{#t}}common.skasuvaty{{/t}}</a>
+                        <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary ms-4  ">
+                        <a zippy="delete"     class="btn btn-danger ms-4  "> {{#t}}common.vydalyty{{/t}}</a>
 
                     </div>
                 </div>   
@@ -186,98 +186,94 @@
             <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Опис тегів шаблонізатора</h5>
+                        <h5 class="modal-title">{{#t}}app.subscribes.opys_tehiv_shablonizatora{{/t}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             
                         </button>
                     </div>
                     <div class="modal-body">
-                        Теги використовуються для підстановки даних з контексту (наприклад, документа).
-                        Для системних повідомлень та e-mail в розмітці можна використовувати HTML.
-                        <a href="https://core.telegram.org/bots/api#htms-style">Доступні HTML теги</a> для відправки через Телеграм.
+                        {{#t}}app.subscribes.tehy_vykorystovuiutsia_dlia_pidstanovky{{/t}}
+                        <a href="https://core.telegram.org/bots/api#htms-style">{{#t}}app.subscribes.dostupni_html_tehy{{/t}}</a> {{#t}}app.subscribes.dlia_vidpravky_cherez_telehram{{/t}}
                         <br>
-                        <br>Для реалізації логіки в шаблоні використовується синтаксис шаблонізатора  Mustache
+                        <br>{{#t}}app.subscribes.dlia_realizatsii_lohiky_v_shabloni{{/t}}
                         <br>
-                        Теги шаблонізатора для документу :
+                        {{#t}}app.subscribes.tehy_shablonizatora_dlia_dokumentu{{/t}}
                         <table  >
-                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
-                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>Телефон контрагента</small></td></tr>
-                            <tr><td><small><b>{document_id}</b></small></td><td><small>ID документа</small></td></tr>
-                            <tr><td><small><b>{document_number}</b></small></td><td><small>Номер документа</small></td></tr>
-                            <tr><td><small><b>{doc_dn}</b></small></td><td><small>Номер документа (тільки цифри)</small></td></tr>
-                            <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документа</small></td></tr>
-                            <tr><td><small><b>{document_type}</b></small> </td><td><small>Тип документа</small></td></tr>
-                            <tr><td><small><b>{amount}</b></small> </td><td><small>Сума по документу</small></td></tr>
-                            <tr><td><small><b>{mf} </b></small></td><td><small>Каса, банк</small></td></tr>
-                            <tr><td><small><b>{mfacc} </b></small></td><td><small>Розрахунковий рахунок (якщо банк)</small></td></tr>
-                            <tr><td><small><b>{nal} </b></small></td><td><small>Готівка, карта</small></td></tr>
-                            <tr><td><small><b>{pos} </b></small></td><td><small>POS термінал</small></td></tr>
-                            <tr><td><small><b>{forpay} </b></small></td><td><small>До сплати</small></td></tr>
-                            <tr><td><small><b>{source} </b></small></td><td><small>Джерело продаж</small></td></tr>
-                            <tr><td><small><b>{device} </b></small></td><td><small>Виріб, прийнятий від замовника</small></td></tr>
-                            <tr><td><small><b>{credit} </b></small></td><td><small>Борг покупця</small></td></tr>
-                            <tr><td><small><b>{payed} </b></small></td><td><small>Прийнята оплата по документу</small></td></tr>
-                            <tr><td><small><b>{taxurl} </b></small></td><td><small>Посилання на фіскальний чек</small></td></tr>
-                            <tr><td><small><b>{orderno} </b></small></td><td><small>Номер замовлення.Якщо документ не  Замовлення  шукатиме  замовлення  як  батьківський (для чека  i ТТН)</small></td></tr>
-                            <tr><td><small><b>{author} </b></small></td><td><small>Автор документа</small></td></tr>
-                            <tr><td><small><b>{notes} </b></small></td><td><small>Примітка до документа</small></td></tr>
-                            <tr><td><small><b>{ttnnp} </b></small></td><td><small>Декларація НП та інших служб доставок </small></td></tr>
-                            <tr><td><small><b>{docurl} </b></small></td><td><small>Зовнішнє посилання (URL) на документ</small></td></tr>
-                            <tr><td><small><b>{docview} </b></small></td><td><small>Зовнішнє посилання (URL) на журнал документів (якщо сесія з автологіном)</small></td></tr>
-                            <tr><td><small><b>{payurl} </b></small></td><td><small>Посилання на оплату по реквізитах </small></td></tr>
-                            <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
+                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>{{#t}}app.subscribes.imia_kontrahenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>{{#t}}app.subscribes.telefon_kontrahenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{document_id}</b></small></td><td><small>{{#t}}app.subscribes.id_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{document_number}</b></small></td><td><small>{{#t}}common.nomer_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{doc_dn}</b></small></td><td><small>{{#t}}app.subscribes.nomer_dokumenta_tilky_tsyfry{{/t}}</small></td></tr>
+                            <tr><td><small><b>{document_date}</b></small> </td><td><small>{{#t}}common.data_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{document_type}</b></small> </td><td><small>{{#t}}common.typ_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{amount}</b></small> </td><td><small>{{#t}}app.subscribes.suma_po_dokumentu{{/t}}</small></td></tr>
+                            <tr><td><small><b>{mf} </b></small></td><td><small>{{#t}}app.subscribes.kasa_bank{{/t}}</small></td></tr>
+                            <tr><td><small><b>{mfacc} </b></small></td><td><small>{{#t}}app.subscribes.rozrakhunkovyi_rakhunok_iakshcho_bank{{/t}}</small></td></tr>
+                            <tr><td><small><b>{nal} </b></small></td><td><small>{{#t}}app.subscribes.hotivka_karta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{pos} </b></small></td><td><small>{{#t}}common.pos_terminal{{/t}}</small></td></tr>
+                            <tr><td><small><b>{forpay} </b></small></td><td><small>{{#t}}common.do_splaty{{/t}}</small></td></tr>
+                            <tr><td><small><b>{source} </b></small></td><td><small>{{#t}}common.dzherelo_prodazh{{/t}}</small></td></tr>
+                            <tr><td><small><b>{device} </b></small></td><td><small>{{#t}}app.subscribes.vyrib_pryiniatyi_vid_zamovnyka{{/t}}</small></td></tr>
+                            <tr><td><small><b>{credit} </b></small></td><td><small>{{#t}}app.subscribes.borh_pokuptsia{{/t}}</small></td></tr>
+                            <tr><td><small><b>{payed} </b></small></td><td><small>{{#t}}app.subscribes.pryiniata_oplata_po_dokumentu{{/t}}</small></td></tr>
+                            <tr><td><small><b>{taxurl} </b></small></td><td><small>{{#t}}app.subscribes.posylannia_na_fiskalnyi_chek{{/t}}</small></td></tr>
+                            <tr><td><small><b>{orderno} </b></small></td><td><small>{{#t}}app.subscribes.nomer_zamovlennia_iakshcho_dokument_ne{{/t}}</small></td></tr>
+                            <tr><td><small><b>{author} </b></small></td><td><small>{{#t}}app.subscribes.avtor_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{notes} </b></small></td><td><small>{{#t}}app.subscribes.prymitka_do_dokumenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{ttnnp} </b></small></td><td><small>{{#t}}app.subscribes.deklaratsiia_np_ta_inshykh_sluzhb{{/t}} </small></td></tr>
+                            <tr><td><small><b>{docurl} </b></small></td><td><small>{{#t}}app.subscribes.zovnishnie_posylannia_url_na_dokument{{/t}}</small></td></tr>
+                            <tr><td><small><b>{docview} </b></small></td><td><small>{{#t}}app.subscribes.zovnishnie_posylannia_url_na_zhurnal{{/t}}</small></td></tr>
+                            <tr><td><small><b>{payurl} </b></small></td><td><small>{{#t}}app.subscribes.posylannia_na_oplatu_po_rekvizytakh{{/t}} </small></td></tr>
+                            <tr><td><small><b>{botname} </b></small></td><td><small>{{#t}}app.subscribes.telehram_bot{{/t}} </small></td></tr>
                           
                         </table>
-                        Теги для контрагента :
+                        {{#t}}app.subscribes.tehy_dlia_kontrahenta{{/t}}
                         <table  >
-                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
-                            <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>
+                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>{{#t}}app.subscribes.imia_kontrahenta{{/t}}</small></td></tr>
+                            <tr><td><small><b>{customer_id}</b></small></td><td><small>{{#t}}app.subscribes.id_kontrahenta{{/t}}</small></td></tr>
                         
                         </table>
                         
-                        Теги для підсумків дня :
+                        {{#t}}app.subscribes.tehy_dlia_pidsumkiv_dnia{{/t}}
                         <table  >
-                            <tr><td><small><b>{day_nal}</b></small> </td><td><small>Готівкова  виручка за день</small></td></tr>
-                            <tr><td><small><b>{day_beznal}</b></small></td><td><small>Безготівкова виручка за день</small></td></tr>
-                            <tr><td><small><b>{day_summa}</b></small></td><td><small>Сума продаж по товарах</small></td></tr>
-                            <tr><td><small><b>{day_return}</b></small></td><td><small>Сума повернень  по товарах</small></td></tr>
+                            <tr><td><small><b>{day_nal}</b></small> </td><td><small>{{#t}}app.subscribes.hotivkova_vyruchka_za_den{{/t}}</small></td></tr>
+                            <tr><td><small><b>{day_beznal}</b></small></td><td><small>{{#t}}app.subscribes.bezhotivkova_vyruchka_za_den{{/t}}</small></td></tr>
+                            <tr><td><small><b>{day_summa}</b></small></td><td><small>{{#t}}app.subscribes.suma_prodazh_po_tovarakh{{/t}}</small></td></tr>
+                            <tr><td><small><b>{day_return}</b></small></td><td><small>{{#t}}app.subscribes.suma_povernen_po_tovarakh{{/t}}</small></td></tr>
                              
                         </table>
                          <br>
                         
-                               Якщо потрібно вивести текст в залежності від наявності значення, наприклад,
+                               {{#t}}app.subscribes.iakshcho_potribno_vyvesty_tekst_v{{/t}}
                         <br>
-                             {#credit}
-                                Ваш борг {credit}  &nbsp;
-                             {/credit}
+                             {{#t}}app.subscribes.credit_vash_borh_nbsp_credit{{/t}}
                         <br>
                         <br>
-                        Для виведення списків, наприклад, позицій документа, потрібно додати інформацію між тегами
-                        {#list}  та  {/list&gt;}  
-                        <br>  Всередині рядка списку допускаються наступні теги:
+                        {{#t}}app.subscribes.dlia_vyvedennia_spyskiv_napryklad_pozyts{{/t}}  
+                        <br>  {{#t}}app.subscribes.vseredyni_riadka_spysku_dopuskaiutsia_na{{/t}}
 
                         <table  >
-                            <tr><td><small><b>{item_name}</b></small> </td><td><small>Найменування товару</small></td></tr>
-                            <tr><td><small><b>{item_code}</b></small></td><td><small>Артикул</small></td></tr>
-                            <tr><td><small><b>{item_barcode}</b></small> </td><td><small>Штрих код</small></td></tr>
-                            <tr><td><small><b>{msr}</b></small> </td><td><small>Од. виміру</small></td></tr>
-                            <tr><td><small><b>{qty} </b></small></td><td><small>Кількість</small></td></tr>
-                            <tr><td><small><b>{price} </b></small></td><td><small>Ціна</small></td></tr>
-                            <tr><td><small><b>{summa} </b></small></td><td><small>Сума по строці</small></td></tr>
+                            <tr><td><small><b>{item_name}</b></small> </td><td><small>{{#t}}app.subscribes.naimenuvannia_tovaru{{/t}}</small></td></tr>
+                            <tr><td><small><b>{item_code}</b></small></td><td><small>{{#t}}common.artykul{{/t}}</small></td></tr>
+                            <tr><td><small><b>{item_barcode}</b></small> </td><td><small>{{#t}}common.shtrykh_kod_2{{/t}}</small></td></tr>
+                            <tr><td><small><b>{msr}</b></small> </td><td><small>{{#t}}common.od_vymiru{{/t}}</small></td></tr>
+                            <tr><td><small><b>{qty} </b></small></td><td><small>{{#t}}common.kilkist{{/t}}</small></td></tr>
+                            <tr><td><small><b>{price} </b></small></td><td><small>{{#t}}common.tsina{{/t}}</small></td></tr>
+                            <tr><td><small><b>{summa} </b></small></td><td><small>{{#t}}app.subscribes.suma_po_strotsi{{/t}}</small></td></tr>
                   
                         </table>
-                        Наприклад:<br>
+                        {{#t}}app.subscribes.napryklad{{/t}}<br>
                         <p class="text-bold">
-                            Привіт {customer_name}&lt;br&gt; <br> 
+                            {{#t}}app.subscribes.pryvit_lt_br_gt{{/t}} <br> 
                            <br>
                             &lt;table&gt;  <br>
-                            &lt;tr&gt; &lt;th&gt;Товар&lt;/th&gt; &lt;th align="right" &gt;Кіл. &lt;/th&gt; &lt;/tr&gt;<br>
+                            {{#t}}app.subscribes.lt_tr_gt_lt_th{{/t}}<br>
                             {#list} <br>
                             &lt;tr&gt; &lt;td&gt;{item_name} &lt;/td&gt; &lt;td align="right" &gt;{qty} &lt;/td&gt;&lt;/tr&gt; <br>
                             {/list} <br>
                             &lt;/table&gt;&lt;br&gt;   <br> 
-                            До сплати {forpay}   &lt;br&gt;<br> 
-                            Прайси за &lt;a href="https://price.com/"&gt;посиланням&lt;/a&gt;&lt;br&gt;<br>
+                            {{#t}}app.subscribes.do_splaty_lt_br_gt{{/t}}<br> 
+                            {{#t}}app.subscribes.praisy_za_lt_a_href{{/t}}<br>
                            
                         </p>
 

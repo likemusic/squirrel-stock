@@ -33,7 +33,7 @@ class GroupList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
             App::RedirectError();
             return;
         }
@@ -64,7 +64,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new TextInput('attrid'));
         $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
         $form->add(new Label('attrtypename'));
-        $form->add(new Label('tt'))->setAttribute("title", "Атрибут `Є/Немає` вказує на наявність або відсутність характеристики (наприклад, FM-тюнер)");
+        $form->add(new Label('tt'))->setAttribute("title", __('mod.shop.grouplist.atrybut_ie_nemaie_vkazuie_na'));
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -157,22 +157,22 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Є/Немає` вказує на наявність або відсутність характеристики (наприклад, FM-тюнер).");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_ie_nemaie_vkazuie_na_2'));
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Число` - числовий параметр (наприклад, ємність акумулятора). Перелік для фільтра відбору формується на основі діапазону  значень атрибута, заданих для товарів.");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_chyslo_chyslovyi_parametr_napryk'));
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Перелік` передбачений для переліку, з якого можна вибрати тільки одне значення (наприклад, колір). Задається переліком через кому");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_perelik_peredbachenyi_dlia_perel'));
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набір` передбачений для переліку, з якого можна вибрати кілька значень (наприклад, типи живлення). Задається переліком через кому. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_nabir_peredbachenyi_dlia_perelik'));
         }
         if ($type == 5) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовий параметр (наприклад тип процесора). Значення не  використовується  в  фільтрах. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_stroka_prosto_tekstovyi_parametr'));
         }
         if ($type == 6) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", " Атрибут для кастомних полів (якщо задані для даної категорії). Задається  як код кастомного  поля  ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", __('mod.shop.grouplist.atrybut_dlia_kastomnykh_poliv_iakshcho'));
             $this->attrpanel->attreditform->cfpanel->setVisible(true);
      
         }        
@@ -221,7 +221,7 @@ class GroupList extends \App\Pages\Base
         $attr->attributename = $form->attrname->getText();
 
         if (strlen($attr->attributename) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
 
             return;
         }
@@ -247,7 +247,7 @@ class GroupList extends \App\Pages\Base
             
             
             if (strlen (trim($attr->valueslist)) == 0) {
-                $this->setError("Не введено значення");
+                $this->setError(__('mod.shop.grouplist.ne_vvedeno_znachennia'));
 
                 return;
             }            
@@ -257,7 +257,7 @@ class GroupList extends \App\Pages\Base
            
             $fcode = $form->cfpanel->attrcf->getValue();
             if ( $fcode == "0") {
-                $this->setError("Не вибрано значення");
+                $this->setError(__('mod.shop.grouplist.ne_vybrano_znachennia'));
 
                 return;
             }             

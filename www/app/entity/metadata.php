@@ -18,11 +18,11 @@ class MetaData extends \ZCL\DB\Entity
 
     public static function getNames() {
         $list = array();
-        $list[1] = "Документ";
-        $list[2] = "Звіт";
-        $list[3] = "Журнал";
-        $list[4] = "Довідник";
-        $list[5] = "Сервісна сторінка";
+        $list[1] = __('common.dokument');
+        $list[2] = __('common.zvit');
+        $list[3] = __('common.zhurnal');
+        $list[4] = __('common.dovidnyk');
+        $list[5] = __('common.servisna_storinka');
 
         return $list;
     }

@@ -1,6 +1,6 @@
 <html>
  <head>
-      <title> Закриття зміни   </title>
+      <title> {{#t}}mod.ppo.zform.zakryttia_zminy{{/t}}   </title>
 
     </head>
 
@@ -8,21 +8,19 @@
         <div class="row">
             <div class="col-12  col-xl-8"  >
 
-                <h3>Закриття зміни</h3>
-                <small>Сторінка для ручного закриття зміни. На  випадок розходжень  з фіскальним сервером (наприклад, внаслідок  збою) 
-                можна  отримати підсумкові  дані (і підставити в z-звіт) з ФС   
-                щоб  сформувати  такий  самий  z-звіт </small>
+                <h3>{{#t}}mod.ppo.zform.zakryttia_zminy{{/t}}</h3>
+                <small>{{#t}}mod.ppo.zform.storinka_dlia_ruchnoho_zakryttia_zminy{{/t}} </small>
                 <div class="navbar">
                     <form zippy="filter"  >
                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="pos">POS термінал</label>
+                        <label class="col-form-label col-auto" for="pos">{{#t}}common.pos_terminal{{/t}}</label>
                        <div class="col-auto  ">
                         <select zippy="pos" class="form-control ms-sm-2">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
                         <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="Оновити">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.onovyty{{/t}}">
                       </div></div>
                     </form>
 
@@ -32,96 +30,96 @@
    
     <div class="row">
             <div class="col-12 col-md-6 col-xl-4"  >
-                <a title="Підсумкові дані з  фіскального сервера" zippy="zt"><b>Отримати підсумки  з  ДПА</b></a>
+                <a title="{{#t}}mod.ppo.zform.pidsumkovi_dani_z_fiskalnoho_servera{{/t}}" zippy="zt"><b>{{#t}}mod.ppo.zform.otrymaty_pidsumky_z_dpa{{/t}}</b></a>
                 <p zippy="ztres"></p>
                 <form zippy="stat">
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="nal">Готівка</label>
+                        <label class="col-5 col-form-label" for="nal">{{#t}}common.hotivka{{/t}}</label>
                         <div class="col-7">
                         <input style="width:100px" zippy="nal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="bnal">Банківська карта</label>
+                        <label class="col-5 col-form-label" for="bnal">{{#t}}mod.cb.checkbox.bankivska_karta{{/t}}</label>
                         <div class="col-7">
                         <input style="width:100px" zippy="bnal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="credit">Кредит</label>
+                        <label class="col-5 col-form-label" for="credit">{{#t}}common.kredyt{{/t}}</label>
                         <div class="col-7">
                         <input style="width:100px" zippy="credit" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="prepaid">Передплата</label>
+                        <label class="col-5 col-form-label" for="prepaid">{{#t}}common.peredplata{{/t}}</label>
                        <div class="col-7">
                         <input style="width:100px" zippy="prepaid" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="cnt">Кількість чеків</label>
+                        <label class="col-5 col-form-label" for="cnt">{{#t}}print.zrep.kilkist_chekiv{{/t}}</label>
                        <div class="col-7">
                         <input style="width:100px" zippy="cnt" pattern="[0-9]+" class="form-control  ">
                     </div>
                     </div>
 
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="retnal">Повернення, готівка</label>
+                        <label class="col-5 col-form-label" for="retnal">{{#t}}mod.ppo.zform.povernennia_hotivka{{/t}}</label>
                        <div class="col-7">
                         <input style="width:100px" zippy="retnal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="retbnal">Повернення, банківська карта</label>
+                        <label class="col-5 col-form-label" for="retbnal">{{#t}}mod.ppo.zform.povernennia_bankivska_karta{{/t}}</label>
                       <div class="col-7">
                         <input style="width:100px" zippy="retbnal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
                     </div>
                     <div class=" row">
-                        <label class="col-5 col-form-label" for="retcnt">Повернення, кількість чеків</label>
+                        <label class="col-5 col-form-label" for="retcnt">{{#t}}mod.ppo.zform.povernennia_kilkist_chekiv{{/t}}</label>
                        <div class="col-7">
                         <input style="width:100px" zippy="retcnt" pattern="[0-9]+" class="form-control  ">
                     </div>
                     </div>
 
                      <div class=" row">
-                        <label class="col-5 col-form-label" for="sin">Службове внесення </label>
+                        <label class="col-5 col-form-label" for="sin">{{#t}}common.sluzhbove_vnesennia{{/t}} </label>
                      <div class="col-7">
                         <input style="width:100px" zippy="sin" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     </div>
 
                      <div class=" row">
-                        <label class="col-5 col-form-label" for="sout">Службова видача</label>
+                        <label class="col-5 col-form-label" for="sout">{{#t}}common.sluzhbova_vydacha{{/t}}</label>
                        <div class="col-7">
                         <input style="width:100px" zippy="sout" pattern="[0-9\.]+" class="form-control  ">
                     </div>
                     </div>
 
 
-                    <input zippy="zclose"  type="submit" class="  btn btn-success  " value="Закрити">    
-                     <input zippy="onlyshift" type="checkbox"> Не посилати  z-звіт
+                    <input zippy="zclose"  type="submit" class="  btn btn-success  " value="{{#t}}common.zakryty{{/t}}">    
+                     <input zippy="onlyshift" type="checkbox"> {{#t}}mod.ppo.zform.ne_posylaty_z_zvit{{/t}}
 
                 </form>
             </div>
             
             <div class="col-12 col-md-6 col-lg-8  "  >
-                Документи  в  z-звіті
+                {{#t}}mod.ppo.zform.dokumenty_v_z_zviti{{/t}}
                {{#hideblock}}
-               <br><a zippy="sync"><b>Синхронізація з  фіскальним  сервером</b></a> 
+               <br><a zippy="sync"><b>{{#t}}mod.ppo.zform.synkhronizatsiia_z_fiskalnym_serverom{{/t}}</b></a> 
                {{/hideblock}}             
                
                         
                 <table class="table table-sm">
                     <tr>
-                        <th>Документ</th>
-                        <th class="text-end">Нал</th>
-                        <th class="text-end">Безнал</th>
-                        <th class="text-end">Кредит</th>
-                        <th class="text-end">Передплата</th>
-                        <th class="text-end">Пов. нал</th>
-                        <th class="text-end">Пов. безнал</th>
+                        <th>{{#t}}common.dokument{{/t}}</th>
+                        <th class="text-end">{{#t}}mod.ppo.zform.nal{{/t}}</th>
+                        <th class="text-end">{{#t}}mod.ppo.zform.beznal{{/t}}</th>
+                        <th class="text-end">{{#t}}common.kredyt{{/t}}</th>
+                        <th class="text-end">{{#t}}common.peredplata{{/t}}</th>
+                        <th class="text-end">{{#t}}mod.ppo.zform.pov_nal{{/t}}</th>
+                        <th class="text-end">{{#t}}mod.ppo.zform.pov_beznal{{/t}}</th>
                        
                      
                         <th> </th>

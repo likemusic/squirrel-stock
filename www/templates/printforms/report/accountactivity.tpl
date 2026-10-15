@@ -2,35 +2,35 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="7">
-            Рух по рахунку  {{acc}}
+            {{#t}}print.accountactivity.rukh_po_rakhunku{{/t}}
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="7">
-            Період з {{datefrom}} по {{dateto}}
+            {{#t}}common.period_z_po_2{{/t}}
         </td>
     </tr>
  
 
     <tr  >
  
-        <th rowspan="2" style="border: solid black 1px">Дата</th>
+        <th rowspan="2" style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
       
-        <th colspan="2" style="border: solid black 1px">Поч. сальдо</th>
-        <th colspan="2" style="border: solid black 1px">Оборот</th>
-        <th colspan="2" style="border: solid black 1px">Кін. сальдо.</th>
+        <th colspan="2" style="border: solid black 1px">{{#t}}print.accountactivity.poch_saldo{{/t}}</th>
+        <th colspan="2" style="border: solid black 1px">{{#t}}print.accountactivity.oborot{{/t}}</th>
+        <th colspan="2" style="border: solid black 1px">{{#t}}print.accountactivity.kin_saldo{{/t}}</th>
         
     </tr>
     <tr  >
  
-        <th   style="border: solid black 1px">Дебет</th>
-        <th   style="border: solid black 1px">Кредит</th>
-        <th   style="border: solid black 1px">Дебет</th>
-        <th   style="border: solid black 1px">Кредит</th>
-        <th   style="border: solid black 1px">Дебет</th>
-        <th   style="border: solid black 1px">Кредит</th>
+        <th   style="border: solid black 1px">{{#t}}common.debet{{/t}}</th>
+        <th   style="border: solid black 1px">{{#t}}common.kredyt{{/t}}</th>
+        <th   style="border: solid black 1px">{{#t}}common.debet{{/t}}</th>
+        <th   style="border: solid black 1px">{{#t}}common.kredyt{{/t}}</th>
+        <th   style="border: solid black 1px">{{#t}}common.debet{{/t}}</th>
+        <th   style="border: solid black 1px">{{#t}}common.kredyt{{/t}}</th>
 
       
     

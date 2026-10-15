@@ -61,10 +61,10 @@ class ItemSel extends \Zippy\Html\PageFragment
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
  
-        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', __('common.nazva'), true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', __('common.artykul'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', __('common.shtrykh_kod'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', __('common.brend'), true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('edit', " ", false, true, true));      
         $table->AddColumn(new \Zippy\Html\DataList\Column('edit', " ", false, true, true));
        

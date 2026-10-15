@@ -26,11 +26,11 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = "Товари, маржа";
-        $this->typelist[2] = "Постачальники, об`єм поставок";
-        $this->typelist[3] = "Покупці, об`єм продаж";
-        $this->typelist[4] = "Послуги, маржа";
-        $this->typelist[5] = "Покупці, маржа";
+        $this->typelist[1] = __('report.abc.tovary_marzha');
+        $this->typelist[2] = __('report.abc.postachalnyky_obiem_postavok');
+        $this->typelist[3] = __('report.abc.pokuptsi_obiem_prodazh');
+        $this->typelist[4] = __('report.abc.posluhy_marzha');
+        $this->typelist[5] = __('report.abc.pokuptsi_marzha');
 
 
         $this->add(new Form('filter')) ;

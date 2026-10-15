@@ -156,7 +156,7 @@ class MoveItem extends \App\Pages\Base
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
         $this->editdetail->setVisible(true);
@@ -192,7 +192,7 @@ class MoveItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -201,7 +201,7 @@ class MoveItem extends \App\Pages\Base
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getDouble();
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -209,7 +209,7 @@ class MoveItem extends \App\Pages\Base
             $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Невірний номер серії');
+                $this->setWarn(__('common.nevirnyi_nomer_serii'));
             }
         }
 
@@ -288,7 +288,7 @@ class MoveItem extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                            $this->setError(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                             return;
                         }
                     }
@@ -325,34 +325,34 @@ class MoveItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
 
         if ( $this->_doc->headerdata['store'] == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         if ( $this->_doc->headerdata['tostore'] == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         if ( $this->_doc->headerdata['storeemp'] ==0 && $this->_doc->headerdata['tostoreemp'] ==0 && $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
-            $this->setError("Той самий склад");
+            $this->setError(__('doc.moveitem.toi_samyi_sklad'));
         }
         if ( ($this->_doc->headerdata['tostoreemp'] > 0 || $this->_doc->headerdata['storeemp'] > 0 ) &&
             ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) 
              && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
-            $this->setError("Той самий склад");
+            $this->setError(__('doc.moveitem.toi_samyi_sklad'));
         }
     
       
@@ -396,7 +396,7 @@ class MoveItem extends \App\Pages\Base
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
 
@@ -405,7 +405,7 @@ class MoveItem extends \App\Pages\Base
         $item = Item::findBarCode($code,$store_id);
  
         if ($item == null) {
-            $this->setError('Товар не знайдено');
+            $this->setError(__('common.tovar_ne_znaideno'));
             return;
         }
 
@@ -454,7 +454,7 @@ class MoveItem extends \App\Pages\Base
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -468,7 +468,7 @@ class MoveItem extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказані серійні номери");
+            $this->setError(__('common.ne_vkazani_seriini_nomery'));
             return;
         }
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;

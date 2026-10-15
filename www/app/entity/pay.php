@@ -72,7 +72,7 @@ class Pay extends \ZCL\DB\Entity
             $b = \App\Entity\MoneyFund::Balance() ;
 
             if(( $b[$mf_id] ??0) < abs($amount)) {
-                throw new \Exception('Сума  на рахунку недостатня  для  оплати')  ;
+                throw new \Exception(__('common.suma_na_rakhunku_nedostatnia_dlia'))  ;
             }
         }
 
@@ -100,7 +100,7 @@ class Pay extends \ZCL\DB\Entity
                     $payb->document_id = $document_id;
                     $payb->paytype = Pay::PAY_BANK;
                     $payb->paydate = $paydate;
-                    $payb->notes = 'Банківський процент за транзакцію';
+                    $payb->notes = __('app.pay.bankivskyi_protsent_za_tranzaktsiiu');
                     $payb->user_id = \App\System::getUser()->user_id;
 
                     if ( $doc->meta_name=='ReturnIssue' && $mf->back == 1 ) {    //возврат
@@ -133,7 +133,7 @@ class Pay extends \ZCL\DB\Entity
                     $payc->document_id = $document_id;
                     $payc->paytype = Pay::PAY_COMISSION;
                     $payc->paydate = $paydate;
-                    $payc->notes = 'Комісія';
+                    $payc->notes = __('app.pay.komisiia');
                     $payc->user_id = \App\System::getUser()->user_id;
                     $payc->amount = 0- ($amount * $mf->com / 100);                    
                     $payc->save(); 

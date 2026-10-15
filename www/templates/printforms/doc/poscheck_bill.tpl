@@ -1,25 +1,25 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0"  {{{style}}}}>
     <tr style="font-weight: bolder;">
-        <td colspan="3">Чек {{document_number}}</td>
+        <td colspan="3">{{#t}}common.chek_2{{/t}}</td>
     </tr>
     {{#fiscalnumber}}
     <tr>
-        <td colspan="3">Фіскальний чек</td>
+        <td colspan="3">{{#t}}common.fiskalnyi_chek{{/t}}</td>
     </tr>
     <tr>
-        <td colspan="3">ФН чека {{fiscalnumber}}</td>
+        <td colspan="3">{{#t}}common.fn_cheka{{/t}}</td>
     </tr>
     {{/fiscalnumber}}
    {{#fiscalnumberpos}}
     <tr>
-        <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
+        <td colspan="3">{{#t}}common.fn_rro{{/t}}</td>
     </tr>
     {{/fiscalnumberpos}}
    
 
     <tr>
 
-        <td colspan="3">від {{time}}</td>
+        <td colspan="3">{{#t}}common.vid_3{{/t}}</td>
     </tr>
     <tr>
 
@@ -28,13 +28,13 @@
   {{#inn}}
     <tr>
 
-        <td colspan="3">ІПН {{inn}}</td>
+        <td colspan="3">{{#t}}common.ipn_2{{/t}}</td>
     </tr>
  {{/inn}} 
  {{#tin}}
     <tr>
 
-        <td colspan="3">ЄДРПОУ {{tin}}</td>
+        <td colspan="3">{{#t}}common.iedrpou_2{{/t}}</td>
     </tr>
  {{/tin}} 
     
@@ -52,7 +52,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> {{#t}}common.pokupets_2{{/t}}</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -62,13 +62,13 @@
     <tr>
        <td colspan="3" > 
         {{#form1}}
-          Форма оплати: готівка
+          {{#t}}common.forma_oplaty_hotivka{{/t}}
         {{/form1}}
         {{#form2}}
-          Форма оплати: безготівка
+          {{#t}}common.forma_oplaty_bezhotivka{{/t}}
         {{/form2}}
         {{#form3}}
-          Форма оплати: інше
+          {{#t}}print.poscheck_bill.forma_oplaty_inshe{{/t}}
         {{/form3}}
 
        </td>
@@ -76,22 +76,22 @@
   {{#payeq}}
     <tr>
        <td colspan="3" > 
-          Засіб оплати:  {{payeq}}
+          {{#t}}print.orderfood_bill.zasib_oplaty{{/t}}
        </td>
     </tr> 
   {{/payeq}}       
    {{#trans}}
     <tr>
        <td colspan="3" > 
-          № транзакції:  {{trans}}
+          {{#t}}print.orderfood_bill.tranzaktsii{{/t}}
        </td>
     </tr> 
   {{/trans}}   
     <tr>
-        <td colspan="3">Термінал: {{pos_name}}</td>
+        <td colspan="3">{{#t}}common.terminal_2{{/t}}</td>
     </tr>
     <tr>
-        <td colspan="3">Касир: {{username}}</td>
+        <td colspan="3">{{#t}}common.kasyr{{/t}}</td>
     </tr>
     {{#_detail}}
     <tr>
@@ -104,7 +104,7 @@
     </tr>  
        {{#isstamps}}
     <tr>
-        <td  colspan="3">Акцизні марки:</td> 
+        <td  colspan="3">{{#t}}common.aktsyzni_marky_2{{/t}}</td> 
     </tr> 
         {{#stamps}}
         <tr>
@@ -118,45 +118,45 @@
     
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{total}}</td>
     </tr>
      {{#exciseval}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">В т.ч. акциз:</td>
+        <td colspan="2" align="right">{{#t}}print.orderfood_bill.v_t_ch_aktsyz{{/t}}</td>
         <td align="right">{{exciseval}}</td>
     </tr>
     {{/exciseval}}
  
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Знижка:</td>
+        <td colspan="2" align="right">{{#t}}common.znyzhka_2{{/t}}</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусів:</td>
+        <td colspan="2" align="right">{{#t}}print.poscheck_bill.spysano_bonusiv{{/t}}</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
    {{#prepaid}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Передплата:</td>
+        <td colspan="2" align="right">{{#t}}common.peredplata_2{{/t}}</td>
         <td align="right">{{prepaid}}</td>
     </tr>
     {{/prepaid}}
 
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До сплати:</td>
+        <td colspan="2" align="right">{{#t}}common.do_splaty_2{{/t}}</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Оплата:</td>
+        <td colspan="2" align="right">{{#t}}common.oplata_2{{/t}}</td>
         <td align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Решта:</td>
+        <td colspan="2" align="right">{{#t}}common.reshta{{/t}}</td>
         <td align="right">{{exchange}}</td>
     </tr>
   
@@ -167,20 +167,20 @@
          
    {{#addbonus}}
    <tr  >
-        <td colspan="2" align="right">Нараховано бонусів:</td>
+        <td colspan="2" align="right">{{#t}}print.poscheck_bill.narakhovano_bonusiv{{/t}}</td>
         <td align="right">{{addbonus}}</td>
     </tr>
    {{/addbonus}}    
   {{#allbonus}}
    <tr  >
-        <td colspan="2" align="right">Всього бонусів:</td>
+        <td colspan="2" align="right">{{#t}}print.poscheck_bill.vsoho_bonusiv{{/t}}</td>
         <td align="right">{{allbonus}}</td>
     </tr>
    {{/allbonus}}          
      
     {{#promo}}   
     <tr style="font-weight: bolder;">
-        <td colspan="3">Промокод {{promo}}</td>
+        <td colspan="3">{{#t}}common.promokod{{/t}}</td>
 
     </tr>
    {{/promo}}   

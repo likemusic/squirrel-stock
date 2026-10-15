@@ -32,7 +32,7 @@ class ServiceAct extends Document
         foreach ($this->unpackDetails('detail2data') as $item) {
             $detail[] = array("no"           => $i++,
                               "service_name" => $item->itemname,
-                              "desc"         => $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'') ,
+                              "desc"         => $item->item_code . ( strlen($item->snumber) >0 ? __('doc.serviceact.s_n'). $item->snumber :'') ,
                               "msr"         => $item->msr  ,
                               "qty"          => H::fqty($item->quantity),
                               "pricenonds"      => H::fa($item->pricenonds),
@@ -203,7 +203,7 @@ class ServiceAct extends Document
                     $itemp->quantity = $s->quantity * $part->qty;
 
                     if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                        throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                        throw new \Exception(__('common.na_skladi_vsoho').H::fqty($itemp->getQuantity($this->headerdata['store'])).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $itemp->itemname]));
                     }
 
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -232,7 +232,7 @@ class ServiceAct extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'Акт-000000';
+        return __('doc.serviceact.akt_000000');
     }
 
     public function generatePosReport($ps=false) {
@@ -257,7 +257,7 @@ class ServiceAct extends Document
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
-            $header['gar'] = 'Гарантія: ' . $this->headerdata['gar'];
+            $header['gar'] = __('doc.serviceact.harantiia') . $this->headerdata['gar'];
         }
         $detail = array();
         $i = 1;

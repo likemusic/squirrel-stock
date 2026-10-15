@@ -25,7 +25,7 @@ class XRep extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -75,11 +75,11 @@ class XRep extends \App\Pages\Base
        
        $ret=  \App\Modules\PPO\PPOHelper::shiftTotal( $pos);
        if($ret == false) {
-            $this->setError("Сервер недоступний або нема жодної фіскалізації ");
+            $this->setError(__('mod.ppo.xrep.server_nedostupnyi_abo_nema_zhodnoi'));
             return ;
         }
         if(!is_array($ret['Totals'])) {
-            $this->setError("Сервер недоступний або нема жодної фіскалізації") ;
+            $this->setError(__('mod.ppo.xrep.server_nedostupnyi_abo_nema_zhodnoi_2')) ;
             return ;
         }
         $zt="";

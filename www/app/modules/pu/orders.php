@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки") ;
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky')) ;
 
             App::RedirectError();
             return;
@@ -96,7 +96,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['id']);
+                    $this->setWarn(__('common.ne_znaideno_artykul_tovara_v', ['name' => $product['name']]) . $puorder['id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
@@ -128,32 +128,32 @@ class Orders extends \App\Pages\Base
 
 
             $neworder->document_date = time();
-            $neworder->notes = "PU номер:{$puorder['id']};";
-            $neworder->notes .= " Клієнт:" .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
+            $neworder->notes = __('mod.pu.orders.pu_nomer', ['id' => $puorder['id']]);
+            $neworder->notes .= __('mod.hr.orders.kliient') .$puorder['client_first_name'] . ' ' . $puorder['client_last_name'].';';
             if (strlen($puorder['email']) > 0) {
                 $neworder->notes .= " Email:" . $puorder['email'] . ";";
             }
             if (strlen($puorder['phone']) > 0) {
-                $neworder->notes .= " Тел:" . str_replace('+', '', $puorder['phone']). ";";
+                $neworder->notes .= __('common.tel') . str_replace('+', '', $puorder['phone']). ";";
             }
             
             if (strlen($puorder['payment_data']['name']) > 0) {
-                $neworder->notes .= " Оплата: " . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
+                $neworder->notes .= __('mod.pu.orders.oplata') . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
             }
    
             if ( is_array($puorder['payment_option']) &&   count($puorder['payment_option']) > 0) {
-                $neworder->notes .= " Оплата: "  ;
+                $neworder->notes .= __('mod.pu.orders.oplata')  ;
                $neworder->notes .= (($puorder['payment_option']['name'] ?? '') . " ");
                $neworder->notes .=  ";" ; 
             }            
             
             
             if (strlen($puorder['delivery_option']['name']) > 0) {
-                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . "  " . $puorder['delivery_option']['shipping_service'] . ";";
+                $neworder->notes .= __('mod.hr.orders.dostavka') . $puorder['delivery_option']['name'] . "  " . $puorder['delivery_option']['shipping_service'] . ";";
             }
 
             if (strlen($puorder['delivery_address']) > 0) {
-                $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
+                $neworder->notes .= __('common.adresa') . $puorder['delivery_address'] . ";";
                 $neworder->headerdata['ship_address']   = $puorder['delivery_address'];
             }
             
@@ -169,7 +169,7 @@ class Orders extends \App\Pages\Base
             
             
             if (strlen($puorder['client_notes']) > 0) {
-                $neworder->notes .= " Комментар:" . $puorder['client_notes'] . ";";
+                $neworder->notes .= __('common.kommentar') . $puorder['client_notes'] . ";";
             }
 
 
@@ -215,7 +215,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
 
                     $cust->email = $shoporder->headerdata['email'];
-                    $cust->comment = "Клієнт  Prom UA";
+                    $cust->comment = __('mod.pu.orders.kliient_prom_ua');
                     $cust->save();
                 }        
                 if($cust != null) {         
@@ -235,7 +235,7 @@ class Orders extends \App\Pages\Base
 
         }
 
-        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
+        $this->setInfo(__('mod.hr.orders.importovano').count($this->_neworders).__('common.zamovlen'));
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -271,7 +271,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('Не обрано ордер');
+            $this->setError(__('common.ne_obrano_order'));
             return;
         }
 
@@ -295,7 +295,7 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень");
+        $this->setSuccess(__('common.onovleno_2').count($elist).__('common.zamovlen'));
 
 
 

@@ -17,7 +17,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'vdoc') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -41,7 +41,7 @@ class Options extends \App\Pages\Base
         $modules['vdclientid'] = trim($this->cform->clientid->getText());
      
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
     }
 
@@ -49,7 +49,7 @@ class Options extends \App\Pages\Base
         list($code, $result) =        Helper::connect(trim($this->cform->clientid->getText()));
         if($code=='ok') {
             System::getSession()->pltoken = $result;
-            $this->setSuccess("Успішне з`єднання") ;
+            $this->setSuccess(__('common.uspishne_ziednannia')) ;
         }
         if($code=='error') {
             $this->setError($result) ;

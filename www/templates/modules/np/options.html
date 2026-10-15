@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title> Налаштування   </title>
+      <title> {{#t}}common.nalashtuvannia{{/t}}   </title>
 
     </head>
 
@@ -8,66 +8,66 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Налаштування </h4>
-                <h5>Налаштування API</h5>
+                <h4>{{#t}}common.nalashtuvannia{{/t}} </h4>
+                <h5>{{#t}}app.options.nalashtuvannia_api{{/t}}</h5>
                 <form zippy="cform">
 
                     <div class="mb-2">
-                        <label for="apikey">Ключ</label>
+                        <label for="apikey">{{#t}}common.kliuch{{/t}}</label>
                         <input type="text" zippy="apikey" class="form-control" required="required"/>
                     </div>
 
 
                     <div class="mb-2">
-                        <input type="submit" value="Зберегти" class="btn   btn-primary  "/>
+                        <input type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  "/>
 
                     </div>
                 </form>  <br>
          
                 <br>
-                <h5>Дані відправника за замовчуванням</h5>
+                <h5>{{#t}}mod.np.options.dani_vidpravnyka_za_zamovchuvanniam{{/t}}</h5>
 
                 <form zippy="oform">
 
                     <div class="mb-2">
-                        <label for="tel">Телефон</label>
+                        <label for="tel">{{#t}}common.telefon{{/t}}</label>
 
                         <input zippy="tel" class="form-control   "/>
 
                     </div>
                      <div class="mb-2">
-                        <label for="city">Населений пункт</label>
+                        <label for="city">{{#t}}common.naselenyi_punkt{{/t}}</label>
 
-                        <input placeholder="Почніть вводити..." zippy="city" class="form-control   "/>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="city" class="form-control   "/>
 
                     </div>
                     <div class="mb-2">
-                        <label for="point">Відділення</label>
+                        <label for="point">{{#t}}common.viddilennia{{/t}}</label>
 
-                        <input placeholder="Почніть вводити..." zippy="point" class="form-control   "/>
-                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="point" class="form-control   "/>
+                         <small>{{#t}}common.dlia_poshuku_po_nomeru_dodaite{{/t}}</small>
                     </div>
                   
              
 
                     <div class="mb-2">
-                        <input type="submit" value="Зберегти" class="btn   btn-primary  "/>
+                        <input type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  "/>
 
                     </div>
                 </form>
             </div>
           <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-            <b>Перелік габаритів</b>
+            <b>{{#t}}mod.np.options.perelik_habarytiv{{/t}}</b>
            <form zippy="gabform"  >
              <div class="row  ">
               <div class="col-auto  ">
-              Ш: <input zippy="gw" required="required"  class="form-control" style="width:75px"  type="number">  
+              {{#t}}register.gilist.sh{{/t}} <input zippy="gw" required="required"  class="form-control" style="width:75px"  type="number">  
                </div>
                <div class="col-auto  ">
-              В: <input zippy="gh" required="required"  class="form-control" style="width:75px"  type="number">  
+              {{#t}}register.gilist.v{{/t}} <input zippy="gh" required="required"  class="form-control" style="width:75px"  type="number">  
                </div> 
                <div class="col-auto  ">
-              Д: <input zippy="gd" required="required"  class="form-control" style="width:75px"  type="number">  
+              {{#t}}mod.np.options.d{{/t}} <input zippy="gd" required="required"  class="form-control" style="width:75px"  type="number">  
                </div>
                <div class="col-auto  ">
               <input class="btn btn-success" type="submit" value="+"> 

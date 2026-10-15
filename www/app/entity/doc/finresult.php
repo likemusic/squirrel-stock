@@ -54,7 +54,7 @@ class FinResult extends Document
         return true;
     }
     protected function getNumberTemplate() {
-        return 'ФР-000000';
+        return __('doc.finresult.fr_000000');
     }
     //доходы
     protected function accIn($acc_code) {

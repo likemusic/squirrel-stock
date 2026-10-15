@@ -200,7 +200,7 @@ class AdvanceRep extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -210,12 +210,12 @@ class AdvanceRep extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn(__('common.ne_vkazana_tsina'));
         }
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -223,7 +223,7 @@ class AdvanceRep extends \App\Pages\Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -271,7 +271,7 @@ class AdvanceRep extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError(__('common.fail_bilshe_10_mb'));
             return;
         }
 
@@ -319,7 +319,7 @@ class AdvanceRep extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $id = H::addFile($file, $this->_doc->document_id, __('common.skan'), \App\Entity\Message::TYPE_DOC);
                 $this->_doc->headerdata["scan"] = $id;
                 $this->_doc->save();
                  
@@ -360,28 +360,28 @@ class AdvanceRep extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
                                                            
 
         if (($this->docform->store->getValue() > 0) == false &&  doubleval( $this->docform->examount->getText() ) > 0) {
-            $this->setError("Не обрано касу");
+            $this->setError(__('doc.advancerep.ne_obrano_kasu'));
         }
 
         if (($this->docform->exmf->getValue() > 0) == false && count($this->_itemlist) > 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
         if (($this->docform->emp->getValue() > 0) == false  ) {
-            $this->setError("Не обрано співробітника");
+            $this->setError(__('common.ne_obrano_spivrobitnyka'));
         }
 
 
@@ -423,14 +423,14 @@ class AdvanceRep extends \App\Pages\Base
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         
         $price = doubleVal($this->editsnitem->editsnprice->getText());
         if ($price == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError(__('common.ne_vkazana_tsina'));
             return;
         }
         $sns =  $this->editsnitem->editsn->getText();
@@ -444,7 +444,7 @@ class AdvanceRep extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказані серійні номери");
+            $this->setError(__('common.ne_vkazani_seriini_nomery'));
             return;
         }
         
@@ -453,7 +453,7 @@ class AdvanceRep extends \App\Pages\Base
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
-                $this->setError("Серійний  номер має бути унікальним для виробу");    
+                $this->setError(__('doc.advancerep.seriinyi_nomer_maie_buty_unikalnym'));    
                 return;
             }           
             
@@ -494,7 +494,7 @@ class AdvanceRep extends \App\Pages\Base
         $item = Item::findBarCode($code );
 
         if ($item == null) {
-            $this->setError('Не знайдено ТМЦ  з таким  кодом');
+            $this->setError(__('common.ne_znaideno_tmts_z_takym'));
             return;
         }
 
@@ -533,7 +533,7 @@ class AdvanceRep extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $item = new Item();
@@ -542,7 +542,7 @@ class AdvanceRep extends \App\Pages\Base
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
               return;
         }  
 

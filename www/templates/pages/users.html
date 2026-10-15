@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Користувачі системи   </title>
+        <title> {{#t}}app.users.korystuvachi_systemy{{/t}}   </title>
 
     </head>
 
@@ -9,35 +9,35 @@
 
 
             <div zippy="listpan" class="col-12   col-xl-10">
-                <h3>Користувачі системи</h3>
+                <h3>{{#t}}app.users.korystuvachi_systemy{{/t}}</h3>
                 <div class="navbar">
 
                     <form zippy="filter"  >
                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="searchrole">Роль</label>
+                        <label class="col-form-label col-auto" for="searchrole">{{#t}}app.users.rol{{/t}}</label>
                         <div class="col-auto  ">
                          <select zippy="searchrole" class="form-control ms-sm-2">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                        </div>
                          <div class="col-auto  ">
-                        <input class="btn btn-success  " type="submit" value="ОК">
+                        <input class="btn btn-success  " type="submit" value="{{#t}}common.ok{{/t}}">
                        </div>
                        </div>
                     </form>
                 </div>
-                <a zippy="addnew" class="btn btn-success  ">Додати</a>
+                <a zippy="addnew" class="btn btn-success  ">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table table-bordered table-striped table-sm">
 
                     <thead align="center">
                         <tr>
-                            <th>Логін</th>
-                            <th>Роль</th>
-                            <th>Співробітник</th>
-                            <th>Створено</th>
+                            <th>{{#t}}common.lohin{{/t}}</th>
+                            <th>{{#t}}app.users.rol{{/t}}</th>
+                            <th>{{#t}}common.spivrobitnyk{{/t}}</th>
+                            <th>{{#t}}common.stvoreno{{/t}}</th>
 
                             <th>E-mail</th>
-                            <th>Ост. логін</th>   
+                            <th>{{#t}}app.users.ost_lohin{{/t}}</th>   
 
 
                             <th  > </th>
@@ -65,32 +65,32 @@
 
 
             <div zippy="editpan" class="col-12     col-xl-8 col-xll-6 ">
-                <h4> Редагування користувача</h4>
+                <h4> {{#t}}app.users.redahuvannia_korystuvacha{{/t}}</h4>
                 <form zippy="editform" role="form">
                    
                     <div class="row">
                     <div class="col-6">
                     
                     <div class="mb-2">
-                        <label for="editlogin">Логін</label>
+                        <label for="editlogin">{{#t}}common.lohin{{/t}}</label>
                         <input pattern="[_a-zA-Z0-9]+" style="width:200px" class="form-control" zippy="editlogin"
                                 required="on" >
-                        <small>Допускаються латинські букви, цифри і підкреслення</small>
+                        <small>{{#t}}app.users.dopuskaiutsia_latynski_bukvy_tsyfry_i{{/t}}</small>
                     </div>
                     <div class="mb-2">
-                        <label for="editpass">Пароль</label>
+                        <label for="editpass">{{#t}}common.parol{{/t}}</label>
                         <input style="width:200px" class="form-control" zippy="editpass">
-                        <small  >Якщо  пароль існуючого юзера не змінюється, залиште порожнім</small>
+                        <small  >{{#t}}app.users.iakshcho_parol_isnuiuchoho_iuzera_ne{{/t}}</small>
                     </div>
                     <div class="mb-2">
-                        <label for="editrole">Роль</label>
+                        <label for="editrole">{{#t}}app.users.rol{{/t}}</label>
                         <select class="form-control" zippy="editrole">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                     </div>
 
                     <div class="mb-2">
-                        <label for="editphone">Тел.</label>
+                        <label for="editphone">{{#t}}common.tel_2{{/t}}</label>
                         <input style="width:100px" class="form-control" zippy="editphone">
                     </div>
                      <div class="mb-2">
@@ -99,8 +99,8 @@
                      </div>
                      {{#otpcode}}
                      <div class="mb-2">
-                        <label   >Код відновлення {{otpcode}}</label>
-                       <br> <small  >Якщо двофакторна аутентифікація</small>
+                        <label   >{{#t}}app.users.kod_vidnovlennia{{/t}}</label>
+                       <br> <small  >{{#t}}app.users.iakshcho_dvofaktorna_autentyfikatsiia{{/t}}</small>
                     </div>
                      {{/otpcode}}
 
@@ -109,13 +109,13 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edithidemenu">
-                            <label class="form-check-label ms-sm-2" for="edithidemenu"> Не показувати бокове меню (тільки оперативне)</label>
+                            <label class="form-check-label ms-sm-2" for="edithidemenu"> {{#t}}app.users.ne_pokazuvaty_bokove_meniu_tilky{{/t}}</label>
                         </div>
                     </div>
                     <div class="mb-2">
                         <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="editdisabled">
-                            <label class="form-check-label ms-sm-2 text-danger" for="editdisabled"> Не активний</label>
+                            <label class="form-check-label ms-sm-2 text-danger" for="editdisabled"> {{#t}}app.users.ne_aktyvnyi{{/t}}</label>
                         </div>
                    </div>
                    </div>
@@ -127,7 +127,7 @@
 
                      {{#usebranch}}
                     <div class="mb-2">
-                        <label  > Доступ до філій</label>
+                        <label  > {{#t}}app.users.dostup_do_filii{{/t}}</label>
                         <table class="table table-sm table-striped">
                             <tr zippy="brow">
                                 <td zippy="branch_name"></td>
@@ -142,7 +142,7 @@
                     {{/usebranch}} 
                    {{^usebranch}}
                     <div class="mb-2">
-                        <label  >Доступ  до складів</label>
+                        <label  >{{#t}}app.users.dostup_do_skladiv{{/t}}</label>
                        <table class="table table-sm table-striped">
                             <tr zippy="srow">
                                 <td zippy="store_name"></td>
@@ -152,7 +152,7 @@
                         </table> 
                     </div>
                     <div class="mb-2">
-                        <label  >Доступ  до грошових рахунків</label>
+                        <label  >{{#t}}app.users.dostup_do_hroshovykh_rakhunkiv{{/t}}</label>
                           <table class="table table-sm table-striped">
                             <tr zippy="mrow">
                                 <td zippy="mf_name"></td>
@@ -167,7 +167,7 @@
                       <div class="mb-2">
                          <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="editonlymy">
-                            <label class="form-check-label ms-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
+                            <label class="form-check-label ms-sm-2" for="editonlymy"> {{#t}}app.users.dostup_lyshe_do_vlasnykh_dokumentiv{{/t}}</label>
                         </div>
                      </div>   
                    </div>
@@ -176,8 +176,8 @@
                   
                     <div class="col-12 mt-2">
                       
-                        <a zippy="cancel" class="btn btn-secondary  me-2   ">Скасувати</a>
-                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                        <a zippy="cancel" class="btn btn-secondary  me-2   ">{{#t}}common.skasuvaty{{/t}}</a>
+                        <button type="submit" class="btn btn-primary   ">{{#t}}common.zberehty{{/t}}</button>
                       
                     
                     </div>

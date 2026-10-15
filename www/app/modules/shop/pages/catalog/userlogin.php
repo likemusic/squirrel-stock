@@ -49,16 +49,16 @@ class UserLogin extends \Zippy\Html\WebPage
     public function onrcsubmit($sender) {
         $phone = $sender->rcuserphone->getText();
         if (strlen($phone) != Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
         $c = Customer::getByPhone($phone);
         if ($c == null) {
-            $this->setError("Користувач з таким телефоном не знайдений");
+            $this->setError(__('mod.df.userlogin.korystuvach_z_takym_telefonom_ne'));
             return;
         }
         $p= substr(bin2hex(random_bytes(8)), 0, 8);
-        $ret = \App\Comm::sendSMS($phone, "ZStore: новий пароль " . $p);
+        $ret = \App\Comm::sendSMS($phone, __('mod.df.userlogin.zstore_novyi_parol') . $p);
         if(strlen($ret ?? '')  >0) {
             \App\Helper::logerror($ret) ;
             $this->setError('SMS error') ;
@@ -68,7 +68,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $c->passw = $p;
         $c->save();
      
-        $this->setSuccess("Пароль відправлено")  ;
+        $this->setSuccess(__('mod.df.userlogin.parol_vidpravleno'))  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;
 
@@ -80,20 +80,20 @@ class UserLogin extends \Zippy\Html\WebPage
         $pass = $sender->suserpassword->getText();
         $conf = $sender->sconfirm->getText();
         if (strlen($phone) != Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
         if (strlen($pass) ==0) {
-            $this->setError("Введіть пароль") ;
+            $this->setError(__('common.vvedit_parol')) ;
             return;
         }
         if ($pass != $conf) {
-            $this->setError("Невірне підтвердження") ;
+            $this->setError(__('common.nevirne_pidtverdzhennia')) ;
             return;
         }
         $c = Customer::getByPhone($phone);
         if ($c != null) {
-            $this->setError("Вже існує користувач з таким телефоном");
+            $this->setError(__('mod.shop.userlogin.vzhe_isnuie_korystuvach_z_takym'));
             return;
         }
         $c = new  Customer();
@@ -120,22 +120,22 @@ class UserLogin extends \Zippy\Html\WebPage
         $sender->userpassword->setText('');
 
         if (strlen($phone) != Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
         $c = Customer::getByPhone($phone);
         if ($c == null) {
-            $this->setError("Користувач з таким телефоном не знайдений");
+            $this->setError(__('mod.df.userlogin.korystuvach_z_takym_telefonom_ne'));
             return;
         }
         if (!$c->checkPassword($password)) {
-            $this->setError("Введіть пароль");
+            $this->setError(__('common.vvedit_parol'));
             return;
         }
         if ($shop["uselogin"] == 1) {
             if ($c->allowedshop != 1) {
 
-                $this->setError("У вас немає права доступу до каталогу. Зверніться до адміністратора");
+                $this->setError(__('mod.shop.userlogin.u_vas_nemaie_prava_dostupu'));
                 return;
             }
         }

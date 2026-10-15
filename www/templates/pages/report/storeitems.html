@@ -1,13 +1,13 @@
 <html>
    <head>
-        <title> Стан складів   </title>
+        <title> {{#t}}report.storeitems.stan_skladiv{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   ">
-                <h3>Стан складів</h3>
-                <small>Кількість ТМЦ на складах</small>
+                <h3>{{#t}}report.storeitems.stan_skladiv{{/t}}</h3>
+                <small>{{#t}}report.storeitems.kilkist_tmts_na_skladakh{{/t}}</small>
                 <div class="navbar">
                     <form zippy="filter"  >
                         <div class="row  ">
@@ -15,7 +15,7 @@
                          <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fcust">
                             <label class="form-check-label" for="fcust">
-                               Кастомні поля
+                               {{#t}}common.kastomni_polia{{/t}}
                             </label>
                         </div>
                         </div>
@@ -23,7 +23,7 @@
                          <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fminus">
                             <label class="form-check-label" for="fminus">
-                               В мінусі
+                               {{#t}}register.itemlist.v_minusi{{/t}}
                             </label>
                         </div>
                         </div>
@@ -31,7 +31,7 @@
                        <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="fmin">
                             <label class="form-check-label" for="fmin">
-                                Менше мін.
+                                {{#t}}report.storeitems.menshe_min{{/t}}
                             </label>
                         </div>
                         </div>
@@ -39,19 +39,19 @@
                          <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fver">
                             <label class="form-check-label" for="fver">
-                                Вертикальний режим
+                                {{#t}}report.storeitems.vertykalnyi_rezhym{{/t}}
                             </label>
                         </div>  
                         </div>  
                                               
-                        <label class="col-form-label col-auto" for="searchcat">категорія</label>
+                        <label class="col-form-label col-auto" for="searchcat">{{#t}}common.katehoriia_2{{/t}}</label>
                           <div class="col-auto  ">
                             <select class="form-control ms-sm-2" zippy="searchcat">
-                                <option value="0">Не вказано</option>
+                                <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                             </select>    
                          </div>             
                          <div class="col-auto  ">       
-                           <input zippy="onreport" class="btn btn-primary  " type="submit" value="ОК">
+                           <input zippy="onreport" class="btn btn-primary  " type="submit" value="{{#t}}common.ok{{/t}}">
                          </div>
                        </div>
                     </form>
@@ -60,9 +60,9 @@
                 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/storeitems" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/storeitems" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/storeitems" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/storeitems" target="_blank" title="{{#t}}common.eksport_v_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
 
                     </div>
 

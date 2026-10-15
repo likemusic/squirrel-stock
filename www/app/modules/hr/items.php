@@ -28,7 +28,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -219,7 +219,7 @@ class Items extends \App\Pages\Base
         }
         if (count($body['products']) == 0) {
 
-            $this->setError('Не обрано товар');
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -238,7 +238,7 @@ class Items extends \App\Pages\Base
                 $this->setErrorTopPage($ee->getMessage());
                 return;
         }
-        $this->setSuccess("Експортовано ".count( $body['products'])." товарів");
+        $this->setSuccess(__('common.eksportovano').count( $body['products']).__('common.tovariv'));
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -286,7 +286,7 @@ class Items extends \App\Pages\Base
 
           $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/importResidues", json_encode($body, JSON_UNESCAPED_UNICODE));
   
-          $this->setSuccess('Оновлено');
+          $this->setSuccess(__('common.onovleno'));
     }
 
     public function onUpdatePrice($sender) {
@@ -334,7 +334,7 @@ class Items extends \App\Pages\Base
               $this->setErrorTopPage($ee->getMessage());
               return;
           }
-          $this->setSuccess('Оновлено');
+          $this->setSuccess(__('common.onovleno'));
     }
 
     public function importOnSubmit($sender) {
@@ -343,7 +343,7 @@ class Items extends \App\Pages\Base
         $conn =   \ZDB\DB::getConnect();
  
         if(count($this->_pages)==0){
-            $this->setError('Не  оновлені  категорії') ;
+            $this->setError(__('mod.hr.items.ne_onovleni_katehorii')) ;
             return;
         }
  
@@ -466,7 +466,7 @@ class Items extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Завантажено {$i} товарів");
+        $this->setSuccess(__('common.zavantazheno_tovariv', ['i' => $i]));
     }
     //список  артикулов  в магазе
     private  function getArticles() {

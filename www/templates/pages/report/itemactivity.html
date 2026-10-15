@@ -1,36 +1,36 @@
 <html>
    <head>
-        <title> Рух по складу   </title>
+        <title> {{#t}}report.itemactivity.rukh_po_skladu{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   ">
-                <h3>Рух по складу</h3>
+                <h3>{{#t}}report.itemactivity.rukh_po_skladu{{/t}}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                             <div class="row">
-                          <label class="col-auto mt-2" for="from">З</label>
+                          <label class="col-auto mt-2" for="from">{{#t}}common.z{{/t}}</label>
                           <div class="col-auto">
                             <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="from">
                           </div>
                        
               
-                        <label class="col-auto mt-2" for="to">по</label>
+                        <label class="col-auto mt-2" for="to">{{#t}}common.po{{/t}}</label>
                          <div class="col-auto">
                          <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="to">
                         </div>
                         
                        
-                        <label  class="col-auto mt-2"  for="searchcat">категорія</label>
+                        <label  class="col-auto mt-2"  for="searchcat">{{#t}}common.katehoriia_2{{/t}}</label>
                          <div class="col-auto">
                      
                         <select class="form-control me-2" zippy="searchcat">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                              </div>
                       
-                        <label class=" col-auto mt-2" for="store">Склад</label>
+                        <label class=" col-auto mt-2" for="store">{{#t}}common.sklad{{/t}}</label>
                         <div class="col-auto">
                      
                         <select class="form-control ms-sm-2" zippy="store"> 
@@ -41,27 +41,27 @@
                                              
                         {{#storeemp}}
                         
-                       <label  class="col-auto mt-2" for="searchemp">Співробітник</label>
+                       <label  class="col-auto mt-2" for="searchemp">{{#t}}common.spivrobitnyk{{/t}}</label>
                           <div class="col-auto">
                     
                         <select class="form-control ms-sm-2" zippy="searchemp">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                         </div>
                          
                        {{/storeemp}}                        
                         
              
-                        <label class="col-auto mt-2" for="item">ТМЦ</label>
+                        <label class="col-auto mt-2" for="item">{{#t}}common.tmts{{/t}}</label>
                             <div class="col-auto">
                     
-                        <input placeholder="Почніть вводити..." class="form-control ms-sm-2" zippy="item">
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control ms-sm-2" zippy="item">
                          </div>
                          
                      
                             {{#usesnumber}}
                         
-                        <label class="col-auto mt-2" for data-label="snumber" for="snumber">Серія, с/н </label>
+                        <label class="col-auto mt-2" for data-label="snumber" for="snumber">{{#t}}register.stocklist.seriia_s_n{{/t}} </label>
                            <div class="col-auto">
                     
                            <input class="form-control ms-sm-2" zippy="snumber">
@@ -74,7 +74,7 @@
                           <div class="form-check   pt-2">
                             <input class="form-check-input" type="checkbox" zippy="fdet">
                             <label class="form-check-label" for="fdet">
-                              Деталізація
+                              {{#t}}common.detalizatsiia{{/t}}
                             </label>
                          </div>
                         </div>
@@ -82,13 +82,13 @@
                           <div class="form-check  pt-2 ">
                             <input class="form-check-input" type="checkbox" zippy="fitem">
                             <label class="form-check-label" for="fitem">
-                              Сортувати  по  ТМЦ
+                              {{#t}}report.itemactivity.sortuvaty_po_tmts{{/t}}
                             </label>
                          </div>
                         </div>
                       
                         <div class="col-auto">
-                        <input zippy="onreport" class="btn btn-primary me-2 " type="submit" value="ОК">
+                        <input zippy="onreport" class="btn btn-primary me-2 " type="submit" value="{{#t}}common.ok{{/t}}">
                        </div>
                       </div>
 
@@ -97,9 +97,9 @@
 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemactivity" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemactivity" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemactivity" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemactivity" target="_blank" title="{{#t}}common.eksport_v_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
                                                                          
 
                     </div>

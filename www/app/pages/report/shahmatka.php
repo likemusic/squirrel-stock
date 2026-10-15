@@ -96,7 +96,7 @@ class Shahmatka extends \App\Pages\Base
        
         $top = array(array('cell' => ''));
       
-        $bottom = array(array('cell' => 'Кредит', 'bold' => true));
+        $bottom = array(array('cell' => __('common.kredyt'), 'bold' => true));
 
 
         $from = strtotime($this->filter->from->getValue());
@@ -110,7 +110,7 @@ class Shahmatka extends \App\Pages\Base
 
             $bottom[] = array('cell' => H::fa($data['ct']),'right' => true, 'bold' => true);
         }
-        $top[] = array('cell' => 'Дебет', 'right' => true, 'bold' => true);
+        $top[] = array('cell' => __('common.debet'), 'right' => true, 'bold' => true);
         $bottom[] = array('cell' => '');
      
 

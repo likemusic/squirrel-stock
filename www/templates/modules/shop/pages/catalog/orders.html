@@ -5,9 +5,9 @@
         <div class="row " style="min-height:400px;">
             <div zippy="plist" class="col-10  col-md-8 col-xl-6">
 
-                <h4>Мої замовлення</h4>
+                <h4>{{#t}}mod.shop.base.moi_zamovlennia{{/t}}</h4>
                 <table class="table table-sm">
-                  <tr><th>Номер</th><th>Дата</th><th class="text-end">Сума</th><th>Статус</th>
+                  <tr><th>{{#t}}common.nomer{{/t}}</th><th>{{#t}}common.data{{/t}}</th><th class="text-end">{{#t}}common.suma{{/t}}</th><th>{{#t}}common.status{{/t}}</th>
                    {{#usepayment}}<th> </th>           {{/usepayment}}
                   <th> </th>
                   </tr>
@@ -17,22 +17,22 @@
                   <td zippy="amount" class="text-end"></td>
                   <td zippy="status"></td>
                   
-                  {{#usepayment}}       <td  ><a zippy="topay">Оплатити</a></td>           {{/usepayment}}
-                  <td  ><a zippy="detail">Детальніше</a></td>
+                  {{#usepayment}}       <td  ><a zippy="topay">{{#t}}common.oplatyty{{/t}}</a></td>           {{/usepayment}}
+                  <td  ><a zippy="detail">{{#t}}mod.shop.orders.detalnishe{{/t}}</a></td>
                   </tr>
                 </table>
                                  
             </div>
             <div zippy="porder" class="col-10  col-md-8 col-xl-6">
-                 <a zippy="back">До переліку</a>
+                 <a zippy="back">{{#t}}common.do_pereliku{{/t}}</a>
                  <table class="table table-sm">
-                  <tr><th>Найменування</th><th class="text-end">Кіл.</th><th class="text-end">Ціна</th><th class="text-end">Сума</th><th> </th></tr>
+                  <tr><th>{{#t}}common.naimenuvannia{{/t}}</th><th class="text-end">{{#t}}common.kil{{/t}}</th><th class="text-end">{{#t}}common.tsina{{/t}}</th><th class="text-end">{{#t}}common.suma{{/t}}</th><th> </th></tr>
                   <tr zippy="dlist">
                   <td zippy="itemname"></td>
                   <td zippy="qty" class="text-end"></td>
                   <td zippy="price" class="text-end"></td>
                   <td zippy="amount" class="text-end"></td>
-                  <td><a zippy="addcart" title="Додати до кошика"><i class="fa fa-shopping-cart"></i></a></td>
+                  <td><a zippy="addcart" title="{{#t}}mod.shop.orders.dodaty_do_koshyka{{/t}}"><i class="fa fa-shopping-cart"></i></a></td>
                   </tr>
                 </table>
                 

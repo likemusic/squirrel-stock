@@ -1,10 +1,10 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
-        <td colspan="2"> <b>Квитанція про оплату </b></td>
+        <td colspan="2"> <b>{{#t}}print.pays_bill.kvytantsiia_pro_oplatu{{/t}} </b></td>
     </tr>
     <tr>
 
-        <td colspan="2">Підстава {{document_number}}</td>
+        <td colspan="2">{{#t}}print.pays_bill.pidstava{{/t}}</td>
     </tr>
     <tr>
 
@@ -19,7 +19,7 @@
 
 
     <tr>
-        <td colspan="2">Оплати:</td>
+        <td colspan="2">{{#t}}common.oplaty{{/t}}</td>
     </tr>
     {{#plist}}
     <tr>
@@ -30,7 +30,7 @@
     {{/plist}}
 
     <tr>
-        <td  align="right"> <b> Всього:</b></td>
+        <td  align="right"> <b> {{#t}}common.vsoho{{/t}}</b></td>
         <td  align="right"><b> {{pall}}</b></td>
 
     </tr>

@@ -6,32 +6,32 @@
                  <div class="col-12">
                    <div class="input-group">
       
-                <label   for="wissearchkey">пошук</label>
+                <label   for="wissearchkey">{{#t}}common.poshuk_2{{/t}}</label>
                 
                   <input   class="form-control ms-sm-2" type="text" zippy="wissearchkey">
                 </div>
                 </div>
                  <div class="col-12">
                    <div class="input-group">
-               <label   for="wissearchcat">категорія</label>
+               <label   for="wissearchcat">{{#t}}common.katehoriia_2{{/t}}</label>
             
                 <select class="form-select  " zippy="wissearchcat">
-                    <option value="0">Не задано</option>
+                    <option value="0">{{#t}}common.ne_zadano{{/t}}</option>
                 </select>
                 </div>
                 </div>
                <div class="col-12">
                    <div class="input-group">
                       
-                <label class="col-form-label col-auto" for="searchtype">Тип </label>
+                <label class="col-form-label col-auto" for="searchtype">{{#t}}common.typ{{/t}} </label>
                 
                    <select zippy="searchtype" class="form-select  ">
-                        <option value="0">Всі </option>
-                        <option value="1">Товари</option>
-                        <option value="2">Мат. та компл.</option>
-                        <option value="3">МШП</option>
-                        <option value="4">Готова продукція</option>
-                        <option value="5">Напівфабрикати</option>
+                        <option value="0">{{#t}}common.vsi{{/t}} </option>
+                        <option value="1">{{#t}}common.tovary{{/t}}</option>
+                        <option value="2">{{#t}}widgets.itemsel.mat_ta_kompl{{/t}}</option>
+                        <option value="3">{{#t}}common.mshp{{/t}}</option>
+                        <option value="4">{{#t}}common.hotova_produktsiia{{/t}}</option>
+                        <option value="5">{{#t}}common.napivfabrykaty{{/t}}</option>
                       
                     </select>
                   </div>
@@ -40,7 +40,7 @@
                    <div class="input-group">
                 
                   
-                <label   for="wissearchmanufacturer">Бренд </label>
+                <label   for="wissearchmanufacturer">{{#t}}common.brend{{/t}} </label>
                
                 <input autocomplete="off" list="wissearchmanlist" class="form-control me-2" zippy="wissearchmanufacturer"/>
                 <datalist id="wissearchmanlist">
@@ -53,12 +53,12 @@
                
                <div class="col-12">    
                  <div class="form-check   ">
-                   <label for="wissearchonstore" class="form-check-label">В наявності </label> 
+                   <label for="wissearchonstore" class="form-check-label">{{#t}}common.v_naiavnosti{{/t}} </label> 
                    <input type="checkbox" zippy="wissearchonstore" class="form-check-input  me-2"  >
                   </div>                  
               </div>    
                <div class="col-12  ">      
-                <input class="btn btn-success  " type="submit" value="ОК">
+                <input class="btn btn-success  " type="submit" value="{{#t}}common.ok{{/t}}">
               </div>
               </div>
             </form>
@@ -73,24 +73,24 @@
            <div   class="col-12 col-md-10 col-xxl-8">  
        
              <form zippy="weditform"  >
-                 <h4>Редагування ТМЦ  </h4>
-                 <small> Зміни оновлять також довідник номенклатури  </small>
+                 <h4>{{#t}}doc.serviceact.redahuvannia_tmts{{/t}}  </h4>
+                 <small> {{#t}}widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat{{/t}}  </small>
               
                  <div class="mb-2 row">
-                    <label class="col-5 col-form-label" for="weditname">Найменування</label>
+                    <label class="col-5 col-form-label" for="weditname">{{#t}}common.naimenuvannia{{/t}}</label>
                     <div class="col-7">
                         <input required="on" autofocus="on"   class="form-control" zippy="weditname"/>
                     </div>
                 </div>
                  <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="weditbarcode">Штрих код </label>
+                        <label class="col-5 col-form-label" for="weditbarcode">{{#t}}common.shtrykh_kod_2{{/t}} </label>
                         <div class="col-5">
                             <input class="form-control" zippy="weditbarcode"/>
-                            <small   >Латинскі  букви і цифри</small>
+                            <small   >{{#t}}reference.itemlist.latynski_bukvy_i_tsyfry{{/t}}</small>
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="weditprice">Ціна</label>
+                        <label class="col-5 col-form-label" for="weditprice">{{#t}}common.tsina{{/t}}</label>
                         <div class="col-5">
                               <input style="width: 100px" pattern="[0-9,\.\%]+" class="form-control" zippy="weditprice"/>
                           
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                      <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="weditdescription">Опис</label>
+                        <label class="col-5 col-form-label" for="weditdescription">{{#t}}common.opys{{/t}}</label>
                         <div class="col-7">
                             <textarea style="height:100px" class="form-control" zippy="weditdescription"></textarea>
                         </div>
@@ -106,7 +106,7 @@
                             
                     <div class="    mt-4   ">
                          <input zippy="weditcancel"   value="Скасувати" class="btn btn-secondary ms-4 "> 
-                         <input   type="submit" value="Зберегти" class="btn btn-primary  ">
+                         <input   type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                    </div>                            
                </form>   
             </div>

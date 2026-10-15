@@ -1,19 +1,19 @@
 <html>
      <head>
-        <title> Журнал прибутків та видатків  </title>
+        <title> {{#t}}register.iostate.zhurnal_prybutkiv_ta_vydatkiv{{/t}}  </title>
 
     </head>
   <body>      
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Журнал прибутків та видатків</h3>
+                <h3>{{#t}}register.iostate.zhurnal_prybutkiv_ta_vydatkiv{{/t}}</h3>
                 <b> <i class="fa fa-repeat"></i>
                   {{^bmode}}
-                 <a zippy="bmode">Режим Книги обліку прибутків та видатків</a> <small data-label="bmode">Для системи загального оподаткування</small>
+                 <a zippy="bmode">{{#t}}register.iostate.rezhym_knyhy_obliku_prybutkiv_ta{{/t}}</a> <small data-label="bmode">{{#t}}register.iostate.dlia_systemy_zahalnoho_opodatkuvannia{{/t}}</small>
                   {{/bmode}}
                    {{#bmode}}
-                 <a zippy="jmode">Режим повного журналу</a>
+                 <a zippy="jmode">{{#t}}register.iostate.rezhym_povnoho_zhurnalu{{/t}}</a>
                   {{/bmode}}
                 </b> 
                 </div>
@@ -22,14 +22,14 @@
                         <div class="row row-cols-sm-auto g-2 align-items-start ">
                           <div class="col-12">
                            <div class="input-group">
-                            <label   for="from"> З </label>
+                            <label   for="from"> {{#t}}common.z{{/t}} </label>
                             <input type="text" class="form-control    " zippy="from" style="width:110px">
                            </div>
                           </div>
                            <div class="col-12">
                            <div class="input-group">
                              
-                           <label   for="to"> по </label>
+                           <label   for="to"> {{#t}}common.po{{/t}} </label>
                           
                           <input type="text" class="form-control    " zippy="to" style="width:110px">
                            </div>
@@ -39,26 +39,26 @@
                           <div class="col-12">
                            <div class="input-group">
             
-                        <label   for="fuser"> автор </label>
+                        <label   for="fuser"> {{#t}}register.iostate.avtor{{/t}} </label>
                          
                           <select class="form-select  " zippy="fuser">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                          </div>
                          </div>
                          <div class="col-12">
                            <div class="input-group">
                          
-                        <label   for="ftype"> тип </label>
+                        <label   for="ftype"> {{#t}}common.typ_2{{/t}} </label>
                           
                           <select class="form-select  " zippy="ftype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                          </div>
                          </div>
                        {{/bmode}}
                         <div class="col-12  ">
-                           <input type="submit" zippy="bfilter" class="  btn btn-success  " value="ОК">
+                           <input type="submit" zippy="bfilter" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                         </div> 
                       </div>
                      
@@ -72,34 +72,34 @@
                          <div class="col-12">
                            <div class="input-group">
  
-                             <label   for="docnumber"> Документ </label>
+                             <label   for="docnumber"> {{#t}}common.dokument{{/t}} </label>
                          
-                             <input style="width:125px" required="on" placeholder="Номер документа" class="form-control  me-2  " zippy="docnumber"  >
+                             <input style="width:125px" required="on" placeholder="{{#t}}common.nomer_dokumenta{{/t}}" class="form-control  me-2  " zippy="docnumber"  >
                            </div>
                            </div>
                          <div class="col-12">
                            <div class="input-group">
-                          <label   for="docio"> Тип </label>
+                          <label   for="docio"> {{#t}}common.typ{{/t}} </label>
                           <select class="form-select me-2" zippy="docio">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                           </select>
                          </div>
                         </div>
                          <div class="col-12">
                            <div class="input-group">
-                              <label for="docdate">Дата:</label>
+                              <label for="docdate">{{#t}}register.iostate.data{{/t}}</label>
                               <input   class="form-control  " type="text" zippy="docdate"  >
                           </div>
                           </div>
                         <div class="col-12">
                            <div class="input-group">
-                            <label   for="docamount"> Сума </label>
+                            <label   for="docamount"> {{#t}}common.suma{{/t}} </label>
                             <input style="width:75px" required="on"   class="form-control  me-2  " zippy="docamount"  >
                            </div>
                           </div>
                           
                           <div class="col-12  ">
-                             <input type="submit" class="  btn btn-success  " value="Додати">
+                             <input type="submit" class="  btn btn-success  " value="{{#t}}common.dodaty{{/t}}">
                         </div>
                         </div>
                      
@@ -117,25 +117,25 @@
             <div class="col-12 col-md-8 col-xl-6">
 
                   {{#bmode}} 
-                     <small class="compact"><i class="fa fa-exclamation-triangle"></i> В  режимі книги витрати - собівартість реалізованого товару (а не  закупка). Редагування впливає тільки на  формування  книги. Оригінальні документи і касові операції не  змінюються</small>
+                     <small class="compact"><i class="fa fa-exclamation-triangle"></i> {{#t}}register.iostate.v_rezhymi_knyhy_vytraty_sobivartist{{/t}}</small>
                   {{/bmode}} 
                 <br>
                   {{^bmode}} 
-                <a zippy="csv">Експорт у Excel</a>
+                <a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
                  {{/bmode}} 
                   {{#bmode}} 
-                <a zippy="viewbook"><i class="fa fa-book"></i> Перегляд Книги</a>
+                <a zippy="viewbook"><i class="fa fa-book"></i> {{#t}}register.iostate.perehliad_knyhy{{/t}}</a>
                   {{/bmode}} 
 
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Дата</th>
-                        <th>Номер</th>
-                        <th class="text-end">Дохід</th>
-                        <th class="text-end">Витрата</th>
-                        <th>Автор</th>     
-                        <th>Тип прибутку/видатку</th>
+                        <th>{{#t}}common.data{{/t}}</th>
+                        <th>{{#t}}common.nomer{{/t}}</th>
+                        <th class="text-end">{{#t}}register.iostate.dokhid{{/t}}</th>
+                        <th class="text-end">{{#t}}register.iostate.vytrata{{/t}}</th>
+                        <th>{{#t}}common.avtor{{/t}}</th>     
+                        <th>{{#t}}register.iostate.typ_prybutku_vydatku{{/t}}</th>
                         <th></th>
                         <th></th>
                         
@@ -155,14 +155,14 @@
                       
                         <td  >
 
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
                       
                         </td>
                          <td  >
 
                             {{#bmode}} 
                           
-                             <a zippy="delete" title="Видалити"><i class="fa fa-trash text-danger"></i></a>
+                             <a zippy="delete" title="{{#t}}common.vydalyty{{/t}}"><i class="fa fa-trash text-danger"></i></a>
                              {{/bmode}} 
 
                         </td>
@@ -182,9 +182,9 @@
             <div class="col-12">
                 <table   class="ctanle">
                   
-                   <tr><td style="width:100px"  >Дохід  </td><td class="text-end"><b> {{totalin}} </b> </td></tr>
-                   <tr><td style="width:100px"  >Видатки </td><td class="text-end"><b>{{totalout}}</b></td></tr>
-                   <tr><td style="width:100px"  >Прибуток </td><td class="text-end"><b>{{totaldiff}}</b></td></tr>
+                   <tr><td style="width:100px"  >{{#t}}register.iostate.dokhid{{/t}}  </td><td class="text-end"><b> {{totalin}} </b> </td></tr>
+                   <tr><td style="width:100px"  >{{#t}}print.paybalance.vydatky{{/t}} </td><td class="text-end"><b>{{totalout}}</b></td></tr>
+                   <tr><td style="width:100px"  >{{#t}}common.prybutok{{/t}} </td><td class="text-end"><b>{{totaldiff}}</b></td></tr>
 
                 </table>
             </div>
@@ -194,8 +194,8 @@
              <br><hr><br>
              <div zippy="bookrep" class="col-12  ">
                  
-                 <a href="/index.php?p=App/Pages/ShowReport&arg=xls/iobook" target="_blank"  >Експорт у Excel</a>
-                 &nbsp;&nbsp;&nbsp;&nbsp;  <a style="cursor:pointer" onclick=" $('#bookrephtml').printThis();"  >Друк</a>                      
+                 <a href="/index.php?p=App/Pages/ShowReport&arg=xls/iobook" target="_blank"  >{{#t}}common.eksport_u_excel{{/t}}</a>
+                 &nbsp;&nbsp;&nbsp;&nbsp;  <a style="cursor:pointer" onclick=" $('#bookrephtml').printThis();"  >{{#t}}common.druk{{/t}}</a>                      
                   
                  <div zippy="bookrephtml"></div> 
             </div>

@@ -2,25 +2,25 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="6">
-            Рух по грошових рахунках
+            {{#t}}print.payactivity.rukh_po_hroshovykh_rakhunkakh{{/t}}
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="6">
-            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Рахунок: <strong>{{mf_name}}</strong>
+            {{#t}}print.payactivity.period_z_po_nbsp_nbsp{{/t}} <strong>{{mf_name}}</strong>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
 
-        <th align="right" style="border: solid black 1px">Поч.</th>
-        <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Витр.</th>
-        <th align="right" style="border: solid black 1px">Кін.</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.poch{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}print.itemactivity.prykh{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.vytr{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.kin{{/t}}</th>
 
     </tr>
     {{#_detail}}
@@ -38,7 +38,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Разом:</td>
+        <td align="right">{{#t}}common.razom{{/t}}</td>
 
 
         <td align="right"></td>

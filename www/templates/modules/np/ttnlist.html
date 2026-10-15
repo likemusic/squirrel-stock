@@ -1,31 +1,31 @@
 <html >
   <head>
-      <title> Стан  доставок   </title>
+      <title> {{#t}}mod.np.ttnlist.stan_dostavok{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   col-xl-10"  >
 
-                <h3>Стан  доставок</h3>
-                <small>ТТН в  стані Готовий до відправки та В доставці</small>
+                <h3>{{#t}}mod.np.ttnlist.stan_dostavok{{/t}}</h3>
+                <small>{{#t}}mod.np.ttnlist.ttn_v_stani_hotovyi_do{{/t}}</small>
                     <div class="col-12 col-md-10 col-xl-8" >
               
                             <div class="navbar">
                                 <form zippy="searchform"  >
                                     <div class="row  ">
-                                    <label class="col-form-label col-auto" for="searchnumber"> ЕН </label>
+                                    <label class="col-form-label col-auto" for="searchnumber"> {{#t}}mod.np.ttnlist.en{{/t}} </label>
                                     <div class="col-auto  ">
                                       <input class="form-control me-2" type="text" zippy="searchnumber" style="width:200px">
                                     </div>
-                                    <label class="col-form-label col-auto" for="searchcust"> Покупець </label>
+                                    <label class="col-form-label col-auto" for="searchcust"> {{#t}}common.pokupets{{/t}} </label>
                                     <div class="col-auto  ">
                                     <select class="form-control select2" zippy="searchcust" >
-                                       <option value="0">Не обрано </option>
+                                       <option value="0">{{#t}}common.ne_obrano{{/t}} </option>
                                     </select>
                                     </div>
                                     <div class="col-auto  ">
-                                    <input zippy="refresh" type="submit" class=" ms-2 btn btn-success  " value="Шукати">
+                                    <input zippy="refresh" type="submit" class=" ms-2 btn btn-success  " value="{{#t}}common.shukaty{{/t}}">
                                  </div>
                                </div>
                                 </form>
@@ -37,12 +37,12 @@
             
                 <table class="table  table-sm">
                     <tr>
-                        <th>Дата</th>
-                        <th>ТТН</th>
-                        <th>Сума</th>
-                        <th>Покупець</th>
-                        <th>Експрес-накладна</th>
-                        <th>Стан</th>
+                        <th>{{#t}}common.data{{/t}}</th>
+                        <th>{{#t}}register.orderlist.ttn{{/t}}</th>
+                        <th>{{#t}}common.suma{{/t}}</th>
+                        <th>{{#t}}common.pokupets{{/t}}</th>
+                        <th>{{#t}}mod.np.ttnlist.ekspres_nakladna{{/t}}</th>
+                        <th>{{#t}}common.stan{{/t}}</th>
                         <th> </th>
                     </tr>
                     <tr zippy="doclist">
@@ -52,7 +52,7 @@
                         <td zippy="customer_name"></td>
                         <td zippy="ship_number"></td>
                         <td zippy="state"></td>
-                        <td><a target="_blank" zippy="print" title="Друк маркування"><i class="fa fa-print"></i></a> </td>
+                        <td><a target="_blank" zippy="print" title="{{#t}}mod.np.ttnlist.druk_markuvannia{{/t}}"><i class="fa fa-print"></i></a> </td>
                     </tr>
                 </table>
             </div>

@@ -142,7 +142,7 @@ class OutcomeItem extends \App\Pages\Base
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
         $this->editdetail->setVisible(true);
@@ -177,7 +177,7 @@ class OutcomeItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -188,7 +188,7 @@ class OutcomeItem extends \App\Pages\Base
         $item->sum = H::fa($item->quantity * $item->getPartion());
         
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -196,7 +196,7 @@ class OutcomeItem extends \App\Pages\Base
             $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError(__('common.nevirnyi_nomer_serii'));
                 return;
             }
         }
@@ -275,7 +275,7 @@ class OutcomeItem extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                            $this->setError(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                             return;
                         }
                     }
@@ -286,10 +286,10 @@ class OutcomeItem extends \App\Pages\Base
                 if ($sender->id == 'execdoc' && $tostore > 0) {    //создание  прихода
                     $ch = $this->_doc->getChildren('IncomeItem');
                     if (count($ch) > 0) {
-                        $this->setWarn('Вже є прибутковий документ ');
+                        $this->setWarn(__('doc.outcomeitem.vzhe_ie_prybutkovyi_dokument'));
                     } else {
                         if ($this->_doc->headerdata['store'] == $tostore) {
-                            $this->setWarn('Вибрано той самий склад');
+                            $this->setWarn(__('doc.outcomeitem.vybrano_toi_samyi_sklad'));
                         }
                         $indoc = Document::create('IncomeItem');
 
@@ -308,10 +308,10 @@ class OutcomeItem extends \App\Pages\Base
                       //  $admin  =\App\Entity\User::getByLogin('admin') ;
                      //   $indoc->user_id = $admin->user_id;
                         $indoc->user_id=0;
-                        $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
+                        $indoc->notes = __('doc.outcomeitem.na_pidstavi_zi_skladu', ['document_number' => $this->_doc->document_number]) . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
-                            $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
+                            $indoc->notes = __('doc.outcomeitem.na_pidstavi_zi_skladu_filiia', ['document_number' => $this->_doc->document_number, 'storename' => $this->_doc->headerdata['storename']]) . $br->branch_name;
                         }
 
                         $ina=0;
@@ -339,10 +339,10 @@ class OutcomeItem extends \App\Pages\Base
                         
                         
                         if ($indoc->document_id > 0) {
-                            $this->setSuccess("Створено документ " . $indoc->document_number);
+                            $this->setSuccess(__('doc.outcomeitem.stvoreno_dokument') . $indoc->document_number);
                         }
                         
-                        $this->_doc->notes = "Створено {$indoc->document_number}, на склад " . $indoc->headerdata['storename'];
+                        $this->_doc->notes = __('doc.outcomeitem.stvoreno_na_sklad', ['document_number' => $indoc->document_number]) . $indoc->headerdata['storename'];
           
                         $this->_doc->save();
                         
@@ -377,23 +377,23 @@ class OutcomeItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
 
@@ -434,7 +434,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
 
@@ -443,7 +443,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $item = Item::getFirst("disabled = 0 and item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {
-            $this->setError('Товар не знайдено');
+            $this->setError(__('common.tovar_ne_znaideno'));
             return;
         }
 

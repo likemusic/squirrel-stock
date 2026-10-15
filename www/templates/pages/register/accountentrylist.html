@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title> Журнал проводок  </title>
+        <title> {{#t}}register.accountentrylist.zhurnal_provodok{{/t}}  </title>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Журнал проводок</h3>
+                <h3>{{#t}}register.accountentrylist.zhurnal_provodok{{/t}}</h3>
 
 
                 
@@ -16,7 +16,7 @@
                           <div class="col-12">
                            <div class="input-group">
                   
-                    <label   for="from"> З </label>
+                    <label   for="from"> {{#t}}common.z{{/t}} </label>
                         
                           <input type="text" class="form-control    " zippy="from" style="width:110px">
                         </div>
@@ -24,7 +24,7 @@
                          <div class="col-12">
                            <div class="input-group">
                         
-                        <label   for="to"> По </label>
+                        <label   for="to"> {{#t}}common.po_2{{/t}} </label>
                         
                           <input type="text" class="form-control    " zippy="to" style="width:110px">
                         </div>
@@ -32,27 +32,27 @@
                          <div class="col-12">
                            <div class="input-group">
                 
-                        <label   for="facc"> Рахунок </label>
+                        <label   for="facc"> {{#t}}common.rakhunok{{/t}} </label>
                      
                           <select class="form-select  " zippy="facc">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                          </select>
                         </div>
                         </div>
                          <div class="col-12">
                            <div class="input-group">
                         
-                        <label   for="ftype"> Вибрати </label>
+                        <label   for="ftype"> {{#t}}common.vybraty{{/t}} </label>
                         
                          <select class="form-select  " zippy="ftype">
-                            <option value="0">Все</option>
-                            <option value="1">По дебету</option>
-                            <option value="2">По кредиту</option>
+                            <option value="0">{{#t}}register.accountentrylist.vse{{/t}}</option>
+                            <option value="1">{{#t}}register.accountentrylist.po_debetu{{/t}}</option>
+                            <option value="2">{{#t}}register.accountentrylist.po_kredytu{{/t}}</option>
                          </select>
                          </div>
                          </div>
                         <div class="col-12  ">
-                         <input type="submit" class="  btn btn-success  " value="ОК">
+                         <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                       </div>
                       </div>
                     </form>
@@ -64,16 +64,16 @@
             <div class="col-12 col-md-6 col-xl-4">
 
 
-                <br><a zippy="csv">Експорт у Excel</a>
+                <br><a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
 
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Дата</th>
-                        <th>Дебет</th>
-                        <th>Кредит</th>
-                        <th class="text-end">Сума</th>
-                        <th>Документ</th>
+                        <th>{{#t}}common.data{{/t}}</th>
+                        <th>{{#t}}common.debet{{/t}}</th>
+                        <th>{{#t}}common.kredyt{{/t}}</th>
+                        <th class="text-end">{{#t}}common.suma{{/t}}</th>
+                        <th>{{#t}}common.dokument{{/t}}</th>
                         <th></th>
                         <th></th>
 
@@ -91,7 +91,7 @@
                         <td ><small zippy="notes"></small></td>
                         <td  >
 
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
 
 
                         </td>

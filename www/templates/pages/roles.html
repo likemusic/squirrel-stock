@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Ролі користувачів   </title>
+        <title> {{#t}}app.roles.roli_korystuvachiv{{/t}}   </title>
 
     </head>
 
@@ -9,17 +9,17 @@
 
 
             <div zippy="listpan" class="col-12 col-md-6 col-xl-4">
-                <h3>Ролі користувачів</h3>
-                <a zippy="addnew" class="btn btn-success  ">Додати</a>
+                <h3>{{#t}}app.roles.roli_korystuvachiv{{/t}}</h3>
+                <a zippy="addnew" class="btn btn-success  ">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table   table-striped table-sm ">
            
                         <tr zippy="rolerow">
                             <td zippy="rolename"></td>
-                            <td><span title="Користувачів" zippy="cnt" class="badge text-bg-success rounded-pill "></span></td>
+                            <td><span title="{{#t}}app.roles.korystuvachiv{{/t}}" zippy="cnt" class="badge text-bg-success rounded-pill "></span></td>
 
 
-                            <td><a title="Права доступу" zippy="acl"><i class="fa fa-user-lock"></i></a></td>
-                            <td><a title="Меню швидкого доступу" zippy="smenu"><i class="fa fa-ellipsis-v"></i></a></td>
+                            <td><a title="{{#t}}app.roles.prava_dostupu{{/t}}" zippy="acl"><i class="fa fa-user-lock"></i></a></td>
+                            <td><a title="{{#t}}app.roles.meniu_shvydkoho_dostupu{{/t}}" zippy="smenu"><i class="fa fa-ellipsis-v"></i></a></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -30,27 +30,27 @@
 
 
             <div zippy="editpanname" class="col-12 col-sm-8 col-md-4 col-zl-3  ">
-                <h4> Редагування ролі</h4>
+                <h4> {{#t}}app.roles.redahuvannia_roli{{/t}}</h4>
                 <form zippy="editformname" role="form">
                     <div class="mb-2">
-                        <label for="editname">Назва</label>
+                        <label for="editname">{{#t}}common.nazva{{/t}}</label>
                         <input class="form-control" zippy="editname"  required="on" >
 
                     </div>
                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                    <label class="form-check-label" for="editdisabled">{{#t}}common.ne_vykorystovuietsia{{/t}}</label>
                 </div>                        
                     <div class="mb-2">
-                          <a zippy="cancelname" class="btn btn-secondary    ">Скасувати</a>
-                        <button type="submit" class="btn btn-primary ms-4  ">Зберегти</button>
+                          <a zippy="cancelname" class="btn btn-secondary    ">{{#t}}common.skasuvaty{{/t}}</a>
+                        <button type="submit" class="btn btn-primary ms-4  ">{{#t}}common.zberehty{{/t}}</button>
 
                     </div>
                 </form>
             </div>
 
             <div zippy="editpan" class="col-12 col-sm-10   ">
-                <h4> Редагування доступу</h4>
+                <h4> {{#t}}app.roles.redahuvannia_dostupu{{/t}}</h4>
                 <form zippy="editform" role="form">
 
 
@@ -59,39 +59,39 @@
                         <div class="col-md-6 col-xl-5">
 
                             <div class="mb-2" zippy="metaaccess">
-                                &nbsp;<b><i class="fa fa-eye"></i></b> <span>Тільки перегляд</span><br>
+                                &nbsp;<b><i class="fa fa-eye"></i></b> <span>{{#t}}app.roles.tilky_perehliad{{/t}}</span><br>
                                 &nbsp;<b><i class="fa fa-edit"></i></b>
-                                <span>Створення та редагування без права проведення.</span><br>
-                                &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Зміна статусу (крім видалення та відміни). Наприклад, менеджер створює наряд, а виконавець тільки переводить статус</span><br>
+                                <span>{{#t}}app.roles.stvorennia_ta_redahuvannia_bez_prava{{/t}}</span><br>
+                                &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>{{#t}}app.roles.zmina_statusu_krim_vydalennia_ta{{/t}}</span><br>
                                 &nbsp;<b><i class="fa fa-gavel"></i></b>
-                                <span>Створення, затвердження та виконання.</span><br>
-                                &nbsp;<b><i class="fa fa-undo"></i></b> <span>Відміна проведення</span><br>
-                                &nbsp;<b><i class="fa fa-trash"></i></b> <span>Видалення</span><br>
+                                <span>{{#t}}app.roles.stvorennia_zatverdzhennia_ta_vykonannia{{/t}}</span><br>
+                                &nbsp;<b><i class="fa fa-undo"></i></b> <span>{{#t}}app.roles.vidmina_provedennia{{/t}}</span><br>
+                                &nbsp;<b><i class="fa fa-trash"></i></b> <span>{{#t}}app.roles.vydalennia{{/t}}</span><br>
 
                                 <table class="table table-sm  table-hover ms-4">
                                     <tr>
-                                        <th>Сторінка</th>
-                                        <th>Тип</th>
+                                        <th>{{#t}}app.roles.storinka{{/t}}</th>
+                                        <th>{{#t}}common.typ{{/t}}</th>
                                         <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-eye"></i></th>
                                         <th onclick=" $('.editacc').prop('checked', $('.editacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-edit"></i>
                                         </th>
                                         <th onclick=" $('.stateacc').prop('checked', $('.stateacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-exchange-alt"></i>
                                         </th>
 
                                         <th onclick=" $('.exeacc').prop('checked', $('.exeacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-gavel"></i></th>
                                         <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-undo"></i></th>
                                         <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked') == false);"
-                                            style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                            style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                                 class="fa fa-trash"></i></th>
                                     </tr>
                                     <tr zippy="metarow">
@@ -110,9 +110,9 @@
 
                             </div>
                             <div class="  d-flex  justify-content-end">
-                            <a zippy="cancel" class="btn btn-secondary   me-4  ">Скасувати</a>
+                            <a zippy="cancel" class="btn btn-secondary   me-4  ">{{#t}}common.skasuvaty{{/t}}</a>
                             
-                                <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                                <button type="submit" class="btn btn-primary   ">{{#t}}common.zberehty{{/t}}</button>
                                
                             </div>
                         </div>
@@ -125,16 +125,16 @@
                                    
                                      <tr>
                                         <td colspan="2">
-                                             Доступ до контрагентів 
+                                             {{#t}}app.roles.dostup_do_kontrahentiv{{/t}} 
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
                                        
                                         <select zippy="editcusttype" class="form-control  ">
-                                            <option value="0">Всі </option>
-                                            <option value="1">Покупці</option>
-                                            <option value="2">Постачальники</option>
+                                            <option value="0">{{#t}}common.vsi{{/t}} </option>
+                                            <option value="1">{{#t}}common.pokuptsi{{/t}}</option>
+                                            <option value="2">{{#t}}common.postachalnyky{{/t}}</option>
                                         
                                         </select>                                        </td> 
                                        </tr> 
@@ -143,7 +143,7 @@
                                             <input class="form-check-input" type="checkbox" zippy="editnoshowpartion">
                                            </td> 
                                            <td> 
-                                            <label class="form-check-label ms-sm-2" for="editnoshowpartion"> Не показувати закупівельні ціни</label>
+                                            <label class="form-check-label ms-sm-2" for="editnoshowpartion"> {{#t}}app.roles.ne_pokazuvaty_zakupivelni_tsiny{{/t}}</label>
                                         </td> 
                                        </tr> 
                                        
@@ -152,7 +152,7 @@
                                             <input class="form-check-input" type="checkbox" zippy="editcanevent">
                                              </td> 
                                            <td> 
-                                          <label class="form-check-label ms-sm-2" for="editcanevent"> Може  створювати завдання іншим користувачам</label>
+                                          <label class="form-check-label ms-sm-2" for="editcanevent"> {{#t}}app.roles.mozhe_stvoriuvaty_zavdannia_inshym_korys{{/t}}</label>
                                         </td> 
                                            
                                        </tr>
@@ -161,7 +161,7 @@
                                             <input class="form-check-input" type="checkbox" zippy="editdashboard">
                                              </td> 
                                            <td> 
-                                          <label class="form-check-label ms-sm-2" for="editdashboard"> Показувати  віджети на дашборді</label>
+                                          <label class="form-check-label ms-sm-2" for="editdashboard"> {{#t}}app.roles.pokazuvaty_vidzhety_na_dashbordi{{/t}}</label>
                                         </td></tr> 
                                      {{#usebranch}}
                                       <tr> <td>
@@ -169,7 +169,7 @@
                                            <input class="form-check-input" type="checkbox" zippy="editshowotherstores">
                                             </td> 
                                            <td> 
-                                          <label class="form-check-label ms-sm-2" for="editshowotherstores"> Доступ до складів інших філій</label>
+                                          <label class="form-check-label ms-sm-2" for="editshowotherstores"> {{#t}}app.roles.dostup_do_skladiv_inshykh_filii{{/t}}</label>
                                          </td> 
                                            
                                        </tr>
@@ -180,7 +180,7 @@
 
                                     <tr>
                                         <td colspan="2">
-                                            <b>Доступ до модулів</b>
+                                            <b>{{#t}}app.roles.dostup_do_moduliv{{/t}}</b>
                                         </td>
                                     </tr>
 
@@ -190,8 +190,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editocstore">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editocstore"> Інтеграція з
-                                                опенкарт</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editocstore"> {{#t}}app.admin.intehratsiia_z_openkart{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/ocstore}}
@@ -201,8 +200,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
                                             </td> 
-                                           <td> <label class="form-check-label ms-sm-2" for="editwoocomerce"> Інтеграція з
-                                                Woocomerce</label>
+                                           <td> <label class="form-check-label ms-sm-2" for="editwoocomerce"> {{#t}}app.roles.intehratsiia_z_woocomerce{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/woocomerce}}
@@ -213,8 +211,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="edithoroshop">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editwoocomerce"> Інтеграція з
-                                                Хорошоп</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editwoocomerce"> {{#t}}app.admin.intehratsiia_z_khoroshop{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/horoshop}}
@@ -226,7 +223,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editshop">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editshop"> Онлайн каталог </label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editshop"> {{#t}}common.onlain_kataloh{{/t}} </label>
                                         </td>
                                     </tr>
                                     {{/shop}}
@@ -236,7 +233,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editnote">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editnote"> База знань </label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editnote"> {{#t}}common.baza_znan{{/t}} </label>
                                         </td>
                                     </tr>
                                     {{/note}}
@@ -246,8 +243,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editissue">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editissue"> Проекти та
-                                                завдання </label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editissue"> {{#t}}common.proekty_ta_zavdannia{{/t}} </label>
                                         </td>
                                     </tr>
                                     {{/issue}}
@@ -257,7 +253,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editppo">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editppo"> Програмний РРО </label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editppo"> {{#t}}app.roles.prohramnyi_rro{{/t}} </label>
                                         </td>
                                     </tr>
                                     {{/ppo}}
@@ -267,7 +263,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editnp">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editnp">Нова Пошта</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editnp">{{#t}}app.base.nova_poshta{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/np}}
@@ -299,7 +295,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editvk">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editvk">ВчасноКаса</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editvk">{{#t}}common.vchasnokasa{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/vkassa}}
@@ -311,7 +307,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editvdoc">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editvdoc">Вчасно Документооборот</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editvdoc">{{#t}}app.base.vchasno_dokumentooborot{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/vdoc}}
@@ -321,7 +317,7 @@
 
                                             <input class="form-check-input" type="checkbox" zippy="editdf">
                                            </td> 
-                                           <td>  <label class="form-check-label ms-sm-2" for="editdf">Дропшипінг та  фулфілмент</label>
+                                           <td>  <label class="form-check-label ms-sm-2" for="editdf">{{#t}}common.dropshypinh_ta_fulfilment{{/t}}</label>
                                         </td>
                                     </tr>
                                     {{/df}}
@@ -336,8 +332,8 @@
             </div>
 
             <div zippy="editpanmenu" class="col-12   col-md-8 col-xl-6  ">
-                <h4> Меню швидкого доступу</h4>
-                <small>Після редагування необхідно перелогінитись. Меню не доступно на малих екранах</small>
+                <h4> {{#t}}app.roles.meniu_shvydkoho_dostupu{{/t}}</h4>
+                <small>{{#t}}app.roles.pislia_redahuvannia_neobkhidno_perelohin{{/t}}</small>
                 <form zippy="editformmenu" role="form">
                     <div class="mb-2">
 
@@ -355,8 +351,8 @@
 
                     </div>
                     <div class="   d-flex  justify-content-end">
-                            <a zippy="cancelmenu" class="btn btn-secondary   me-4  ">Скасувати</a>
-                        <button type="submit" class="btn btn-primary  ">Зберегти</button>
+                            <a zippy="cancelmenu" class="btn btn-secondary   me-4  ">{{#t}}common.skasuvaty{{/t}}</a>
+                        <button type="submit" class="btn btn-primary  ">{{#t}}common.zberehty{{/t}}</button>
                    
                     </div>
                 </form>

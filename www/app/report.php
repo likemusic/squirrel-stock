@@ -40,7 +40,7 @@ class Report
 
 
         if (strlen($template) == 0) {
-            return "Файл  форми друку " . $this->_template . " не знайдений";
+            return __('app.report.fail_formy_druku') . $this->_template . __('app.report.ne_znaidenyi');
         }
         $header['t'] = $header['t'] ?? new \App\Translator();   // перевод в печатных формах: {{#t}}ключ{{/t}}
         $m = new \Mustache_Engine();

@@ -12,7 +12,7 @@ class Helper
 {
     public static function getBreadScrumbs($id) {
 
-        $bs = "<li class=\"breadcrumb-item\"><a href='/shop'>Каталог</a></li>";
+        $bs = __('mod.shop.helper.kataloh');
         $g = Category::load($id);
         if ($g != null) {
             $gl = $g->getParents();
@@ -131,12 +131,12 @@ class Helper
     // список  типов  атрибутов товара
     public static function getAttributeTypes() {
 
-        return array(1 => "Є/Немає",
+        return array(1 => __('mod.shop.helper.ie_nemaie'),
             //  2 => "Число"  ,
-                     3 => "Перелік",
-                     4 => "Набір",
-                     5 => "Строка",
-                     6 => "Кастомне"
+                     3 => __('common.perelik'),
+                     4 => __('mod.shop.helper.nabir'),
+                     5 => __('mod.shop.helper.stroka'),
+                     6 => __('mod.shop.helper.kastomne')
         );
     }
 

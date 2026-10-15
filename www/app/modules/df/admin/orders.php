@@ -24,7 +24,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'df') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -36,7 +36,7 @@ class Orders extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
        
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Закриті',2 => 'Всі'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.zakryti'),2 => __('common.vsi')), 0));
         $this->filter->add(new DropDownChoice('fpartner', \App\Entity\Customer::findArray("customer_name","status=0 and (detail like '%<df>1</df>%' or detail like '%<df>2</df>%'  ) ","customer_name"), 0));
         $this->filter->add(new Date('from', time() - (15 * 24 * 3600)));
         $this->filter->add(new Date('to', 0));
@@ -108,13 +108,13 @@ class Orders extends \App\Pages\Base
          
        $this->doclist->Reload() ;
        $this->docpan->setVisible(false) ;      
-       $this->setSuccess('Відправлено') ;
+       $this->setSuccess(__('common.vidpravleno')) ;
     
         $n = new \App\Entity\Notify();
         $n->user_id = $uid;
         $n->sender_id = \App\System::getUser()->user_id;
         $n->dateshow = time();
-        $n->message = "Вам  призначено замовлення {$this->_doc->document_number}  " ;
+        $n->message = __('mod.df.orders.vam_pryznacheno_zamovlennia', ['document_number' => $this->_doc->document_number]) ;
 
         $n->save();      
        

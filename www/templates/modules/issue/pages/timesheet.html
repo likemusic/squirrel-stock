@@ -1,7 +1,7 @@
 <html>
 
     <head>
-    <title> Облік часу  по  задачах  </title>
+    <title> {{#t}}mod.issue.timesheet.oblik_chasu_po_zadachakh{{/t}}  </title>
 
     </head>
 
@@ -13,37 +13,37 @@
  
 
 
-                <h3>Облік часу  по  задачах</h3>
+                <h3>{|#t|}mod.issue.timesheet.oblik_chasu_po_zadachakh{|/t|}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="from">З </label>
+                        <label class="col-form-label col-auto" for="from">{|#t|}common.z{|/t|} </label>
                         <div class="col-auto  ">
                           <input v-model="from" type="date" class="form-control ms-sm-2  "  style="width:110px">
                        </div>
 
-                        <label class="col-form-label col-auto" for="to"> по </label>
+                        <label class="col-form-label col-auto" for="to"> {|#t|}common.po{|/t|} </label>
                         <div class="col-auto  ">
                           <input v-model="to" type="date" class="form-control ms-sm-2 " style="width:110px" >
                         </div>
-                        <label class="col-form-label col-auto"   for="searchemp">виконавець </label>
+                        <label class="col-form-label col-auto"   for="searchemp">{|#t|}mod.issue.issuelist.vykonavets{|/t|} </label>
                         <div class="col-auto  ">
                         <select v-model="user_id" class="form-control  me-2  " >
-                            <option value="0">Не обрано</option>
+                            <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                             <option v-for="u in users" :value="u.key">{{u.value}}</option>
                          
                             
                         </select> 
                         </div>
-                        <label class="col-form-label col-auto" for="searchproject"> проект </label>
+                        <label class="col-form-label col-auto" for="searchproject"> {|#t|}mod.issue.issuelist.proekt{|/t|} </label>
                         <div class="col-auto  ">
                         <select v-model="project_id" class="form-control me-2" zippy="searchproject">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                             <option v-for="p in projects" :value="p.key">{{p.value}}</option>
                         </select>
                         </div>
                         <div class="col-auto  ">
-                        <input   v-on:click.prevent="onFilter" type="button" class="  btn btn-success  " value="ОК">
+                        <input   v-on:click.prevent="onFilter" type="button" class="  btn btn-success  " value="{|#t|}common.ok{|/t|}">
                       </div></div>
                     </form>
                 </div>
@@ -53,11 +53,11 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#ttable">Облік часу</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#ttable">{|#t|}app.base.oblik_chasu{|/t|}</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-bs-toggle="tab" href="#tstat"> Статистика </a>
+                        <a class="nav-link " data-bs-toggle="tab" href="#tstat"> {|#t|}common.statystyka{|/t|} </a>
                       </li>
                       
                   </ul>
@@ -65,19 +65,19 @@
                     <div class="tab-pane  show active "  id="ttable"> 
                       <div class="col-12 col-md-8 col-xl-10">       
                
-                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Додати</a>
+                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">{|#t|}common.dodaty{|/t|}</a>
 
           <table class="table   table-sm table-hover">
                                 <tr>
 
-                                    <th>Дата</th>
-                                    <th>Час</th>
+                                    <th>{|#t|}common.data{|/t|}</th>
+                                    <th>{|#t|}service.armfood.chas{|/t|}</th>
 
-                                    <th>Виконавець</th>
-                                    <th>Завдання</th>
+                                    <th>{|#t|}common.vykonavets{|/t|}</th>
+                                    <th>{|#t|}common.zavdannia{|/t|}</th>
 
-                                    <th>Проект</th>
-                                    <th>Коментар</th>
+                                    <th>{|#t|}mod.issue.issuelist.proekt_2{|/t|}</th>
+                                    <th>{|#t|}common.komentar{|/t|}</th>
 
                                     <th ></th>
 
@@ -96,7 +96,7 @@
                                     <td>
 
                                         
-                                        <a  v-on:click.prevent="del(t.id)"  title="Видалити"><i class="fa fa-trash"></i></a>
+                                        <a  v-on:click.prevent="del(t.id)"  title="{|#t|}common.vydalyty{|/t|}"><i class="fa fa-trash"></i></a>
 
                                     </td>
 
@@ -109,7 +109,7 @@
                     </div>
                    <div class="tab-pane    "  id="tstat"> 
                      <div class="col-12 col-md-8 col-xl-5">       
-                        <h4>Статистика </h4>
+                        <h4>{|#t|}common.statystyka{|/t|} </h4>
                        <table   class="table   table-sm     ">
 
                         <tr v-for="s in stat"  >
@@ -118,7 +118,7 @@
                             <td style="width:100px;"  class="text-end">{{s.amount}}</td>
                         </tr>
                         <tr>
-                            <td  colspan="2" class="text-end text-bold">Всього:</td>
+                            <td  colspan="2" class="text-end text-bold">{|#t|}common.vsoho{|/t|}</td>
                             <td  class="text-end  text-bold">{{total}}</td>
                         </tr>
                     </table>
@@ -134,45 +134,45 @@
  
       <div class="modal-body">
 
-                    <h4 v-show="edited>0">Редагування</h4>
-                    <h4 v-show="edited==0">Новий запис</h4>    
+                    <h4 v-show="edited>{|#t|}app.timesheet.0_redahuvannia{|/t|}</h4>
+                    <h4 v-show="edited==0">{|#t|}app.timesheet.novyi_zapys{|/t|}</h4>    
                 <form zippy="editform">
                     <div class="mb-2"  v-show="isadmin">
-                        <label   for="edituser">виконавець </label>
+                        <label   for="edituser">{|#t|}mod.issue.issuelist.vykonavets{|/t|} </label>
                         <select v-model="edituser" class="form-control    " >
 
-                                <option value="0">Не обрано</option>
+                                <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                         <option v-for="u in editusers" :value="u.key">{{u.value}}</option>
                          
                             
                         </select> 
                     </div>
                     <div class="mb-2">
-                        <label for="editproject">Проект</label>
+                        <label for="editproject">{|#t|}mod.issue.issuelist.proekt_2{|/t|}</label>
                         <select   v-model="editproject" class="form-control  "  >
-                            <option value="0">Не обрано</option>
+                            <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                              <option v-for="p in editprojects" :value="p.key">{{p.value}}</option>
                                              
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="editissue">Завдання</label>
+                        <label for="editissue">{|#t|}common.zavdannia{|/t|}</label>
                         <select v-model="editissue" class="form-control   "  >
-                                   <option value="0">Не обрано</option>
+                                   <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                       <option v-for="i in editissues" :value="i.key">{{i.value}}</option>
                       
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="editdate">Дата</label>
+                        <label for="editdate">{|#t|}common.data{|/t|}</label>
                          <input v-model="editdate" type="date"  class="form-control" >
                     </div>
                     <div class="mb-2">
-                        <label for="edittime">Годин</label>
+                        <label for="edittime">{|#t|}print.task.hodyn{|/t|}</label>
                         <input v-model="edittime" required="required" pattern="[0-9,\.]+" style="width:100px;" zippy="ehours" class="form-control qtyprice">
                     </div>
                     <div class="mb-2">
-                        <label for="editnotes">Коментар</label>
+                        <label for="editnotes">{|#t|}common.komentar{|/t|}</label>
                         <input v-model="editnotes" class="form-control">
                     </div>
              
@@ -180,8 +180,8 @@
                 </form>
                  </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{|#t|}common.skasuvaty{|/t|}</button>
+                <button v-on:click.prevent="save" type="button" class="btn btn-primary">{|#t|}common.zberehty{|/t|}</button>
               </div>
             </div>
           </div>

@@ -59,7 +59,7 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
 
-                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг" : '',
+                        "weight"          => $weight > 0 ? __('doc.ttn.zahalna_vaha_kh', ['weight' => $weight]) : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
@@ -202,7 +202,7 @@ class TTN extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -214,7 +214,7 @@ class TTN extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').$item->getQuantity($this->headerdata['store']) .__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
             }
 
             //продажа
@@ -337,7 +337,7 @@ class TTN extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ТТН-000000';
+        return __('doc.ttn.ttn_000000');
     }
 
     public function supportedExport() {

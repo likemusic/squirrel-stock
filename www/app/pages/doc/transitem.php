@@ -141,24 +141,24 @@ class TransItem extends \App\Pages\Base
         $fi=intval( $this->docform->fromitem->getKey() );
         $fqty=doubleval( $this->docform->fromquantity->getText());
         if ($fi == 0 ) {
-            $this->setError("  Не вибрано ТМЦ ");
+            $this->setError(__('doc.transitem.ne_vybrano_tmts'));
             return;
         } 
         $st = Stock::load($fi) ;
         if ($fqty > $st->qty ) {
-            $this->setError(" Недостатньо ТМЦ на складі");
+            $this->setError(__('doc.transitem.nedostatno_tmts_na_skladi'));
             return;
         }   
                
         if ($fqty == 0 ) {
-            $this->setError(" Не вказана  кількість ");
+            $this->setError(__('doc.transitem.ne_vkazana_kilkist'));
             return;
         }  
         
         $it = Item::load($st->item_id) ;      
         $q  =  $it->getQuantity($this->docform->store->getIntValue());
         if ($fqty > $q ) {
-            $this->setWarn(" Недостатньо ТМЦ на складі");
+            $this->setWarn(__('doc.transitem.nedostatno_tmts_na_skladi'));
         }           
         
         $st->qty= $fqty;
@@ -175,12 +175,12 @@ class TransItem extends \App\Pages\Base
         $fi=intval( $this->docform->toitem->getKey() );
         $fqty=doubleval( $this->docform->toquantity->getText());
         if ($fi == 0 ) {
-            $this->setError("  Не вибрано ТМЦ ");
+            $this->setError(__('doc.transitem.ne_vybrano_tmts'));
             return;
         } 
                      
         if ($fqty == 0 ) {
-            $this->setError(" Не вказана  кількість ");
+            $this->setError(__('doc.transitem.ne_vkazana_kilkist'));
             return;
         }   
         $it = Item::load($fi) ;
@@ -298,24 +298,24 @@ class TransItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         
         if (count( $this->_fromlist)==0 || count( $this->_tolist)==0  ) {
-            $this->setError(" Не введено ТМЦ ");
+            $this->setError(__('doc.transitem.ne_vvedeno_tmts'));
         }        
         
         foreach($this->_tolist as $it){
            if( doubleval($it->price)==0  ) {
-                $this->setError(" Не введена  ціна   ");
+                $this->setError(__('doc.transitem.ne_vvedena_tsina'));
                 break;
            }
         }

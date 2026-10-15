@@ -148,7 +148,7 @@ class PayBalance extends \App\Pages\Base
             $detailitem = array();
 
             $detailitem["out"]   = H::fa(0-$row['am']);
-            $detailitem["type"] = $pl[$row['iotype'] ] ?? 'Не вказано';
+            $detailitem["type"] = $pl[$row['iotype'] ] ?? __('common.ne_vkazano');
             $detailitem["docdet"] = false ;
             if($det) {
 

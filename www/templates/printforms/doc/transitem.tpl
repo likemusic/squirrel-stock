@@ -1,12 +1,12 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Перекомплектації ТМЦ № {{document_number}} від {{date}}</b> <br>
+            <b> {{#t}}print.transitem.perekomplektatsii_tmts_vid{{/t}}</b> <br>
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b> Зі складу:</b>  {{from}}
+            <b> {{#t}}common.zi_skladu_2{{/t}}</b>  {{from}}
         </td>
      
 
@@ -31,7 +31,7 @@
 
     <tr>
         <td colspan="4">
-            <b> На склад:</b>   {{to}}
+            <b> {{#t}}common.na_sklad_2{{/t}}</b>   {{to}}
         </td>
      
 

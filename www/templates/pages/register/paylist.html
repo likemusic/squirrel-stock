@@ -1,19 +1,19 @@
 <html>
      <head>
-        <title>  Журнал платежів </title>
+        <title>  {{#t}}register.paylist.zhurnal_platezhiv{{/t}} </title>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Журнал платежів </h3>
+                <h3>{{#t}}register.paylist.zhurnal_platezhiv{{/t}} </h3>
                    
                     <form zippy="filter"  >
                        <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
-                         <label   for="from">З </label>
+                         <label   for="from">{{#t}}common.z{{/t}} </label>
                            
                             <input type="text" class="form-control me-sm-1  " zippy="from" style="width:110px">
                          </div>
@@ -22,7 +22,7 @@
                        <div class="col-12">
                            <div class="input-group">
 
-                         <label   for="to"> по </label>
+                         <label   for="to"> {{#t}}common.po{{/t}} </label>
                            
                            <input type="text" class="form-control me-sm-1 " style="width:110px" zippy="to">
                           </div>
@@ -31,10 +31,10 @@
                          <div class="col-12">
                            <div class="input-group">
     
-                        <label   for="fmfund"> рахунок </label>
+                        <label   for="fmfund"> {{#t}}common.rakhunok_2{{/t}} </label>
                           
                       <select class="form-select  " zippy="fmfund">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                      </div>
                       </div>   
@@ -42,10 +42,10 @@
                           <div class="col-12">
                            <div class="input-group">
                         
-                        <label   for="fuser"> створив </label>
+                        <label   for="fuser"> {{#t}}register.paylist.stvoryv{{/t}} </label>
                              
                          <select class="form-select  " zippy="fuser">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
                       </div>   
@@ -53,38 +53,38 @@
                          <div class="col-12">
                            <div class="input-group">
 
-                        <label   for="fcustomer"> контрагент </label>
+                        <label   for="fcustomer"> {{#t}}register.paylist.kontrahent{{/t}} </label>
                                
-                          <input placeholder="Почніть вводити..." type="text" class="form-control  me-2 " zippy="fcustomer">
+                          <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" type="text" class="form-control  me-2 " zippy="fcustomer">
                        </div>
                       </div>     
                       
                           <div class="col-12">
                            <div class="input-group">
                        
-                            <label   for="fiostate"> тип витрат  </label>
+                            <label   for="fiostate"> {{#t}}register.paylist.typ_vytrat{{/t}}  </label>
                             
                                
                               <select class="form-select" zippy="fiostate">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                              </select>
                             </div>
                          </div>   
                         
                           <div class="col-12">
                            <div class="input-group">
-                           <label   for="fsort"> сортувати </label>
+                           <label   for="fsort"> {{#t}}register.paylist.sortuvaty{{/t}} </label>
                            
                              <select class="form-select  " zippy="fsort">
-                                <option value="0">За датою</option>
-                                <option value="1">За прибутком</option>
-                                <option value="2">За видатком</option>
+                                <option value="0">{{#t}}register.paylist.za_datoiu{{/t}}</option>
+                                <option value="1">{{#t}}register.paylist.za_prybutkom{{/t}}</option>
+                                <option value="2">{{#t}}register.paylist.za_vydatkom{{/t}}</option>
                             </select>
                         </div>
                       </div>   
                          
                        <div class="col-12">   
-                        <input type="submit" class="  btn btn-success  " value="ОК">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                       </div> 
                     </div> 
                  </form>
@@ -94,29 +94,29 @@
 
         <div class="row" zippy="tpanel">
             <div class="col-12 col-xl-10">
-                <small>Скасування оплати виконується методом  сторно користувачами  ролі admins </small>
+                <small>{{#t}}register.paylist.skasuvannia_oplaty_vykonuietsia_metodom{{/t}} </small>
 
-                <br><a zippy="csv"><i  class="fa fa-upload" ></i> Експорт у Excel</a>
-                <a zippy="import" class="ms-4"><i  class="fa fa-download" ></i> Імпорт виписок</a>
+                <br><a zippy="csv"><i  class="fa fa-upload" ></i> {{#t}}common.eksport_u_excel{{/t}}</a>
+                <a zippy="import" class="ms-4"><i  class="fa fa-download" ></i> {{#t}}register.paylist.import_vypysok{{/t}}</a>
       
                 <table class="table   table-sm   ">
                     <tr>
 
 
-                        <th>Дата</th>
-                        <th>Створив</th>
-                        <th>Рахунок</th>
-                        <th class="text-end">Прибуток</th>
-                        <th class="text-end">Видаток</th>
-                        <th>Номер</th>
-                        <th>Дата. док.</th>
+                        <th>{{#t}}common.data{{/t}}</th>
+                        <th>{{#t}}app.jobs.stvoryv{{/t}}</th>
+                        <th>{{#t}}common.rakhunok{{/t}}</th>
+                        <th class="text-end">{{#t}}common.prybutok{{/t}}</th>
+                        <th class="text-end">{{#t}}common.vydatok{{/t}}</th>
+                        <th>{{#t}}common.nomer{{/t}}</th>
+                        <th>{{#t}}register.paylist.data_dok{{/t}}</th>
                         
 
-                        <th>Контрагент</th>
+                        <th>{{#t}}common.kontrahent{{/t}}</th>
 
 
 
-                        <th>Примітка</th>
+                        <th>{{#t}}common.prymitka{{/t}}</th>
                         <th></th>
 
 
@@ -137,9 +137,9 @@
                         <td zippy="notes"></td>
 
                         <td class="text-nowrap">
-                            <a zippy="print" title="Друкувати квитанцію про оплату"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Скасування оплати"><i class="fa fa-trash"></i></a>
+                            <a zippy="print" title="{{#t}}register.paylist.drukuvaty_kvytantsiiu_pro_oplatu{{/t}}"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                            <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
+                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="{{#t}}register.paylist.skasuvannia_oplaty{{/t}}"><i class="fa fa-trash"></i></a>
 
 
                         </td>
@@ -151,9 +151,9 @@
 
                 <div zippy="pag"></div>
                  <table class="ctable" >
-                   <tr><td>Прибуток </td><td zippy="totp" class="text-end text-bold"></td></tr>
-                   <tr><td>Видаток </td><td zippy="totm" class="text-end text-bold"></td></tr>
-                   <tr><td class="text-bold">Разом </td><td zippy="tottot" class="text-end text-bold"></td></tr>
+                   <tr><td>{{#t}}common.prybutok{{/t}} </td><td zippy="totp" class="text-end text-bold"></td></tr>
+                   <tr><td>{{#t}}common.vydatok{{/t}} </td><td zippy="totm" class="text-end text-bold"></td></tr>
+                   <tr><td class="text-bold">{{#t}}register.paylist.razom{{/t}} </td><td zippy="tottot" class="text-end text-bold"></td></tr>
                  
                  </table>
                 <div class="row" id="dankor">
@@ -176,14 +176,14 @@
                         <form zippy="fnotes">
 
                             <div class="mb-2">
-                                <label for="notes">Підстава скасування</label>
+                                <label for="notes">{{#t}}register.paylist.pidstava_skasuvannia{{/t}}</label>
                                 <input type="hidden" zippy="pl_id"/>
                                 <input  required="on"  class="form-control" zippy="notes"/>
                             </div>
                             <div class="mb-2">
 
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                                <input   type="submit" value="Виконати" class="btn btn-primary ms-2 ">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{#t}}common.skasuvaty{{/t}}</button>
+                                <input   type="submit" value="{{#t}}common.vykonaty{{/t}}" class="btn btn-primary ms-2 ">
                             </div>
                         </form>
                     </div>
@@ -196,58 +196,58 @@
                 
                 <form zippy="importform" enctype="multipart/form-data"  >
                  
-                    <h4>Імпорт банківських виписок  </h4>
-                     <small>Для суми з плюсом (покупець) створюється прибутковий ордер, інакше видатковий </small>
+                    <h4>{{#t}}register.paylist.import_bankivskykh_vypysok{{/t}}  </h4>
+                     <small>{{#t}}register.paylist.dlia_sumy_z_pliusom_pokupets{{/t}} </small>
                         <div class="row">
                          <div class="col-12 col-md-4 col-xl-3">
                           
                              <div class="mb-2">
-                                <label for="bipayment">Банк</label>
+                                <label for="bipayment">{{#t}}app.account.bank{{/t}}</label>
                                  <select   zippy="bipayment" class="form-control  ">
-                                    <option value="0">Не вибраний</option>
+                                    <option value="0">{{#t}}common.ne_vybranyi{{/t}}</option>
                                 </select> 
                              </div>
                                
                         
                              <div class="mb-2">
-                                <label for="filename">Файл імпорту</label>
+                                <label for="filename">{{#t}}common.fail_importu{{/t}}</label>
                                 <input type="file" zippy="filename" class="form-control  "/>
                              </div>                  
                              <div class="  form-check">
                                 <input zippy="passfirst" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                                <label class="form-check-label" for="passfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                             </div>
                           
                                    
                       
                              <div class="mb-2">
-                                <label><b>Номери колонок Excel файлу</b> </label>
+                                <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                             </div>
                                               
                               <div class="mb-2 row">
-                                <label  class="col-8 col-form-label" for="coltran">Номер тран.  </label>
+                                <label  class="col-8 col-form-label" for="coltran">{{#t}}register.paylist.nomer_tran{{/t}}  </label>
                                 <div class="col-4">
                                     <select style="width:100px;" zippy="coltran" class="form-control  ">
                                 </select>   
                                 </div> 
                             </div>                                                                                
                              <div class="mb-2 row">
-                                <label  class="col-8 col-form-label" for="coledrpou">ЄДРПОУ контрагента  </label>
+                                <label  class="col-8 col-form-label" for="coledrpou">{{#t}}register.paylist.iedrpou_kontrahenta{{/t}}  </label>
                                 <div class="col-4">
                                     <select style="width:100px;" zippy="coledrpou" class="form-control  ">
                                 </select>   
                                 </div> 
                             </div>                                                                                
                             <div class="mb-2 row">
-                                <label  class="col-8 col-form-label" for="colsum">Сума</label>
+                                <label  class="col-8 col-form-label" for="colsum">{{#t}}common.suma{{/t}}</label>
                                 <div class="col-4">
                                     <select   zippy="colsum" class="form-control  ">
                                 </select> 
                                  </div> 
                             </div>                     
                           <div class="mb-2 row">
-                                <label  class="col-8 col-form-label" for="coldate">Дата</label>
+                                <label  class="col-8 col-form-label" for="coldate">{{#t}}common.data{{/t}}</label>
                                 <div class="col-4">
                                     <select   zippy="coldate" class="form-control  ">
                                 </select>  
@@ -255,7 +255,7 @@
                             </div>                     
                                                                              
                             <div class="mb-2 row">
-                                <label  class="col-8 col-form-label" for="colnotes">Призначення</label>
+                                <label  class="col-8 col-form-label" for="colnotes">{{#t}}register.paylist.pryznachennia{{/t}}</label>
                                 <div class="col-4">
                                     <select style="width:100px;" zippy="colnotes" class="form-control  ">
                                 </select>  
@@ -264,15 +264,15 @@
                                                                                                       
                      
                          <div class="mb-2">
-                           <a zippy="biback" class="btn btn-secondary  ms-4 " >Скасувати</a>                          
+                           <a zippy="biback" class="btn btn-secondary  ms-4 " >{{#t}}common.skasuvaty{{/t}}</a>                          
                                 
-                            <input zippy="bipreview"    type="submit" value="Завантажити" class="btn btn-primary  "> 
+                            <input zippy="bipreview"    type="submit" value="{{#t}}common.zavantazhyty{{/t}}" class="btn btn-primary  "> 
                           
                            </div>                                                                                                            
                         </div> 
                       
                         <div class="col-12 col-md-8 col-xl-6">
-                           <a zippy="biload" class="btn btn-success  ms-4 " >Імпортувати</a>                          
+                           <a zippy="biload" class="btn btn-success  ms-4 " >{{#t}}common.importuvaty{{/t}}</a>                          
                            <table class="ctable">
                               {{#ilist}}
                               <tr>

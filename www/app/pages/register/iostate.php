@@ -115,15 +115,15 @@ class IOState extends \App\Pages\Base
         $type = intval($this->docform->docio->getValue());
         $doc = Document::getFirst("  document_number = ".Document::qstr($dn) )  ;
         if($doc==null) {
-            $this->setError('Документ не знайдено') ;
+            $this->setError(__('app.admin.dokument_ne_znaideno')) ;
             return;
         }
         if($type ==0) {
-            $this->setError('Не вказаний тип') ;
+            $this->setError(__('register.iostate.ne_vkazanyi_typ')) ;
             return;
         }
         if($da == 0) {
-            $this->setError('Не введена  сума') ;
+            $this->setError(__('register.iostate.ne_vvedena_suma')) ;
             return;
         }
         
@@ -132,7 +132,7 @@ class IOState extends \App\Pages\Base
         $doc->setHD('iniostatetype',$type);
         $doc->setHD('iniostateamount',$da);
         $doc->save();
-        $this->setSuccess('Додано') ;
+        $this->setSuccess(__('register.iostate.dodano')) ;
         $this->docform->docamount->setText('');
         $this->docform->docnumber->setText('');
         $this->docform->docio->setValue(0);
@@ -320,10 +320,10 @@ class IOState extends \App\Pages\Base
           
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Прибутки'); // Optionally set a title
+        $sheet1->setTitle(__('print.paybalance.prybutky')); // Optionally set a title
      
         $sheet2 = $spreadsheet->createSheet();
-        $sheet2->setTitle('Видатки');
+        $sheet2->setTitle(__('print.paybalance.vydatky'));
          
 
         $i1 = 0;
@@ -486,10 +486,10 @@ class IOState extends \App\Pages\Base
        $header['firmname']  = $firm['firm_name']  ;          
        $header['firmcode']  = ''  ;   
        if(strlen($firm['tin']??'')>0) {
-          $header['firmcode']  = "ЄДРПОУ ". $firm['tin']  ;   
+          $header['firmcode']  = __('register.iostate.iedrpou'). $firm['tin']  ;   
        }      
        if(strlen($firm['inn']??'')>0) {
-          $header['firmcode']  = "ІПН ". $firm['inn']  ;   
+          $header['firmcode']  = __('register.iostate.ipn'). $firm['inn']  ;   
        }      
               
        $header['from']  = H::fd($from) ;          

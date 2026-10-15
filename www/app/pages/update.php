@@ -28,12 +28,12 @@ class Update extends \App\Pages\Base
         parent::__construct();
        
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
             \App\Application::RedirectError();
             return  ;
         }  
         if (System::FORK_NO_UPSTREAM_UPDATES) {
-            System::setErrorMsg('Оновлення Zippy з zippy.com.ua в SquirrelStock вимкнено: вони затерли б зміни форку');
+            System::setErrorMsg(__('app.update.onovlennia_zippy_z_zippy_com'));
             \App\Application::RedirectError();
             return  ;
         }
@@ -72,7 +72,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setError('Помилка завантаження version.json. Детальніше  в  лог файлі ') ;
+            $this->setError(__('app.update.pomylka_zavantazhennia_version_json_deta')) ;
             return  ;
         }
    
@@ -212,7 +212,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'app/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError(__('app.update.nema_prava_zapysu'));
                 return;        
             }
 
@@ -226,7 +226,7 @@ class Update extends \App\Pages\Base
         
             $response = H::getContent($this->_tvars['archive']) ;
             if($response === false) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError(__('app.update.pomylka_zavantazhennia_failu'));
          
                 return false;
             }
@@ -235,7 +235,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, $response) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка архіву');
+                $this->setError(__('app.update.pomylka_arkhivu'));
                 return;        
             }
 
@@ -247,11 +247,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError(__('app.update.pomylka_arkhivu_2'));
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess(__('app.update.faily_onovleni'))  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          
@@ -268,7 +268,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'vendor/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError(__('app.update.nema_prava_zapysu'));
                 return;        
             }
 
@@ -281,7 +281,7 @@ class Update extends \App\Pages\Base
             if($b==1) {
                 @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor.zip")) ;
             }   else {
-                $this->setError('Тільки для версій PHP > 8.1.0');
+                $this->setError(__('app.update.tilky_dlia_versii_php_8'));
                 return;  
             }
  
@@ -289,7 +289,7 @@ class Update extends \App\Pages\Base
             
               if(filesize($archive)==0) {
   
-                $this->setError('Помилка завантаження файлу');
+                $this->setError(__('app.update.pomylka_zavantazhennia_failu'));
                 return;        
             }
         
@@ -304,11 +304,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError(__('app.update.pomylka_arkhivu_2'));
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess(__('app.update.faily_onovleni'))  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          
@@ -326,7 +326,7 @@ class Update extends \App\Pages\Base
   
        $sql= file_get_contents($this->_tvars['sqlurl'] )  ;
        if(strlen($sql)==0) {
-           $this->setError('Не знайдено  файл оновлення')  ;
+           $this->setError(__('app.update.ne_znaideno_fail_onovlennia'))  ;
            return;
        }
        
@@ -361,7 +361,7 @@ class Update extends \App\Pages\Base
   
  
 
-         $this->setSuccess('БД оновлена')  ;
+         $this->setSuccess(__('app.update.bd_onovlena'))  ;
          App::RedirectURI("/index.php?p=/App/Pages/Update");
          
          
@@ -379,7 +379,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'app/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError(__('app.update.nema_prava_zapysu'));
                 return;        
             }
 
@@ -393,7 +393,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, file_get_contents($path)) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError(__('app.update.pomylka_zavantazhennia_failu'));
                 return;        
             }
          
@@ -405,11 +405,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError(__('app.update.pomylka_arkhivu_2'));
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess(__('app.update.faily_onovleni'))  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          

@@ -23,7 +23,7 @@ class MoveItem extends Document
 
             $listst = Stock::pickup($this->headerdata['store'], $item, $this->headerdata["storeemp"] );
             if (count($listst) == 0) {
-                \App\System::setErrorMsg("Недостатньо товару " . $item->itemname);
+                \App\System::setErrorMsg(__('doc.moveitem.nedostatno_tovaru') . $item->itemname);
 
                 return false;
             }
@@ -82,7 +82,7 @@ class MoveItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПТ-000000';
+        return __('doc.moveitem.pt_000000');
     }
 
 }

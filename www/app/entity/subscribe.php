@@ -95,9 +95,9 @@ class Subscribe extends \ZCL\DB\Entity
     //типы  подписок 
     public static function getEventList() {
         $list = array();
-        $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
-        $list[self::EVENT_NEWCUST]  = "Новий контрагент";
-        $list[self::EVENT_ENDDAY]   = "Кінець робочого дня";
+        $list[self::EVENT_DOCSTATE] = __('app.subscribe.zmina_statusu_dokumenta');
+        $list[self::EVENT_NEWCUST]  = __('app.subscribe.novyi_kontrahent');
+        $list[self::EVENT_ENDDAY]   = __('app.options.kinets_robochoho_dnia');
 
 
         return $list;
@@ -111,7 +111,7 @@ class Subscribe extends \ZCL\DB\Entity
         $sms = \App\System::getOptions('sms')  ;
 
         $list = array();
-        $list[self::MSG_NOTIFY] = "Текст";
+        $list[self::MSG_NOTIFY] = __('app.subscribe.tekst');
       
         $list[self::MSG_EMAIL] = "E-mail";
 
@@ -124,7 +124,7 @@ class Subscribe extends \ZCL\DB\Entity
         }
 
         if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
-            $list[self::MSG_BOT] = "Телеграм";
+            $list[self::MSG_BOT] = __('common.telehram');
         }
       
         
@@ -169,20 +169,20 @@ class Subscribe extends \ZCL\DB\Entity
 
         $list = array();
         if($et==self::EVENT_DOCSTATE) {
-           $list[self::RSV_DOCAUTHOR] = "Автор документу";
-           $list[self::RSV_DOCRESP] = "Відповідальний за документ";
-           $list[self::RSV_CUSTOMER] = "Контрагент документу";
+           $list[self::RSV_DOCAUTHOR] = __('app.subscribe.avtor_dokumentu');
+           $list[self::RSV_DOCRESP] = __('app.subscribe.vidpovidalnyi_za_dokument');
+           $list[self::RSV_CUSTOMER] = __('app.subscribe.kontrahent_dokumentu');
         }
         if($et==self::EVENT_NEWCUST) {
-           $list[self::RSV_CUSTOMER] = "Контрагент";
+           $list[self::RSV_CUSTOMER] = __('common.kontrahent');
         }
-        $list[self::RSV_SYSTEM] = "Системний лог";
-        $list[self::RSV_USER] = "Користувач системи";
+        $list[self::RSV_SYSTEM] = __('common.systemnyi_loh');
+        $list[self::RSV_USER] = __('app.subscribe.korystuvach_systemy');
         $list[self::RSV_WH] = "Web Hook";
         $list[self::RSV_EMAIL] = "E-mail";
        
         if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
-            $list[self::RSV_TG] = "Телеграм";
+            $list[self::RSV_TG] = __('common.telehram');
         }
         
          
@@ -439,7 +439,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return __('app.subscribe.pomylka_rozmitky');
         }        
     }
  
@@ -503,7 +503,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return __('app.subscribe.pomylka_rozmitky');
         }        
     }
    
@@ -558,28 +558,28 @@ class Subscribe extends \ZCL\DB\Entity
             }
 
             if ($mf->beznal == 1) {
-                $header['nal'] = "Безготівка";
+                $header['nal'] = __('common.bezhotivka');
             } else {
-                $header['nal'] = "Готівка";
+                $header['nal'] = __('common.hotivka');
             }
         } else {
             if ($doc->payamount > 0 && $doc->headerdata['payed'] == 0) {
-                $header['mf'] = "Постоплата (кредит)";
+                $header['mf'] = __('app.subscribe.postoplata_kredyt');
             }
             if ($doc->payamount == 0) {
-                $header['mf'] = "Передоплата";
+                $header['mf'] = __('app.subscribe.peredoplata');
             }
         }
         if($doc->meta_name == 'POSCheck') {
 
             if(doubleval($doc->headerdata['payedcard']) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                $header['nal'] = "Готівка";
+                $header['nal'] = __('common.hotivka');
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
                 $header['mf'] = $mf->mf_name;
 
             }
             if(doubleval($doc->headerdata['payed']) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $header['nal'] = "Безготівка";
+                $header['nal'] = __('common.bezhotivka');
                 $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
                 $header['mf'] = $mfb->mf_name;
                 if(strlen($mfb->bank)>0) {
@@ -598,7 +598,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
 
 
-                $header['nal'] = "Комбінована";
+                $header['nal'] = __('app.subscribe.kombinovana');
             }
 
         }
@@ -606,10 +606,10 @@ class Subscribe extends \ZCL\DB\Entity
         $payed= doubleval($doc->headerdata['payed'] ?? 0) + doubleval($doc->headerdata['payedcard'] ?? 0) ;
 
         if ($payed == 0 && $doc->payamount > 0) {
-            $header['mf'] = "Постоплата (кредит)";
+            $header['mf'] = __('app.subscribe.postoplata_kredyt');
         }
         if ($payed == 0 && $doc->payamount == 0) {
-            $header['mf'] = "Передоплата";
+            $header['mf'] = __('app.subscribe.peredoplata');
         }
         if ($payed > 0) {
             $header['payed'] = \App\Helper::fa($payed);
@@ -700,7 +700,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return __('app.subscribe.pomylka_rozmitky');
         }
     }
   

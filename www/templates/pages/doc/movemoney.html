@@ -1,40 +1,40 @@
 <html>
     <head>
-          <title> Переміщення коштів</title>
+          <title> {{#t}}doc.movemoney.peremishchennia_koshtiv{{/t}}</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Переміщення  коштів</h3>
+            <h3> {{#t}}doc.movemoney.peremishchennia_koshtiv{{/t}}</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
                     <div class="mb-2">
-                        <label for="paymentfrom">З рахунку</label>
+                        <label for="paymentfrom">{{#t}}doc.movemoney.z_rakhunku{{/t}}</label>
                         <select class="form-control" zippy="paymentfrom">
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="paymentto">На рахунок</label>
+                        <label for="paymentto">{{#t}}doc.movemoney.na_rakhunok{{/t}}</label>
                         <select class="form-control" zippy="paymentto">
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="amount">Сума</label>
+                        <label for="amount">{{#t}}common.suma{{/t}}</label>
                         <input  style="width:120px" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
                     </div>
 
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -46,9 +46,9 @@
 
             <div class="row">
                 <div class="col-11 col-md-7 col-xl-5 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>

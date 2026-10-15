@@ -30,7 +30,7 @@ class Admin extends \App\Pages\Base
         parent::__construct();
        
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
             \App\Application::RedirectError();
             return  ;
         }  
@@ -118,7 +118,7 @@ class Admin extends \App\Pages\Base
           
         $conn = \ZDB\DB::getConnect();
       
-        $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood','ARMFoodW') or    menugroup= ".$conn->qstr('Кафе');
+        $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood','ARMFoodW') or    menugroup= ".$conn->qstr(__('app.admin.kafe'));
         if($options['usefood']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {
@@ -126,7 +126,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
      
-        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','Prod','EmpTask' ) or    menugroup= ".$conn->qstr('Виробництво');
+        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','Prod','EmpTask' ) or    menugroup= ".$conn->qstr(__('common.vyrobnytstvo'));
         if($options['useprod']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {
@@ -142,7 +142,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
         */
-        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблік');
+        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr(__('app.admin.bukhoblik'));
       
         if($options['useacc']==1) {
             $sql="update metadata set  disabled=0 ";
@@ -167,7 +167,7 @@ class Admin extends \App\Pages\Base
         
         Session::getSession()->menu = [];       
         
-        $this->setSuccess('Збережено')  ;  
+        $this->setSuccess(__('common.zberezheno'))  ;  
         App::Redirect("\\App\\Pages\\Admin");
               
     }
@@ -183,7 +183,7 @@ class Admin extends \App\Pages\Base
         System::setOptions("common",$options) ;
         Session::getSession()->menu = [];       
         
-        $this->setSuccess('Збережено')  ; 
+        $this->setSuccess(__('common.zberezheno'))  ; 
         App::Redirect("\\App\\Pages\\Admin");               
     }
     public function sendEmail($sender) {
@@ -232,11 +232,11 @@ class Admin extends \App\Pages\Base
      
         $doc =  \App\Entity\doc\Document::getFirst("document_number=".$dn);
         if($doc==null){
-            $this->setError("Документ не знайдено")  ;
+            $this->setError(__('app.admin.dokument_ne_znaideno'))  ;
             return;
         }
         if($doc->state <5){
-            $this->setError("Документ не проведений")  ;
+            $this->setError(__('app.admin.dokument_ne_provedenyi'))  ;
             return;
         }
         $conn->BeginTrans();
@@ -255,7 +255,7 @@ class Admin extends \App\Pages\Base
 
             return;
         }
-        $this->setSuccess("Документ скасовано")  ;
+        $this->setSuccess(__('app.admin.dokument_skasovano'))  ;
          
     }        
 
@@ -273,7 +273,7 @@ class Admin extends \App\Pages\Base
           
                          
            if(strlen($origtables) == 0 ) {
-               $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
+               $this->setError(__('app.admin.struktura_dlia').System::REQUIRED_DB.__('app.admin.ne_zavantazhena')) ;
                return; 
            }  
         
@@ -301,7 +301,7 @@ class Admin extends \App\Pages\Base
            
            foreach($origtables as $i=>$o)  {
               if( !is_array($tables[$i] ?? null) ){
-                 $answer .= "Таблиця {$i} не знайдена<br>"; 
+                 $answer .= __('app.admin.tablytsia_ne_znaidena', ['i' => $i]); 
               } 
            }
        
@@ -314,7 +314,7 @@ class Admin extends \App\Pages\Base
                foreach($origtables[$i] as $c)  {
                  
                   if( !in_array($c,$cc)  ){
-                     $answer .= "Поле {$c} в {$i} не знайдено<br>"; 
+                     $answer .= __('app.admin.pole_v_ne_znaideno', ['c' => $c, 'i' => $i]); 
                   } 
                }
            }
@@ -324,7 +324,7 @@ class Admin extends \App\Pages\Base
               return; 
            }           
            
-          $this->setSuccess('Структура OK')  ;
+          $this->setSuccess(__('app.admin.struktura_ok'))  ;
     }    
     
     public function onModules($sender) {
@@ -351,7 +351,7 @@ class Admin extends \App\Pages\Base
         $modules['freg']   = $fisctype == 4 ? 1:0;
  
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         App::Redirect("\\App\\Pages\\Admin");
 
     }
@@ -400,7 +400,7 @@ class Admin extends \App\Pages\Base
 
         $file = $this->oform->ofilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -409,7 +409,7 @@ class Admin extends \App\Pages\Base
         $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-            $this->setError("Невірний  контент");
+            $this->setError(__('app.admin.nevirnyi_kontent'));
 
             return;
         }
@@ -450,7 +450,7 @@ class Admin extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("Імпортовано  ");
+        $this->setSuccess(__('app.admin.importovano'));
     }
   
     

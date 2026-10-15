@@ -50,11 +50,11 @@ class UserLogin extends \Zippy\Html\WebPage
      
         $c = Customer::getByEmail($email);
         if ($c == null) {
-            $this->setError("Користувач з таким телефоном не знайдений");
+            $this->setError(__('mod.df.userlogin.korystuvach_z_takym_telefonom_ne'));
             return;
         }
         $p= substr(bin2hex(random_bytes(8)), 0, 8);
-        $ret = \App\Comm::sendSMS($c->phone, "ZStore: новий пароль " . $p);
+        $ret = \App\Comm::sendSMS($c->phone, __('mod.df.userlogin.zstore_novyi_parol') . $p);
         if(strlen($ret ?? '')  >0) {
             \App\Helper::logerror($ret) ;
             $this->setError('SMS error') ;
@@ -63,7 +63,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $c->passw = $p;
         $c->save();
         
-        $this->setSuccess("Пароль відправлено")  ;
+        $this->setSuccess(__('mod.df.userlogin.parol_vidpravleno'))  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;
 
@@ -83,15 +83,15 @@ class UserLogin extends \Zippy\Html\WebPage
       
         $c = Customer::getByEmail($email);
         if ($c == null) {
-            $this->setError("Користувач з таким email не знайдений");
+            $this->setError(__('mod.df.userlogin.korystuvach_z_takym_email_ne'));
             return;
         }
         if ( ($c->df ??0 )  ==0) {
-            $this->setError("Нема  права  доступу");
+            $this->setError(__('mod.df.userlogin.nema_prava_dostupu'));
             return;
         }
         if (!$c->checkPassword($password)) {
-            $this->setError("Введіть пароль");
+            $this->setError(__('common.vvedit_parol'));
             return;
         }
     

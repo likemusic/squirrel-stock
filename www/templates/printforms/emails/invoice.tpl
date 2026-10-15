@@ -1,10 +1,9 @@
-Добрий день, {{customer_name}}
+{{#t}}print.invoice.dobryi_den{{/t}}
 <br>
 <br>
-Рахунок на оплату {{number}} від {{date}} на суму {{amount}}.
+{{#t}}print.invoice.rakhunok_na_oplatu_vid_na{{/t}}
 <br>
 <br>
 
-З повагою,
-{{firm_name}}
+{{#t}}print.invoice.z_povahoiu{{/t}}
 

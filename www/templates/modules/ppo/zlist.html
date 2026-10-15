@@ -1,33 +1,33 @@
 <html>
     <head>
-      <title>Журнал  Z-звітів   </title>
+      <title>{{#t}}mod.ppo.zlist.zhurnal_z_zvitiv{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10  ">
-                <h3>Журнал  Z-звітів</h3>
+                <h3>{{#t}}mod.ppo.zlist.zhurnal_z_zvitiv{{/t}}</h3>
                 <div class="card">
                     <form zippy="filter"  >
                         <div class="row  ">
-                        <label class="col-form-label col-auto" for="from">З</label>
+                        <label class="col-form-label col-auto" for="from">{{#t}}common.z{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="from">
                          </div>
-                        <label class="col-form-label col-auto" for="to">по</label>
+                        <label class="col-form-label col-auto" for="to">{{#t}}common.po{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="to">
                          </div>
-                        <label class="col-form-label col-auto" for="pos">ФН терміналу</label>
+                        <label class="col-form-label col-auto" for="pos">{{#t}}mod.ppo.zlist.fn_terminalu{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2"  type="text" zippy="pos">
                          </div>
-                        <label class="col-form-label col-auto" for="doc">ФН звіту</label>
+                        <label class="col-form-label col-auto" for="doc">{{#t}}mod.ppo.zlist.fn_zvitu{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2"   type="text" zippy="doc">
                            </div>
                           <div class="col-auto  ">
-                        <input class="btn btn-primary  " type="submit" value="ОК">
+                        <input class="btn btn-primary  " type="submit" value="{{#t}}common.ok{{/t}}">
                         </div></div>
 
                     </form>
@@ -35,25 +35,25 @@
            </div>
            <div class="col-12  col-lg-8  col-xl-6">
                  
-                <a  zippy="csv">Експорт  </a>
+                <a  zippy="csv">{{#t}}common.eksport{{/t}}  </a>
                 <table class="table  table-sm">
                 
                   <tr> 
-                    <th>Дата</th>
-                    <th>ФН. терміналу</th>
-                    <th>ФН. звіту</th>
-                    <th colspan="2" class="text-center">Реалізація</th>
-                    <th colspan="2" class="text-center">Повернення</th>
+                    <th>{{#t}}common.data{{/t}}</th>
+                    <th>{{#t}}mod.ppo.zlist.fn_terminalu_2{{/t}}</th>
+                    <th>{{#t}}mod.ppo.zlist.fn_zvitu_2{{/t}}</th>
+                    <th colspan="2" class="text-center">{{#t}}common.realizatsiia{{/t}}</th>
+                    <th colspan="2" class="text-center">{{#t}}common.povernennia{{/t}}</th>
                     <th ></th>
                   </tr>
                   <tr> 
                     <th> </th>
                     <th> </th>
                     <th> </th>
-                    <th  class="text-end">Чеків</th>
-                    <th  class="text-end">Сума</th>
-                    <th  class="text-end">Чеків</th>
-                    <th  class="text-end">Сума</th>
+                    <th  class="text-end">{{#t}}common.chekiv{{/t}}</th>
+                    <th  class="text-end">{{#t}}common.suma{{/t}}</th>
+                    <th  class="text-end">{{#t}}common.chekiv{{/t}}</th>
+                    <th  class="text-end">{{#t}}common.suma{{/t}}</th>
                     <th > </th>
                   </tr>
                   
@@ -70,7 +70,7 @@
                   <tr  >  
                     <th> </th>
                     <th> </th>
-                    <th class="text-end">Всього: </th>
+                    <th class="text-end">{{#t}}common.vsoho{{/t}} </th>
                     <th zippy="tcnt" class="text-end"> </th>
                     <th zippy="tamount" class="text-end"> </th>
                     <th zippy="trcnt" class="text-end"> </th>
@@ -86,13 +86,13 @@
          <ul class="nav nav-tabs">
   
           <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#tprint">  Друкована форма</a>
+            <a class="nav-link active" data-bs-toggle="tab" href="#tprint">  {{#t}}mod.ppo.zlist.drukovana_forma{{/t}}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " data-bs-toggle="tab" href="#txml">  Відправлений XML</a>
+            <a class="nav-link  " data-bs-toggle="tab" href="#txml">  {{#t}}mod.ppo.zlist.vidpravlenyi_xml{{/t}}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " data-bs-toggle="tab" href="#tanswer">  Відповідь  фіскального сервера</a>
+            <a class="nav-link  " data-bs-toggle="tab" href="#tanswer">  {{#t}}mod.ppo.zlist.vidpovid_fiskalnoho_servera{{/t}}</a>
           </li>
           
           </ul>
@@ -100,10 +100,10 @@
           
                 <div class="tab-pane   show active" id="tprint"> 
                    {{^usemobileprinter}}
-                   <a href="javascript:void(0)"   onclick="printform()">Друк</a>
+                   <a href="javascript:void(0)"   onclick="printform()">{{#t}}common.druk{{/t}}</a>
                    {{/usemobileprinter}}
                    {{#usemobileprinter}}
-                   <a href="/showreport/print/zreport" target="_blank">Друк</a>
+                   <a href="/showreport/print/zreport" target="_blank">{{#t}}common.druk{{/t}}</a>
                    {{/usemobileprinter}}
                    <div zippy="preview" >
                   </div>
@@ -117,7 +117,7 @@
          
                  <div zippy="axml" >
                   </div> 
-                 <a zippy="download" >Завантажити</a>
+                 <a zippy="download" >{{#t}}common.zavantazhyty{{/t}}</a>
                 </div>
                 
                 

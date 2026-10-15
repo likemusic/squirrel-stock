@@ -178,7 +178,7 @@ class PayList extends \App\Pages\Base
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pl->paydate) {
-            $this->setError("Не можна відміняти оплату раніше  " .date('Y-m-d', $da));
+            $this->setError(__('register.paylist.ne_mozhna_vidminiaty_oplatu_ranishe') .date('Y-m-d', $da));
             return;
         }
 
@@ -214,7 +214,7 @@ class PayList extends \App\Pages\Base
 
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $doc->meta_desc);
             return;
         }
 
@@ -224,10 +224,10 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
 
 
-        \App\Entity\Notify::toSystemLog("Користувач {$user->username} видалив платіж з документа {$doc->document_number}. Підстава: " . $sender->notes->getText()) ;
+        \App\Entity\Notify::toSystemLog(__('register.paylist.korystuvach_vydalyv_platizh_z_dokumenta', ['username' => $user->username, 'document_number' => $doc->document_number]) . $sender->notes->getText()) ;
 
         $sender->notes->setText('');
-        $this->setSuccess('Платіж скасовано');
+        $this->setSuccess(__('register.paylist.platizh_skasovano'));
         $this->resetURL();
     }
 
@@ -237,14 +237,14 @@ class PayList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Дата";
-        $header['B1'] = "Рахунок";
-        $header['C1'] = "Прибуток";
-        $header['D1'] = "Видаток";
-        $header['E1'] = "Документ";
-        $header['F1'] = "Створив";
-        $header['G1'] = "Контрагент";
-        $header['H1'] = "Примітка";
+        $header['A1'] = __('common.data');
+        $header['B1'] = __('common.rakhunok');
+        $header['C1'] = __('common.prybutok');
+        $header['D1'] = __('common.vydatok');
+        $header['E1'] = __('common.dokument');
+        $header['F1'] = __('app.jobs.stvoryv');
+        $header['G1'] = __('common.kontrahent');
+        $header['H1'] = __('common.prymitka');
 
         $i = 1;
         foreach ($list as $doc) {
@@ -326,13 +326,13 @@ class PayList extends \App\Pages\Base
         $passfirst =  $this->importform->passfirst->isChecked();
         $bank =  $this->importform->bipayment->getValue();
         if($bank==0){
-            $this->setError('Не вибраний банк') ;
+            $this->setError(__('register.paylist.ne_vybranyi_bank')) ;
             return;
         }
         $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не обрано файл');
+            $this->setError(__('common.ne_obrano_fail'));
             return;
         }        
         $coltran =  $this->importform->coltran->getValue();
@@ -443,7 +443,7 @@ class PayList extends \App\Pages\Base
             return;
         }     
     
-       $this->setSuccess(" Імпортовано {$cnt} строк" );
+       $this->setSuccess(__('register.paylist.importovano_strok', ['cnt' => $cnt]) );
       
        $this->importform->setVisible(false);
        $this->filter->setVisible(true);

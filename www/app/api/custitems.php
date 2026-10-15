@@ -19,7 +19,7 @@ class custitems extends JsonRPC
         if ($args['customer_id'] > 0) {
             $w .= " and customer_id=" .  intval( $args['customer_id'] );
         } else {
-            throw new \Exception('Не вказано  постачальника');            
+            throw new \Exception(__('api.custitems.ne_vkazano_postachalnyka'));            
         }
         
  

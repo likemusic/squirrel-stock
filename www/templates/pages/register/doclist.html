@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title> Журнал документів  </title>
+        <title> {{#t}}register.doclist.zhurnal_dokumentiv{{/t}}  </title>
 
     </head>
    <body>
         <div class="row">
             <div class="col-12     ">
                
-                <h3>Журнал документів
+                <h3>{{#t}}register.doclist.zhurnal_dokumentiv{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom" data-bs-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
@@ -23,13 +23,13 @@
                            <label     for="searchnumber">№ </label>
                          
                            <input autofocus="on" placeholder="{{#t}}common.ph.search{{/t}}" class="form-control  " type="search" zippy="searchnumber"
-                               autocomplete="off"      style="width:125px" title="Якщо пошук по номеру, інші елементи фільтру ігноруються">
+                               autocomplete="off"      style="width:125px" title="{{#t}}register.doclist.iakshcho_poshuk_po_nomeru_inshi{{/t}}">
                          </div>
                         </div>
                         
                             <div class="col-12">
                               <div class="input-group">
-                             <label   for="from">З </label>
+                             <label   for="from">{{#t}}common.z{{/t}} </label>
                              
                                 <input type="text" class="form-control    " zippy="from" style="width:110px">
                              </div>
@@ -38,7 +38,7 @@
                       
                                 <div class="col-12">
                                 <div class="input-group">
-                               <label   for="to"> по </label>
+                               <label   for="to"> {{#t}}common.po{{/t}} </label>
                                
                                   <input type="text" class="form-control   " style="width:110px" zippy="to">
                               </div>
@@ -46,10 +46,10 @@
                           
                              <div class="col-12">
                             <div class="input-group">
-                                <label   for="status"> Статус </label>
+                                <label   for="status"> {{#t}}common.status{{/t}} </label>
                             
                                 <select class="form-select  " zippy="status">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                             </div>
                             </div>
@@ -57,10 +57,10 @@
                             <div class="col-12">
                             <div class="input-group">
                          
-                                <label   for="doctype"> Тип </label>
+                                <label   for="doctype"> {{#t}}common.typ{{/t}} </label>
                                           
                                <select class="form-select    " zippy="doctype">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                            </div>
                            </div>
@@ -68,9 +68,9 @@
                              <div class="col-12">
                             <div class="input-group">
                         
-                                <label   for="searchcust"> Контрагент </label>
+                                <label   for="searchcust"> {{#t}}common.kontrahent{{/t}} </label>
                               
-                                  <input placeholder="Почніть вводити..." class="form-control me-1" type="text" zippy="searchcust">
+                                  <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control me-1" type="text" zippy="searchcust">
 
                            </div>
                            </div>
@@ -78,10 +78,10 @@
                            <div class="col-12">
                             <div class="input-group">
                         
-                               <label   for="author"> Автор </label>
+                               <label   for="author"> {{#t}}common.avtor{{/t}} </label>
                                                            
                                <select class="form-select    " zippy="author">
-                                        <option value="0">Не обрано</option>
+                                        <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                     </select>
                              </div>
                              </div>
@@ -89,10 +89,10 @@
                            
                         <div class="col-12">
                            <div class="input-group">
-                           <label   for="store">Склад</label>
+                           <label   for="store">{{#t}}common.sklad{{/t}}</label>
                                   
                             <select class="form-select  " zippy="store">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                          </div>
                          </div>
@@ -101,17 +101,17 @@
                             <div class="input-group">
                           
                  
-                           <label   for="mfund">Рахунок</label>
+                           <label   for="mfund">{{#t}}common.rakhunok{{/t}}</label>
                                    
                             <select class="form-select  " zippy="mfund">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                          </div>
                          </div>
                                                  
                           <div class="col-12">
                             <div class="input-group">
-                             <input class="form-control ms-2  me-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
+                             <input class="form-control ms-2  me-2" type="search" zippy="searchtext" placeholder="{{#t}}common.poshuk_po_kontentu{{/t}}"   >
 
                            </div>
                           </div>
@@ -119,8 +119,8 @@
                             <div class="input-group">
                          
                       
-                            <input type="submit" class="   btn btn-success  " value="ОК">
-                            <a class="input-group-text" zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                            <input type="submit" class="   btn btn-success  " value="{{#t}}common.ok{{/t}}">
+                            <a class="input-group-text" zippy="erase" title="{{#t}}common.skynuty_filtr{{/t}}"><i class="fa fa-eraser"></i></a>
                             
                         </div>
                        </div>
@@ -129,24 +129,24 @@
 
                     </form>
              
-                <a zippy="csv">Експорт в Excel</a>
+                <a zippy="csv">{{#t}}common.eksport_v_excel{{/t}}</a>
                 <div class="table-responsive-lg  "    >
                   
                 <table class="table   table-sm  table-hover   ">
                   <thead>  <tr>
                         <th></th>
 
-                         <th class="text-nowrap  "><a zippy="sortdoc">Тип документа</a></th>
-                        <th  ><a zippy="sortnum">Номер</a></th>
-                        <th  ><a zippy="sortdate">Дата</a></th>
-                        <th ><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-end   "><a zippy="sortamount">Сума</a></th>
-                        <th  > Статус </th>
+                         <th class="text-nowrap  "><a zippy="sortdoc">{{#t}}common.typ_dokumenta{{/t}}</a></th>
+                        <th  ><a zippy="sortnum">{{#t}}common.nomer{{/t}}</a></th>
+                        <th  ><a zippy="sortdate">{{#t}}common.data{{/t}}</a></th>
+                        <th ><a zippy="sortcust">{{#t}}common.kontrahent{{/t}}</a></th>
+                        <th class="text-end   "><a zippy="sortamount">{{#t}}common.suma{{/t}}</a></th>
+                        <th  > {{#t}}common.status{{/t}} </th>
                         {{#usebranch}}
-                        <th>Філія</th>
+                        <th>{{#t}}common.filiia{{/t}}</th>
                         {{/usebranch}}
 
-                        <th>Підстава</th>
+                        <th>{{#t}}common.pidstava_2{{/t}}</th>
                         <th></th>
                         <th></th>
 
@@ -160,8 +160,8 @@
                     <tbody>
                         <tr zippy="doclist">
                             <td>
-                           <a  zippy="tofav"><i title="Додати в обране" zippy="top" class="far fa-star"  ></i></a>
-                            <a  zippy="fromfav"><i title="Видалити з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
+                           <a  zippy="tofav"><i title="{{#t}}register.doclist.dodaty_v_obrane{{/t}}" zippy="top" class="far fa-star"  ></i></a>
+                            <a  zippy="fromfav"><i title="{{#t}}register.doclist.vydalyty_z_obranoho{{/t}}" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
                             <td class="text-nowrap  "><a zippy="name"></a></td>
@@ -177,28 +177,28 @@
 
                             <td><a zippy="parentdoc"></a></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
-                            <td><i zippy="hasscan" class="far fa-image" title="Прикріплено скан оригіналу"></i></td>
+                            <td><i zippy="hasscan" class="far fa-image" title="{{#t}}register.doclist.prykripleno_skan_oryhinalu{{/t}}"></i></td>
 
-                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланований"></i></td>
-                            <td><i zippy="waitapp" class="fa fa-gavel" title="Очікує затвердження "></i></td>
+                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="{{#t}}register.doclist.zaplanovanyi{{/t}}"></i></td>
+                            <td><i zippy="waitapp" class="fa fa-gavel" title="{{#t}}doc.document.ochikuie_zatverdzhennia{{/t}} "></i></td>
                          <td  >
-                                <a zippy="qr" title="Зовнішнє посилання  на  документ"><i class="fa fa-link"></i></a> &nbsp; &nbsp;
+                                <a zippy="qr" title="{{#t}}register.doclist.zovnishnie_posylannia_na_dokument{{/t}}"><i class="fa fa-link"></i></a> &nbsp; &nbsp;
                             </td>
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
-                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i> </a>
-                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i> </a>
-                                <a zippy="cancel" title="Скасувати виконання"><i class="fa fa-undo"></i> </a>
+                                <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i> </a>
+                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i> </a>
+                                <a zippy="cancel" title="{{#t}}register.doclist.skasuvaty_vykonannia{{/t}}"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
-                                <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="{{#t}}app.roles.vydalennia{{/t}}"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
-                                    <button title="Створити на підставі" type="button"
+                                    <button title="{{#t}}register.doclist.stvoryty_na_pidstavi{{/t}}" type="button"
                                             class="btn btn-secondary btn-sm  dropdown-toggle" data-bs-toggle="dropdown">
-                                        Створити <span class="caret"></span>
+                                        {{#t}}common.stvoryty{{/t}} <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu" role="menu" zippy="basedlist">
 
@@ -218,41 +218,41 @@
                 <div class=" navbar">
                     <form zippy="statusform"  >
                        <div class="row  ">
-                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
+                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> {{#t}}common.status{{/t}} </label>
                            <div class="col-auto  ">
                            <select zippy="mstates" class="form-select me-2">
-                             <option value="0">Не обрано</option>
+                             <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                              </select>
                          </div>
                            <div class="col-auto  ">
-                             <button zippy="bstatus" class="btn btn-success  me-2"> Застосувати</button>
+                             <button zippy="bstatus" class="btn btn-success  me-2"> {{#t}}common.zastosuvaty{{/t}}</button>
                            </div>
-                         <label class="col-form-label col-auto" data-label="musers" for="musers"> Відповідальний </label>
+                         <label class="col-form-label col-auto" data-label="musers" for="musers"> {{#t}}common.vidpovidalnyi{{/t}} </label>
                            <div class="col-auto  ">
                            <select zippy="musers" class="form-select me-2">
-                             <option value="0">Не обрано</option>
+                             <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                              </select>
                          </div>
                            <div class="col-auto  ">
-                            <button zippy="buser" class="btn btn-success  me-2"> Перевести</button>
+                            <button zippy="buser" class="btn btn-success  me-2"> {{#t}}common.perevesty{{/t}}</button>
                          </div>
                            <div class="col-auto  ">
-                              <a zippy="btopay" class="  btn btn-primary  me-2 ">Сплатити</a>
+                              <a zippy="btopay" class="  btn btn-primary  me-2 ">{{#t}}common.splatyty{{/t}}</a>
                            </div>
                           <div class="col-auto  ">
-                             <button zippy="bap" class="btn btn-primary  me-2"><i class="fas fa-thumbs-up"></i> Затвердити</button>
+                             <button zippy="bap" class="btn btn-primary  me-2"><i class="fas fa-thumbs-up"></i> {{#t}}register.doclist.zatverdyty{{/t}}</button>
                           </div>
                           <div class="col-auto  ">
-                             <button zippy="bref" class="btn btn-danger  me-2"><i class="fas fa-thumbs-down"></i> Відхилити</button>
+                             <button zippy="bref" class="btn btn-danger  me-2"><i class="fas fa-thumbs-down"></i> {{#t}}register.doclist.vidkhylyty{{/t}}</button>
                           </div>
                           <div class="col-auto  ">
-                             <input class="form-control  " zippy="refcomment" placeholder="Коментар до відхилення">
+                             <input class="form-control  " zippy="refcomment" placeholder="{{#t}}register.doclist.komentar_do_vidkhylennia{{/t}}">
                           </div>
                             <div class="col-auto  ">
-                            <button zippy="bprint" class="btn btn-success  me-2 ms-4"><i class="fa fa-print"></i> Друк етикеток</button>
+                            <button zippy="bprint" class="btn btn-success  me-2 ms-4"><i class="fa fa-print"></i> {{#t}}common.druk_etyketok{{/t}}</button>
                          </div>
                         <div class="col-auto  ">   
-                          <button zippy="bcopy" class="btn btn-primary  ms-2"><i class="fas fa-copy"></i> Копія</button>                         
+                          <button zippy="bcopy" class="btn btn-primary  ms-2"><i class="fas fa-copy"></i> {{#t}}register.doclist.kopiia{{/t}}</button>                         
                        </div>
                       </div>
                     </form> 
@@ -279,16 +279,16 @@
                         <div class="modal-body  ">
                           <table class="table table-sm">
                           <tr><td align="center">
-                            <h5 >Посилання  на  документ</h5>
+                            <h5 >{{#t}}register.doclist.posylannia_na_dokument{{/t}}</h5>
                            </td></tr>
                           <tr><td align="center">
                           <div class="mb-2" id="imagelink" > </div>
                           </td></tr>
                           
                           <tr><td align="center">
-                          <a  class="btn btn-info  " id="urllink"  >  Відкрити посилання        </a>
+                          <a  class="btn btn-info  " id="urllink"  >  {{#t}}common.vidkryty_posylannia{{/t}}        </a>
 
-                           <button onclick="copycplink()" class="btn btn-success   "    title="Скопіювати в кліпборд" >Скопіювати </button>
+                           <button onclick="copycplink()" class="btn btn-success   "    title="{{#t}}common.skopiiuvaty_v_klipbord{{/t}}" >{{#t}}common.skopiiuvaty{{/t}} </button>
                           </td></tr> </table>
                         </div>
 

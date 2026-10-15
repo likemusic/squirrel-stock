@@ -4,12 +4,12 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Налаштування підключення</h4>
+                <h4>{{#t}}mod.ocstore.options.nalashtuvannia_pidkliuchennia{{/t}}</h4>
                 <form zippy="cform">
                     <div class="mb-2">
-                        <label class="form-label" for="site">Адреса сайту</label>
+                        <label class="form-label" for="site">{{#t}}common.adresa_saitu{{/t}}</label>
                         <input type="text" zippy="site" class="form-control" required="required"/>
-                         <small><i class="fa fa-exclamation text-danger"></i> Потрібно  вводити повну адресу (з http або https)</small>
+                         <small><i class="fa fa-exclamation text-danger"></i> {{#t}}mod.ocstore.options.potribno_vvodyty_povnu_adresu_z{{/t}}</small>
                     </div>
                      <div class="form-check">
                         <input zippy="v4" type="checkbox" class="form-check-input">
@@ -18,43 +18,43 @@
                     </div>
                     
                     <div class="mb-2">
-                        <label class="form-label" for="apiname">Назва API</label>
+                        <label class="form-label" for="apiname">{{#t}}mod.ocstore.options.nazva_api{{/t}}</label>
                         <input type="text" zippy="apiname" class="form-control" required="required"/>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="key">Код API</label>
+                        <label class="form-label" for="key">{{#t}}mod.ocstore.options.kod_api{{/t}}</label>
                         <textarea style="height:150px;" zippy="key" class="form-control" required="required"></textarea>
                     </div>
                     {{#hideblock}}
                     <div class="form-check">
                         <input zippy="ssl" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="ssl">Перевірка SSL сертифіката </label>
+                        <label class="form-check-label" for="ssl">{{#t}}common.perevirka_ssl_sertyfikata{{/t}} </label>
 
                     </div>
                    {{/hideblock}}
                 
 
                     <div class="mb-2">
-                        <label class="form-label" for="salesource">Джерело продаж</label>
+                        <label class="form-label" for="salesource">{{#t}}common.dzherelo_prodazh{{/t}}</label>
                         <select class="form-select" zippy="salesource">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>                    
                     <div class="mb-2">
-                        <label class="form-label" for="defpricetype">Тип ціни </label>
+                        <label class="form-label" for="defpricetype">{{#t}}common.typ_tsiny{{/t}} </label>
 
                         <select class="form-select" zippy="defpricetype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
 
                         </select>
-                        <small class="form-text text-muted">Ціна для оновлення в магазині </small>
+                        <small class="form-text text-muted">{{#t}}mod.ocstore.options.tsina_dlia_onovlennia_v_mahazyni{{/t}} </small>
 
                     </div>
                    <div class="mb-2">
-                        <label class="form-label" for="defpaytype">Спосіб оплати </label>
+                        <label class="form-label" for="defpaytype">{{#t}}common.sposib_oplaty{{/t}} </label>
 
                         <select class="form-select" zippy="defpaytype">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
 
                         </select>
                         
@@ -62,20 +62,20 @@
                     </div>
                    
                     <div class="mb-2">
-                        <label class="form-label" for="defmf">Каса </label>
+                        <label class="form-label" for="defmf">{{#t}}common.kasa{{/t}} </label>
 
                         <select class="form-select" zippy="defmf">
-                            <option value="0">Не вказана</option>
+                            <option value="0">{{#t}}common.ne_vkazana{{/t}}</option>
 
                         </select>
-                        <small class="form-text text-muted">Обов'язкова  якщо тип оплати  - передплата </small>
+                        <small class="form-text text-muted">{{#t}}common.oboviazkova_iakshcho_typ_oplaty_peredpla{{/t}} </small>
 
                     </div>
                     <div class="mb-2">
-                        <label class="form-label" for="defstore">Склад</label>
+                        <label class="form-label" for="defstore">{{#t}}common.sklad{{/t}}</label>
 
                         <select class="form-select" zippy="defstore">
-                            <option value="0">Не вказаний</option>
+                            <option value="0">{{#t}}common.ne_vkazanyi{{/t}}</option>
 
                         </select>
                         
@@ -83,26 +83,26 @@
                 
                     <div class="form-check">
                         <input zippy="reserve" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="reserve">Автоматично резервувати товари </label>
+                        <label class="form-check-label" for="reserve">{{#t}}mod.ocstore.options.avtomatychno_rezervuvaty_tovary{{/t}} </label>
                          
                     </div>
               
                     <div class="form-check">
                         <input zippy="dostore" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="dostore">Списуватии товари в замовленнi </label>
-                        <small class="form-text text-muted">Якщо не використовується ТТН, Чек  або ВН  </small>
+                        <label class="form-check-label" for="dostore">{{#t}}mod.ocstore.options.spysuvatyy_tovary_v_zamovlenni{{/t}} </label>
+                        <small class="form-text text-muted">{{#t}}mod.ocstore.options.iakshcho_ne_vykorystovuietsia_ttn_chek{{/t}}  </small>
   
                     </div>
               
                     <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="insertcust">Імпортувати контрагентів </label>
+                        <label class="form-check-label" for="insertcust">{{#t}}common.importuvaty_kontrahentiv{{/t}} </label>
                          
                     </div>
               
                             
                     <div class="mt-2">
-                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary me-2"/>
+                        <input type="submit" value="{{#t}}common.zberehty{{/t}}" zippy="save" class="btn   btn-primary me-2"/>
                             
 
                     </div>

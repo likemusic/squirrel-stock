@@ -2,22 +2,22 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
-            Неліквідні товари
+            {{#t}}common.nelikvidni_tovary{{/t}}
         </td>
     </tr>
  
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Найменування</th>
+        <th style="border: solid black 1px"> {{#t}}common.naimenuvannia{{/t}}</th>
 
-        <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Категорія</th>
-        <th style="border: solid black 1px">Бренд</th>
-        <th style="border: solid black 1px">Склад</th>
-        <th style="border: solid black 1px">Комірка</th>
-        <th align="right" style="border: solid black 1px">Ціна</th>
-        <th align="right" style="border: solid black 1px">На складі</th>
+        <th style="border: solid black 1px">{{#t}}common.kod{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.katehoriia{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.brend{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.sklad{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.komirka{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.tsina{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.na_skladi{{/t}}</th>
 
 
     </tr>

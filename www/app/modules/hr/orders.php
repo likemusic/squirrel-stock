@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки") ;
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky')) ;
 
             App::RedirectError();
             return;
@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товару {$product['article']} в замовленні номер " . $hrorder['order_id']);
+                    $this->setWarn(__('mod.hr.orders.ne_znaideno_artykul_tovaru_v', ['article' => $product['article']]) . $hrorder['order_id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
@@ -146,23 +146,23 @@ class Orders extends \App\Pages\Base
             if($neworder->document_date==0) {
                 $neworder->document_date = time()   ;
             }           
-            $neworder->notes = "HR номер:{$hrorder['order_id']};";
-            $neworder->notes .= " Клієнт:" .$hrorder['delivery_name'] ;
+            $neworder->notes = __('mod.hr.orders.hr_nomer', ['order_id' => $hrorder['order_id']]);
+            $neworder->notes .= __('mod.hr.orders.kliient') .$hrorder['delivery_name'] ;
             if (strlen($hrorder['delivery_email']) > 0) {
                 $neworder->notes .= " Email:" . $hrorder['delivery_email'] . ";";
             }
             if (strlen($hrorder['delivery_phone']) > 0) {
-                $neworder->notes .= " Тел:" . str_replace('+', '', $hrorder['delivery_phone']). ";";
+                $neworder->notes .= __('common.tel') . str_replace('+', '', $hrorder['delivery_phone']). ";";
             }
             if (strlen($hrorder['delivery_option']['name']) > 0) {
-                $neworder->notes .= " Доставка:" . ($hrorder['delivery_type']['title']??'')  . ";";
+                $neworder->notes .= __('mod.hr.orders.dostavka') . ($hrorder['delivery_type']['title']??'')  . ";";
             }
 
             if (strlen($hrorder['delivery_address']) > 0) {
-                $neworder->notes .= " Адреса:" . $hrorder['delivery_city'] .' '. $hrorder['delivery_address']. ";";
+                $neworder->notes .= __('common.adresa') . $hrorder['delivery_city'] .' '. $hrorder['delivery_address']. ";";
             }
             if (strlen($hrorder['comment']) > 0) {
-                $neworder->notes .= " Комментар:" . $hrorder['comment'] . ";";
+                $neworder->notes .= __('common.kommentar') . $hrorder['comment'] . ";";
             }
 
 
@@ -205,7 +205,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
 
                     $cust->email = $shoporder->headerdata['cemail'];
-                    $cust->comment = "Клієнт  Хорошоп";
+                    $cust->comment = __('mod.hr.orders.kliient_khoroshop');
                     $cust->save();
                 }        
                 if($cust != null) {         
@@ -222,7 +222,7 @@ class Orders extends \App\Pages\Base
 
         }
 
-        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
+        $this->setInfo(__('mod.hr.orders.importovano').count($this->_neworders).__('common.zamovlen'));
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -260,7 +260,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('Не обрано ордер');
+            $this->setError(__('common.ne_obrano_order'));
             return;
         }
 
@@ -299,7 +299,7 @@ class Orders extends \App\Pages\Base
         }
   
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень");
+        $this->setSuccess(__('common.onovleno_2').count($elist).__('common.zamovlen'));
 
 
 

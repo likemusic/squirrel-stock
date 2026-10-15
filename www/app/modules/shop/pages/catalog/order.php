@@ -108,7 +108,7 @@ class Order extends Base
 
             if (!is_numeric($product->quantity)) {
 
-                $this->setWarn('Невірна кількість');
+                $this->setWarn(__('mod.shop.order.nevirna_kilkist'));
                 break;
             }
 
@@ -174,30 +174,30 @@ class Order extends Base
      
         if ($delivery == 0) {
 
-            $this->setError("Виберіть тип доставки");
+            $this->setError(__('mod.shop.order.vyberit_typ_dostavky'));
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
 
-            $this->setError("Введіть адресу");
+            $this->setError(__('service.armfood.vvedit_adresu'));
             return;
         }
     
         if ($paytype == 0) {
 
-            $this->setError("Виберіть оплату");
+            $this->setError(__('mod.shop.order.vyberit_oplatu'));
             return;
         }
 
 
 
         if (strlen($phone) != \App\Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         if ($this->_tvars["isfood"] && $time < (time() + 1800)) {
-            $this->setError("Невірний час доставки");
+            $this->setError(__('mod.shop.order.nevirnyi_chas_dostavky'));
             return;
         }
         $conn = \ZDB\DB::getConnect();
@@ -361,7 +361,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
 
-        System::setSuccessMsg("Створено замовлення номер " . $number) ;
+        System::setSuccessMsg(__('mod.shop.order.stvoreno_zamovlennia_nomer') . $number) ;
 
         
         setcookie("shop_fn",$firstname) ;

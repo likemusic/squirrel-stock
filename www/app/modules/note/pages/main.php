@@ -31,7 +31,7 @@ class Main extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
             App::RedirectError();
             return;
         }
@@ -116,7 +116,7 @@ class Main extends \App\Pages\Base
             $topic = Topic::load($args[1]);
 
             if ($topic->ispublic == 1 && $node->ispublic == 0) {
-                return "Не можна додавати публічний топік у приватний вузол" ;
+                return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_topik') ;
             }
       
             
@@ -133,7 +133,7 @@ class Main extends \App\Pages\Base
                 return;
             }
             if ($topic->ispublic == 1 && $node->ispublic == 0) {
-                return "Не можна додавати публічний топік у приватний вузол" ;
+                return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_topik') ;
             }
             $topic->addToNode($node->node_id,true);
   
@@ -143,7 +143,7 @@ class Main extends \App\Pages\Base
             $topic = Topic::load($args[1]);
 
             if ($topic->ispublic ==1 && $node->ispublic != 1) {
-                return "Не можна додавати публічний топік до приватного вузла";
+                return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_topik_2');
             }
             $newtopic = new Topic();
             $newtopic->user_id = System::getUser()->user_id;
@@ -151,7 +151,7 @@ class Main extends \App\Pages\Base
             $newtopic->content = $topic->content;
             $newtopic->ispublic = $topic->ispublic;
             if ($node->node_id == $topic->node_id) {
-                $newtopic->title = $topic->title . " (Копія)";
+                $newtopic->title = $topic->title . __('mod.note.main.kopiia');
             }
             $newtopic->detail = $topic->detail;
             $newtopic->save();
@@ -191,13 +191,13 @@ class Main extends \App\Pages\Base
         $topic->ispublic = $post->ispublic ?1:0;
 
         if (strlen($topic->title) == 0) {
-            return 'Не введено заголовок';
+            return __('mod.note.main.ne_vvedeno_zaholovok');
         }
 
 
         $node = Node::load((int) $args[1]);
         if ($topic->ispublic == 1 && $node->ispublic == 0) {
-            return "Не можна додавати публічний топік у приватний вузол" ;
+            return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_topik') ;
         }
         $topic->updatedon = time();
 
@@ -228,7 +228,7 @@ class Main extends \App\Pages\Base
             $node->ispublic = $args[2]=="true" ? 1 : 0;
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
 
-                return "Не можна додавати публічний вузол до приватного" ;
+                return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_vuzol') ;
             }
 
             $node->save();
@@ -241,7 +241,7 @@ class Main extends \App\Pages\Base
             $node->ispublic = $args[2]=="true" ? 1 : 0;
             $parent = Node::load($node->pid);
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
-                return "Не можна додавати публічний вузол до приватного" ;
+                return __('mod.note.main.ne_mozhna_dodavaty_publichnyi_vuzol') ;
             }
 
             $node->save();
@@ -264,7 +264,7 @@ class Main extends \App\Pages\Base
             if (strpos($dest->mpath, $node->mpath) === 0) {
 
 
-                return "Не можна переміщувати в свого спадкоємця";
+                return __('mod.note.main.ne_mozhna_peremishchuvaty_v_svoho');
             }
 
             $node->moveTo($dest->node_id);

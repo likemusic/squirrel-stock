@@ -106,18 +106,18 @@ class Util
      */
     public static function getMonth() {
         $list = array();
-        $list[1] = "Січень";
-        $list[2] = "Лютий";
-        $list[3] = "Березень";
-        $list[4] = "Квітень";
-        $list[5] = "Травень";
-        $list[6] = "Червень";
-        $list[7] = "Липень";
-        $list[8] = "Серпень";
-        $list[9] = "Вересень";
-        $list[10] = "Жовтень";
-        $list[11] = "Листопад";
-        $list[12] = "Грудень";
+        $list[1] = __('app.util.sichen');
+        $list[2] = __('app.util.liutyi');
+        $list[3] = __('app.util.berezen');
+        $list[4] = __('app.util.kviten');
+        $list[5] = __('app.util.traven');
+        $list[6] = __('app.util.cherven');
+        $list[7] = __('app.util.lypen');
+        $list[8] = __('app.util.serpen');
+        $list[9] = __('app.util.veresen');
+        $list[10] = __('app.util.zhovten');
+        $list[11] = __('app.util.lystopad');
+        $list[12] = __('app.util.hruden');
         return $list;
     }
 
@@ -276,22 +276,22 @@ function money2str_ru($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
-    $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
-        'восемь', "девять", 'десять', 'одиннадцать', 'двенадцать', 'тринадцать',
-        'четырнадцать', "пятнадцать", 'шестнадцать', 'семнадцать', 'восемьнадцать',
-        "девятнадцать", 'двадцать', 30  => 'тридцать', 40 => 'сорок', 50 => "пятьдесят",
-                                    60  => 'шестдесят', 70 => 'семьдесят', 80 => 'восемьдесят', 90 => "девяносто",
-                                    100 => 'сто', 200 => 'двести', 300 => 'триста', 400 => 'четыреста',
-                                    500 => "пятьсот", 600 => 'шестьсот', 700 => 'семьсот', 800 => 'восемьсот',
-                                    900 => "девятьсот");
+    $numbers_m = array('', __('app.util.odyn'), __('app.util.dva'), __('app.util.try'), __('app.util.chetyre'), __('app.util.piat'), __('app.util.shest'), __('app.util.sem'),
+        __('app.util.vosem'), __('app.util.deviat'), __('app.util.desiat'), __('app.util.odynnadtsat'), __('app.util.dvenadtsat'), __('app.util.trynadtsat'),
+        __('app.util.chetyrnadtsat'), __('app.util.piatnadtsat'), __('app.util.shestnadtsat'), __('app.util.semnadtsat'), __('app.util.vosemnadtsat'),
+        __('app.util.deviatnadtsat'), __('app.util.dvadtsat'), 30  => __('app.util.trydtsat'), 40 => __('app.util.sorok'), 50 => __('app.util.piatdesiat'),
+                                    60  => __('app.util.shestdesiat'), 70 => __('app.util.semdesiat'), 80 => __('app.util.vosemdesiat'), 90 => __('app.util.devianosto'),
+                                    100 => __('app.util.sto'), 200 => __('app.util.dvesty'), 300 => __('app.util.trysta'), 400 => __('app.util.chetyresta'),
+                                    500 => __('app.util.piatsot'), 600 => __('app.util.shestsot'), 700 => __('app.util.semsot'), 800 => __('app.util.vosemsot'),
+                                    900 => __('app.util.deviatsot'));
 
-    $numbers_f = array('', 'одна', 'две');
+    $numbers_f = array('', __('app.util.odna'), __('app.util.dve'));
 
     $units_ru = array(
-        (($options & M2S_KOPS_SHORT) ? array('коп.', 'коп.', 'коп.') : array('копейка', 'копейки', 'копеек')),
-        array('рубль', 'рубля', 'рублей'),
-        array('тысяча', 'тысячи', 'тысяч'),
-        array('миллион', 'миллиона', 'миллионов')
+        (($options & M2S_KOPS_SHORT) ? array(__('app.util.kop'), __('app.util.kop'), __('app.util.kop')) : array(__('app.util.kopeika'), __('app.util.kopeiky'), __('app.util.kopeek'))),
+        array(__('app.util.rubl'), __('app.util.rublia'), __('app.util.rublei')),
+        array(__('app.util.tysiacha'), __('app.util.tysiachy'), __('app.util.tysiach')),
+        array(__('app.util.myllyon'), __('app.util.myllyona'), __('app.util.myllyonov'))
     );
 
     $dig = '';
@@ -341,7 +341,7 @@ function money2str_ru($money, $options = 0) {
             $ret .= $units_ru[1][2] . ' ';
         } // mandatory copecks
         elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
-            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
+            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : __('app.util.nol')) .
                 ' ' . $units_ru[0][2];
         }
     }
@@ -353,22 +353,22 @@ function money2str_us($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
-    $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
-        'восемь', "девять", 'десять', 'одиннадцать', 'двенадцать', 'тринадцать',
-        'четырнадцать', "пятнадцать", 'шестнадцать', 'семнадцать', 'восемьнадцать',
-        "девятнадцать", 'двадцать', 30  => 'тридцать', 40 => 'сорок', 50 => "пятьдесят",
-                                    60  => 'шестдесят', 70 => 'семьдесят', 80 => 'восемьдесят', 90 => "девяносто",
-                                    100 => 'сто', 200 => 'двести', 300 => 'триста', 400 => 'четыреста',
-                                    500 => "пятьсот", 600 => 'шестьсот', 700 => 'семьсот', 800 => 'восемьсот',
-                                    900 => "девятьсот");
+    $numbers_m = array('', __('app.util.odyn'), __('app.util.dva'), __('app.util.try'), __('app.util.chetyre'), __('app.util.piat'), __('app.util.shest'), __('app.util.sem'),
+        __('app.util.vosem'), __('app.util.deviat'), __('app.util.desiat'), __('app.util.odynnadtsat'), __('app.util.dvenadtsat'), __('app.util.trynadtsat'),
+        __('app.util.chetyrnadtsat'), __('app.util.piatnadtsat'), __('app.util.shestnadtsat'), __('app.util.semnadtsat'), __('app.util.vosemnadtsat'),
+        __('app.util.deviatnadtsat'), __('app.util.dvadtsat'), 30  => __('app.util.trydtsat'), 40 => __('app.util.sorok'), 50 => __('app.util.piatdesiat'),
+                                    60  => __('app.util.shestdesiat'), 70 => __('app.util.semdesiat'), 80 => __('app.util.vosemdesiat'), 90 => __('app.util.devianosto'),
+                                    100 => __('app.util.sto'), 200 => __('app.util.dvesty'), 300 => __('app.util.trysta'), 400 => __('app.util.chetyresta'),
+                                    500 => __('app.util.piatsot'), 600 => __('app.util.shestsot'), 700 => __('app.util.semsot'), 800 => __('app.util.vosemsot'),
+                                    900 => __('app.util.deviatsot'));
 
-    $numbers_f = array('', 'один', 'два');
+    $numbers_f = array('', __('app.util.odyn'), __('app.util.dva'));
 
     $units_ru = array(
-        (($options & M2S_KOPS_SHORT) ? array('c.', 'c.', 'c.') : array('цент', 'цента', 'центов')),
-        array('Доллар', 'доллара', 'долларов'),
-        array('тысяча', 'тысячи', 'тысяч'),
-        array('миллион', 'миллиона', 'миллионов')
+        (($options & M2S_KOPS_SHORT) ? array('c.', 'c.', 'c.') : array(__('app.util.tsent'), __('app.util.tsenta'), __('app.util.tsentov'))),
+        array(__('app.util.dollar'), __('app.util.dollara'), __('app.util.dollarov')),
+        array(__('app.util.tysiacha'), __('app.util.tysiachy'), __('app.util.tysiach')),
+        array(__('app.util.myllyon'), __('app.util.myllyona'), __('app.util.myllyonov'))
     );
 
     $ret = '';
@@ -417,7 +417,7 @@ function money2str_us($money, $options = 0) {
             $ret .= $units_ru[1][2] . ' ';
         } // mandatory copecks
         elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
-            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
+            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : __('app.util.nol')) .
                 ' ' . $units_ru[0][2];
         }
     }
@@ -429,22 +429,22 @@ function money2str_eu($money, $options = 0) {
     $dig='';
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
-    $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
-        'восемь', "девять", 'десять', 'одиннадцать', 'двенадцать', 'тринадцать',
-        'четырнадцать', "пятнадцать", 'шестнадцать', 'семнадцать', 'восемьнадцать',
-        "девятнадцать", 'двадцать', 30  => 'тридцать', 40 => 'сорок', 50 => "пятьдесят",
-                                    60  => 'шестдесят', 70 => 'семьдесят', 80 => 'восемьдесят', 90 => "девяносто",
-                                    100 => 'сто', 200 => 'двести', 300 => 'триста', 400 => 'четыреста',
-                                    500 => "пятьсот", 600 => 'шестьсот', 700 => 'семьсот', 800 => 'восемьсот',
-                                    900 => "девятьсот");
+    $numbers_m = array('', __('app.util.odyn'), __('app.util.dva'), __('app.util.try'), __('app.util.chetyre'), __('app.util.piat'), __('app.util.shest'), __('app.util.sem'),
+        __('app.util.vosem'), __('app.util.deviat'), __('app.util.desiat'), __('app.util.odynnadtsat'), __('app.util.dvenadtsat'), __('app.util.trynadtsat'),
+        __('app.util.chetyrnadtsat'), __('app.util.piatnadtsat'), __('app.util.shestnadtsat'), __('app.util.semnadtsat'), __('app.util.vosemnadtsat'),
+        __('app.util.deviatnadtsat'), __('app.util.dvadtsat'), 30  => __('app.util.trydtsat'), 40 => __('app.util.sorok'), 50 => __('app.util.piatdesiat'),
+                                    60  => __('app.util.shestdesiat'), 70 => __('app.util.semdesiat'), 80 => __('app.util.vosemdesiat'), 90 => __('app.util.devianosto'),
+                                    100 => __('app.util.sto'), 200 => __('app.util.dvesty'), 300 => __('app.util.trysta'), 400 => __('app.util.chetyresta'),
+                                    500 => __('app.util.piatsot'), 600 => __('app.util.shestsot'), 700 => __('app.util.semsot'), 800 => __('app.util.vosemsot'),
+                                    900 => __('app.util.deviatsot'));
 
-    $numbers_f = array('', 'один', 'два');
+    $numbers_f = array('', __('app.util.odyn'), __('app.util.dva'));
 
     $units_ru = array(
-        (($options & M2S_KOPS_SHORT) ? array('c.', 'c.', 'c.') : array('цент', 'цента', 'центов')),
-        array('Евро', 'Евро', 'Евро'),
-        array('тысяча', 'тысячи', 'тысяч'),
-        array('миллион', 'миллиона', 'миллионов')
+        (($options & M2S_KOPS_SHORT) ? array('c.', 'c.', 'c.') : array(__('app.util.tsent'), __('app.util.tsenta'), __('app.util.tsentov'))),
+        array(__('app.util.evro'), __('app.util.evro'), __('app.util.evro')),
+        array(__('app.util.tysiacha'), __('app.util.tysiachy'), __('app.util.tysiach')),
+        array(__('app.util.myllyon'), __('app.util.myllyona'), __('app.util.myllyonov'))
     );
 
     $ret = '';
@@ -493,7 +493,7 @@ function money2str_eu($money, $options = 0) {
             $ret .= $units_ru[1][2] . ' ';
         } // mandatory copecks
         elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
-            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
+            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : __('app.util.nol')) .
                 ' ' . $units_ru[0][2];
         }
     }
@@ -505,23 +505,23 @@ function money2str_ua($money, $options = 0) {
     $dig ='';
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
-    $numbers_m = array('', 'одна', 'дві', 'три', 'чотири', "п'ять", 'шість', 'сім',
-        'вісім', "дев'ять", 'десять', 'одинадцять', 'дванадцять', 'тринадцять',
-        'чотирнадцять', "п'ятнадцять", 'шістнадцять', 'сімнадцять', 'вісімнадцять',
-        "дев'ятнадцять", 'двадцять', 30  => 'тридцять', 40 => 'сорок', 50 => "п'ятдесят",
-                                     60  => 'шістдесят', 70 => 'сімдесят', 80 => 'вісімдесять', 90 => "дев'яносто",
-                                     100 => 'сто', 200 => 'двісті', 300 => 'триста', 400 => 'чотириста',
-                                     500 => "п'ятсот", 600 => 'шістсот', 700 => 'сімсот', 800 => 'вісімсот',
-                                     900 => "дев'ятсот");
+    $numbers_m = array('', __('app.util.odna'), __('app.util.dvi'), __('app.util.try'), __('app.util.chotyry'), __('app.util.piat_2'), __('app.util.shist'), __('app.util.sim'),
+        __('app.util.visim'), __('app.util.deviat_2'), __('app.util.desiat'), __('app.util.odynadtsiat'), __('app.util.dvanadtsiat'), __('app.util.trynadtsiat'),
+        __('app.util.chotyrnadtsiat'), __('app.util.piatnadtsiat'), __('app.util.shistnadtsiat'), __('app.util.simnadtsiat'), __('app.util.visimnadtsiat'),
+        __('app.util.deviatnadtsiat'), __('app.util.dvadtsiat'), 30  => __('app.util.trydtsiat'), 40 => __('app.util.sorok'), 50 => __('app.util.piatdesiat_2'),
+                                     60  => __('app.util.shistdesiat'), 70 => __('app.util.simdesiat'), 80 => __('app.util.visimdesiat'), 90 => __('app.util.devianosto_2'),
+                                     100 => __('app.util.sto'), 200 => __('app.util.dvisti'), 300 => __('app.util.trysta'), 400 => __('app.util.chotyrysta'),
+                                     500 => __('app.util.piatsot_2'), 600 => __('app.util.shistsot'), 700 => __('app.util.simsot'), 800 => __('app.util.visimsot'),
+                                     900 => __('app.util.deviatsot_2'));
 
-    $numbers_f = array('', 'одна', 'дві');
+    $numbers_f = array('', __('app.util.odna'), __('app.util.dvi'));
 
     $units_ru = array(
-        (($options & M2S_KOPS_SHORT) ? array('коп.', 'коп.', 'коп.') : array('копійка', 'копійки', 'копійок')),
-        array('гривня', 'гривні', 'гривень'),
-        array('тисяча', 'тисячі', 'тисяч'),
-        array('мільйон', 'мільйона', 'мільйонів'),
-        array('мільярд', 'мільярди', 'мільярдів')
+        (($options & M2S_KOPS_SHORT) ? array(__('app.util.kop'), __('app.util.kop'), __('app.util.kop')) : array(__('app.util.kopiika'), __('app.util.kopiiky'), __('app.util.kopiiok'))),
+        array(__('app.util.hryvnia'), __('app.util.hryvni'), __('app.util.hryven')),
+        array(__('app.util.tysiacha_2'), __('app.util.tysiachi'), __('app.util.tysiach_2')),
+        array(__('app.util.milion'), __('app.util.miliona'), __('app.util.milioniv')),
+        array(__('app.util.miliard'), __('app.util.miliardy'), __('app.util.miliardiv'))
     );
 
     $ret = '';
@@ -570,7 +570,7 @@ function money2str_ua($money, $options = 0) {
             $ret .= $units_ru[1][2] . ' ';
         } // mandatory copecks
         elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
-            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
+            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : __('app.util.nol')) .
                 ' ' . $units_ru[0][2];
         }
     }

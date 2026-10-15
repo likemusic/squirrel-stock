@@ -27,7 +27,7 @@ class PosList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
+            System::setErrorMsg(__('app.poslist.do_storinky_maie_dostup_tilky'));
             \App\Application::RedirectError();
             return  ;
         }
@@ -186,13 +186,13 @@ class PosList extends \App\Pages\Base
         $this->_pos->scriptfreg = $this->posdetail->editscriptfreg->getText();
   
         if ($this->_pos->pos_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
      
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
-            $this->setError("Виберіть філію");
+            $this->setError(__('common.vyberit_filiiu'));
             return;
         }
         $fn = intval($this->_pos->fiscdocnumber);
@@ -258,15 +258,15 @@ class PosList extends \App\Pages\Base
         $certdata =  !empty($certfile['tmp_name']) ? @file_get_contents($certfile['tmp_name']) : '';
 
         if(  strlen($keydata)==0) {
-            $this->setError('Не вказано ключ') ;
+            $this->setError(__('app.poslist.ne_vkazano_kliuch')) ;
             return;
         }
         if(strlen($password)==0  ) {
-            $this->setError('Не вказано пароль') ;
+            $this->setError(__('app.poslist.ne_vkazano_parol')) ;
             return;
         }
         if(strlen($certdata)==0 && $isjks == false && $loadsert == false) {
-            $this->setError('Не вказано сертифікат') ;
+            $this->setError(__('app.poslist.ne_vkazano_sertyfikat')) ;
             return;
         }
 
@@ -360,7 +360,7 @@ class PosList extends \App\Pages\Base
         $this->_pos->ppoisjks =  $isjks ? 1 : 0   ;
         $this->_pos->save();
 
-        $this->setSuccess("Ключ завантажений") ;
+        $this->setSuccess(__('app.poslist.kliuch_zavantazhenyi')) ;
 
         
         $this->postable->setVisible(true);

@@ -1,17 +1,17 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Накладна {{document_number}}</text>
+<text>{{#t}}print.goodsissue_bill_ps.nakladna{{/t}}</text>
 <font >a</font>
-<text>від {{date}}</text>
+<text>{{#t}}common.vid_2{{/t}}</text>
 <align>left</align>
-<text>Продавець: {{firm_name}}</text>
+<text>{{#t}}print.goodsissue_bill_ps.prodavets{{/t}}</text>
 
     {{#isbank}}
 <text>{{bank}}</text>
-<text>р/р {{bankacc}}</text>    
+<text>{{#t}}print.goodsissue_bill.r_r{{/t}}</text>    
    {{/isbank}}
-<text>Тел. {{phone}}</text>
-<text>Покупець: {{customer_name}}</text>
+<text>{{#t}}common.tel_3{{/t}}</text>
+<text>{{#t}}common.pokupets_3{{/t}}</text>
 <separator>-</separator>
  {{#_detail}}
  <text>{{tovar_name}}</text>
@@ -24,5 +24,5 @@
 <font bold="true">a</font>
 <separator>-</separator>
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>{{#t}}common.vsoho_2{{/t}}</text>
 <newline ></newline>

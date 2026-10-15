@@ -43,7 +43,7 @@ class Items extends Base
         $conn = \ZDB\DB::getConnect();
   
         $catlist = array();
-        $catlist[-1] = "Без категорії";
+        $catlist[-1] = __('common.bez_katehorii');
         foreach (Category::findArray("cat_name","cat_id in (select cat_id from items where detail like   '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ) ") as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -151,11 +151,11 @@ class Items extends Base
         $this->_item->description = trim(  $this->itemdetail->editdesc->getText()) ;
        
         if (strlen($this->_item->itemname) == 0) {
-            $this->setError('Не введено назву');
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }       
         if ($this->_item->checkUniqueArticle()==false) {
-            $this->setError('Такий артикул вже існує');
+            $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
             return;
         }   
        

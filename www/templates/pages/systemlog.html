@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Системний лог  </title>
+        <title>  {{#t}}common.systemnyi_loh{{/t}}  </title>
 
     </head>
 
@@ -9,15 +9,15 @@
         <div class="row">
              
             <div class="col-12 col-md-8 col-xl-6 col-xxl-4 "  >
-                <h5>Системні повідомлення</h5>
+                <h5>{{#t}}app.systemlog.systemni_povidomlennia{{/t}}</h5>
                 <div class="navbar">
                     <form  zippy="filter"  >
                       <div class="row  ">
                        <div class="col-auto  ">
-                         <input   class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                         <input   class="form-control me-2" type="text" zippy="searchtext" placeholder="{{#t}}common.poshuk_po_kontentu{{/t}}">
                        </div>
                        <div class="col-auto  ">
-                         <input   type="submit" class="  btn btn-success  " value="Шукати">
+                         <input   type="submit" class="  btn btn-success  " value="{{#t}}common.shukaty{{/t}}">
                       </div>
                      </div>
                     </form>
@@ -34,7 +34,7 @@
                             <small zippy="msg" >
                             </small>
                         </td>
-                        <td><span  zippy="newn" class="badge text-bg info">Нове</span></td>
+                        <td><span  zippy="newn" class="badge text-bg info">{{#t}}common.nove{{/t}}</span></td>
 
 
                     </tr>
@@ -46,14 +46,14 @@
 
               
                 <div class="col-12 col-md-4  col-xxl-3"  >
-                <h5>Файловий лог</h5>
+                <h5>{{#t}}app.systemlog.failovyi_loh{{/t}}</h5>
                 <table class="table table-sm    ">
                     <tr  zippy="flist">
 
                         <td zippy="fname">                        </td>
                         <td> 
-                        <a zippy="fview"   title="Переглянути"> <i class="fa fa-eye"></i></a>
-                        &nbsp;&nbsp;<a zippy="fdown"   title="Завантажити"> <i class="fa fa-download"></i></a>
+                        <a zippy="fview"   title="{{#t}}app.systemlog.perehlianuty{{/t}}"> <i class="fa fa-eye"></i></a>
+                        &nbsp;&nbsp;<a zippy="fdown"   title="{{#t}}common.zavantazhyty{{/t}}"> <i class="fa fa-download"></i></a>
                          </td>
 
 
@@ -67,7 +67,7 @@
               </div>
               
     <div class="col-12   col-xl-11 col-xxl-10 "  >
-             <h5>Загальна історія документів </h5>
+             <h5>{{#t}}app.systemlog.zahalna_istoriia_dokumentiv{{/t}} </h5>
                 
             <form zippy="sfilter"   >
                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
@@ -75,7 +75,7 @@
                         
                             <div class="col-12">
                               <div class="input-group">
-                             <label   for="from">З </label>
+                             <label   for="from">{{#t}}common.z{{/t}} </label>
                              
                                 <input type="text" class="form-control    " zippy="from" style="width:110px">
                              </div>
@@ -84,7 +84,7 @@
                       
                                 <div class="col-12">
                                 <div class="input-group">
-                               <label   for="to"> по </label>
+                               <label   for="to"> {{#t}}common.po{{/t}} </label>
                                
                                   <input type="text" class="form-control   " style="width:110px" zippy="to">
                               </div>
@@ -92,20 +92,20 @@
                           
                              <div class="col-12">
                             <div class="input-group">
-                                <label   for="status"> Статус </label>
+                                <label   for="status"> {{#t}}common.status{{/t}} </label>
                             
                                 <select class="form-select  " zippy="status">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                             </div>
                             </div>
                             <div class="col-12">
                             <div class="input-group">
                          
-                                <label   for="doctype"> Тип </label>
+                                <label   for="doctype"> {{#t}}common.typ{{/t}} </label>
                                           
                                <select class="form-select    " zippy="doctype">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                            </div>
                            </div>
@@ -114,10 +114,10 @@
                            <div class="col-12">
                             <div class="input-group">
                         
-                               <label   for="author"> Автор </label>
+                               <label   for="author"> {{#t}}common.avtor{{/t}} </label>
                                                            
                                <select class="form-select    " zippy="author">
-                                        <option value="0">Не обрано</option>
+                                        <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                     </select>
                              </div>
                              </div>
@@ -126,7 +126,7 @@
                          
                           <div class="col-12">
                             
-                            <input type="submit" class="   btn btn-success  " value="ОК">
+                            <input type="submit" class="   btn btn-success  " value="{{#t}}common.ok{{/t}}">
                             
                          
                        </div>

@@ -84,13 +84,13 @@ class OutFood extends \App\Pages\Base
 
 
             $days =[];
-            $days[1]= 'Пн';
-            $days[2]= 'Вт';
-            $days[3]= 'Ср';
-            $days[4]= 'Чт';
-            $days[5]= 'Пт';
-            $days[6]= 'Сб';
-            $days[0]= 'Нд';
+            $days[1]= __('report.outfood.pn');
+            $days[2]= __('report.outfood.vt');
+            $days[3]= __('report.outfood.sr');
+            $days[4]= __('report.outfood.cht');
+            $days[5]= __('report.outfood.pt');
+            $days[6]= __('report.outfood.sb');
+            $days[0]= __('report.outfood.nd');
 
             foreach ($rs as $row) {
                 $t = strtotime($row['dt']) ;

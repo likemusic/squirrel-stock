@@ -2,23 +2,23 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Кінець дня  {{date}}
+            {{#t}}print.endday.kinets_dnia{{/t}}
         </td>
     </tr>
    <tr style="  font-weight: bolder;">
         <td   colspan="5">
-            По користувачах
+            {{#t}}print.endday.po_korystuvachakh{{/t}}
         </td>
     </tr>
  
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Ім'я</th>
+        <th style="border: solid black 1px"> {{#t}}common.imia{{/t}}</th>
 
-        <th colspan="2" style="border: solid black 1px">Рахунок</th>
-        <th  align="right" style="border: solid black 1px">Прибуток</th>
-        <th  align="right" style="border: solid black 1px">Видаток</th>
+        <th colspan="2" style="border: solid black 1px">{{#t}}common.rakhunok{{/t}}</th>
+        <th  align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+        <th  align="right" style="border: solid black 1px">{{#t}}common.vydatok{{/t}}</th>
         
 
 
@@ -41,19 +41,19 @@
     {{#showmf}}
     <tr style="  font-weight: bolder;">
         <td   colspan="5">
-            По грошових рахунках
+            {{#t}}print.endday.po_hroshovykh_rakhunkakh{{/t}}
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th   style="border: solid black 1px"> Рахунок
+        <th   style="border: solid black 1px"> {{#t}}common.rakhunok{{/t}}
 
-        <th align="right"  style="border: solid black 1px">Початок
-        <th align="right"  style="border: solid black 1px">Прибуток
-        <th align="right"  style="border: solid black 1px">Видаток
-        <th align="right" style="border: solid black 1px">Кінець
+        <th align="right"  style="border: solid black 1px">{{#t}}common.pochatok{{/t}}
+        <th align="right"  style="border: solid black 1px">{{#t}}common.prybutok{{/t}}
+        <th align="right"  style="border: solid black 1px">{{#t}}common.vydatok{{/t}}
+        <th align="right" style="border: solid black 1px">{{#t}}print.endday.kinets{{/t}}
      
         
 

@@ -27,7 +27,7 @@ class Roles extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->userlogin != 'admin') {
-            $this->setError("До сторінки має доступ тільки користувач admin");
+            $this->setError(__('app.roles.do_storinky_maie_dostup_tilky'));
             App::RedirectError();
             return  ;
         }
@@ -201,7 +201,7 @@ class Roles extends \App\Pages\Base
         $role = UserRole::getFirst('rolename=' . UserRole::qstr($this->role->rolename));
         if ($role instanceof UserRole) {
             if ($role->role_id != $this->role->role_id) {
-                $this->setError('Неунікальна назва');
+                $this->setError(__('app.roles.neunikalna_nazva'));
                 return;
             }
         }
@@ -390,19 +390,19 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = 'Документ';
+                $title = __('common.dokument');
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = __('common.zvit');
                 break;
             case 3:
-                $title = 'Журнал';
+                $title = __('common.zhurnal');
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = __('common.dovidnyk');
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = __('common.servisna_storinka');
                 break;
         }
         $item->editacc = false;
@@ -452,22 +452,22 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = 'Документ';
+                $title = __('common.dokument');
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = __('common.zvit');
                 break;
             case 3:
-                $title = 'Журнал';
+                $title = __('common.zhurnal');
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = __('common.dovidnyk');
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = __('common.servisna_storinka');
                 break;
             case 6:
-                $title = "Сторінка модуля";
+                $title = __('app.roles.storinka_modulia');
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);

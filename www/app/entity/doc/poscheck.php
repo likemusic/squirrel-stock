@@ -226,7 +226,7 @@ class POSCheck extends Document
            
           
            if($p->showcheck==1 && $p->disc>0) {
-               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               $header['promo']  = __('doc.orderfood.promokod'). $p->code . __('doc.orderfood.na_znyzhku', ['disc' => $p->disc]);
                break;
            }
         }  
@@ -367,7 +367,7 @@ class POSCheck extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -380,7 +380,7 @@ class POSCheck extends Document
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
 
-                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').$item->getQuantity($this->headerdata['store']) .__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
 
             }
 
@@ -420,7 +420,7 @@ class POSCheck extends Document
                 $ua->document_id = $this->document_id;
                 $ua->emp_id = $emp_id;
                 $ua->amount = $b;
-                $ua->notes = "Бонус ";
+                $ua->notes = __('common.bonus');
                 $ua->save();
              
               

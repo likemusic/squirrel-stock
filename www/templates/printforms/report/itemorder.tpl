@@ -2,25 +2,25 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Замовлені товари на {{date}}
+            {{#t}}print.itemorder.zamovleni_tovary_na{{/t}}
         </td>
     </tr>
     {{#cust}}
     <tr>
 
         <td colspan="4">
-            <b> Покупець:</b> {{customer_name}}
+            <b> {{#t}}common.pokupets_2{{/t}}</b> {{customer_name}}
         </td>
     </tr>
     {{/cust}}
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Найменування</th>
-        <th style="border: solid black 1px"> Артикул</th>
+        <th style="border: solid black 1px"> {{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: solid black 1px"> {{#t}}common.artykul{{/t}}</th>
 
-        <th style="border: solid black 1px">Од.</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th style="border: solid black 1px">{{#t}}common.od{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
 
 
     </tr>
@@ -42,7 +42,7 @@
     <tr>
 
         <td colspan="4">
-            <b> На суму:</b> {{total}}
+            <b> {{#t}}common.na_sumu_2{{/t}}</b> {{total}}
         </td>
     </tr>
 

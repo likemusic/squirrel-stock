@@ -4,12 +4,12 @@
     <tr style="font-weight: bolder;">
         <td></td>
         <td colspan="8">
-            Гарантійний талон {{document_number}}  &nbsp;     від {{date}}
+            {{#t}}print.warranty.harantiinyi_talon_nbsp_vid{{/t}}
         </td>
     </tr>
     {{#basedon}}
    <tr>
-        <td colspan="8">Підстава {{basedon}}</td>
+        <td colspan="8">{{#t}}print.warranty.pidstava{{/t}}</td>
     </tr>
     {{/basedon}}    
   <tr>
@@ -21,12 +21,12 @@
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
-        <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Ціна</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Сума</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сер. номер</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Гар., міс.</th>
+        <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >{{#t}}common.kil{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >{{#t}}common.tsina{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >{{#t}}common.suma{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >{{#t}}print.warranty.ser_nomer{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >{{#t}}print.warranty.har_mis{{/t}}</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -49,17 +49,17 @@
     <tr>
         <td></td>
         <td colspan="3">
-            <b> Покупець</b> {{customer_name}}
+            <b> {{#t}}common.pokupets{{/t}}</b> {{customer_name}}
         </td>
         <td colspan="4">
-            <b> Продавець</b> {{firm_name}}
+            <b> {{#t}}common.prodavets{{/t}}</b> {{firm_name}}
         </td>
 
     </tr>
     <tr>
         <td></td>
         <td colspan="8">
-            Підписи
+            {{#t}}print.warranty.pidpysy{{/t}}
         </td>
 
 
@@ -70,7 +70,7 @@
 
         </td>
         <td colspan="3">
-            М.П.
+            {{#t}}print.warranty.m_p{{/t}}
         </td>
 
 

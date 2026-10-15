@@ -101,7 +101,7 @@ class Warranty extends \App\Pages\Base
                     }
 
                     if (count($basedoc->getChildren('Warranty')) > 0) {
-                        $this->setWarn('Вже є документ Гарантійний талон');
+                        $this->setWarn(__('doc.warranty.vzhe_ie_dokument_harantiinyi_talon'));
                     }
 
                 }
@@ -176,7 +176,7 @@ class Warranty extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -282,14 +282,14 @@ class Warranty extends \App\Pages\Base
     private function checkForm() {
 
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         return !$this->isError();

@@ -138,7 +138,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setAttribute('readonly' );
        
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
+            $this->docform->tip->setText(__('doc.eq.oplata_cherez_zhurnal_rozrakhunkiv'));
          }
          if($op==EqEntry::OP_PROD){
            $this->docform->amount->setAttribute('readonly' );
@@ -155,7 +155,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly' );
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
+            $this->docform->tip->setText(__('doc.eq.oplata_cherez_zhurnal_rozrakhunkiv'));
        
          }
          if($op==EqEntry::OP_TOSTORE){
@@ -267,7 +267,7 @@ class EQ extends \App\Pages\Base
     private function checkForm() {
          $eq = intval($this->docform->eq->getKey() );
          if($eq==0)  {
-             $this->setError('Не вибрано ОЗ') ;
+             $this->setError(__('doc.eq.ne_vybrano_oz')) ;
              return false;
          }        
          $isincome = 0< intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_INCOME) ); // введен в эксплуатацию
@@ -277,16 +277,16 @@ class EQ extends \App\Pages\Base
          $op = intval($this->docform->optype->getValue() );
          
          if(!in_array($op,[1,6,7,8 ]) && !$isincome ){
-             $this->setError('Не введено в експлуатацію')  ;
+             $this->setError(__('doc.eq.ne_vvedeno_v_ekspluatatsiiu'))  ;
          }
          if(in_array($op,[1,6,7,8]) && $isincome  ){
-             $this->setError('Вже введено в експлуатацію')  ;
+             $this->setError(__('doc.eq.vzhe_vvedeno_v_ekspluatatsiiu'))  ;
          }
          if( in_array($op,[  9,10,11]) && !$isoutcome  ){
-             $this->setError('Не виведено з експлуатації')  ;
+             $this->setError(__('doc.eq.ne_vyvedeno_z_ekspluatatsii'))  ;
          }
          if(!in_array($op,[  9,10,11 ]) && $isoutcome  ){
-             $this->setError('Вже виведено з експлуатації')  ;
+             $this->setError(__('doc.eq.vzhe_vyvedeno_z_ekspluatatsii'))  ;
          }
           
          $amount = doubleval($this->docform->amount->getText() );
@@ -296,14 +296,14 @@ class EQ extends \App\Pages\Base
       
          if($op==6 || $op==9){
              if($c==0)  {
-                 $this->setError('Не вибрано контрагента') ;
+                 $this->setError(__('common.ne_vybrano_kontrahenta')) ;
              }
      
  
          }
          if($op==8 ||$op==10   ){
              if($item==0)  {
-                 $this->setError('Не вибрано ТМЦ') ;
+                 $this->setError(__('doc.eq.ne_vybrano_tmts')) ;
              }
     
          }
@@ -311,14 +311,14 @@ class EQ extends \App\Pages\Base
             $parea = intval($this->docform->parea->getValue() );
             $emp = intval($this->docform->emp->getValue() );
             if($parea==0 && $emp==0)   {
-               $this->setError('Не вибрано дільницю та/або  відповідального ') ;
+               $this->setError(__('doc.eq.ne_vybrano_dilnytsiu_ta_abo')) ;
             
             }
              
          }
          if(in_array($op,[3,4,6.7] )){
              if($amount==0)  {
-                 $this->setError('Не вказано суму  ') ;
+                 $this->setError(__('doc.eq.ne_vkazano_sumu')) ;
              }
          }
    

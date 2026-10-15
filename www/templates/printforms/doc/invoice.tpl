@@ -11,9 +11,9 @@
     {{/islogo}}
     <tr>
         <td></td>
-        <td><b>Покупець</b></td>
+        <td><b>{{#t}}common.pokupets{{/t}}</b></td>
         <td colspan="7"> {{customer_name}}</b> 
-          {{#phone}} Тел. {{phone}}  {{/phone}} 
+          {{#phone}} {{#t}}common.tel_3{{/t}}  {{/phone}} 
         </td>
     </tr>
     
@@ -22,7 +22,7 @@
    {{#edrpou}}
     <tr>
         <td></td>
-        <td valign="top">ЄДРПОУ</td>
+        <td valign="top">{{#t}}common.iedrpou{{/t}}</td>
         <td colspan="7">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
@@ -31,7 +31,7 @@
     
       <tr>
         <td></td>
-        <td valign="top">Адреса</td>
+        <td valign="top">{{#t}}common.adresa_2{{/t}}</td>
         <td colspan="7">{{custaddress}}</td>
     </tr>    
     {{/iscustaddress}}   
@@ -40,9 +40,9 @@
     <tr>
 
         <td></td>
-        <td><b> Продавець</b></td>
+        <td><b> {{#t}}common.prodavets{{/t}}</b></td>
         <td colspan="7"> {{firm_name}} 
-        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
+        {{#fphone}} {{#t}}common.tel_4{{/t}}  {{/fphone}} 
           
         </td>
 
@@ -51,7 +51,7 @@
     {{#fedrpou}}
     <tr>
         <td></td>
-        <td valign="top">ЄДРПОУ</td>
+        <td valign="top">{{#t}}common.iedrpou{{/t}}</td>
         <td colspan="7">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}  
@@ -59,7 +59,7 @@
      {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">ІПН</td>
+        <td valign="top">{{#t}}common.ipn{{/t}}</td>
         <td colspan="7">{{finn}}</td>
     </tr>
      {{/finn}}     
@@ -69,27 +69,27 @@
     <tr>
 
         <td></td>
-        <td><b> Продавець</b></td>
+        <td><b> {{#t}}common.prodavets{{/t}}</b></td>
         <td colspan="7"> {{fop_name}} </td>
 
     </tr> 
     <tr>
         <td></td>
-        <td valign="top">ЄДРПОУ</td>
+        <td valign="top">{{#t}}common.iedrpou{{/t}}</td>
         <td colspan="7">{{fop_edrpou}}</td>
     </tr>       
    {{/isfop}}   
      <tr>
         <td></td>
-        <td valign="top">Адреса</td>
+        <td valign="top">{{#t}}common.adresa_2{{/t}}</td>
         <td colspan="7">{{address}}</td>
     </tr>    
     {{#iscontract}}
     <tr>
 
         <td></td>
-        <td> Договір</td>
-        <td colspan="7">{{contract}} від {{createdon}}</td>
+        <td> {{#t}}common.dohovir{{/t}}</td>
+        <td colspan="7">{{#t}}common.vid{{/t}}</td>
 
     </tr>
     {{/iscontract}}
@@ -97,7 +97,7 @@
     <tr>
 
         <td></td>
-        <td> р/р</td>
+        <td> {{#t}}common.r_r{{/t}}</td>
         <td colspan="7">{{bankacc}}    {{bank}}</td>
 
     </tr>
@@ -117,20 +117,20 @@
     
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
-            Рахунок-фактура № {{document_number}} від {{date}}
+            {{#t}}print.invoice.rakhunok_faktura_vid{{/t}}
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">{{#t}}common.naimenuvannia{{/t}}
         </th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">{{#t}}common.kod{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">{{#t}}common.od{{/t}}</th>
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Ціна  {{#nds}} (без ПДВ)  {{/nds}} </th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">{{#t}}common.kil{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">{{#t}}common.tsina{{/t}}  {{#nds}} {{#t}}common.bez_pdv{{/t}}  {{/nds}} </th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">{{#t}}common.suma{{/t}}</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -145,37 +145,37 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">{{#t}}common.razom{{/t}}</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Знижка:</td>
+        <td colspan="8" align="right">{{#t}}common.znyzhka_2{{/t}}</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
    {{#nds}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">В т.ч. ПДВ:</td>
+        <td colspan="8" align="right">{{#t}}common.v_t_ch_pdv{{/t}}</td>
         <td align="right">{{nds}}</td>
     </tr>
     {{/nds}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">До сплати:</td>
+        <td colspan="8" align="right">{{#t}}common.do_splaty_2{{/t}}</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
    {{#payed}}  
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Оплата:</td>
+        <td colspan="8" align="right">{{#t}}common.oplata_2{{/t}}</td>
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
        {{#payamount}}
    {{#totalstr}}
     <tr>
-        <td colspan="9">На суму <b>{{totalstr}}</b></td>
+        <td colspan="9">{{#t}}common.na_sumu{{/t}} <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}      
   {{/payamount}}

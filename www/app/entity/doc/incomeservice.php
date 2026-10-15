@@ -133,7 +133,7 @@ class IncomeService extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return __('doc.incomeservice.vp_000000');
     }
 
 

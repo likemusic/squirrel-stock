@@ -1,28 +1,28 @@
 <align>center</align>
 <font bold="true">a</font>
 <text>
-   {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
-          {{^isfinished}}  Квитанція до {{/isfinished}} 
+   {{#isfinished}}  {{#t}}common.akt_vykonanykh_robit{{/t}} {{/isfinished}} 
+          {{^isfinished}}  {{#t}}common.kvytantsiia_do{{/t}} {{/isfinished}} 
          {{document_number}}
 </text>
 <font >a</font>
-<text>від {{date}}</text>
+<text>{{#t}}common.vid_2{{/t}}</text>
 <align>left</align>
 <text> {{firm_name}}</text>
     {{#shopname}}
 <text> {{shopname}}</text>
     {{/shopname}}
 <text> {{address}}</text>    
-<text>Тел. {{phone}}</text>    
+<text>{{#t}}common.tel_3{{/t}}</text>    
 <text> {{customer_name}}</text>    
 
     {{#isdevice}}
-<text>Прийнято від клієнта:</text>       
+<text>{{#t}}print.serviceact_bill_ps.pryiniato_vid_kliienta{{/t}}</text>       
 <text>{{device}}</text>       
-<text>с/н {{serial}}</text>       
+<text>{{#t}}print.serviceact_bill.s_n{{/t}}</text>       
     {{/isdevice}}
     {{#iswork}}
-<text>Роботи:</text>       
+<text>{{#t}}print.serviceact_bill.roboty{{/t}}</text>       
     {{#slist}}
 
 <row>
@@ -34,7 +34,7 @@
    {{/iswork}}  
   
     {{#isitems}}
-<text>Комплектуючі:</text>       
+<text>{{#t}}print.serviceact_bill.komplektuiuchi{{/t}}</text>       
  
     {{#ilist}}
  
@@ -48,13 +48,13 @@
    
     {{#istotal}}
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>{{#t}}common.vsoho_2{{/t}}</text>
     {{/istotal}}
 
 
     {{#ispay}}
 <align>left</align> 
-<text>Оплати:</text>  
+<text>{{#t}}common.oplaty{{/t}}</text>  
  
     {{#plist}}
     
@@ -70,8 +70,8 @@
    
 <text>{{gar}}</text>      
  <newline ></newline>   
- <text>Виконавець ________</text>  
+ <text>{{#t}}print.serviceact_bill_ps.vykonavets{{/t}}</text>  
  <newline ></newline>  
- <text>Клієнт ________</text>  
+ <text>{{#t}}print.serviceact_bill_ps.kliient{{/t}}</text>  
  <newline ></newline>  
  

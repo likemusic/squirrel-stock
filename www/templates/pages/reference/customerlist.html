@@ -1,7 +1,7 @@
 <html>
     <head>
         
-             <title> Довідник контрагентів</title>
+             <title> {{#t}}reference.customerlist.dovidnyk_kontrahentiv{{/t}}</title>
       <script src="/assets/js/chart.umd.js?v=441"></script><script src="/assets/js/gcharts-local.js?v=1"></script>
  
     </head>
@@ -10,14 +10,14 @@
         <div class="row">
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
-                    <h2>Довідник контрагентів </h2>
+                    <h2>{{#t}}reference.customerlist.dovidnyk_kontrahentiv{{/t}} </h2>
                     
                     <div class="navbar ">
                        <form zippy="leadf" class="row"  >
                           <div class="col-auto pt-2 ">
                             <div class="form-check ">
                               <input   zippy="chleads" type="checkbox"> 
-                              <label for="chleads"> Режим роботи з лідами </label>
+                              <label for="chleads"> {{#t}}reference.customerlist.rezhym_roboty_z_lidamy{{/t}} </label>
                             </div>
                           </div>  
                         </form>
@@ -29,7 +29,7 @@
                          <div class="col-12">
                            <div class="input-group">
                    
-                            <label   for="searchkey">Пошук</label>
+                            <label   for="searchkey">{{#t}}common.poshuk{{/t}}</label>
                             
                               <input class="form-control ms-sm-2" type="search" zippy="searchkey">
                             </div> 
@@ -37,28 +37,28 @@
                             {{^leadmode}}
                           <div class="col-12">
                            <div class="input-group">
-                           <label   for="searchtype">Тип</label>
+                           <label   for="searchtype">{{#t}}common.typ{{/t}}</label>
                             
                               <select zippy="searchtype" class="form-select  ">
-                                <option value="0">Всі активні</option>
-                                <option value="1">Покупці</option>
-                                <option value="2">Постачальники</option>
-                                <option value="5">Холдинги</option>
+                                <option value="0">{{#t}}reference.customerlist.vsi_aktyvni{{/t}}</option>
+                                <option value="1">{{#t}}common.pokuptsi{{/t}}</option>
+                                <option value="2">{{#t}}common.postachalnyky{{/t}}</option>
+                                <option value="5">{{#t}}reference.customerlist.kholdynhy{{/t}}</option>
                                 {{#df}}
-                                <option value="7">Дропшипінг</option>
-                                <option value="8">Фулфілмент</option>
+                                <option value="7">{{#t}}reference.customerlist.dropshypinh{{/t}}</option>
+                                <option value="8">{{#t}}reference.customerlist.fulfilment{{/t}}</option>
                                 {{/df}}
                                 
-                                <option value="10">Деактивовані</option>
+                                <option value="10">{{#t}}reference.customerlist.deaktyvovani{{/t}}</option>
                              </select>
                             </div> 
                             </div> 
                          <div class="col-12">
                            <div class="input-group">
-                            <label   for="searchholding">дочірній для</label>
+                            <label   for="searchholding">{{#t}}reference.customerlist.dochirnii_dlia{{/t}}</label>
                           
                               <select zippy="searchholding" class="form-control ms-sm-2">
-                                <option value="0">Не вказано</option>
+                                <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                               </select>
                             </div> 
                             </div> 
@@ -66,28 +66,28 @@
                             {{#leadmode}} 
                           <div class="col-12">
                            <div class="input-group">
-                           <label   for="searchleadsource">джерело</label>
+                           <label   for="searchleadsource">{{#t}}reference.customerlist.dzherelo{{/t}}</label>
                             
                               <select zippy="searchleadsource" class="form-select  ">
-                                <option value="0">Не вказано</option>
+                                <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                               </select>    
                             </div> 
                             </div> 
                            <div class="col-12">
                            <div class="input-group">
-                           <label   for="searchleadstatus">стан</label>
+                           <label   for="searchleadstatus">{{#t}}reference.customerlist.stan{{/t}}</label>
                            
                              <select zippy="searchleadstatus" class="form-control me-2">
-                                <option value="0">Не вказано</option>
+                                <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                              </select>  
                             </div>   
                             </div>   
                             {{/leadmode}} 
                             <div class="col-12  ">
-                               <input class="btn btn-success   " type="submit" value="ОК"  >
+                               <input class="btn btn-success   " type="submit" value="{{#t}}common.ok{{/t}}"  >
                              </div>
                              <div class="col-12 pt-2 ">
-                              <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                              <a zippy="erase" title="{{#t}}common.skynuty_filtr{{/t}}"><i class="fa fa-eraser"></i></a>
                              
                            </div> 
                          </div> 
@@ -96,13 +96,13 @@
                         {{#leadmode}}  
                        <div class=" row  ">
                          <div class="col-auto  pe-4 pt-2">
-                           <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
+                           <a zippy="showstat"><i class="fa fa-chart-area"></i> {{#t}}common.statystyka{{/t}}</a>
                          </div>
                          <div class="col-auto  ">
-                            <a class="btn btn-success me-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
+                            <a class="btn btn-success me-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> {{#t}}reference.customerlist.dzherelo_lidiv{{/t}}</i> </a>
                          </div>
                          <div class="col-auto  ">
-                           <a class="btn btn-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                           <a class="btn btn-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> {{#t}}reference.customerlist.stan_lidiv{{/t}}</i> </a>
                          </div>  
                        </div>  
                         {{/leadmode}}            
@@ -113,12 +113,12 @@
                          <div class="col-auto  ">
                       
                      <details class="mb-2 ms-2">
-                        <summary >Теги</summary>
+                        <summary >{{#t}}common.tehy{{/t}}</summary>
                         <small zippy="taglist"></small>
                      </details>
                      </div>   </div>  
                     
-                    <a zippy="addnew" class="btn btn-primary">Додати нового</a>
+                    <a zippy="addnew" class="btn btn-primary">{{#t}}common.dodaty_novoho{{/t}}</a>
                            
                     <form zippy="listform">
                       <div class="table-responsive-lg  "    >
@@ -126,16 +126,16 @@
                         <table class="table table-hover   table-sm mt-2">
                             <tr>
                                 <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                    style="width:30px;cursor:pointer" title="{{#t}}common.zniaty_vystavyty_praporets{{/t}}"><i
                                         class="fa fa-check-double"></i></th>
 
-                                <th ><a zippy="sortname">Ім'я</a> </th>
-                                <th >Тел.</th>
+                                <th ><a zippy="sortname">{{#t}}common.imia{{/t}}</a> </th>
+                                <th >{{#t}}common.tel_2{{/t}}</th>
                                 <th >E-Mail</th>
-                                <th >ЄДРПОУ</th>
-                                {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
-                                {{#leadmode}}     <th><a zippy="sortleadstatus">Стан ліда</a> </th>     {{/leadmode}} 
-                                {{#leadmode}}     <th><a zippy="sortleaddate">Дата</a> </th>     {{/leadmode}} 
+                                <th >{{#t}}common.iedrpou{{/t}}</th>
+                                {{^leadmode}}        <th  ><a zippy="sortdoc">{{#t}}print.outcome.dok{{/t}}</a> </th>    {{/leadmode}}
+                                {{#leadmode}}     <th><a zippy="sortleadstatus">{{#t}}reference.customerlist.stan_lida{{/t}}</a> </th>     {{/leadmode}} 
+                                {{#leadmode}}     <th><a zippy="sortleaddate">{{#t}}common.data{{/t}}</a> </th>     {{/leadmode}} 
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
@@ -165,19 +165,19 @@
                                                      
                                 <td><i zippy="customercomment" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
 
-                                <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарі"></i></td>
-                                <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикріплені файли  "></i></td>
-                                <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
+                                <td><i zippy="hasmsg" class="fa fa-comments" title="{{#t}}common.komentari{{/t}}"></i></td>
+                                <td><i zippy="hasfiles" class="fa fa-paperclip" title="{{#t}}common.prykripleni_faily{{/t}}  "></i></td>
+                                <td><i zippy="isplanned" class="fa fa-calendar-alt" title="{{#t}}reference.customerlist.zaplanovani_podii{{/t}}"></i></td>
 
                                 <td style="white-space:  nowrap"> &nbsp;&nbsp;
-                                    <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редагувати додаткові дані"><i
+                                    <a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="{{#t}}reference.customerlist.redahuvaty_dodatkovi_dani{{/t}}"><i
                                             class="fa fa-eye"></i></a>
 
                                 </td>
 
                             </tr>
-                            <tr><td><a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
+                            <tr><td><a class="text-danger" zippy="deleteall" title="{{#t}}reference.customerlist.vydalyty_deaktyvuvaty{{/t}}"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
 
                         </table>
                         <div style="width:50%" zippy="pag"></div>
@@ -191,15 +191,15 @@
 
 
         <form class="row" zippy="customerdetail" method="post">
-            <h4>&nbsp; Редагувати  </h4>
+            <h4>{{#t}}reference.customerlist.nbsp_redahuvaty{{/t}}  </h4>
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
 
                 <div class="mb-2">
-                    <label for="editcustomername">Назва</label>
+                    <label for="editcustomername">{{#t}}common.nazva{{/t}}</label>
                     <input autofocus="on"    required="on"  class="form-control" zippy="editcustomername"/>
                     {{#leadmode}}  
-                    <small>Можна використати контакт як тимчасове ім'я</small>
+                    <small>{{#t}}reference.customerlist.mozhna_vykorystaty_kontakt_iak_tymchasov{{/t}}</small>
                     {{/leadmode}}  
                 </div>
 
@@ -208,7 +208,7 @@
                     <input type="email"  class="form-control" zippy="editemail"/>
                 </div>
                 <div class="mb-2">
-                    <label for="editphone">Телефон</label>
+                    <label for="editphone">{{#t}}common.telefon{{/t}}</label>
                     <input pattern="[0-9()\+\s]+" class="form-control" zippy="editphone"/>
                 </div>
                 <div class="mb-2">
@@ -216,7 +216,7 @@
                     <input class="form-control" zippy="editviber"/>
                 </div>
                 <div class="mb-2">
-                    <label for="edittelega">Телеграм</label>
+                    <label for="edittelega">{{#t}}common.telehram{{/t}}</label>
                     <input class="form-control" zippy="edittelega"/>
                 </div>
 
@@ -224,54 +224,54 @@
 
                 {{#leadmode}} 
                 <div class="mb-2">
-                    <label for="editleadsource">Джерело ліда</label>
+                    <label for="editleadsource">{{#t}}reference.customerlist.dzherelo_lida{{/t}}</label>
                     <select class="form-select" zippy="editleadsource">
-                        <option value="0">Не вказано</option>
+                        <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label for="editleadstatus">Стан ліда</label>
+                    <label for="editleadstatus">{{#t}}reference.customerlist.stan_lida{{/t}}</label>
                     <select class="form-select" zippy="editleadstatus">
-                        <option value="0">Не вказано</option>
+                        <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                     </select>
                 </div>
                 {{/leadmode}} 
 
                 {{^leadmode}} 
                 <div class="mb-2">
-                    <label for="edittype">Тип</label>
+                    <label for="edittype">{{#t}}common.typ{{/t}}</label>
                     <select zippy="edittype" class="form-select">
-                        <option value="0">Не вказано</option>
+                        <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                     </select>
                 </div>
                  {{#df}}
                 <div class="mb-2">
-                    <label for="editdf">Партнер</label>
+                    <label for="editdf">{{#t}}reference.customerlist.partner{{/t}}</label>
                     <select zippy="editdf" class="form-select">
-                        <option value="0">Не обрано</option>
+                        <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
             
                     </select>
                 </div>
                  {{/df}}         
                 <div class="form-check">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editisholding">Холдинг</label>
-                    <br><small>Компанія (або просто умовна назва), що об'єднує дочірні компанії для  консолідованої звітності  </small>
+                    <label class="form-check-label" for="editisholding">{{#t}}common.kholdynh{{/t}}</label>
+                    <br><small>{{#t}}reference.customerlist.kompaniia_abo_prosto_umovna_nazva{{/t}}  </small>
                 </div>
                 <div class="mb-2">
-                    <label for="editholding">Дочірня для холдингу</label>
+                    <label for="editholding">{{#t}}reference.customerlist.dochirnia_dlia_kholdynhu{{/t}}</label>
                     <select zippy="editholding" class="form-select">
-                        <option value="0">Не обрано</option>
+                        <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                     </select>
                 </div>
             
                 <div class="form-check">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editnosubs">Не враховувати в підписках</label>
+                    <label class="form-check-label" for="editnosubs">{{#t}}reference.customerlist.ne_vrakhovuvaty_v_pidpyskakh{{/t}}</label>
                 </div>
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Більше не використовується</label>
+                    <label class="form-check-label" for="editdisabled">{{#t}}common.bilshe_ne_vykorystovuietsia{{/t}}</label>
                 </div>        
                 {{/leadmode}} 
        
@@ -281,76 +281,76 @@
                 {{^leadmode}}  
                 {{#hideblock}}
                 <div class="mb-2">
-                    <label for="editcity">Країна</label>
+                    <label for="editcity">{{#t}}reference.customerlist.kraina{{/t}}</label>
                     <input class="form-control" zippy="editcity"/>
                 </div>
                   {{/hideblock}}
                 <div class="mb-2">
-                    <label for="editcountry">Місто</label>
+                    <label for="editcountry">{{#t}}common.misto{{/t}}</label>
                     <input class="form-control" zippy="editcountry"/>
                 </div>
                 <div class="mb-2">
-                    <label for="editaddress">Повна адреса</label>
+                    <label for="editaddress">{{#t}}reference.customerlist.povna_adresa{{/t}}</label>
                     <input class="form-control" zippy="editaddress"/>
-                    <small>Для накладних і рахунків-фактур</small>
+                    <small>{{#t}}reference.customerlist.dlia_nakladnykh_i_rakhunkiv_faktur{{/t}}</small>
                 </div>
                 <div class="mb-2">
-                    <label for="editaddressdel">Адреса доставки</label>
+                    <label for="editaddressdel">{{#t}}common.adresa_dostavky{{/t}}</label>
                     <input class="form-control" zippy="editaddressdel"/>
                 </div>
 
                 <div class="mb-2">
-                    <label for="editedrpou">ЄДРПОУ</label>
+                    <label for="editedrpou">{{#t}}common.iedrpou{{/t}}</label>
                     <input value="0" class="form-control"   zippy="editedrpou">
                 </div>
 
                 <div class="form-check">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editjurid">Юр. особа</label>
+                    <label class="form-check-label" for="editjurid">{{#t}}reference.customerlist.iur_osoba{{/t}}</label>
                 </div>
                 
            <div class="mb-2">
-                        <label for="editpricetype">Тип ціни</label>
+                        <label for="editpricetype">{{#t}}common.typ_tsiny{{/t}}</label>
                         <select class="form-select" zippy="editpricetype">
-                         <option value="none">Не обрано</option>                         </select>
-                         <small>Для підстановки в  накладних<small>
+                         <option value="none">{{#t}}common.ne_obrano{{/t}}</option>                         </select>
+                         <small>{{#t}}reference.customerlist.dlia_pidstanovky_v_nakladnykh{{/t}}<small>
                     </div>         
                 
                 {{/leadmode}} 
                 
                {{#shop}}        
                 <div class="mb-2">
-                    <label for="editpassword">Пароль логіна для онлайн-каталогу</label>
+                    <label for="editpassword">{{#t}}reference.customerlist.parol_lohina_dlia_onlain_katalohu{{/t}}</label>
                     <input class="form-control" zippy="editpassword"  type="password"/>
-                    <small>Залиште порожнім, якщо пароль не змінюється</small>
+                    <small>{{#t}}reference.customerlist.zalyshte_porozhnim_iakshcho_parol_ne{{/t}}</small>
                 </div>
                  <div class="mb-2">
-                    <label for="editconfirm">Підтвердити пароль</label>
+                    <label for="editconfirm">{{#t}}reference.customerlist.pidtverdyty_parol{{/t}}</label>
                     <input class="form-control" zippy="editconfirm" type="password"/>
                 </div>
            
                <div class="form-check">
                     <input zippy="editallowedshop" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editallowedshop"   data-label="editallowedshop">Дозвіл на перегляд онлайн каталогу</label>
+                    <label class="form-check-label" for="editallowedshop"   data-label="editallowedshop">{{#t}}reference.customerlist.dozvil_na_perehliad_onlain_katalohu{{/t}}</label>
                 </div>        
                 {{/shop}}  
                                
                 <div class="mb-2">
-                    <label for="editcomment">Примітка</label>
+                    <label for="editcomment">{{#t}}common.prymitka{{/t}}</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
                 </div>
         <div class="mb-2">
-                   <label for="edittags">Теги</label>
+                   <label for="edittags">{{#t}}common.tehy{{/t}}</label>
                    <div zippy="edittags"> </div>
-                   <small>Вводяться по  Enter</small>
+                   <small>{{#t}}common.vvodiatsia_po_enter{{/t}}</small>
               </div>                 
             </div>    
 
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
                 <div class="mb-2">
-                    <button zippy="cancel" type="button" class="btn btn-secondary me-2">Скасувати</button>
-                    <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> 
+                    <button zippy="cancel" type="button" class="btn btn-secondary me-2">{{#t}}common.skasuvaty{{/t}}</button>
+                    <button zippy="save" type="submit" class="btn btn-primary ">{{#t}}common.zberehty{{/t}}</button> 
                     
 
                 </div>
@@ -361,7 +361,7 @@
         <a name="contentviewlink"></a>
         <div class="row mt-2" zippy="contentview">
             <div class="col-12 pb-4">
-                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До переліку</a>
+                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> {{#t}}common.do_pereliku{{/t}}</a>
                 <h4 zippy="concname"></h4>
 
                 <table>
@@ -371,7 +371,7 @@
                     <tr><td colspan="2">
                             <span  zippy="conlastdoc"></span> 
                         </td></tr>
-                    <tr><td ><span data-label="conphone">Телефон</span></td><td><span zippy="conphone"></span></td></tr>
+                    <tr><td ><span data-label="conphone">{{#t}}common.telefon{{/t}}</span></td><td><span zippy="conphone"></span></td></tr>
                     <tr><td ><span data-label="conemail">E-Mail</span></td><td><span zippy="conemail"></span></td></tr>
                 </table>
          
@@ -380,12 +380,12 @@
                 <form zippy="conlstform"  >
                      <div class="row  ">
                     
-                    <label class="col-form-label col-auto" for="conleadstatus"> Стан</label> 
+                    <label class="col-form-label col-auto" for="conleadstatus"> {{#t}}common.stan{{/t}}</label> 
                       <div class="col-auto  ">
                     <select zippy="conleadstatus" class="form-select ms-4"></select>
                      </div>
                      <div class="col-auto  "> 
-                     <a zippy="convert"> <i class="fa fa-gavel"></i> Конвертувати в контрагента </a>
+                     <a zippy="convert"> <i class="fa fa-gavel"></i> {{#t}}reference.customerlist.konvertuvaty_v_kontrahenta{{/t}} </a>
                    </div>
                   </div>   
                 </form>
@@ -400,7 +400,7 @@
                 
                      
 
-                        <h5> Розклад подій </h5>
+                        <h5> {{#t}}reference.customerlist.rozklad_podii{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_eventlist">
                                 <td><span zippy="eventdate"></span><br>
@@ -417,7 +417,7 @@
 
                         <form zippy="addeventform">
                             <div class="mb-2 row">
-                                <label class="col-12 col-form-label" for="addeventdate">Дата, час</label>
+                                <label class="col-12 col-form-label" for="addeventdate">{{#t}}app.jobs.data_chas{{/t}}</label>
 
                                 <div class="col-6">
                                     <input   class="form-control"   zippy="addeventdate" >
@@ -428,32 +428,32 @@
 
                             </div>
                             <div class="mb-2">
-                                <label for="addeventtitle">Заголовок, тип події</label>
+                                <label for="addeventtitle">{{#t}}app.jobs.zaholovok_typ_podii{{/t}}</label>
                                 <input  required="on"  class="form-control" zippy="addeventtitle">
                             </div>
                             <div class="mb-2">
-                                <label for="addeventdesc">Коментар</label>
+                                <label for="addeventdesc">{{#t}}common.komentar{{/t}}</label>
                                 <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                             </div>
                             <div class="mb-2">
-                                <label for="addeventnotify">Нагадати повідомленням за</label>
+                                <label for="addeventnotify">{{#t}}app.jobs.nahadaty_povidomlenniam_za{{/t}}</label>
                                 <select class="form-control" zippy="addeventnotify">
-                                    <option value="0">Не нагадувати</option>
-                                    <option value="1">1 годину</option>
-                                    <option value="2">2 години</option>
-                                    <option value="4">4 години</option>
-                                    <option value="8">8 годин</option>
-                                    <option value="16">16 годин</option>
-                                    <option value="24">24 години</option>
+                                    <option value="0">{{#t}}app.jobs.ne_nahaduvaty{{/t}}</option>
+                                    <option value="1">{{#t}}app.jobs.1_hodynu{{/t}}</option>
+                                    <option value="2">{{#t}}app.jobs.2_hodyny{{/t}}</option>
+                                    <option value="4">{{#t}}app.jobs.4_hodyny{{/t}}</option>
+                                    <option value="8">{{#t}}app.jobs.8_hodyn{{/t}}</option>
+                                    <option value="16">{{#t}}app.jobs.16_hodyn{{/t}}</option>
+                                    <option value="24">{{#t}}app.jobs.24_hodyny{{/t}}</option>
                              </select>
                             </div>
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
                         </form>
                 
                
             </div>
             <div class="col-6  col-md-4 col-xl-3 card">
-                   <h5> Коментарі </h5>
+                   <h5> {{#t}}common.komentari{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
                                 <td>
@@ -467,15 +467,15 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="mb-2">
-                                <label for="addmsg">Коментар</label>
+                                <label for="addmsg">{{#t}}common.komentar{{/t}}</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
                         </form>
             </div>
             <div class="col-6 col-md-4 col-xl-3 card">
-                        <h5> Прикріплені файли </h5>
+                        <h5> {{#t}}common.prykripleni_faily{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_files">
                                 <td><a zippy="filename" target="_blank"></a></td>
@@ -485,18 +485,18 @@
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
                             <div class="mb-2">
-                                <label for="addfile">Вибрати файл</label>
+                                <label for="addfile">{{#t}}common.vybraty_fail_2{{/t}}</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
                             <div class="mb-2">
-                                <label for="adddescfile">Опис </label>
+                                <label for="adddescfile">{{#t}}common.opys{{/t}} </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
 
 
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
 
                         </form>
             </div>
@@ -508,10 +508,10 @@
             <div class="col-6 col-md-4 col-xl-3 ">
                 <div class="card">
 
-                        <h5> Договори </h5>
+                        <h5> {{#t}}reference.contractlist.dohovory{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_contr">
-                                <td><a title="Перейти" zippy="contract"></a></td>
+                                <td><a title="{{#t}}reference.customerlist.pereity{{/t}}" zippy="contract"></a></td>
                                 <td><span zippy="contract_desc"></span></td>
 
                             </tr>
@@ -526,10 +526,10 @@
             <div class="col-6 col-md-4 col-xl-3 ">
                 <div class="card">
 
-                        <h5> Останні документи </h5>
+                        <h5> {{#t}}reference.customerlist.ostanni_dokumenty{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_doc">
-                                <td><a title="Перейти" zippy="doc"></a></td>
+                                <td><a title="{{#t}}reference.customerlist.pereity{{/t}}" zippy="doc"></a></td>
                                 <td class="text-end"><span zippy="doc_amount"></span></td>
                                 <td><span zippy="doc_state"></span></td>
 
@@ -547,9 +547,9 @@
         <form zippy="leadsourcesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагування джерел лідів</h5>
-                    <small>Джерела лідів, наприклад, 'інстаграм', 'дзвінок'...</small>  <br>
-                    <a  zippy="addnewsource">Додати</a>
+                    <h5>{{#t}}reference.customerlist.redahuvannia_dzherel_lidiv{{/t}}</h5>
+                    <small>{{#t}}reference.customerlist.dzherela_lidiv_napryklad_instahram_dzvin{{/t}}</small>  <br>
+                    <a  zippy="addnewsource">{{#t}}common.dodaty{{/t}}</a>
 
                     <table class="table table-sm">
                         <tr zippy="leadsourceslist">
@@ -557,8 +557,8 @@
                             <td><a zippy="delsource"> <i class="fa fa-trash"></i></a></td>
                          </tr>   
                     </table>
-                    <a  zippy="leadsourcecancel" class="btn btn-secondary me-2">Скасувати</a>
-                    <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
+                    <a  zippy="leadsourcecancel" class="btn btn-secondary me-2">{{#t}}common.skasuvaty{{/t}}</a>
+                    <input zippy="leadsourcesave"  type="submit"  value="{{#t}}common.zberehty{{/t}}" class="btn  btn-success">
                     
                 </div>
             </div>
@@ -567,9 +567,9 @@
         <form zippy="leadstatusesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагуванняя станів лідів</h5>
-                    <small>Стан ліда, наприклад, 'очікує', 'перемовини'...</small>  <br>
-                    <a  zippy="addnewstatus">Додати</a>
+                    <h5>{{#t}}reference.customerlist.redahuvanniaia_staniv_lidiv{{/t}}</h5>
+                    <small>{{#t}}reference.customerlist.stan_lida_napryklad_ochikuie_peremovyny{{/t}}</small>  <br>
+                    <a  zippy="addnewstatus">{{#t}}common.dodaty{{/t}}</a>
 
                     <table class="table table-sm">
                         <tr zippy="leadstatuseslist">
@@ -577,8 +577,8 @@
                             <td><a zippy="delstatus"> <i class="fa fa-trash"></i></a></td>
                               </tr> 
                     </table>
-                    <a  zippy="leadstatuscancel" class="btn btn-secondary  me-2">Скасувати</a>
-                    <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-success">
+                    <a  zippy="leadstatuscancel" class="btn btn-secondary  me-2">{{#t}}common.skasuvaty{{/t}}</a>
+                    <input zippy="leadstatussave"  type="submit"  value="{{#t}}common.zberehty{{/t}}" class="btn  btn-success">
                     
                 </div>
             </div>
@@ -588,7 +588,7 @@
 
         <div    zippy="statpan">
 
-            &nbsp;      <a zippy="closestat"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+            &nbsp;      <a zippy="closestat"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.nazad{{/t}}</a>
             <div class="row"   >
                 <div   class="col-12  col-md-6  col-xl-4  ">
                     <div class="card">

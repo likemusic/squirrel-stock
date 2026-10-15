@@ -84,7 +84,7 @@ class Service extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  entrylist where   service_id = {$this->service_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? 'Не можна видаляти послугу, яка використовується' : "";
+        return ($cnt > 0) ? __('app.service.ne_mozhna_vydaliaty_posluhu_iaka') : "";
     }
 
     public static function getCategoryList() {

@@ -311,9 +311,9 @@ class DocView extends \Zippy\Html\PageFragment
             
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
-            $n->message = "<b>Новий коментар до документа:</b> {$doc->meta_desc} {$doc->document_number}  ";
+            $n->message = __('widgets.docview.novyi_komentar_do_dokumenta', ['meta_desc' => $doc->meta_desc, 'document_number' => $doc->document_number]);
             $n->message .= "<br> {$msg->message} ";
-            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$doc->document_id}\">Відповісти</a> ";
+            $n->message .= __('widgets.docview.vidpovisty', ['document_id' => $doc->document_id]);
             $n->sender_id = $user->user_id;
             $n->save();
         }

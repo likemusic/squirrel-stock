@@ -170,7 +170,7 @@ class ProdReturn extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $store_id = $this->docform->store->getValue();
@@ -183,7 +183,7 @@ class ProdReturn extends \App\Pages\Base
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -191,7 +191,7 @@ class ProdReturn extends \App\Pages\Base
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError(__('common.nevirnyi_nomer_serii'));
                 return;
             }
         }
@@ -271,7 +271,7 @@ class ProdReturn extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                            $this->setError(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                             return;
                         }
                     }
@@ -310,7 +310,7 @@ class ProdReturn extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
    
@@ -318,14 +318,14 @@ class ProdReturn extends \App\Pages\Base
 
 
         if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
+            $this->setError(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
        
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
-            $this->setError("Товару {$item->itemname} немає на складі");
+            $this->setError(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
 
@@ -342,7 +342,7 @@ class ProdReturn extends \App\Pages\Base
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Потрібна партія виробника');
+                    $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
@@ -367,21 +367,21 @@ class ProdReturn extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
         return !$this->isError();

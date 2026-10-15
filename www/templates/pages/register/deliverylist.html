@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title> Журнал доставок  </title>
+        <title> {{#t}}register.deliverylist.zhurnal_dostavok{{/t}}  </title>
 
     </head>
    <body>
         <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3   " >
-                <h3>Журнал доставок</h3>
+                <h3>{{#t}}register.deliverylist.zhurnal_dostavok{{/t}}</h3>
                 <div id="newordersalert" style="display:none;"  class="alert alert-success  ms-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
@@ -29,7 +29,7 @@
                                     </div>
                                     </div>
                                        <div class="col-12  ">
-                                    <input type="submit" class="  btn btn-success  " value="Шукати">
+                                    <input type="submit" class="  btn btn-success  " value="{{#t}}common.shukaty{{/t}}">
                                  </div>
                                  </div>
 
@@ -39,15 +39,15 @@
    
                     <table class="table  table-sm">
                         <tr>
-                            <th>Дата</th>
-                            <th>Номер</th>
+                            <th>{{#t}}common.data{{/t}}</th>
+                            <th>{{#t}}common.nomer{{/t}}</th>
 
-                            <th >Статус</th>
-                            <th >Час доставки</th>
-                            <th >Адреса </th>
-                            <th >Контакт </th>
-                            <th >Відповідальний </th>
-                            <th class="text-end">Сума</th>
+                            <th >{{#t}}common.status{{/t}}</th>
+                            <th >{{#t}}common.chas_dostavky{{/t}}</th>
+                            <th >{{#t}}common.adresa_2{{/t}} </th>
+                            <th >{{#t}}common.kontakt{{/t}} </th>
+                            <th >{{#t}}common.vidpovidalnyi{{/t}} </th>
+                            <th class="text-end">{{#t}}common.suma{{/t}}</th>
 
                             <th ></th>
                             <th ></th>
@@ -82,31 +82,31 @@
                                     <form zippy="statusform"  >
                                     <div class="row  ">
                                           <div class="col-auto  ">
-                                        <button zippy="bdelivered" type="submit" class="  btn btn-success  me-2 ">Доставлено</button>   
+                                        <button zippy="bdelivered" type="submit" class="  btn btn-success  me-2 ">{{#t}}register.deliverylist.dostavleno{{/t}}</button>   
                                         </div>
-                                        <label class="col-form-label col-auto" data-label="emp" for="emp">Відповідальний</label>
+                                        <label class="col-form-label col-auto" data-label="emp" for="emp">{{#t}}common.vidpovidalnyi{{/t}}</label>
                                            <div class="col-auto  ">
                                         <select zippy="emp" class="form-control me-2">
-                                            <option value="0">Не вказано</option>
+                                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                         </select>   </div>
                                            <div class="col-auto  ">
-                                        <button zippy="bsend" type="submit" class="  btn btn-success ms-2  me-2 ">Відправити </button>   
+                                        <button zippy="bsend" type="submit" class="  btn btn-success ms-2  me-2 ">{{#t}}common.vidpravyty{{/t}} </button>   
                                        </div></div>
                                     </form>
 
                                     <form zippy="payform"  >
                                     <div class="row  ">
-                                        <label class="col-form-label col-auto" data-label="payamount" for="payamount">До сплати</label>
+                                        <label class="col-form-label col-auto" data-label="payamount" for="payamount">{{#t}}common.do_splaty{{/t}}</label>
                                           <div class="col-auto  ">
                                        <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice me-2">
                                         </div>
-                                        <label class="col-form-label col-auto" data-label="mf" for="mf">Рахунок</label>
+                                        <label class="col-form-label col-auto" data-label="mf" for="mf">{{#t}}common.rakhunok{{/t}}</label>
                                            <div class="col-auto  ">
                                         <select zippy="mf" class="form-control">
-                                            <option value="0">Не вказано</option>
+                                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                         </select>   </div>
                                           <div class="col-auto  ">
-                                        <button zippy="bpay" type="submit" class="  btn btn-primary ms-2  me-2 ">Внести оплату</button>
+                                        <button zippy="bpay" type="submit" class="  btn btn-primary ms-2  me-2 ">{{#t}}common.vnesty_oplatu{{/t}}</button>
                                        </div></div> 
                                     </form>
                                 </div>

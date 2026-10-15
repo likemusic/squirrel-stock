@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -35,7 +35,7 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('eistatus', array('pending' => 'В очікуванні', 'processing' => 'В обробці','on-hold'=>'На  утриманні' ), 'pending'));
+        $this->filter->add(new DropDownChoice('eistatus', array('pending' => __('mod.wc.orders.v_ochikuvanni'), 'processing' => __('mod.wc.orders.v_obrobtsi'),'on-hold'=>__('mod.wc.orders.na_utrymanni') ), 'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -44,7 +44,7 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'cancelled' => 'Скасований'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => __('common.vykonanyi'), 'shipped' => __('common.dostavlenyi'), 'cancelled' => __('doc.document.skasovanyi')), 'completed'));
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
           
     }
@@ -114,7 +114,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product->name} в замовленні номер " .  $wcorder->id);
+                        $this->setWarn(__('common.ne_znaideno_artykul_tovara_v', ['name' => $product->name]) .  $wcorder->id);
                         continue;
                     }
                     $tovar->quantity = $product->quantity;
@@ -150,15 +150,15 @@ class Orders extends \App\Pages\Base
 
 
                 $neworder->document_date = time();
-                $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
-                $neworder->notes .= " Адреса доставки:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-                $neworder->notes .= " Адреса платіжна:" . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
+                $neworder->notes = __('mod.wc.orders.wc_nomer', ['id' => $wcorder->id]);
+                $neworder->notes .= __('mod.wc.orders.kliient') . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
+                $neworder->notes .= __('mod.wc.orders.adresa_dostavky') . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= __('mod.wc.orders.adresa_platizhna') . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
    
                 if (strlen($wcorder->billing->phone) > 0) {
-                    $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
+                    $neworder->notes .= __('common.tel') . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
+                $neworder->notes .= __('common.kommentar') . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;
             }
@@ -199,7 +199,7 @@ class Orders extends \App\Pages\Base
                         $cust->customer_name = trim($shoporder->headerdata['wcclient']);
                         $cust->type = Customer::TYPE_BAYER;
                         $cust->phone = $phone;
-                        $cust->comment = "Клієнт  WC";
+                        $cust->comment = __('mod.wc.orders.kliient_wc');
                         $cust->save();
                   }
                 
@@ -233,7 +233,7 @@ class Orders extends \App\Pages\Base
            
             return;
         }  
-        $this->setInfo("Імпортовано {$i} замовлень");
+        $this->setInfo(__('mod.ocstore.orders.importovano_zamovlen', ['i' => $i]));
        
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -270,7 +270,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('Не обрано ордер');
+            $this->setError(__('common.ne_obrano_order'));
             return;
         }
 
@@ -292,7 +292,7 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень");
+        $this->setSuccess(__('common.onovleno_2').count($elist).__('common.zamovlen'));
 
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);

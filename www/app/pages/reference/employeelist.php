@@ -69,7 +69,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new TextInput('editposition'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
 
-        $this->employeedetail->add(new DropDownChoice('editztype', array("1" => "Оклад", "2" => "Погодинна оплата", "3" => "Понарядна"), 1))->onChange($this, "onType");
+        $this->employeedetail->add(new DropDownChoice('editztype', array("1" => __('reference.employeelist.oklad'), "2" => __('reference.employeelist.pohodynna_oplata'), "3" => __('reference.employeelist.ponariadna')), 1))->onChange($this, "onType");
         $this->employeedetail->add(new TextInput('editzhour'));
         $this->employeedetail->add(new TextInput('editzmon'));
         $this->employeedetail->add(new TextInput('editadvance'));
@@ -385,7 +385,7 @@ class EmployeeList extends \App\Pages\Base
 
         $file = $this->contentview->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError(__('common.fail_bilshe_10_mb'));
             return;
         }
 

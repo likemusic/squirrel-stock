@@ -23,7 +23,7 @@ class OutcomeItem extends Document
 
             $listst = Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']??0);
             if (count($listst) == 0) {
-                \App\System::setErrorMsg("Недостатньо товару"  . $item->itemname);
+                \App\System::setErrorMsg(__('doc.outcomeitem.nedostatno_tovaru')  . $item->itemname);
                 return false;
             }
             foreach ($listst as $st) {
@@ -81,7 +81,7 @@ class OutcomeItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'СТ-000000';
+        return __('doc.outcomeitem.st_000000');
     }
 
     public function getRelationBased() {

@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title> Довідник нарахувань та утримань </title>
+            <title> {{#t}}reference.salarytypelist.dovidnyk_narakhuvan_ta_utryman{{/t}} </title>
   </head>
 
     <body>
@@ -9,13 +9,13 @@
             
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active"   data-bs-toggle="tab" href="#listtab" role="tab"  >Перелік</a>
+    <a class="nav-link active"   data-bs-toggle="tab" href="#listtab" role="tab"  >{{#t}}common.perelik{{/t}}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link"   data-bs-toggle="tab" href="#calctab" role="tab"  >Формули</a>
+    <a class="nav-link"   data-bs-toggle="tab" href="#calctab" role="tab"  >{{#t}}reference.salarytypelist.formuly{{/t}}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link"   data-bs-toggle="tab" href="#optiontab" role="tab"  >Налаштування</a>
+    <a class="nav-link"   data-bs-toggle="tab" href="#optiontab" role="tab"  >{{#t}}common.nalashtuvannia{{/t}}</a>
   </li>
 </ul>
 <div class="tab-content"  >
@@ -23,17 +23,17 @@
        <div class="row"    >
        
                <div zippy="tablepan"  class="col-12  col-md-8  col-xl-6" >
-                <h4>Коди нарахувань та утримань </h4>    
-                <small>За замовчанням коди до 200 - нарахування </small>    
-                   <br> <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                <h4>{{#t}}reference.salarytypelist.kody_narakhuvan_ta_utryman{{/t}} </h4>    
+                <small>{{#t}}reference.salarytypelist.za_zamovchanniam_kody_do_200{{/t}} </small>    
+                   <br> <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
-                            <th>Найменування</th>
+                            <th>{{#t}}common.naimenuvannia{{/t}}</th>
 
-                            <th> Скорочення</th>
-                            <th> Код</th>
+                            <th> {{#t}}reference.salarytypelist.skorochennia{{/t}}</th>
+                            <th> {{#t}}common.kod{{/t}}</th>
                             {{#useacc}}
-                             <th>Бух. рахунок  </th>
+                             <th>{{#t}}doc.calcsalary.bukh_rakhunok{{/t}}  </th>
                             {{/useacc}}
                             <th> </th>
                         </tr>
@@ -44,7 +44,7 @@
                             {{#useacc}}
                              <td zippy="acccode"></td>
                             {{/useacc}}
-                            <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
+                            <td  ><a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                     </table>
 
@@ -53,39 +53,39 @@
 
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
                     <div class="mb-2">
-                        <label for="editstname">Найменування</label>
+                        <label for="editstname">{{#t}}common.naimenuvannia{{/t}}</label>
                         <input autofocus="on"    required="on"  class="form-control" zippy="editstname"/>
                     </div>
                     <div class="mb-2">
-                        <label for="editshortname">Скорочене позначення</label>
+                        <label for="editshortname">{{#t}}reference.salarytypelist.skorochene_poznachennia{{/t}}</label>
                         <input maxlength="10"  style="width:200px;"  required="on"  class="form-control" zippy="editshortname"/>
-                        <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
+                        <small>{{#t}}reference.salarytypelist.do_10_symvoliv_vykorystovuietsia_dlia{{/t}}</small>
                     </div>
                     <div class="mb-2">
-                        <label for="editcode">Код                        </label>
+                        <label for="editcode">{{#t}}common.kod{{/t}}                        </label>
                         <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
-                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.                         </small>
+                        <small>{{#t}}reference.salarytypelist.tryznachnyi_kod_dlia_vykorystannia_u{{/t}}                         </small>
                     </div>
                     {{#useacc}}
                      <div class="mb-2">
-                        <label for="editacc">Бух. рахунок                        </label>
+                        <label for="editacc">{{#t}}doc.calcsalary.bukh_rakhunok{{/t}}                        </label>
                         <select   class="form-control" zippy="editacc">
-                            <option value="0">Не вказано</option>
-                            <option value="641">Розрахунки за податками</option>
-                            <option value="65">Розрахунки за страхуванням</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
+                            <option value="641">{{#t}}app.account.rozrakhunky_za_podatkamy{{/t}}</option>
+                            <option value="65">{{#t}}app.account.rozrakhunky_za_strakhuvanniam{{/t}}</option>
                         </select>
-                        <small> Тільки для утримань   </small>
+                        <small> {{#t}}reference.salarytypelist.tilky_dlia_utryman{{/t}}   </small>
                     </div>
                     {{/useacc}}
                  
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Більше не використовується</label>
+                        <label class="form-check-label" for="editdisabled">{{#t}}common.bilshe_ne_vykorystovuietsia{{/t}}</label>
                     </div>
                    <div class="mb-2">
-                     <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
-                     <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary me-2 ">
-                     <input zippy="delete" type="button" value="Видалити" class="btn btn-danger  ">
+                     <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">
+                     <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary me-2 ">
+                     <input zippy="delete" type="button" value="{{#t}}common.vydalyty{{/t}}" class="btn btn-danger  ">
                    </div>
                 </form>
   
@@ -93,24 +93,24 @@
        </div>
   </div>
   <div class="tab-pane  " id="calctab"  >
-     <h4>Формули розрахунку зарплати</h4>   
+     <h4>{{#t}}reference.salarytypelist.formuly_rozrakhunku_zarplaty{{/t}}</h4>   
       <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="calcform"  >
              <div class="mb-2">
-                <label for="calcbase">Розрахунок основної зарплати</label>             
+                <label for="calcbase">{{#t}}reference.salarytypelist.rozrakhunok_osnovnoi_zarplaty{{/t}}</label>             
                 <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
-                <small>Виконується однократно для заповнення поля  редагування</small>
+                <small>{{#t}}reference.salarytypelist.vykonuietsia_odnokratno_dlia_zapovnennia{{/t}}</small>
              </div> 
              <div class="mb-2">
-                <label for="calc">Розрахунок нарахувань та утримань </label>
+                <label for="calc">{{#t}}reference.salarytypelist.rozrakhunok_narakhuvan_ta_utryman{{/t}} </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
-                <small>Виконується після редагування основної зарплати</small>
+                <small>{{#t}}reference.salarytypelist.vykonuietsia_pislia_redahuvannia_osnovno{{/t}}</small>
            </div> 
              <div class="mb-2">
                     
-                     <a zippy="savecalc"    class="btn btn-success  ">Зберегти</a>&nbsp;&nbsp;
+                     <a zippy="savecalc"    class="btn btn-success  ">{{#t}}common.zberehty{{/t}}</a>&nbsp;&nbsp;
                       
              </div>
                 
@@ -119,52 +119,45 @@
          
           </div>
  <div class="col-12 col-md-6  "    >
-     <h5>Коди контексту      </h5>
-       <b>daysmon</b>  - кількість робочих днів у місяці   <br>
-       <b>invalid</b> - особа з інвалідністю (true або false) <br>
-       <b>salarytype</b> - тип  зарплати   1 - оклад, 2 - Погодинна оплата, 3 - відрядна оплата <br>  
-       <b>salarym</b> - оклад    <br>
-       <b>salaryh</b> - погодинна  сума    <br>
-       <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
-       <b>tasksum</b> - сума  по відрядному  виробництву <br>
-       <b>hours</b> - робочі години з обліку часу <br>
-       <b>days</b> - робочі дні з обліку часу <br>
-       <b>hours_over</b> - переробка <br>
-       <b>hours_week</b> - години в вихідні <br>
-       <b>days_week</b> - дні в вихідні <br>
-       <b>days_vac</b> - дні відпустки <br>
-       <b>days_sick</b> - лікарняні дні <br>
-       <b>days_bt</b> - дні в відрядженні <br>
-       <b>advance</b> - аванс <br>
-       <b>bonus</b> - премії та бонуси <br>
-       <b>fine</b> - штрафи <br>
+     <h5>{{#t}}reference.salarytypelist.kody_kontekstu{{/t}}      </h5>
+       <b>daysmon</b>  {{#t}}reference.salarytypelist.kilkist_robochykh_dniv_u_misiatsi{{/t}}   <br>
+       <b>invalid</b> {{#t}}reference.salarytypelist.osoba_z_invalidnistiu_true_abo{{/t}} <br>
+       <b>salarytype</b> {{#t}}reference.salarytypelist.typ_zarplaty_1_oklad_2{{/t}} <br>  
+       <b>salarym</b> {{#t}}reference.salarytypelist.oklad{{/t}}    <br>
+       <b>salaryh</b> {{#t}}reference.salarytypelist.pohodynna_suma{{/t}}    <br>
+       <b>sellvalue</b> {{#t}}reference.salarytypelist.vyruchka_po_prodazhnykh_dokumentakh_spiv{{/t}} <br>
+       <b>tasksum</b> {{#t}}reference.salarytypelist.suma_po_vidriadnomu_vyrobnytstvu{{/t}} <br>
+       <b>hours</b> {{#t}}reference.salarytypelist.robochi_hodyny_z_obliku_chasu{{/t}} <br>
+       <b>days</b> {{#t}}reference.salarytypelist.robochi_dni_z_obliku_chasu{{/t}} <br>
+       <b>hours_over</b> {{#t}}reference.salarytypelist.pererobka{{/t}} <br>
+       <b>hours_week</b> {{#t}}reference.salarytypelist.hodyny_v_vykhidni{{/t}} <br>
+       <b>days_week</b> {{#t}}reference.salarytypelist.dni_v_vykhidni{{/t}} <br>
+       <b>days_vac</b> {{#t}}reference.salarytypelist.dni_vidpustky{{/t}} <br>
+       <b>days_sick</b> {{#t}}reference.salarytypelist.likarniani_dni{{/t}} <br>
+       <b>days_bt</b> {{#t}}reference.salarytypelist.dni_v_vidriadzhenni{{/t}} <br>
+       <b>advance</b> {{#t}}reference.salarytypelist.avans{{/t}} <br>
+       <b>bonus</b> {{#t}}reference.salarytypelist.premii_ta_bonusy{{/t}} <br>
+       <b>fine</b> {{#t}}reference.salarytypelist.shtrafy{{/t}} <br>
 
      
       
        <br>
        <br>
 <details>
-            <summary><b>Керівництво по синтаксису</b></summary>
+            <summary><b>{{#t}}reference.salarytypelist.kerivnytstvo_po_syntaksysu{{/t}}</b></summary>
             <p>  <br>
-              Формули пишуться з використанням синтаксису мови JavaScript. Обчислення (у документі Нарахування зарплати) здійснюються за
-              рядками (за співробітником у переліку) .
-              <br>Нарахування та утримання позначаються кодом із префіксом v.
-               <br>Наприклад v900 = v200 + v300
-              <br>При необхідності список нарахувань та утримань може мати не грошові поля, наприклад, кількість днів відпустки
-              або лікарняного для розрахунку на підставі зарплати та кількості днів у місяці.
-               <br> Для форматування  сум (наприклад  після  операцій ділення)  можна використати  функцію  fa()  наприклад = v105=fa(v105) . 
-               Кількість нулів після  коми буде відповідати загальним налаштуванням.
+              {{#t}}reference.salarytypelist.formuly_pyshutsia_z_vykorystanniam_synta{{/t}}
+              <br>{{#t}}reference.salarytypelist.narakhuvannia_ta_utrymannia_poznachaiuts{{/t}}
+               <br>{{#t}}reference.salarytypelist.napryklad_v900_v200_v300{{/t}}
+              <br>{{#t}}reference.salarytypelist.pry_neobkhidnosti_spysok_narakhuvan_ta{{/t}}
+               <br> {{#t}}reference.salarytypelist.dlia_formatuvannia_sum_napryklad_pislia{{/t}}
                  
-              <br>Також можуть використовуватися деякі системні змінні, такі як кількість днів у
-              місяці, кількість дітей, особа з інвалідністю, сумісник тощо.
+              <br>{{#t}}reference.salarytypelist.takozh_mozhut_vykorystovuvatysia_deiaki{{/t}}
               
-              <br>Результат має бути присвоєний змінній з номером, заданим у налаштуваннях -
-              поле До видачі. Цим полем буде виконано запис в особистий рахунок співробітника.
+              <br>{{#t}}reference.salarytypelist.rezultat_maie_buty_prysvoienyi_zminnii{{/t}}
               
-              <br>Формули зберігаються як налаштування, тобто може бути заданий алгоритм для будь якого
-              типу бізнесу та/або будь якого законодавства будь якої країни.
-               <br>  Розрахунок  може не  працювати  зза  помилки  в  формулах, наприклад  неіснуюча змінна  або  який  спецсимвол.
-               помилки скрипту   можна побачити  в  devtools (для Chrome     F12-&gt;console)
+              <br>{{#t}}reference.salarytypelist.formuly_zberihaiutsia_iak_nalashtuvannia{{/t}}
+               <br>  {{#t}}reference.salarytypelist.rozrakhunok_mozhe_ne_pratsiuvaty_zza{{/t}}
              </p>
          </details>        
        </div>
@@ -172,45 +165,45 @@
        
   </div>
   <div class="tab-pane  " id="optiontab"  >
-     <h4>Налаштування </h4>
+     <h4>{{#t}}common.nalashtuvannia{{/t}} </h4>
     <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="optform"  >
              <div class="mb-2">
-                <label for="optbaseincom">Основна зарплата</label>
+                <label for="optbaseincom">{{#t}}reference.salarytypelist.osnovna_zarplata{{/t}}</label>
                 <select  class="form-control" zippy="optbaseincom" >
-                   <option value="0">Не вибрано</option>
+                   <option value="0">{{#t}}common.ne_vybrano{{/t}}</option>
                 </select>
-                <small>Показується як поле ручного вводу </small>
-               <br> <small> <i class="fa fa-exclamation-triangle"></i> Інші поля тільки на  основі  формул  </small>
+                <small>{{#t}}reference.salarytypelist.pokazuietsia_iak_pole_ruchnoho_vvodu{{/t}} </small>
+               <br> <small> <i class="fa fa-exclamation-triangle"></i> {{#t}}reference.salarytypelist.inshi_polia_tilky_na_osnovi{{/t}}  </small>
              </div> 
      
      
       
              <div class="mb-2">
-                <label for="optall">Всього нараховано</label>
+                <label for="optall">{{#t}}reference.salarytypelist.vsoho_narakhovano{{/t}}</label>
                 <select  class="form-control" zippy="optall" >
                 
                 </select>
-                <small>Обов'язкове поле, значення якого відноситься до  витрат . </small>
+                <small>{{#t}}reference.salarytypelist.oboviazkove_pole_znachennia_iakoho_vidno{{/t}} </small>
                 
              </div> 
      
        
              <div class="mb-2">
-                <label for="optresult">До видачі</label>
+                <label for="optresult">{{#t}}reference.salarytypelist.do_vydachi{{/t}}</label>
                 <select  class="form-control" zippy="optresult" >
                 
                 </select>
-                <small>Обов'язкове поле, значення якого заноситься до балансу особового рахунку співробітника. </small>
+                <small>{{#t}}reference.salarytypelist.oboviazkove_pole_znachennia_iakoho_zanos{{/t}} </small>
                 
              </div> 
      
              <div class="mb-2">
                     
                       
-                   <a zippy="saveopt"    class="btn btn-success  ">Зберегти</a>
+                   <a zippy="saveopt"    class="btn btn-success  ">{{#t}}common.zberehty{{/t}}</a>
                       
              </div>
                 

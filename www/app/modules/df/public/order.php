@@ -115,12 +115,12 @@ class Order extends  Base
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
-        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', __('common.nazva'), true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', __('common.artykul'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', __('common.shtrykh_kod'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', __('common.brend'), true, true, false));
         if($this->_tvars["isff"]==true ) {
-           $table->AddColumn(new \Zippy\Html\DataList\Column('onstore', "На складі", false, true, false,'text-end','text-end'));
+           $table->AddColumn(new \Zippy\Html\DataList\Column('onstore', __('common.na_skladi'), false, true, false,'text-end','text-end'));
         }
         $table->setCellClickEvent($this, 'OnSelect');
 
@@ -245,7 +245,7 @@ class Order extends  Base
       
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -256,7 +256,7 @@ class Order extends  Base
         $item->price = $this->editdetail->editprice->getDouble();
         
         if($item->price==0){
-           $this->setError('Не задано відпускну ціну');
+           $this->setError(__('mod.df.order.ne_zadano_vidpusknu_tsinu'));
            return;
         }
         $item->pricefrom = $this->editdetail->pricefrom->getText();
@@ -279,7 +279,7 @@ class Order extends  Base
             }
             
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo(__('common.pozytsiia_dodana')) ;
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
@@ -352,10 +352,10 @@ class Order extends  Base
            $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayhouse'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' буд '. $this->docform->bayhouse->getText() );   
+           $this->_doc->headerdata['npaddressfull']  .= (__('doc.order.bud'). $this->docform->bayhouse->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayflat'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' кв '. $this->docform->bayflat->getText() );   
+           $this->_doc->headerdata['npaddressfull']  .= (__('doc.order.kv'). $this->docform->bayflat->getText() );   
         }
         if(strlen($this->_doc->headerdata['npaddressfull'])==0) {
            $this->_doc->headerdata['npaddressfull']  = $this->_doc->headerdata['npaddress'];   
@@ -460,18 +460,18 @@ class Order extends  Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
        
@@ -506,7 +506,7 @@ class Order extends  Base
         $qty=$item->getQuantity();
         
         if(doubleval($qty) <= 0 ) {
-            $this->setWarn('Товару  немає  на  складі') ;
+            $this->setWarn(__('mod.df.order.tovaru_nemaie_na_skladi')) ;
         }
     }
    

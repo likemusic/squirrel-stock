@@ -10,120 +10,114 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-10 col-xl-10  ps-4 pe-4">
-            <h2>Опис API</h2>
+            <h2>{{#t}}app.apihelp.opys_api{{/t}}</h2>
 
-            <h3>Формат обміну</h3>
+            <h3>{{#t}}app.apihelp.format_obminu{{/t}}</h3>
             <p>
-              В якості протоколу в API використовується <a target="_blank"
+              {{#t}}app.apihelp.v_iakosti_protokolu_v_api{{/t}} <a target="_blank"
                                                             href="https://www.jsonrpc.org/specification">JSON-RPC</a>.
-                <br>Повідомлення в загальному  випадку має вигляд:
+                <br>{{#t}}app.apihelp.povidomlennia_v_zahalnomu_vypadku_maie{{/t}}
                 <br>POST /api/{endpoint}
                 <br>content-type: application/json
-                <br>Authorization: Bearer &lt;JWT токен&gt;
+                <br>{{#t}}app.apihelp.authorization_bearer_lt_jwt_token{{/t}}
                 <br>
-                <br><code>{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привіт"}, "id": 1}</code>
+                <br><code>{{#t}}app.apihelp.jsonrpc_2_0_method_echo{{/t}}</code>
              </p>
             <ul>
-                <li>jsonrpc - завжди "2.0"</li>
-                <li>method - функція, що викликається</li>
-                <li>params - параметри (не обов'язкове поле)</li>
-                <li>id - ідентифікатор запиту</li>
+                <li>{{#t}}app.apihelp.jsonrpc_zavzhdy_2_0{{/t}}</li>
+                <li>{{#t}}app.apihelp.method_funktsiia_shcho_vyklykaietsia{{/t}}</li>
+                <li>{{#t}}app.apihelp.params_parametry_ne_oboviazkove_pole{{/t}}</li>
+                <li>{{#t}}app.apihelp.id_identyfikator_zapytu{{/t}}</li>
             </ul>
              <p>
-            Ідентифікатор запиту повертається у відповідь і може бути будь яким унікальним у випадку пакетного
-            (batch)  запиту, (сервер може бути асинхронним та повернути відповіді у довільному порядку). У випадку
-            відсутності ідентифікатора вважається, що запит - це нотифікація і не потребує відповіді.
-            <br> Пакетний запит
-            <br><code>[{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привіт"}, "id": 1}, {"jsonrpc": "2.0",
-            "method": "echo", "params": {"say": "Бувай"}, "id": 1} ]</code>
-            <br> Відповідь має вигляд
+            {{#t}}app.apihelp.identyfikator_zapytu_povertaietsia_u_vid{{/t}}
+            <br> {{#t}}app.apihelp.paketnyi_zapyt{{/t}}
+            <br><code>{{#t}}app.apihelp.jsonrpc_2_0_method_echo_2{{/t}}</code>
+            <br> {{#t}}app.apihelp.vidpovid_maie_vyhliad{{/t}}
             <br>
-            <code> {"jsonrpc": "2.0", "result": {"answer": "Привіт"}, "id": 1} </code>
+            <code> {{#t}}app.apihelp.jsonrpc_2_0_result_answer{{/t}} </code>
              </p>
             <ul>
-                <li>jsonrpc - завжди "2.0"</li>
-                <li>result - відповідь</li>
-                <li>error - повертається замість result, якщо помилка</li>
-                <li>id - відповідний ідентифікатор із запиту</li>
+                <li>{{#t}}app.apihelp.jsonrpc_zavzhdy_2_0{{/t}}</li>
+                <li>{{#t}}app.apihelp.result_vidpovid{{/t}}</li>
+                <li>{{#t}}app.apihelp.error_povertaietsia_zamist_result_iakshc{{/t}}</li>
+                <li>{{#t}}app.apihelp.id_vidpovidnyi_identyfikator_iz_zapytu{{/t}}</li>
             </ul>
             <p>
-            <i class="fa fa-exclamation-triangle"></i>  Поля з довільним текстом (наприклад описи) повертаються  закодованими  в  base64
+            <i class="fa fa-exclamation-triangle"></i>  {{#t}}app.apihelp.polia_z_dovilnym_tekstom_napryklad{{/t}}
             </p>
             
-                <b>Коди помилок</b>
+                <b>{{#t}}app.apihelp.kody_pomylok{{/t}}</b>
             <table class="ctable">
                 <tr>
                     <td>-1000</td>
-                    <td>Невірний логін</td>
+                    <td>{{#t}}api.common.nevirnyi_lohin{{/t}}</td>
                 </tr>
                 <tr>
                     <td>-1001</td>
-                    <td>Користувач не знайдений</td>
+                    <td>{{#t}}api.jsonrpc.korystuvach_ne_znaidenyi{{/t}}</td>
                 </tr>
                 <tr>
                     <td>-1002</td>
-                    <td>Прострочений токен</td>
+                    <td>{{#t}}api.jsonrpc.prostrochenyi_token{{/t}}</td>
                 </tr>
                 <tr>
                     <td>-1003</td>
-                    <td>Помилка в синтаксисі</td>
+                    <td>{{#t}}app.apihelp.pomylka_v_syntaksysi{{/t}}</td>
                 </tr>
                 <tr>
                     <td>-1004</td>
-                    <td>Невірний запит</td>
+                    <td>{{#t}}app.apihelp.nevirnyi_zapyt{{/t}}</td>
                 </tr>
                 <tr>
                     <td>-1005</td>
-                    <td>Хибна команда</td>
+                    <td>{{#t}}app.apihelp.khybna_komanda{{/t}}</td>
                 </tr>
             </table>
           
-            <h3>Авторизація</h3>
+            <h3>{{#t}}app.apihelp.avtoryzatsiia{{/t}}</h3>
             <p>
-                Тип авторизації задається в налаштуваннях і може бути на основі JWT токена, Basic аутентифікації
-                або авторизація може не використовуватися (наприклад, у локальній мережі).
-                Bearer та Basic аутентифікація відправляються стардартним чином в заголовку Authorization.
-                Для Bearer попередньо необхідно отримати JWT токен.
+                {{#t}}app.apihelp.typ_avtoryzatsii_zadaietsia_v_nalashtuva{{/t}}
             </p>
             
-            <br><b><a href="https://github.com/leon-mbs/zstore/blob/master/www/app/api/client.php">Приклад клієнту</a> для роботи з API</b>
+            <br><b><a href="https://github.com/leon-mbs/zstore/blob/master/www/app/api/client.php">{{#t}}app.apihelp.pryklad_kliientu{{/t}}</a> {{#t}}app.apihelp.dlia_roboty_z_api{{/t}}</b>
             
             
-            <h3>Перелік endpoints</h3>
+            <h3>{{#t}}app.apihelp.perelik_endpoints{{/t}}</h3>
             <ul style=" line-height: 1.4em;" class="list-unstyled text-bold">
-                <li><a class=" " href="#common">Загальні</a></li>
-                <li><a class=" " href="#items">ТМЦ</a></li>
-                <li><a class=" " href="#service">Роботи, послуги</a></li>
-                <li><a class=" " href="#cust">Контрагенти</a></li>
-                <li><a class=" " href="#docs">Документи</a></li>
+                <li><a class=" " href="#common">{{#t}}app.apihelp.zahalni{{/t}}</a></li>
+                <li><a class=" " href="#items">{{#t}}common.tmts{{/t}}</a></li>
+                <li><a class=" " href="#service">{{#t}}app.apihelp.roboty_posluhy{{/t}}</a></li>
+                <li><a class=" " href="#cust">{{#t}}app.apihelp.kontrahenty{{/t}}</a></li>
+                <li><a class=" " href="#docs">{{#t}}common.dokumenty{{/t}}</a></li>
                 <!--  <li> <a class=" " href="#saas">SAAS</a> </li>-->
             </ul>
             <br>
-            <h4 id="common">Загальні</h4>
+            <h4 id="common">{{#t}}app.apihelp.zahalni{{/t}}</h4>
             <i>/api/common</i><br>
              <table class="table table-sm">
              <tr>
                 <td><b>checkapi</b></td>
-                <td>перевірка API. Не потребує авторизації</td>
+                <td>{{#t}}app.apihelp.perevirka_api_ne_potrebuie_avtoryzatsii{{/t}}</td>
                 <td>{"jsonrpc": "2.0", "method": "checkapi",  "id": 1}</td>
              </tr>
             <tr>
                 <td><b>token</b></td>
-                <td>отримати Bearer токен <br>
-                <span>Параметри:</span>
-                <br>login - логін
-                <br>password - пароль                </td>
+                <td>{{#t}}app.apihelp.otrymaty_bearer_token{{/t}} <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
+                <br>{{#t}}app.apihelp.login_lohin{{/t}}
+                <br>{{#t}}app.apihelp.password_parol{{/t}}                </td>
                 <td>{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}</td>
              </tr>
              <tr>
                 <td><b>parealist</b></td>
-                <td>виробничі дільниці</td>
+                <td>{{#t}}app.apihelp.vyrobnychi_dilnytsi{{/t}}</td>
                 <td></td>
              </tr>
          
             <tr>
                 <td><b>sourcelist</b></td>
-                <td>джерела продаж</td>
+                <td>{{#t}}app.apihelp.dzherela_prodazh{{/t}}</td>
                 <td></td>
              </tr>
             </table>
@@ -131,36 +125,36 @@
      
     
 
-            <h4 id="items">ТМЦ</h4>
+            <h4 id="items">{{#t}}common.tmts{{/t}}</h4>
             <i>/api/items</i><br>
           <table class="table table-sm">
              <tr>
                 <td><b>storelist</b></td>
-                <td>перелік складів</td>
+                <td>{{#t}}app.apihelp.perelik_skladiv{{/t}}</td>
                 <td></td>
              </tr>
              <tr>
                 <td><b>catlist</b></td>
-                <td>перелік категорій</td>
+                <td>{{#t}}app.apihelp.perelik_katehorii{{/t}}</td>
                 <td></td>
              </tr>
              <tr>
                 <td><b>articlelist</b></td>
-                <td>перелік артикулів</td>
+                <td>{{#t}}app.apihelp.perelik_artykuliv{{/t}}</td>
                 <td></td>
              </tr>
             <tr>
                 <td><b>typelist</b></td>
-                <td>перелік типів ТМЦ</td>
+                <td>{{#t}}app.apihelp.perelik_typiv_tmts{{/t}}</td>
                 <td></td>
              </tr>
            <tr>
                 <td><b>itemlist</b></td>
-                <td>перелік   ТМЦ <br>
-                <small>Якщо категорія не задана, повертається загальний перелік.  </small>
+                <td>{{#t}}app.apihelp.perelik_tmts{{/t}} <br>
+                <small>{{#t}}app.apihelp.iakshcho_katehoriia_ne_zadana_povertaiet{{/t}}  </small>
                 <br>
-                <span>Параметри:</span><br>
-                cat_id - id категорії<br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                {{#t}}app.apihelp.cat_id_id_katehorii{{/t}}<br>
                 </td>
                 <td>
                 "params": {"cat_id":10}
@@ -168,11 +162,11 @@
              </tr>
          <tr>
                 <td><b>getqty</b></td>
-                <td>наявність на складах <br>
-                <small>Якщо склад не заданий, повертається загальний перелік</small>
+                <td>{{#t}}app.apihelp.naiavnist_na_skladakh{{/t}} <br>
+                <small>{{#t}}app.apihelp.iakshcho_sklad_ne_zadanyi_povertaietsia{{/t}}</small>
                 <br>
-                <span>Параметри:</span><br>
-                 store_id - id складу<br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                 {{#t}}app.apihelp.store_id_id_skladu{{/t}}<br>
                 </td>
                 <td>
               
@@ -180,42 +174,33 @@
              </tr>
          <tr>
                 <td><b>save</b></td>
-                <td>зберегти ТМЦ <br>
-                <small>Якщо артикул (item_code) існує, то ТМЦ перезаписується, інакше створюється новий</small>
+                <td>{{#t}}app.apihelp.zberehty_tmts{{/t}} <br>
+                <small>{{#t}}app.apihelp.iakshcho_artykul_item_code_isnuie{{/t}}</small>
                 <br>
-                <span>Параметри:</span><br>
-                <br>itemname - назва (обов'язкове поле)
-                <br>item_code - артикул (обов'язкове поле)
-                <br>bar_code - штрих код
-                <br>measure - од. виміру
-                <br>manufacturer - виробник, бренд
-                <br>cat_id - id категорії
-                <br>price1,... - відпускні ціни
-                <br> description - опис (в base64)
-                <br> imageurl - URL картинки
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                <br>{{#t}}app.apihelp.itemname_nazva_oboviazkove_pole{{/t}}
+                <br>{{#t}}app.apihelp.item_code_artykul_oboviazkove_pole{{/t}}
+                <br>{{#t}}app.apihelp.bar_code_shtrykh_kod{{/t}}
+                <br>{{#t}}app.apihelp.measure_od_vymiru{{/t}}
+                <br>{{#t}}app.apihelp.manufacturer_vyrobnyk_brend{{/t}}
+                <br>{{#t}}app.apihelp.cat_id_id_katehorii{{/t}}
+                <br>{{#t}}app.apihelp.price1_vidpuskni_tsiny{{/t}}
+                <br> {{#t}}app.apihelp.description_opys_v_base64{{/t}}
+                <br> {{#t}}app.apihelp.imageurl_url_kartynky{{/t}}
                 </td>
                 <td>
-                 "params":   {
-                "item_code":"К001",
-                "bar_code":"К001",
-                "itemname":"testapi",
-                "description":"",
-                "measure":"шт",
-                "manufacturer":"",
-                "cat_id":"0",
-                "price1":50
-                }
+                 {{#t}}app.apihelp.params_item_code_k001_bar{{/t}}
                 </td>
              </tr>
              
              
       <tr>
                 <td><b>substitemlist</b></td>
-                <td>перелік  замін і аналогів ТМЦ   <br>
+                <td>{{#t}}app.apihelp.perelik_zamin_i_analohiv_tmts{{/t}}   <br>
                
                 <br>
-                <span>Параметри:</span><br>
-                  searchkey -  стока  пошуку (необов`язково)<br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                  {{#t}}app.apihelp.searchkey_stoka_poshuku_neoboviazkovo{{/t}}<br>
                 </td>
                 <td>
                 "params": { }
@@ -224,37 +209,30 @@
              
        <tr>
                 <td><b>custitemadd</b></td>
-                <td>додати заміну <br>
+                <td>{{#t}}app.apihelp.dodaty_zaminu{{/t}} <br>
                  <br>
-                <span>Параметри:</span><br>
-                <br>itemname - назва (обов'язкове поле)
-                <br>origcode - артикул-оригінал (обов'язкове поле)
-                <br>origbrand - бренд-оригінал
-                <br>substcode - артикул-заміна   (обов'язкове поле)
-                <br>substbrand - бренд -заміна
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                <br>{{#t}}app.apihelp.itemname_nazva_oboviazkove_pole{{/t}}
+                <br>{{#t}}app.apihelp.origcode_artykul_oryhinal_oboviazkove_po{{/t}}
+                <br>{{#t}}app.apihelp.origbrand_brend_oryhinal{{/t}}
+                <br>{{#t}}app.apihelp.substcode_artykul_zamina_oboviazkove_pol{{/t}}
+                <br>{{#t}}app.apihelp.substbrand_brend_zamina{{/t}}
           
                 </td>
                 <td>
-                 "params":   {
-                "itemname":"Деталь",
-                "origcode":"К001",
-                "origbrand":"OOO",
-                "substcode":"Е234",
-                "substbrand":"" 
-                
-                }
+                 {{#t}}app.apihelp.params_itemname_detal_origcode_k001{{/t}}
                 </td>
              </tr>
                
              
   <tr>
                 <td><b>custitemlist</b></td>
-                <td>перелік   ТМЦ у постачальників <br>
+                <td>{{#t}}app.apihelp.perelik_tmts_u_postachalnykiv{{/t}} <br>
                
                 <br>
-                <span>Параметри:</span><br>
-                customer_id - id постачальника (необов`язково)<br>
-                searchkey -  стока  пошуку (необов`язково)<br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                {{#t}}app.apihelp.customer_id_id_postachalnyka_neoboviazko{{/t}}<br>
+                {{#t}}app.apihelp.searchkey_stoka_poshuku_neoboviazkovo{{/t}}<br>
                 </td>
                 <td>
                 "params": { }
@@ -264,73 +242,56 @@
          <tr>             
         <tr>
                 <td><b>custitemadd</b></td>
-                <td>додати ТМЦ у постачальника <br>
+                <td>{{#t}}app.apihelp.dodaty_tmts_u_postachalnyka{{/t}} <br>
                  <br>
-                <span>Параметри:</span><br>
-                <br>customer_id - id постачальника (обов'язкове поле)
-                <br>cust_name - назва у постачальника (обов'язкове поле)
-                <br>cust_code - артикул у постачальника (обов'язкове поле)
-                <br>brand - бренд 
-                <br>bar_code - штрих-код 
-                <br>store - склад у постачальника
-                <br>quantity - кількість
-                <br>price - ціна
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                <br>{{#t}}app.apihelp.customer_id_id_postachalnyka_oboviazkove{{/t}}
+                <br>{{#t}}app.apihelp.cust_name_nazva_u_postachalnyka{{/t}}
+                <br>{{#t}}app.apihelp.cust_code_artykul_u_postachalnyka{{/t}}
+                <br>{{#t}}app.apihelp.brand_brend{{/t}} 
+                <br>{{#t}}app.apihelp.bar_code_shtrykh_kod_2{{/t}} 
+                <br>{{#t}}app.apihelp.store_sklad_u_postachalnyka{{/t}}
+                <br>{{#t}}app.apihelp.quantity_kilkist{{/t}}
+                <br>{{#t}}app.apihelp.price_tsina{{/t}}
           
                 </td>
                 <td>
-                 "params":   {
-                "customer_id":1,
-                "cust_name":"Запчасть",
-                "brand":"OOO",
-                "cust_code":"Е234",
-                "store":"Одеса" ,
-                "quantity":45 ,
-                "price":200.00 
-                
-                }
+                 {{#t}}app.apihelp.params_customer_id_1_cust{{/t}}
                 </td>
              </tr>
           
              <tr>
                 <td><b>service</b></td>
-                <td>Роботи, послуги</td>
+                <td>{{#t}}app.apihelp.roboty_posluhy{{/t}}</td>
                 <td></td>
              </tr>
        </table>    
  
  
-            <h4 id="cust">Контрагенти</h4>
+            <h4 id="cust">{{#t}}app.apihelp.kontrahenty{{/t}}</h4>
             <i>/api/customers</i><br>
        <table class="table table-sm">
              <tr>
                 <td><b>list</b></td>
-                <td>перелік  </td>
+                <td>{{#t}}app.apihelp.perelik{{/t}}  </td>
                 <td></td>
              </tr>
          <tr>
                 <td><b>save</b></td>
-                <td>зберегти контрагента <br>
-                <small>Якщо customer_id більше нуля, то контрагент перезаписується. Якщо дорівнює нулю або відсутній,
-                        то  створюється новий </small>
+                <td>{{#t}}app.apihelp.zberehty_kontrahenta{{/t}} <br>
+                <small>{{#t}}app.apihelp.iakshcho_customer_id_bilshe_nulia{{/t}} </small>
                 <br>
-                <span>Параметри:</span><br>
-                <br>customer_id - id контрагента
-                        <br> customer_name - назва (обов'язкове поле)
-                        <br> phone - телефон (рекомендується вводити як 10 цифр)
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span><br>
+                <br>{{#t}}app.apihelp.customer_id_id_kontrahenta{{/t}}
+                        <br> {{#t}}app.apihelp.customer_name_nazva_oboviazkove_pole{{/t}}
+                        <br> {{#t}}app.apihelp.phone_telefon_rekomenduietsia_vvodyty_ia{{/t}}
                         <br> email - e-mail
-                        <br> city - місто
-                        <br> address - адреса
-                        <br> description - опис (в base64)
+                        <br> {{#t}}app.apihelp.city_misto{{/t}}
+                        <br> {{#t}}app.apihelp.address_adresa{{/t}}
+                        <br> {{#t}}app.apihelp.description_opys_v_base64{{/t}}
                 </td>
                 <td>
-                 "params":   {
-                "customer_id":"8",
-                        "customer_name":"\"Рога&amp;Копыта\"",
-                        "phone":"0991111111",
-                        "email":"test@ukr.net",
-                        "city":"",
-                        "address":""
-                        }
+                 {{#t}}app.apihelp.params_customer_id_8_customer{{/t}}
                 </td>
              </tr>             
     </table>               
@@ -340,57 +301,52 @@
             
             
             
-            <h4 id="docs">Документи</h4>
+            <h4 id="docs">{{#t}}common.dokumenty{{/t}}</h4>
             <i>/api/docs</i><br>
         
        <table class="table table-sm">
              <tr>
                 <td><b>statuslist</b></td>
-                <td>перелік статусів документів<br>
-                 <small>Не всі статуси підходять до всіх типів документів</small></td>
+                <td>{{#t}}app.apihelp.perelik_statusiv_dokumentiv{{/t}}<br>
+                 <small>{{#t}}app.apihelp.ne_vsi_statusy_pidkhodiat_do{{/t}}</small></td>
                 <td></td>
              </tr>
              <tr>
                 <td><b>branchlist</b></td>
-                <td>перелік філій<br>
-                 <small>Якщо обліковій системі включена підтримка філій, необхідно вказати філію у створюваному
-                        документі</small></td>
+                <td>{{#t}}app.apihelp.perelik_filii{{/t}}<br>
+                 <small>{{#t}}app.apihelp.iakshcho_oblikovii_systemi_vkliuchena_pi{{/t}}</small></td>
                 <td></td>
              </tr>
         <tr>
                 <td><b>mflist</b></td>
-                <td>перелік грошових рахунків  </td>
+                <td>{{#t}}app.apihelp.perelik_hroshovykh_rakhunkiv{{/t}}  </td>
                 <td></td>
              </tr>             
                    
            <tr>
                 <td><b>cancel</b></td>
-                <td>Запит на видалення  <br>
-                   <small>Запит адміністратору   на видалення документа. Наприклад, якщо замовлення скасовано, але
-                        вже експортовано</small>
+                <td>{{#t}}app.apihelp.zapyt_na_vydalennia{{/t}}  <br>
+                   <small>{{#t}}app.apihelp.zapyt_administratoru_na_vydalennia_dokum{{/t}}</small>
                 <br>
-                <span>Параметри:</span>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
           
-                <br> number - номер документа
-                <br>reason - причина        
+                <br> {{#t}}app.apihelp.number_nomer_dokumenta{{/t}}
+                <br>{{#t}}app.apihelp.reason_prychyna{{/t}}        
                  </td>
-                <td> "params": {
-                        "number": "ТТН00034",
-                        "reason":"Тест"
-                     }</td>
+                <td> {{#t}}app.apihelp.params_number_ttn00034_reason_test{{/t}}</td>
              </tr>             
    
            <tr>
                 <td><b>list</b></td>
-                <td>перелік  <br>
-               <small>Повертаються тільки ті документи, які створені через API.  </small>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.perelik{{/t}}  <br>
+               <small>{{#t}}app.apihelp.povertaiutsia_tilky_ti_dokumenty_iaki{{/t}}  </small>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
         
-                 <br> <small>параметри  необов`язкові</small>   
-                 <br> state - статус     
-                 <br> datefrom - дата початку (якщо не  задана ставится  місяць назад)     
-                 <br> dateto - дата  кінця     
-                 <br> type - тип  ("Order","TTN","GoodsIssue","GoodsReceipt","IncomeItem","ProdIssue","ServiceAct")   
+                 <br> <small>{{#t}}app.apihelp.parametry_neoboviazkovi{{/t}}</small>   
+                 <br> {{#t}}app.apihelp.state_status{{/t}}     
+                 <br> {{#t}}app.apihelp.datefrom_data_pochatku_iakshcho_ne{{/t}}     
+                 <br> {{#t}}app.apihelp.dateto_data_kintsia{{/t}}     
+                 <br> {{#t}}app.apihelp.type_typ_order_ttn_goodsissue{{/t}}   
                           
                  </td>
                 <td> "params": {
@@ -405,81 +361,61 @@
                           
          <tr>
                 <td><b>createorder</b></td>
-                <td>Створення замовлення, якщо замовлення обробляються на стороні складської
-                        системи  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.stvorennia_zamovlennia_iakshcho_zamovlen{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
         
-               <br>number - номер документа. Унікальне значення пов'язано із замовленням в зовнішній системі
-                        <br> phone - телефон (якщо телефон контакту  відрізняється від телефона контрагента)
-                        <br> email - e-mail (якщо e-mail контакту  відрізняється від e-mail контрагента)
-                        <br> ship_address - адреса доставки та інші дані доставки
-                        <br> description - опис (в base64)
-                        <br> customer_id - контрагент
-                        <br> amount - всього по документу щодо оплати (якщо відрізняється від усього по позиціям,
-                        наприклад, по знижкам)
-                        <br> items - перелік позицій
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> item_code - артикул
-                        <br> quantity - кількість
-                        <br> price - ціна                       
+               <br>{{#t}}app.apihelp.number_nomer_dokumenta_unikalne_znachenn{{/t}}
+                        <br> {{#t}}app.apihelp.phone_telefon_iakshcho_telefon_kontaktu{{/t}}
+                        <br> {{#t}}app.apihelp.email_e_mail_iakshcho_e{{/t}}
+                        <br> {{#t}}app.apihelp.ship_address_adresa_dostavky_ta{{/t}}
+                        <br> {{#t}}app.apihelp.description_opys_v_base64{{/t}}
+                        <br> {{#t}}app.apihelp.customer_id_kontrahent{{/t}}
+                        <br> {{#t}}app.apihelp.amount_vsoho_po_dokumentu_shchodo{{/t}}
+                        <br> {{#t}}app.apihelp.items_perelik_pozytsii{{/t}}
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.item_code_artykul{{/t}}
+                        <br> {{#t}}app.apihelp.quantity_kilkist{{/t}}
+                        <br> {{#t}}app.apihelp.price_tsina{{/t}}                       
                  </td>
-                <td> "params":  {
-                        "number":"ID0001",
-                        "phone":"0971111111",
-                        "ship_address":"Харків",
-                        "items":[
-                         {"item_code":"cbs500-1","quantity":2,"price":234},
-                         {"item_code":"ID0018","quantity":2,"price":234}
-                        ]
-                      }</td>
+                <td> {{#t}}app.apihelp.params_number_id0001_phone_0971111111{{/t}}</td>
              </tr>             
         <tr>
                 <td><b>createttn</b></td>
-                <td>Створення ТТН, якщо потрібно тільки списання зі складу  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.stvorennia_ttn_iakshcho_potribno_tilky{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
         
                      
-                        <br> phone - телефон (якщо телефон контакту  відрізняється від телефона контрагента)
-                        <br> email - e-mail (якщо e-mail контакту  відрізняється від e-mail контрагента)
-                        <br> ship_address - адреса доставки та інші дані доставки
-                        <br> customer_id - контрагент
-                        <br> description - опис (в base64)
-                        <br> amount - всього по документу щодо оплати (якщо відрізняється від всього по
-                        позиціям, наприклад, по знижкам)
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> items - перелік позицій
-                        <br> item_code - артикул
-                        <br> quantity - кількість
-                        <br> price - ціна                    
+                        <br> {{#t}}app.apihelp.phone_telefon_iakshcho_telefon_kontaktu{{/t}}
+                        <br> {{#t}}app.apihelp.email_e_mail_iakshcho_e{{/t}}
+                        <br> {{#t}}app.apihelp.ship_address_adresa_dostavky_ta{{/t}}
+                        <br> {{#t}}app.apihelp.customer_id_kontrahent{{/t}}
+                        <br> {{#t}}app.apihelp.description_opys_v_base64{{/t}}
+                        <br> {{#t}}app.apihelp.amount_vsoho_po_dokumentu_shchodo_2{{/t}}
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.items_perelik_pozytsii{{/t}}
+                        <br> {{#t}}app.apihelp.item_code_artykul{{/t}}
+                        <br> {{#t}}app.apihelp.quantity_kilkist{{/t}}
+                        <br> {{#t}}app.apihelp.price_tsina{{/t}}                    
                  </td>
-                <td> "params":  {
-                      
-                        "phone":"0971111111",
-                        "ship_address":"Харків",
-                        "items":[
-                          {"item_code":"cbs500-1","quantity":2,"price":234},
-                          {"item_code":"ID0018","quantity":2,"price":234}
-                        ]
-                        }</td>
+                <td> {{#t}}app.apihelp.params_phone_0971111111_ship_address{{/t}}</td>
              </tr>             
      <tr>
                 <td><b>goodsissue</b></td>
-                <td>Створення видаткової накладної  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.stvorennia_vydatkovoi_nakladnoi{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
         
-                       <br> mf - каса або банківський рахунок
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> customer_id - контрагент
-                        <br> store_id - склад (обов'язкове поле)
-                        <br> autoexec - true (якщо треба записати проводки)
-                        <br> total - всього по документу щодо оплати (якщо відрізняється від всього по
-                        позиціям, наприклад, по знижкам)
-                        <br> payment - до  сплати
-                        <br> payed - внесена сума оплати
-                        <br> items - перелік позицій
-                        <br> item_code - артикул
-                        <br> quantity - кількість
-                        <br> price - ціна                   
+                       <br> {{#t}}app.apihelp.mf_kasa_abo_bankivskyi_rakhunok{{/t}}
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.customer_id_kontrahent{{/t}}
+                        <br> {{#t}}app.apihelp.store_id_sklad_oboviazkove_pole{{/t}}
+                        <br> {{#t}}app.apihelp.autoexec_true_iakshcho_treba_zapysaty{{/t}}
+                        <br> {{#t}}app.apihelp.total_vsoho_po_dokumentu_shchodo{{/t}}
+                        <br> {{#t}}app.apihelp.payment_do_splaty{{/t}}
+                        <br> {{#t}}app.apihelp.payed_vnesena_suma_oplaty{{/t}}
+                        <br> {{#t}}app.apihelp.items_perelik_pozytsii{{/t}}
+                        <br> {{#t}}app.apihelp.item_code_artykul{{/t}}
+                        <br> {{#t}}app.apihelp.quantity_kilkist{{/t}}
+                        <br> {{#t}}app.apihelp.price_tsina{{/t}}                   
                  </td>
                 <td> "params":   {
                       
@@ -496,19 +432,18 @@
              </tr>  
     <tr>
                 <td><b>incomeitem</b></td>
-                <td>Оприбуткування ТМЦ  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}common.oprybutkuvannia_tmts{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
         
                        
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> store_id - склад (обов'язкове поле)
-                        <br> autoexec - true (якщо треба записати проводки)
-                        <br> total - всього по документу щодо оплати (якщо відрізняється від всього по
-                        позиціям, наприклад, по знижкам)
-                        <br> items - перелік позицій
-                        <br> item_code - артикул
-                        <br> quantity - кількість
-                        <br> price - ціна                
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.store_id_sklad_oboviazkove_pole{{/t}}
+                        <br> {{#t}}app.apihelp.autoexec_true_iakshcho_treba_zapysaty{{/t}}
+                        <br> {{#t}}app.apihelp.total_vsoho_po_dokumentu_shchodo{{/t}}
+                        <br> {{#t}}app.apihelp.items_perelik_pozytsii{{/t}}
+                        <br> {{#t}}app.apihelp.item_code_artykul{{/t}}
+                        <br> {{#t}}app.apihelp.quantity_kilkist{{/t}}
+                        <br> {{#t}}app.apihelp.price_tsina{{/t}}                
                  </td>
                 <td> "params":   {
                        
@@ -526,20 +461,19 @@
              </tr>                
      <tr>
                 <td><b>serviceact</b></td>
-                <td>Створення акту виконаних робіт  <br>
-                <span>Параметри:</span>
-                      <br> mf - каса або банківський рахунок
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> customer_id - контрагент
-                        <br> device - виріб замовника
-                        <br> autoexec - true (якщо відправляється на виконання)
-                        <br> total - всього по документу щодо оплати (якщо відрізняється від всього по
-                        позиціям, наприклад, по знижкам)
-                        <br> payed - внесена сума оплати
-                        <br> items - перелік позицій
+                <td>{{#t}}app.apihelp.stvorennia_aktu_vykonanykh_robit{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
+                      <br> {{#t}}app.apihelp.mf_kasa_abo_bankivskyi_rakhunok{{/t}}
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.customer_id_kontrahent{{/t}}
+                        <br> {{#t}}app.apihelp.device_vyrib_zamovnyka{{/t}}
+                        <br> {{#t}}app.apihelp.autoexec_true_iakshcho_vidpravliaietsia{{/t}}
+                        <br> {{#t}}app.apihelp.total_vsoho_po_dokumentu_shchodo{{/t}}
+                        <br> {{#t}}app.apihelp.payed_vnesena_suma_oplaty{{/t}}
+                        <br> {{#t}}app.apihelp.items_perelik_pozytsii{{/t}}
                         <br> service_id - id
-                        <br> quantity - кількість
-                        <br> price - ціна             
+                        <br> {{#t}}app.apihelp.quantity_kilkist{{/t}}
+                        <br> {{#t}}app.apihelp.price_tsina{{/t}}             
                  </td>
                 <td> "params":     {
                      
@@ -554,12 +488,11 @@
              </tr>                
       <tr>
                 <td><b>updatestatus</b></td>
-                <td>Змінити статус  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.zminyty_status{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
                  
-                        <br> number - номер документу
-                        <br> status - статус 
-                         (5- провести,7 - на виконання, 18 - виконано,    9- закрити)
+                        <br> {{#t}}app.apihelp.number_nomer_dokumentu{{/t}}
+                        <br> {{#t}}app.apihelp.status_status_5_provesty_7{{/t}}
                                  
                  </td>
                 <td> "params":     {
@@ -573,13 +506,13 @@
              </tr>                
       <tr>
                 <td><b>createpayment</b></td>
-                <td>Створення платежу  <br>
-                <span>Параметри:</span>
+                <td>{{#t}}app.apihelp.stvorennia_platezhu{{/t}}  <br>
+                <span>{{#t}}app.apihelp.parametry{{/t}}</span>
                  
-                        <br> mf - каса або банківський рахунок
-                        <br> branch_id - філія (якщо увімкнено)
-                        <br> amount - сума. Якщо &gt;0 створюється  Прибутковий касовий  ордер інакше Видатковий касовий ордер
-                        <br> customer_id - контрагент.  Якщо задано і сума &gt;0 то оплата від покупця. Якщо сума &lt; 0 то оплата  постачальнику
+                        <br> {{#t}}app.apihelp.mf_kasa_abo_bankivskyi_rakhunok{{/t}}
+                        <br> {{#t}}app.apihelp.branch_id_filiia_iakshcho_uvimkneno{{/t}}
+                        <br> {{#t}}app.apihelp.amount_suma_iakshcho_gt_0{{/t}}
+                        <br> {{#t}}app.apihelp.customer_id_kontrahent_iakshcho_zadano{{/t}}
                                    
                  </td>
                 <td> "params":     {

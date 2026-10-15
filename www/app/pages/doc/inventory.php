@@ -155,7 +155,7 @@ class Inventory extends \App\Pages\Base
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
         $this->editdetail->setVisible(true);
@@ -172,7 +172,7 @@ class Inventory extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано ТМЦ");
+            $this->setError(__('common.ne_obrano_tmts'));
             return;
         }
         $item = Item::load($id);
@@ -186,13 +186,13 @@ class Inventory extends \App\Pages\Base
 
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_id==$item->item_id && $it->snumber==$item->snumber) {
-                $this->setError("ТМЦ  вже  в  списку") ;
+                $this->setError(__('doc.inventory.tmts_vzhe_v_spysku')) ;
                 return;
             }
         }
         $this->_itemlist[] = $item;
 
-        if($this->_showqty) $this->setInfo("На обліку {$item->quantity} по  факту {$item->qfact}");
+        if($this->_showqty) $this->setInfo(__('doc.inventory.na_obliku_po_faktu', ['quantity' => $item->quantity, 'qfact' => $item->qfact]));
   
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -298,21 +298,21 @@ class Inventory extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено ТМЦ");
+            $this->setError(__('doc.inventory.ne_vvedeno_tmts'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
 
@@ -431,7 +431,7 @@ class Inventory extends \App\Pages\Base
         $item = Item::findBarCode($code,$store,$cat_id );
 
         if ($item == null) {
-            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            $this->setError(__('doc.inventory.tmts_z_kodom_ne_znaideno', ['code' => $code]));
             // Издаем звук если ШК не найден
             App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
             return;
@@ -445,7 +445,7 @@ class Inventory extends \App\Pages\Base
                 $d= $this->_itemlist[$i]->qfact;
                 $qf= doubleval($d) ;
                 $this->_itemlist[$i]->qfact = $qf + 1;
-                if($this->_showqty) $this->setInfo("На обліку {$this->_itemlist[$i]->quantity} по  факту {$this->_itemlist[$i]->qfact}");
+                if($this->_showqty) $this->setInfo(__('doc.inventory.na_obliku_po_faktu', ['quantity' => $this->_itemlist[$i]->quantity, 'qfact' => $this->_itemlist[$i]->qfact]));
   
                 // Издаем звук если всё ок
               //  App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
@@ -477,7 +477,7 @@ class Inventory extends \App\Pages\Base
         $d= $this->_itemlist[$item->item_id]->qfact;
         $qf= doubleval($d) ;
         $this->_itemlist[$item->item_id]->qfact = $qf + 1;
-        if($this->_showqty) $this->setInfo("На обліку {$this->_itemlist[$item->item_id]->quantity} по  факту {$this->_itemlist[$item->item_id]->qfact}");
+        if($this->_showqty) $this->setInfo(__('doc.inventory.na_obliku_po_faktu', ['quantity' => $this->_itemlist[$item->item_id]->quantity, 'qfact' => $this->_itemlist[$item->item_id]->qfact]));
   
 
         $this->docform->detail->Reload();

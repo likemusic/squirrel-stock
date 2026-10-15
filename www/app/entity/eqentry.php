@@ -39,17 +39,17 @@ class EqEntry extends \ZCL\DB\Entity
     public static function getOpList(){
         
         $list=[];
-        $list[self::OP_INCOME] = 'Введення  в експлуатацію' ;
-        $list[self::OP_OUTCOME] = 'Виведення з експлуатації' ;
-        $list[self::OP_AMOR] = 'Нарахування амортизації' ;
-        $list[self::OP_REPAIR] = 'Ремонт та відновлення' ;
-        $list[self::OP_MOVE] = 'Переміщення між вир. ділянками ' ;
-        $list[self::OP_BUY] = 'Закупка' ;
-        $list[self::OP_PROD] = 'Оприходування з виробництва' ;
-        $list[self::OP_STORE] = 'Оприходування зі складу' ;
-        $list[self::OP_SELL] = 'Продаж' ;
-        $list[self::OP_TOSTORE] = 'Оприходування на склад' ;
-        $list[self::OP_LOST] = 'Списання' ;
+        $list[self::OP_INCOME] = __('app.eqentry.vvedennia_v_ekspluatatsiiu') ;
+        $list[self::OP_OUTCOME] = __('app.eqentry.vyvedennia_z_ekspluatatsii') ;
+        $list[self::OP_AMOR] = __('app.eqentry.narakhuvannia_amortyzatsii') ;
+        $list[self::OP_REPAIR] = __('app.eqentry.remont_ta_vidnovlennia') ;
+        $list[self::OP_MOVE] = __('app.eqentry.peremishchennia_mizh_vyr_diliankamy') ;
+        $list[self::OP_BUY] = __('app.eqentry.zakupka') ;
+        $list[self::OP_PROD] = __('app.eqentry.oprykhoduvannia_z_vyrobnytstva') ;
+        $list[self::OP_STORE] = __('app.eqentry.oprykhoduvannia_zi_skladu') ;
+        $list[self::OP_SELL] = __('app.eqentry.prodazh') ;
+        $list[self::OP_TOSTORE] = __('app.eqentry.oprykhoduvannia_na_sklad') ;
+        $list[self::OP_LOST] = __('app.eqentry.spysannia') ;
         
         return $list ;
    }   

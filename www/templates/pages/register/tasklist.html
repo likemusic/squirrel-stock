@@ -1,6 +1,6 @@
 <html>
    <head>
-        <title>  Журнал нарядів </title>
+        <title>  {{#t}}register.tasklist.zhurnal_nariadiv{{/t}} </title>
 
  
         <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
@@ -16,25 +16,25 @@
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Журнал нарядів</h3>
+                <h3>{{#t}}register.tasklist.zhurnal_nariadiv{{/t}}</h3>
                 
                     <form zippy="filterform"  >
                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
-                        <label   for="filterassignedto">Виконавець</label>
+                        <label   for="filterassignedto">{{#t}}common.vykonavets{{/t}}</label>
                              
                         <select class="form-select   " zippy="filterassignedto">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
                         </div>
                       <div class="col-12">
                            <div class="input-group">
-                      <label   for="filterpa">Вир. ділянка</label>
+                      <label   for="filterpa">{{#t}}register.tasklist.vyr_dilianka{{/t}}</label>
                               >
                         <select class="form-control  ms-sm-2" zippy="filterpa">
-                            <option value="0">По всіх</option>
+                            <option value="0">{{#t}}register.tasklist.po_vsikh{{/t}}</option>
                         </select>
                          </div>
                          </div>
@@ -42,14 +42,14 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="filterfinished">
-                            <label class="form-check-label me-sm-3" for="filterfinished">Закриті</label>
+                            <label class="form-check-label me-sm-3" for="filterfinished">{{#t}}common.zakryti{{/t}}</label>
                         </div>
                         </div>
                        <div class="col-12  "> 
-                        <button type="submit" class="btn btn-primary  ">ОК</button>
+                        <button type="submit" class="btn btn-primary  ">{{#t}}common.ok{{/t}}</button>
                         </div>
                             <div class="col-12   "> 
-                        <a title="Очистити фільтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
+                        <a title="{{#t}}register.tasklist.ochystyty_filtr{{/t}}" zippy="eraser"><i class="fa fa-eraser"></i></a>
                        </div>
                        </div>
                     </form>
@@ -63,32 +63,32 @@
 
 
                 <div class="mt-1" style="font-size: 1.5rem">
-                    <a zippy="tabs"><span class="{{{tabcbadge}}}">  Перелік</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tababadge}}}">  Календар   </span> </a> &nbsp;&nbsp;
+                    <a zippy="tabs"><span class="{{{tabcbadge}}}">  {{#t}}common.perelik{{/t}}</span> </a> &nbsp;&nbsp;
+                    <a zippy="tabc"><span class="{{{tababadge}}}">  {{#t}}app.timesheet.kalendar{{/t}}   </span> </a> &nbsp;&nbsp;
 
                 </div>
 
                 <div zippy="tasktab" class="tab-pane  active ">
-                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-primary mt-2 mb-3">Створити</a>
+                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-primary mt-2 mb-3">{{#t}}common.stvoryty{{/t}}</a>
 
                     <div class="row">
                         <div class="col-12    table-responsive">
-                            <a zippy="csv">Експорт у Excel</a>
+                            <a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
 
                             <table class="table   table-sm table-hover">
                                 <tr>
 
-                                    <th>Номер</th>
+                                    <th>{{#t}}common.nomer{{/t}}</th>
 
 
-                                    <th>Початок</th>
+                                    <th>{{#t}}common.pochatok{{/t}}</th>
 
-                                    <th style="text-align: right;">Год.</th>
+                                    <th style="text-align: right;">{{#t}}register.tasklist.hod{{/t}}</th>
 
-                                    <th>Виконавець</th>
-                                    <th>Робота</th>
-                                    <th>Статус</th>
-                                    <th>Опис</th>
+                                    <th>{{#t}}common.vykonavets{{/t}}</th>
+                                    <th>{{#t}}register.serlist.robota{{/t}}</th>
+                                    <th>{{#t}}common.status{{/t}}</th>
+                                    <th>{{#t}}common.opys{{/t}}</th>
 
 
                                     <th  ></th>
@@ -109,8 +109,8 @@
                                     <td zippy="taskdesc"></td>
 
                                     <td>
-                                        <a zippy="taskshow" title="Перегляд"><i class="fa fa-eye"></i></a>
-                                        &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="taskedit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                        <a zippy="taskshow" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
+                                        &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="taskedit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a>
 
                                     </td>
 
@@ -131,32 +131,32 @@
                                     <div class="row  ">
                                       <div class="col-auto  ">
                                     <button zippy="binprocess" type="submit" class="  btn btn-primary  me-2 "><i
-                                            class="fas fa-wrench"></i> На виконання
+                                            class="fas fa-wrench"></i> {{#t}}common.na_vykonannia{{/t}}
                                     </button>
                                     </div>
                                       <div class="col-auto  ">
                                     <button zippy="bshifted" type="submit" class="  btn btn-warning  me-2 "><i
-                                            class="fas fa-clock"></i> Відкласти
+                                            class="fas fa-clock"></i> {{#t}}common.vidklasty{{/t}}
                                     </button>
                                     </div>
                                       <div class="col-auto  ">
                                     <button zippy="bclosed" type="submit" class="  btn btn-success  me-2 "><i
-                                            class="fa fa-gavel"></i> Закінчено
+                                            class="fa fa-gavel"></i> {{#t}}register.tasklist.zakincheno{{/t}}
                                     </button>
                                     </div>
                                       <div class="col-auto  ">
                                     <button zippy="bitems" type="submit" class="  btn btn-secondary  me-2 "><i
-                                            class="fa fa-cogs"></i> Витратні матеріали
+                                            class="fa fa-cogs"></i> {{#t}}register.tasklist.vytratni_materialy{{/t}}
                                     </button>
                                     </div>
                                       <div class="col-auto  ">
                                     <button zippy="bgoods" type="submit" class="  btn btn-secondary  me-2 "><i
-                                            class="fa fa-box"></i> Готова продукція
+                                            class="fa fa-box"></i> {{#t}}common.hotova_produktsiia{{/t}}
                                     </button>
                                     </div>
                                       <div class="col-auto  ">
                                     <button zippy="bact" type="submit" class="  btn btn-secondary  me-2 "><i
-                                            class="fa fa-tools"></i> Акт виконаних робіт
+                                            class="fa fa-tools"></i> {{#t}}common.akt_vykonanykh_robit{{/t}}
                                     </button>
                                    </div>
                                  </div>

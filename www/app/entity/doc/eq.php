@@ -173,7 +173,7 @@ class EQ extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОС-000000';
+        return __('doc.eq.os_000000');
     }
 
     public   function DoAcc() {

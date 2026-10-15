@@ -24,7 +24,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -80,7 +80,7 @@ class Options extends \App\Pages\Base
         $modules['npapikey'] = $apikey;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         
     }
 
@@ -99,7 +99,7 @@ class Options extends \App\Pages\Base
         $modules['nptel'] = $this->oform->tel->getText();
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
    

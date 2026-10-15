@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td  colspan="{{colspan}}">
-            <b> Нарахування зарплати № {{document_number}} від {{date}}</b> <br>
+            <b> {{#t}}print.calcsalary.narakhuvannia_zarplaty_vid{{/t}}</b> <br>
         </td>
     </tr>
 
@@ -9,14 +9,14 @@
 
     <tr>
         <td  colspan="{{colspan}}">
-            <b>Місяць:</b>&nbsp;{{month}}&nbsp;{{year}}
+            <b>{{#t}}print.calcsalary.misiats{{/t}}</b>&nbsp;{{month}}&nbsp;{{year}}
         </td>
     </tr>
 
     {{#department}}  
    <tr>
         <td  colspan="{{colspan}}">
-            <b>Відділ:</b>&nbsp;{{department}}  
+            <b>{{#t}}print.calcsalary.viddil{{/t}}</b>&nbsp;{{department}}  
         </td>
     </tr>
     {{/department}}  
@@ -28,7 +28,7 @@
     </tr>
     <tr>
         <td>
-            <b>П I Б</b>
+            <b>{{#t}}common.p_i_b{{/t}}</b>
         </td>
         {{#stnames}}
         <td align="text-right">
@@ -52,7 +52,7 @@
     {{/_detail}}
     <tr>
         <td colspan="{{colspan}}" align="text-right">
-            <b>Всього:&nbsp;{{total}}</b>
+            <b>{{#t}}print.calcsalary.vsoho_nbsp{{/t}}</b>
         </td>
          
     </tr>

@@ -113,7 +113,7 @@ class Task extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'НР-000000';
+        return __('doc.task.nr_000000');
     }
 
     public function getRelationBased() {

@@ -2,13 +2,13 @@
 
     <tr>
         <td align="center" colspan="5">
-            <h4> Фіскалізовані чеки </h4>
+            <h4> {{#t}}print.prrodoclist.fiskalizovani_cheky{{/t}} </h4>
         </td>
     </tr>
     <tr>
 
         <td colspan="5">
-            Період з <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
+            {{#t}}common.period_z{{/t}} <b>{{datefrom}}</b> {{#t}}common.po{{/t}} <b>{{dateto}}</b> <br>
         </td>
     </tr>
    
@@ -16,12 +16,12 @@
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
-        <th style="border: solid black 1px">Номер</th>
-        <th style="border: solid black 1px">ФН</th>
-        <th style="border: solid black 1px">Тип</th>
-        <th align="right" style="border: solid black 1px">Сума</th>
+        <th style="border: solid black 1px">{{#t}}common.nomer{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}print.prrodoclist.fn{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.typ{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.suma{{/t}}</th>
    </tr>
         {{#detail}}
     <tr>
@@ -44,7 +44,7 @@
 
 
         <td colspan="5" style="border: solid black 1px">
-           Чеків <b>{{cnt}}</b> на  суму <b>{{tam}}</b>. Повернень  <b>{{rcnt}}</b> на суму <b>{{rtam}}</b>. 
+           {{#t}}common.chekiv{{/t}} <b>{{cnt}}</b> {{#t}}print.prrodoclist.na_sumu{{/t}} <b>{{tam}}</b>{{#t}}print.prrodoclist.povernen{{/t}}  <b>{{rcnt}}</b> {{#t}}print.prrodoclist.na_sumu{{/t}} <b>{{rtam}}</b>. 
         </td>
       
        

@@ -45,21 +45,21 @@
                      <input type="hidden"    zippy="userlogin"    >
                           
                         <div class="mb-2">
-                            <label class="form-label"  for="userlog">Логін</label>
+                            <label class="form-label"  for="userlog">{{#t}}common.lohin{{/t}}</label>
                             <input autofocus="on"  zippy="userlog"  required="on"  class="form-control"  >
                             
                         </div>
                         <div class="mb-2">
-                          <label class="form-label"  for="userpasswo">Пароль</label>
+                          <label class="form-label"  for="userpasswo">{{#t}}common.parol{{/t}}</label>
                           <input zippy="userpasswo"  required="on"  type="password" class="form-control"     >
                          
                         </div>
                         {{#capcha}}
                         <div class="input-group mb-3">
                             <input zippy="capchacode"  required="on"  class="form-control ms-4"
-                                   placeholder="Введіть код">
+                                   placeholder="{{#t}}app.userlogin.vvedit_kod{{/t}}">
                           
-                                <img zippy="capcha" style="cursor:pointer" title="Оновити..."/>
+                                <img zippy="capcha" style="cursor:pointer" title="{{#t}}app.userlogin.onovyty{{/t}}"/>
                             
                         </div>
                         {{/capcha}}
@@ -69,16 +69,16 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" zippy="remember">
                                     <label class="form-check-label" for="remember">
-                                        Запам'ятати
+                                        {{#t}}common.zapamiataty{{/t}}
                                     </label>
                                 </div>
                             </div>
                            
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block btn-flat">Увійти</button>
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">{{#t}}common.uviity{{/t}}</button>
                             </div>
                              <div class="col-12">
-                                <small><a target="_blank" href="https://zippy.com.ua/zstore#lostpass">Забули пароль?</a></small>
+                                <small><a target="_blank" href="https://zippy.com.ua/zstore#lostpass">{{#t}}app.userlogin.zabuly_parol{{/t}}</a></small>
                             </div>
                             
                         </div>

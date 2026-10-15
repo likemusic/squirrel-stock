@@ -52,14 +52,14 @@ class Stock extends \ZCL\DB\Entity
                 $name .= ', ' . $value->item_code ;
             }
             if (strlen($value->snumber) > 0) {
-                $name .= ', С/Н ' . $value->snumber    ;
+                $name .= __('app.stock.s_n') . $value->snumber    ;
                 if($value->sdate >0) {
                     $name .= ' ' . \App\Helper::fd($value->sdate) ;
                 }
             }
              
-            $name .= ', ц. ' . \App\Helper::fa($value->partion) ;
-            $name .= ', к. ' . \App\Helper::fqty($value->qty) ;
+            $name .= __('app.stock.ts') . \App\Helper::fa($value->partion) ;
+            $name .= __('app.stock.k') . \App\Helper::fqty($value->qty) ;
             $list[$value->stock_id] = $name;
         }
 

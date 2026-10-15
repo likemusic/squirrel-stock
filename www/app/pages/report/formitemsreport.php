@@ -92,8 +92,8 @@ class FormItemsReport extends \App\Pages\Base
             $in =  $row['qty'] >0 ? H::fa($row['spart']) :''  ;
             $out =   $row['qty'] >0 ? H::fa(($row['outprice'] ??0)>0  ? $row['outprice']:''  ) :$row['spart']   ;
             
-            if($type != 'ProdReceipt' && $row['tag'] == Entry::TAG_FROMPROD  )  $type='Оприходування з виробництва';
-            if($type != 'ProdIssue' && $row['tag'] == Entry::TAG_TOPROD  )   $type='Списання в виробництв';
+            if($type != 'ProdReceipt' && $row['tag'] == Entry::TAG_FROMPROD  )  $type=__('app.eqentry.oprykhoduvannia_z_vyrobnytstva');
+            if($type != 'ProdIssue' && $row['tag'] == Entry::TAG_TOPROD  )   $type=__('report.formitemsreport.spysannia_v_vyrobnytstv');
               
             $row['nrec'] = $i++ ;
             $row['datedec'] = H::fd(strtotime($row['document_date'])) ;

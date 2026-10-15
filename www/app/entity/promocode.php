@@ -85,27 +85,27 @@ class PromoCode extends \ZCL\DB\Entity
         
            $code = PromoCode::getFirst('disabled=0 and code='.PromoCode::qstr($code)) ;
            if($code==null) {
-               return "Недійсний промокод";
+               return __('app.promocode.nediisnyi_promokod');
            }
            if($code->dateto >0  && $code->dateto < time() ) {
-               return "Прострочений промокод";
+               return __('app.promocode.prostrochenyi_promokod');
            }
            if(strlen( $code->used ?? '') > 0  ) {
                if($code->type==1 || $code->type==3 ){
-                  return "Промокод вже використаний";    
+                  return __('app.promocode.promokod_vzhe_vykorystanyi');    
                }
            }
            
            if($code->type==3){
                if( intval($code->customer_id) != intval($customer_id)) {
-                  return "Персональний промокод"; 
+                  return __('app.promocode.personalnyi_promokod'); 
                }
            }
            if($code->type==4 && $customer_id >0 ){
             
                $cnt=intval($conn->GetOne("select count(*) from stats where  category=4 and  keyd= {$customer_id} and vald={$code->id}") );
                if($cnt > 0 ){
-                  return "Промокод вже використаний";    
+                  return __('app.promocode.promokod_vzhe_vykorystanyi');    
                } 
            }
            

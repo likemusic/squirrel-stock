@@ -92,7 +92,7 @@ class ProdIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
+                        $this->docform->notes->setText(__('common.pidstava') . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                         $this->_doc->headerdata['st_id'] = $basedoc->headerdata['st_id'];
                         $this->_doc->headerdata['pp_id'] = $basedoc->headerdata['pp_id'];
@@ -144,7 +144,7 @@ class ProdIssue extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
-                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
+                        $this->docform->notes->setText(__('common.pidstava') . $basedoc->document_number);
                     }
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -215,7 +215,7 @@ class ProdIssue extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $qty = $item->getQuantity($this->docform->store->getValue());
         $row->add(new Label('qtyon',H::fqty($qty) ));
-        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
+        $row->add(new Label('toorder',__('common.v_zakupku') ))->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -264,7 +264,7 @@ class ProdIssue extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $store_id = $this->docform->store->getValue();
@@ -276,12 +276,12 @@ class ProdIssue extends \App\Pages\Base
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
+            $this->setWarn(__('common.vvedeno_bilshe_tovaru_chym_ie'));
         }
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -289,7 +289,7 @@ class ProdIssue extends \App\Pages\Base
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError(__('common.nevirnyi_nomer_serii'));
                 return;
             }
         }
@@ -371,7 +371,7 @@ class ProdIssue extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                            $this->setError(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                             return;
                         }
                     }
@@ -411,7 +411,7 @@ class ProdIssue extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
   
@@ -419,14 +419,14 @@ class ProdIssue extends \App\Pages\Base
 
 
         if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
+            $this->setError(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
        
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
-            $this->setError("Товару {$item->itemname} немає на складі");
+            $this->setError(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
 
@@ -443,7 +443,7 @@ class ProdIssue extends \App\Pages\Base
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Потрібна партія виробника');
+                    $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
@@ -468,21 +468,21 @@ class ProdIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
         return !$this->isError();

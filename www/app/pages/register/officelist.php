@@ -146,11 +146,11 @@ class OfficeList extends \App\Pages\Base
         if (count($ua) > 0 && in_array($doc->state, [7, 8])) {
             if (in_array($user->user_id, $ua)) {
                 $row->state->setAttribute('class', 'text-danger');
-                $row->state->setText("Очікує ващ підпис");
+                $row->state->setText(__('register.officelist.ochikuie_vashch_pidpys'));
             } else {
                 $un = array_values($wa);
                 $names = implode(", ", $un);
-                $row->state->setText("Очікує підпис від: " . $names);
+                $row->state->setText(__('register.officelist.ochikuie_pidpys_vid') . $names);
             }
         }
 
@@ -382,7 +382,7 @@ class OfficeList extends \App\Pages\Base
             if ($sender->id == 'brefuse') {
                 $comment = trim($this->statuspan->buttons->refusecomm->getText());
                 if (strlen($comment) == 0) {
-                    $this->setError("Не введено коментар");
+                    $this->setError(__('register.officelist.ne_vvedeno_komentar'));
                     return;
                 }
 
@@ -406,7 +406,7 @@ class OfficeList extends \App\Pages\Base
 
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
             return;
 
 
@@ -417,7 +417,7 @@ class OfficeList extends \App\Pages\Base
 
     public function maintOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Немає права на дану операцію');
+            $this->setError(__('register.officelist.nemaie_prava_na_danu_operatsiiu'));
             return;
         }
 
@@ -449,7 +449,7 @@ class OfficeList extends \App\Pages\Base
 
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
             return;
 
 
@@ -469,7 +469,7 @@ class OfficeList extends \App\Pages\Base
 
         $list = $this->_doc->getChildren();
         if (count($list) > 0) {
-            $this->setError("У документа є дочірні документи");
+            $this->setError(__('register.doclist.u_dokumenta_ie_dochirni_dokumenty'));
 
             return;
         }
@@ -495,7 +495,7 @@ class OfficeList extends \App\Pages\Base
 
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
             return;
         }
 

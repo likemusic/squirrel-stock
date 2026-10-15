@@ -5,20 +5,20 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Експорт нових товарів</h3>
-                              <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевірити з'єднання</a>
+                <h3>{{#t}}mod.wc.items.eksport_novykh_tovariv{{/t}}</h3>
+                              <a zippy="checkconn"><i class="fa   fa-sync"></i> {{#t}}common.pereviryty_ziednannia{{/t}}</a>
          <div class="navbar">
                     <form zippy="filter"  >
                       <div class="row  ">
-                       <label class="col-form-label col-auto" for="searchcat">Категорія</label>
+                       <label class="col-form-label col-auto" for="searchcat">{{#t}}common.katehoriia{{/t}}</label>
                         <div class="col-auto  ">
                          <select class="form-control ms-sm-2" zippy="searchcat">
-                            <option value="0">Не задано</option>
+                            <option value="0">{{#t}}common.ne_zadano{{/t}}</option>
                          </select>
                         </div>
                          <div class="col-auto  ">
                           <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class=" me-2 btn btn-success  "
-                               value="Завантажити">
+                               value="{{#t}}common.zavantazhyty{{/t}}">
 
                        </div>
                       </div>
@@ -31,11 +31,11 @@
 
                             <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
 
-                            <th>Найменування</th>
-                            <th>Артикул</th>
-                            <th class="text-end">Кіл.</th>
-                            <th class="text-end">Ціна</th>
-                            <th> Опис</th>
+                            <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                            <th>{{#t}}common.artykul{{/t}}</th>
+                            <th class="text-end">{{#t}}common.kil{{/t}}</th>
+                            <th class="text-end">{{#t}}common.tsina{{/t}}</th>
+                            <th> {{#t}}common.opys{{/t}}</th>
 
 
                         </tr>
@@ -56,7 +56,7 @@
 
 
                         &nbsp;<input onclick="document.getElementById('dialogwait').showModal() " type="submit"
-                                     class="  btn btn-success   " value="Відправити">
+                                     class="  btn btn-success   " value="{{#t}}common.vidpravyty{{/t}}">
 
 
                     </div>
@@ -64,24 +64,24 @@
             </div>
             <div class="col-12 col-md-8   pt-4">
 
-                <h3>Оновлення цін і кількості</h3>
+                <h3>{{#t}}mod.wc.items.onovlennia_tsin_i_kilkosti{{/t}}</h3>
 
                 <div class="navbar">
                   
                   <form zippy="upd"  >
                       <div class="row  ">
-                      <label class="col-form-label col-auto" for="updcat">Категорія</label>
+                      <label class="col-form-label col-auto" for="updcat">{{#t}}common.katehoriia{{/t}}</label>
                          <div class="col-auto  ">
                         <select class="form-control ms-sm-2" zippy="updcat">
-                            <option value="0">Всі</option>
+                            <option value="0">{{#t}}common.vsi{{/t}}</option>
                         </select>
                         </div>
                        <div class="col-auto  ">
-                    <a zippy="updateqty" class="  btn btn-success  ">Оновити кількість</a>
+                    <a zippy="updateqty" class="  btn btn-success  ">{{#t}}common.onovyty_kilkist{{/t}}</a>
                       </div>
 
                       <div class="col-auto  ">
-                    <a zippy="updateprice" class="  btn btn-success  ">Оновити ціни</a>
+                    <a zippy="updateprice" class="  btn btn-success  ">{{#t}}common.onovyty_tsiny{{/t}}</a>
                       </div>
                       
                    </form>
@@ -91,10 +91,10 @@
 
             <div class="col-12 col-md-8   pt-4">
 
-                <h3>Завантаження товарів з магазину </h3>
+                <h3>{{#t}}mod.wc.items.zavantazhennia_tovariv_z_mahazynu{{/t}} </h3>
 
                 <div class=" ">
-                    <a zippy="getitems" class="  btn btn-success  ">Завантажити</a>
+                    <a zippy="getitems" class="  btn btn-success  ">{{#t}}common.zavantazhyty{{/t}}</a>
 
 
 

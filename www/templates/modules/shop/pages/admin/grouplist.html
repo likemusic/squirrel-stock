@@ -8,8 +8,8 @@
         </style>
         <div class="row">
             <div class="col-12">
-                <h3>Атрибути для товарів</h3>
-                <small>Показуються  тільки  категорії,  які мають  товари</small>
+                <h3>{{#t}}mod.shop.grouplist.atrybuty_dlia_tovariv{{/t}}</h3>
+                <small>{{#t}}mod.shop.grouplist.pokazuiutsia_tilky_katehorii_iaki_maiut{{/t}}</small>
             </div>
             <div class="col-12 col-md-6  ">
                 <table class="table table-sm">
@@ -26,14 +26,14 @@
 
                 <div zippy="attrpanel" class="row">
                     <div class="col-12    col-xl-10 ">
-                        <h4>Перелік атрибутів</h4>
-                        <a zippy="addattr" class="btn btn-sm  btn-primary ms-4">Новий атрибут</a>
+                        <h4>{{#t}}mod.shop.grouplist.perelik_atrybutiv{{/t}}</h4>
+                        <a zippy="addattr" class="btn btn-sm  btn-primary ms-4">{{#t}}mod.shop.grouplist.novyi_atrybut{{/t}}</a>
                        
                         <table class="   table    table-sm ">
                             <tr>
-                                <th>Назва</th>
-                                <th>Тип</th>
-                                <th>Значення</th>
+                                <th>{{#t}}common.nazva{{/t}}</th>
+                                <th>{{#t}}common.typ{{/t}}</th>
+                                <th>{{#t}}mod.shop.grouplist.znachennia{{/t}}</th>
                                 <th style="width:16px;"> </th>
                                 <th style="width:16px;"> </th>
                                 <th > </th>
@@ -54,28 +54,28 @@
                     <form zippy="attreditform" class="col-12 col-md-6 ">
                         <hr>
                         <div class="mb-2">
-                            <label for="attrtype">Тип: </label>&nbsp;<i zippy="tt" class="fa fa-info-circle" data-bs-toggle="tooltip"
+                            <label for="attrtype">{{#t}}mod.shop.grouplist.typ{{/t}} </label>&nbsp;<i zippy="tt" class="fa fa-info-circle" data-bs-toggle="tooltip"
                                                                 data-bs-placement="top" title=""></i>
                             <select zippy="attrtype" class="form-control"></select>
                             <span zippy="attrtypename" class="form-control"></span>
                         </div>
                          <div class="mb-2" zippy="cfpanel">
-                            <label for="attrcf">Поле:</label>
+                            <label for="attrcf">{{#t}}mod.shop.grouplist.pole{{/t}}</label>
                             <select   zippy="attrcf" class="form-control"  >
-                                <option value="0">Не вибрано</option>
+                                <option value="0">{{#t}}common.ne_vybrano{{/t}}</option>
                             </select>
                          </div>                        
                         <div class="mb-2">
-                            <label for="attrname">Назва:</label>
+                            <label for="attrname">{{#t}}mod.shop.grouplist.nazva{{/t}}</label>
                             <input type="text" zippy="attrname" class="form-control" required="required"/>
                         </div>
                         <div class="mb-2" zippy="attrvaluespanel">
-                            <label for="attrvalues">Значення:</label>
+                            <label for="attrvalues">{{#t}}mod.shop.grouplist.znachennia_2{{/t}}</label>
                             <textarea rows="5" cols="30" class="form-control" zippy="attrvalues"></textarea>
-                            <small>Декілька значень вводяться  через кому</small>
+                            <small>{{#t}}mod.shop.grouplist.dekilka_znachen_vvodiatsia_cherez_komu{{/t}}</small>
                         </div>
                         <div class="mb-2" zippy="meashurepanel">
-                            <label for="meashure">Од. вим.:</label>
+                            <label for="meashure">{{#t}}mod.shop.grouplist.od_vym{{/t}}</label>
                             <input type="text" zippy="meashure" class="form-control" style="width:50px;"/>
                         </div>
                         
@@ -84,7 +84,7 @@
 
                         <div class="mb-2">
 
-                            <input type="submit" class="btn btn-sm  btn-success" value="Зберегти"/>
+                            <input type="submit" class="btn btn-sm  btn-success" value="{{#t}}common.zberehty{{/t}}"/>
                         </div>
                         <input type="hidden" zippy="attrid" value="0">
                     </form>

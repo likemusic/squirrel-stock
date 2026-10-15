@@ -3,7 +3,7 @@
         <meta charset="utf-8">
         <meta lang="uk" >
 
-        <title>Меню</title>
+        <title>{{#t}}mod.shop.cchat.meniu{{/t}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -30,7 +30,7 @@
       <div class="container-fluid ">
         <div class="row ">
             <div class="mt-2  col-12     ">
-             <h4>Чат  по замовленню {{document_number}} від {{document_date}} </h4> 
+             <h4>{{#t}}mod.shop.cchat.chat_po_zamovlenniu_vid{{/t}} </h4> 
              </div>
             <div class="mt-2  col-12   col-md-6  col-xl-4   ">
  
@@ -39,7 +39,7 @@
                       {{#msglist}}
                           {{#isseller}}
                           <div class="row">
-                            <div class="col-6"><b>Продавець</b></div>
+                            <div class="col-6"><b>{{#t}}common.prodavets{{/t}}</b></div>
                             <div class="col-4 text-end"><small>{{msgdate}}</small></div>
                             <div class="col-2"> </div>
                           </div>
@@ -55,7 +55,7 @@
                             <div class="col-2"> </div>
                             <div class="col-4 text-start"><small>{{msgdate}}</small></div>
                             
-                            <div class="col-6 text-end"><b>Ви</b></div>
+                            <div class="col-6 text-end"><b>{{#t}}mod.shop.cchat.vy{{/t}}</b></div>
                         </div>
                            <div class="row">
                             <div class="col-2"> </div>
@@ -78,14 +78,14 @@
                       {{/msglist}}                           
                     <form zippy="msgform" class="mt-2">
                       <div class="mb-2">
-                            <label for="msgtext">Відповідь</label> 
+                            <label for="msgtext">{{#t}}mod.shop.cchat.vidpovid{{/t}}</label> 
                             <textarea required="required" zippy="msgtext"       class="form-control"></textarea>
                              
                                
                           </div>
                       <div class="input-group">
                         
-                          <button type="submit" class="btn btn-primary">Відправити </button>
+                          <button type="submit" class="btn btn-primary">{{#t}}common.vidpravyty{{/t}} </button>
                         
                       </div>
                     </form>  

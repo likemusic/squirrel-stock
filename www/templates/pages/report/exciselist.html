@@ -1,35 +1,35 @@
 <html>
    <head>
-        <title> Акцизні марки   </title>
+        <title> {{#t}}common.aktsyzni_marky{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   ">
-                <h3>Акцизні марки</h3>
+                <h3>{{#t}}common.aktsyzni_marky{{/t}}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                       <div class="row  ">
                        <div class="col-auto  ">
-                          <input placeholder="Пошук..." class="form-control ms-sm-2" zippy="search">
+                          <input placeholder="{{#t}}common.ph.search{{/t}}" class="form-control ms-sm-2" zippy="search">
                         </div>                                                                    
-                        <label class="col-form-label col-auto" for="from">З</label>
+                        <label class="col-form-label col-auto" for="from">{{#t}}common.z{{/t}}</label>
                         <div class="col-auto  ">
                           <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="from">
                         </div>
-                        <label class="col-form-label col-auto" for="to">по</label>
+                        <label class="col-form-label col-auto" for="to">{{#t}}common.po{{/t}}</label>
                         <div class="col-auto  ">
                           <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="to">
                         </div>
                         
-                        <label class="col-form-label col-auto" for="item">ТМЦ</label>
+                        <label class="col-form-label col-auto" for="item">{{#t}}common.tmts{{/t}}</label>
                         <div class="col-auto  ">
                           <select  class="form-control ms-sm-2" zippy="item">
-                             <option  value="0">Не вибрано</option>                  
+                             <option  value="0">{{#t}}common.ne_vybrano{{/t}}</option>                  
                          </select>
                         </div>
                         <div class="col-auto  ">
-                          <input  zippy="onreport" class="btn btn-primary  " type="submit" value="ОК">
+                          <input  zippy="onreport" class="btn btn-primary  " type="submit" value="{{#t}}common.ok{{/t}}">
                        </div>
                       </div>
                     </form>
@@ -37,9 +37,9 @@
 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/exciselist" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/exciselist" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/exciselist" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/exciselist" target="_blank" title="{{#t}}common.eksport_v_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
                                                                          
 
                     </div>

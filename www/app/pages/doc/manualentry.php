@@ -131,15 +131,15 @@ class ManualEntry extends \App\Pages\Base
         $item->amount = $this->editdetail->editamount->getDouble();
 
         if ($item->amount== 0) {
-            $this->setError("Не введено суму");
+            $this->setError(__('common.ne_vvedeno_sumu'));
             return;
         }        
         if ($item->accdt== 0 && $item->accct== 0) {
-            $this->setError("Не введено рахунок");
+            $this->setError(__('doc.manualentry.ne_vvedeno_rakhunok'));
             return;
         }        
         if ($item->accdt==   $item->accct ) {
-            $this->setError("Однакові рахунки");
+            $this->setError(__('doc.manualentry.odnakovi_rakhunky'));
             return;
         }        
         if($this->_rowid == -1) {
@@ -218,20 +218,20 @@ class ManualEntry extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
 
      
         if (count($this->_itemlist)==0) {
-            $this->setError("Не введено проводки");
+            $this->setError(__('doc.manualentry.ne_vvedeno_provodky'));
         }
 
         return !$this->isError();

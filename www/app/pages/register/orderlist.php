@@ -52,7 +52,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->filter->add(new TextInput('searchnumber'));
         $this->listpanel->filter->add(new TextInput('searchtext'));
-        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові',2 => 'До сплати', 3 => 'Всі'), 0));
+        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'),2 => __('common.do_splaty'), 3 => __('common.vsi')), 0));
         $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
         $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
@@ -166,10 +166,10 @@ class OrderList extends \App\Pages\Base
         
         if($doc->getHD('waitpay')==1){
             $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
-            $row->ispay->setAttribute('title','До сплати');            
+            $row->ispay->setAttribute('title',__('common.do_splaty'));            
         }   else {
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
-            $row->ispay->setAttribute('title','Оплачено');            
+            $row->ispay->setAttribute('title',__('register.orderlist.oplacheno'));            
         }
         $row->add(new Label('isreserved'))->setVisible($doc->hasReserve());
 
@@ -307,14 +307,14 @@ class OrderList extends \App\Pages\Base
 
             if ($task) {
 
-                $this->setWarn('Вже існує документ Наряд');
+                $this->setWarn(__('register.orderlist.vzhe_isnuie_dokument_nariad'));
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "bttn") {
             if ($ttn) {
-                $this->setWarn('У замовлення вже є відправки');
+                $this->setWarn(__('register.orderlist.u_zamovlennia_vzhe_ie_vidpravky'));
             }
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
@@ -326,7 +326,7 @@ class OrderList extends \App\Pages\Base
         }
         if ($sender->id == "bpos") {
             if ($pos) {
-                $this->setWarn('Вже існує документ Чек');
+                $this->setWarn(__('register.orderlist.vzhe_isnuie_dokument_chek'));
             }
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
             return;
@@ -385,7 +385,7 @@ class OrderList extends \App\Pages\Base
                 $this->_doc->setHD('waitpay',0); 
                 $this->_doc->save();     
 
-                $this->setWarn('Замовлення анульовано');
+                $this->setWarn(__('register.orderlist.zamovlennia_anulovano'));
             }
 
             if ($sender->id == "bclose") {
@@ -393,11 +393,11 @@ class OrderList extends \App\Pages\Base
   
 
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
-                    $this->setWarn('"Замовлення закрито без оплати"');
+                    $this->setWarn(__('register.orderlist.zamovlennia_zakryto_bez_oplaty'));
                 }
                                           
                 if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
-                    $this->setWarn('Замовлення закрито без доставки');
+                    $this->setWarn(__('register.orderlist.zamovlennia_zakryto_bez_dostavky'));
                 }
 
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -810,7 +810,7 @@ class OrderList extends \App\Pages\Base
 
     public function onBranch($sender) {
         $id = $sender->getValue();
-        $users = array(0=> "Не обрано" );
+        $users = array(0=> __('common.ne_obrano') );
 
         foreach(\App\Entity\User::getByBranch($id) as $id=>$u) {
             $users[$id] = $u ;
@@ -888,7 +888,7 @@ class OrderList extends \App\Pages\Base
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 if($this->_itemlist[$ri]->checkedqty ==  $this->_itemlist[$ri]->quantity) {
-                    $this->setWarn('Лишній товар') ;
+                    $this->setWarn(__('register.orderlist.lyshnii_tovar')) ;
                     $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
                                
                     return;
@@ -904,7 +904,7 @@ class OrderList extends \App\Pages\Base
                 return;
             }
         }
-        $this->setWarn('Товар не знайдено') ;
+        $this->setWarn(__('common.tovar_ne_znaideno')) ;
         $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
 
 
@@ -925,7 +925,7 @@ class OrderList extends \App\Pages\Base
 
                 foreach ($this->_itemlist as   $_item) {
                     if($sender->id == "editready" && $_item->checked != true) {
-                        $this->setError('Не зібрані всі позиції') ;
+                        $this->setError(__('register.orderlist.ne_zibrani_vsi_pozytsii')) ;
 
                         return;
                     }
@@ -993,17 +993,17 @@ class OrderList extends \App\Pages\Base
             }
             
             if($this->_doc->hasPayments() ){
-                $this->setError('Документ  з оплатами не  може  бути розділений') ;
+                $this->setError(__('register.orderlist.dokument_z_oplatamy_ne_mozhe')) ;
                 return;
             }
             $ch=$this->_doc->getChildren(); 
             if(is_array($ch) && count($ch)  >0 ){
-                $this->setError('Документ  має дочірні') ;
+                $this->setError(__('register.orderlist.dokument_maie_dochirni')) ;
                 return;
             }
              
             if($this->_doc->getHD('totaldisc',0)>0 || $this->_doc->getBonus()>0 || $this->_doc->getBonus(false)>0 ){
-                $this->setError('Документ  зі знижками  або бонусами не  може  бути розділений') ;
+                $this->setError(__('register.orderlist.dokument_zi_znyzhkamy_abo_bonusamy')) ;
                 return;
             }
             
@@ -1026,7 +1026,7 @@ class OrderList extends \App\Pages\Base
                     
                     
                      if($item->newqty > $item->quantity || $item->newqty < 0 )  {
-                         $this->setError('Невірна кількість для '.$item->itemname) ;
+                         $this->setError(__('register.orderlist.nevirna_kilkist_dlia').$item->itemname) ;
                          return;
                      }
                     
@@ -1050,7 +1050,7 @@ class OrderList extends \App\Pages\Base
                 }
                 
                 if(count($oldlist)==0 || count($newlist)==0)  {
-                     $this->setError('Порожній перелік позицій в старому або новому замовленні ') ;
+                     $this->setError(__('register.orderlist.porozhnii_perelik_pozytsii_v_staromu')) ;
                      return;
                 }
                 
@@ -1069,7 +1069,7 @@ class OrderList extends \App\Pages\Base
 
                
                 $conn->CommitTrans();
-                $this->setSuccess('Створено замовлення '.$newdoc->document_number) ;
+                $this->setSuccess(__('register.orderlist.stvoreno_zamovlennia').$newdoc->document_number) ;
         } catch(\Exception $e) {
             $this->setError($e->getMessage()) ;
             $conn->RollbackTrans();
@@ -1150,7 +1150,7 @@ class OrderList extends \App\Pages\Base
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
         if($issms == 0) {
-           return  $this->jsonError("Не знайдений сервіс смс") ;
+           return  $this->jsonError(__('register.orderlist.ne_znaidenyi_servis_sms')) ;
         }
 
         $phone= $doc->headerdata['phone'] ??'';
@@ -1159,7 +1159,7 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-           return  $this->jsonError("Не знайдений телефон") ;
+           return  $this->jsonError(__('register.orderlist.ne_znaidenyi_telefon')) ;
 
         }
 
@@ -1167,7 +1167,7 @@ class OrderList extends \App\Pages\Base
        
         $fn = (\App\System::getOption('common', 'shopname')??'')  ;
 
-        $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
+        $text = __('register.orderlist.maiemo_zapytannia_po_vashomu_zamovlenniu').$link;
 
         $r = \App\Comm::sendSMS($phone, $text) ;
         if($r!="") {

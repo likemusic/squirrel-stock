@@ -107,12 +107,12 @@ class StoreList extends \App\Pages\Base
         $this->_store->storename = $this->storeform->storeeditname->getText();
         $this->_store->description = $this->storeform->storeeditdesc->getText();
         if ($this->_store->storename == '') {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $this->_store->branch_id = $this->storeform->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_store->branch_id == 0) {
-            $this->setError('Виберіть філію');
+            $this->setError(__('common.vyberit_filiiu'));
 
             return;
         }

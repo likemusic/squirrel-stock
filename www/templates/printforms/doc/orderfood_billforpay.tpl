@@ -2,7 +2,7 @@
     
   
     <tr>
-        <td colspan="3">Рахунок {{document_number}}</td>
+        <td colspan="3">{{#t}}print.orderfood_billforpay.rakhunok{{/t}}</td>
     </tr>
     
     
@@ -10,7 +10,7 @@
  
     <tr>
 
-        <td colspan="3">від {{time}}</td>
+        <td colspan="3">{{#t}}common.vid_3{{/t}}</td>
     </tr>
     <tr>
 
@@ -27,7 +27,7 @@
  
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> {{#t}}common.pokupets_2{{/t}}</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -53,26 +53,26 @@
     
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{total}}</td>
     </tr>
 
    
     {{#isdisc}}
     <tr  >
-        <td colspan="2" align="right">Знижка:</td>
+        <td colspan="2" align="right">{{#t}}common.znyzhka_2{{/t}}</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/isdisc}}
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусів::</td>
+        <td colspan="2" align="right">{{#t}}common.spysano_bonusiv{{/t}}</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}
 
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До сплати:</td>
+        <td colspan="2" align="right">{{#t}}common.do_splaty_2{{/t}}</td>
         <td style="font-size:larger" align="right">{{payamount}}</td>
     </tr>
     

@@ -200,11 +200,11 @@ class CategoryList extends \App\Pages\Base
         $cat_id = $sender->owner->getDataItem()->cat_id;
         $cat = $this->getById($cat_id) ;
         if ($cat->itemscnt > 0) {
-            $this->setError('Не можна видалити категорію з ТМЦ');
+            $this->setError(__('reference.categorylist.ne_mozhna_vydalyty_katehoriiu_z'));
             return;
         }
         if ($cat->hasChild()) {
-            $this->setError('Категорія має дочірні категорії');
+            $this->setError(__('reference.categorylist.katehoriia_maie_dochirni_katehorii'));
             return;
         }
 
@@ -278,7 +278,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->nofastfoodmenu = $this->categorydetail->editnofastfoodmenu->isChecked() ? 1 : 0;
         $this->_category->noprice = $this->categorydetail->editnoprice->isChecked() ? 1 : 0;
         if ($this->_category->cat_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
 
@@ -304,14 +304,14 @@ class CategoryList extends \App\Pages\Base
             
             if (filesize($file["tmp_name"])  > 1024*1024) {
 
-                    $this->setError('Розмір файлу більше 1M');
+                    $this->setError(__('common.rozmir_failu_bilshe_1m'));
                     return;
             }            
             
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат  зображення');
+                $this->setError(__('reference.categorylist.nevirnyi_format_zobrazhennia'));
                 return;
             }
 

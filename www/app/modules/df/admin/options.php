@@ -16,7 +16,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (  System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -51,7 +51,7 @@ class Options extends \App\Pages\Base
         $modules['dfstore'] = $this->cform->defstore->getValue();
        
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
         
 

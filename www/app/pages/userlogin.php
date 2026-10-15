@@ -70,7 +70,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("Невірний код капчі");
+                $this->setError(__('app.userlogin.nevirnyi_kod_kapchi'));
                 $this->counter();
 
                 return;
@@ -78,11 +78,11 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         if ($login == '') {
 
-            $this->setError('Введіть логін');
+            $this->setError(__('app.userlogin.vvedit_lohin'));
         } else {
             if ($password == '') {
 
-                $this->setError('Введіть пароль');
+                $this->setError(__('common.vvedit_parol'));
             }
         }
 
@@ -98,7 +98,7 @@ class UserLogin extends \Zippy\Html\WebPage
             
             else {
 
-                $this->setError('Невірний логін або пароль');
+                $this->setError(__('app.userlogin.nevirnyi_lohin_abo_parol'));
 
                 $this->counter();
             }
@@ -151,7 +151,7 @@ class UserLogin extends \Zippy\Html\WebPage
     private function counter() {
         $this->_cntlogin++;
         if ($this->_cntlogin == 5) {
-            $msg = "Багато невдалих авторизацій";
+            $msg = __('app.userlogin.bahato_nevdalykh_avtoryzatsii');
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
@@ -161,7 +161,7 @@ class UserLogin extends \Zippy\Html\WebPage
             \App\Entity\Notify::toAdmin($msg) ;
 
 
-            $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
+            $this->setError(__('app.userlogin.bahato_nevdalykh_avtoryzatsii_administra'));
             $this->loginform->setVisible(false);
 
         }

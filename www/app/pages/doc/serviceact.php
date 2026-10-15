@@ -68,7 +68,7 @@ class ServiceAct extends \App\Pages\Base
        
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $paytype ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>__('common.peredplata'),2=>__('common.postoplata'),3=>__('doc.serviceact.oplata_vn_abo_chekom')], $paytype ))->onChange($this, 'OnPayType');
   
     
         $this->docform->add(new TextInput('phone'));
@@ -350,7 +350,7 @@ class ServiceAct extends \App\Pages\Base
         
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $store_id = $this->docform->store->getValue();
@@ -374,7 +374,7 @@ class ServiceAct extends \App\Pages\Base
             
             if (strlen($item->snumber) == 0  ) {
 
-                $this->setError("Потрібен серійний номер");
+                $this->setError(__('common.potriben_seriinyi_nomer'));
                 return;
             }
             
@@ -383,7 +383,7 @@ class ServiceAct extends \App\Pages\Base
             
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setError('Невірний серійний номер  ');
+                $this->setError(__('common.nevirnyi_seriinyi_nomer'));
                 return;
             }  
 
@@ -398,7 +398,7 @@ class ServiceAct extends \App\Pages\Base
 
                 foreach(  $this->_itemlist as $i){
                     if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {
-                        $this->setError('Вже є ТМЦ  з таким серійним номером');
+                        $this->setError(__('common.vzhe_ie_tmts_z_takym'));
                         return;
                         
                     }
@@ -445,7 +445,7 @@ class ServiceAct extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано послугу");
+            $this->setError(__('doc.serviceact.ne_obrano_posluhu'));
             return;
         }
   
@@ -612,7 +612,7 @@ class ServiceAct extends \App\Pages\Base
         $payamount = $this->docform->payamount->getText();
         if ($payed > $payamount) {
 
-            $this->setWarn('Внесена сума більше необхідної');
+            $this->setWarn(__('common.vnesena_suma_bilshe_neobkhidnoi'));
         }        
     }
   
@@ -674,27 +674,27 @@ class ServiceAct extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_serlist) == 0) {
-            $this->setError("Не введено послуг");
+            $this->setError(__('doc.serviceact.ne_vvedeno_posluh'));
         }
 
         if ( count($this->_itemlist) > 0 && ($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("Не задано замовника");
+            $this->setError(__('doc.serviceact.ne_zadano_zamovnyka'));
         }
 
         return !$this->isError();
@@ -768,7 +768,7 @@ class ServiceAct extends \App\Pages\Base
             $disctext = "";
             $d =  $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка " . " {$d}%";
+                $disctext = __('common.postiina_znyzhka_2') . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
@@ -805,7 +805,7 @@ class ServiceAct extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -814,14 +814,14 @@ class ServiceAct extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }

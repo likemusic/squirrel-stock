@@ -7,7 +7,7 @@
           
             <div class="col-12 col-md-auto">
 
-                <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
+                <h3 class="mt-2 mb-3">{{#t}}common.oplata_zamovlennia{{/t}}</h3>
                  <table class="table table-sm">
                     {{#detail}}
                     <tr>
@@ -19,14 +19,14 @@
                     
                    {{/detail}}  
                        <tr>
-                       <td colspan="3" class="text-end"><b>До сплати</b></td>
+                       <td colspan="3" class="text-end"><b>{{#t}}common.do_splaty{{/t}}</b></td>
                        <td class="text-end"><b>{{total}}</b></td>
                     </tr>
              </table>
                
                  
                  {{#qr}}         
-                 <button class="btn btn-success" type="button" onclick="payqr();">Оплатити через QR код</button>         
+                 <button class="btn btn-success" type="button" onclick="payqr();">{{#t}}mod.shop.orderpay.oplatyty_cherez_qr_kod{{/t}}</button>         
                   {{/qr}}         
             </div>
          
@@ -39,16 +39,16 @@
   
      <div class="row justify-content-center mt-4"  >
         <div class="col-12 col-md-auto">
-               <h5 id="qrerror" style="display:none"   class="text-danger">Не задані параметри  отримувача</h5>
+               <h5 id="qrerror" style="display:none"   class="text-danger">{{#t}}mod.shop.orderpay.ne_zadani_parametry_otrymuvacha{{/t}}</h5>
              
                <div id="qrpan" style="display:none">
-                <h4  >QR код для  оплати</h4>
+                <h4  >{{#t}}common.qr_kod_dlia_oplaty{{/t}}</h4>
                
                 <div class="modal-body  ">
                   <div class="mb-2" id="qrimg" >          </div>
-                   <a  class="btn btn-info  " id="qrurl" >  Відкрити посилання        </a>
+                   <a  class="btn btn-info  " id="qrurl" >  {{#t}}common.vidkryty_posylannia{{/t}}        </a>
 
-                   <a class="btn btn-success   " href="javascript:void(0)" onclick="copycb()" title="Скопіювати в кліпборд" >Скопіювати </a>
+                   <a class="btn btn-success   " href="javascript:void(0)" onclick="copycb()" title="{{#t}}common.skopiiuvaty_v_klipbord{{/t}}" >{{#t}}common.skopiiuvaty{{/t}} </a>
 
                 </div>        
              </div>        

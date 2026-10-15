@@ -23,7 +23,7 @@ class Item extends \ZCL\DB\Entity
         $this->item_id = 0;
         $this->cat_id = 0;
         $this->item_type = self::TYPE_TOVAR;
-        $this->msr = "шт";
+        $this->msr = __('app.item.sht');
         $this->notes = "";
 
         $this->price = 0;
@@ -674,7 +674,7 @@ class Item extends \ZCL\DB\Entity
         
  
         if($price==0) {
-            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
+            \App\System::setWarnMsg(__('app.item.dlia_ne_vyrakhuvano_sobivartist', ['itemname' => $this->itemname])) ;
         }
     
         
@@ -1041,11 +1041,11 @@ class Item extends \ZCL\DB\Entity
     public static function getTypes() {
         $list = array();
 
-        $list[Item::TYPE_TOVAR] = "Товар";
-        $list[Item::TYPE_MAT] = "Матеріали та комплектуючі";
-        $list[Item::TYPE_MBP] = "МБП (малоцінка)";
-        $list[Item::TYPE_PROD] = "Готова продукція";
-        $list[Item::TYPE_HALFPROD] = "Напівфабрикати";
+        $list[Item::TYPE_TOVAR] = __('common.tovar');
+        $list[Item::TYPE_MAT] = __('common.materialy_ta_komplektuiuchi');
+        $list[Item::TYPE_MBP] = __('app.item.mbp_malotsinka');
+        $list[Item::TYPE_PROD] = __('common.hotova_produktsiia');
+        $list[Item::TYPE_HALFPROD] = __('common.napivfabrykaty');
 
         return $list;
     }
@@ -1314,7 +1314,7 @@ class Item extends \ZCL\DB\Entity
             }            
 
             if (false == $itemp->checkMinus($itemp->quantity, $store)) {
-                throw new \Exception("На складі всього ". \App\Helper::fqty($itemp->getQuantity($store))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho'). \App\Helper::fqty($itemp->getQuantity($store)).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $itemp->itemname]));
             }
         
             $listst = \App\Entity\Stock::pickup($store, $itemp);
@@ -1351,7 +1351,7 @@ class Item extends \ZCL\DB\Entity
            return  $this->warranty;
         }
         if(intval($this->term ??0)>0){
-           return "до ". \App\Helper::fd( strtotime("+{$this->term} days")  );  ; 
+           return __('app.item.do'). \App\Helper::fd( strtotime("+{$this->term} days")  );  ; 
         }
         return "";
     }

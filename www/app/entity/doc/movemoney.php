@@ -39,7 +39,7 @@ class MoveMoney extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПК-000000';
+        return __('doc.movemoney.pk_000000');
     }
     public   function DoAcc() {
        if(\App\System::getOption("common",'useacc')!=1 ) return;

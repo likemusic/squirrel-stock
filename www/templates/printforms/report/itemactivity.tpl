@@ -2,14 +2,14 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
-            Рух по складу  {{store}}
+            {{#t}}print.itemactivity.rukh_po_skladu{{/t}}
         </td>
        {{#docs}}  <td> </td>       {{/docs}} 
     </tr>
     <tr>
 
         <td align="center" colspan="8">
-            Період з {{datefrom}} по {{dateto}}
+            {{#t}}common.period_z_po_2{{/t}}
         </td>
              {{#docs}}  <td> </td>       {{/docs}} 
  
@@ -18,18 +18,18 @@
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
-         <th style="border: solid black 1px">Найменування</th>
-         <th style="border: solid black 1px">Код</th>
+         <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
+         <th style="border: solid black 1px">{{#t}}common.kod{{/t}}</th>
  
-          {{#docs}}  <th style="border: solid black 1px">Документ</th>     {{/docs}} 
+          {{#docs}}  <th style="border: solid black 1px">{{#t}}common.dokument{{/t}}</th>     {{/docs}} 
                
        
-        <th align="right" style="border: solid black 1px">Поч.</th>
-        <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Витр.</th>
-        <th align="right" style="border: solid black 1px">Кін.</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.poch{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}print.itemactivity.prykh{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.vytr{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.itemactivity.kin{{/t}}</th>
        
     </tr>
     {{#_detail}}
@@ -56,7 +56,7 @@
                  {{#docs}}  <td> </td>       {{/docs}} 
  
         <td></td>
-        <td align="right"><b>Всього</b></td>
+        <td align="right"><b>{{#t}}common.vsoho_3{{/t}}</b></td>
 
         <td align="right"> </td>
         <td align="right"><b>{{bqin}}</b></td>
@@ -73,7 +73,7 @@
                  {{#docs}}  <td> </td>       {{/docs}} 
  
         <td></td>
-        <td align="right"><b>На суму</b></td>
+        <td align="right"><b>{{#t}}common.na_sumu{{/t}}</b></td>
 
         <td align="right"><b> </b></td>
         <td align="right"><b>{{bain}}</b></td>

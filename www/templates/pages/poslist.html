@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Довідник кас (POS терміналів)    </title>
+        <title> {{#t}}app.poslist.dovidnyk_kas_pos_terminaliv{{/t}}    </title>
 
     </head>
 
@@ -13,14 +13,14 @@
                <div class="col-12   col-xl-10">
              {{/loadkey}}
                 <div zippy="postable">
-                    <h3>Довідник кас (POS терміналів) </h3>
-                    <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                    <h3>{{#t}}app.poslist.dovidnyk_kas_pos_terminaliv{{/t}} </h3>
+                    <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
                             <th>ID</th>
-                            <th>Назва</th>
+                            <th>{{#t}}common.nazva{{/t}}</th>
                             {{#usebranch}}
-                            <th>Філія</th>
+                            <th>{{#t}}common.filiia{{/t}}</th>
                             {{/usebranch}}
                             <th></th>
                             <th></th>
@@ -28,8 +28,8 @@
                              
     {{#loadkey}}
                             <th  > </th>
-                            <th  >Власник сертифікату</th>
-                            <th  >Ідентифікатор ключа</th>
+                            <th  >{{#t}}app.poslist.vlasnyk_sertyfikatu{{/t}}</th>
+                            <th  >{{#t}}app.poslist.identyfikator_kliucha{{/t}}</th>
                             
                             
                             {{/loadkey}}   
@@ -41,19 +41,19 @@
                             <td zippy="branch_name"></td>
                             {{/usebranch}}
                             <td zippy="comment"></td>
-                            <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> </td>
-                            <td  > <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                            <td  ><a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a> </td>
+                            <td  > <a zippy="delete" title="{{#t}}common.vyluchyty{{/t}}"><i class="fa fa-trash"></i></a></td>
 
       {{#loadkey}}
                             <td  >&nbsp;&nbsp;
-                               <a  zippy="ppo" title="Завантажити ключ і сертифікат" ><i class="fa fa-key"></i></a>
+                               <a  zippy="ppo" title="{{#t}}app.poslist.zavantazhyty_kliuch_i_sertyfikat{{/t}}" ><i class="fa fa-key"></i></a>
                             </td>
                             <td zippy="ppoowner"> </td>
                             <td zippy="ppokeyid"> </td>
                             {{/loadkey}}    
                          </tr>
                     </table>
-                          {{#loadkey}}    <small>Ідентифікатор ключа має бути прописаний в податковій</small>       {{/loadkey}}     
+                          {{#loadkey}}    <small>{{#t}}app.poslist.identyfikator_kliucha_maie_buty_propysan{{/t}}</small>       {{/loadkey}}     
  
 
                 </div>
@@ -64,42 +64,42 @@
                         <div class="col-6 col-md-4 col-xl-3">
 
                             <div class="mb-2">
-                                <label for="editpos_name">Назва, номер</label>
+                                <label for="editpos_name">{{#t}}app.poslist.nazva_nomer{{/t}}</label>
                                 <input  required="on"  class="form-control" zippy="editpos_name"/>
                             </div>
                       
                             {{#usebranch}}
                             <div class="mb-2">
-                                <label for="editbranch">Філія</label>
+                                <label for="editbranch">{{#t}}common.filiia{{/t}}</label>
                                 <select class="form-control" zippy="editbranch">
-                                    <option value="0">Не обрано </option>
+                                    <option value="0">{{#t}}common.ne_obrano{{/t}} </option>
                                 </select>
                             </div>
                             {{/usebranch}}
 
                             <div class="mb-2">
-                                <label for="editpointname"> Назва торгової точки</label>
+                                <label for="editpointname"> {{#t}}app.poslist.nazva_torhovoi_tochky{{/t}}</label>
                                 <input class="form-control" zippy="editpointname"/>
-                                <small>Використовується в чеках та фіскалізації</small>
+                                <small>{{#t}}app.poslist.vykorystovuietsia_v_chekakh_ta_fiskaliza{{/t}}</small>
 
                             </div>
 
 
                             <div class="mb-2">
-                                <label for="editaddress"> Адреса</label>
+                                <label for="editaddress"> {{#t}}common.adresa_2{{/t}}</label>
                                 <input class="form-control" zippy="editaddress"/>
-                                <small>Використовується в чеках та фіскалізації</small>
+                                <small>{{#t}}app.poslist.vykorystovuietsia_v_chekakh_ta_fiskaliza{{/t}}</small>
 
                             </div>
                              <div class="mb-2">
-                                <label for="editpayeq"> Засоби оплати</label>
+                                <label for="editpayeq"> {{#t}}app.poslist.zasoby_oplaty{{/t}}</label>
                                 <input class="form-control" zippy="editpayeq"/>
-                                <small>Для друку в чеку</small>
+                                <small>{{#t}}app.poslist.dlia_druku_v_cheku{{/t}}</small>
                             </div>
 
 
                             <div class="mb-2">
-                                <label for="editcomment">Коментар</label>
+                                <label for="editcomment">{{#t}}common.komentar{{/t}}</label>
                                 <textarea class="form-control" zippy="editcomment">
                                 </textarea>
                             </div>
@@ -111,8 +111,8 @@
                             
                                 <div class="form-check">
                                     <input zippy="editusefisc" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label text-bold" for="editusefisc">Використовувати фіскалізацію</label>
-                                    <br><small>Чеки з цього терміналу будуть відправлятись в ДПІ</small>
+                                    <label class="form-check-label text-bold" for="editusefisc">{{#t}}app.poslist.vykorystovuvaty_fiskalizatsiiu{{/t}}</label>
+                                    <br><small>{{#t}}app.poslist.cheky_z_tsoho_terminalu_budut{{/t}}</small>
                                  
                             </div>
                             {{/fiscal}}
@@ -121,42 +121,42 @@
                            
                             <div class="form-check">
                                 <input zippy="edittesting" type="checkbox" class="form-check-input">
-                                <label class="form-check-label text-bold" for="edittesting">Тестовий режим</label>
-                                <br><small>Чеки будуть відправлятись в ДПІ, але не фіскалізуватимуться</small>
+                                <label class="form-check-label text-bold" for="edittesting">{{#t}}common.testovyi_rezhym{{/t}}</label>
+                                <br><small>{{#t}}app.poslist.cheky_budut_vidpravliatys_v_dpi{{/t}}</small>
                             </div>
                             <div class="mb-2">
-                                <label for="editfirmname"  >Власник ключа ЕЦП</label>
+                                <label for="editfirmname"  >{{#t}}app.poslist.vlasnyk_kliucha_etsp{{/t}}</label>
                                 <input class="form-control" type="text" zippy="editfirmname">
-                                <br><small> Якщо відрізняється від назви компанії</small>
+                                <br><small> {{#t}}app.poslist.iakshcho_vidrizniaietsia_vid_nazvy_kompa{{/t}}</small>
                             </div>                    
                              <div class="mb-2 row">
-                                    <label  class="col-6 col-form-label"  for="edittin"  >ЄДРПОУ</label>
+                                    <label  class="col-6 col-form-label"  for="edittin"  >{{#t}}common.iedrpou{{/t}}</label>
                                    <div class="col-6 col">
                                       <input class="form-control" type="text" zippy="edittin">
                                   </div>             
-                                   <small> Якщо відрізняється від ЄДРПОУ компанії</small>
+                                   <small> {{#t}}app.poslist.iakshcho_vidrizniaietsia_vid_iedrpou_kom{{/t}}</small>
                             </div>             
                             <div class="mb-2 row">
-                                    <label  class="col-6 col-form-label"  for="editipn" data-label="editpayname">ІПН</label>
+                                    <label  class="col-6 col-form-label"  for="editipn" data-label="editpayname">{{#t}}common.ipn{{/t}}</label>
                                      <div class="col-6 col">
                                        <input class="form-control" type="text" zippy="editipn">
                                     </div>    
-                                     <small> Якщо платник ПДВ і якщо відрізняється від ІПН компанії</small>
+                                     <small> {{#t}}app.poslist.iakshcho_platnyk_pdv_i_iakshcho{{/t}}</small>
                             </div>             
                             <div class="mb-2 row">
-                                <label class="col-6 col-form-label"  for="editfisc">Фіскальний номер</label>
+                                <label class="col-6 col-form-label"  for="editfisc">{{#t}}app.poslist.fiskalnyi_nomer{{/t}}</label>
                                  <div class="col-6 col">
                                    <input class="form-control" zippy="editfisc"/>
                                 </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-6 col-form-label" for="editposinner"> Локальний номер</label>
+                                <label class="col-6 col-form-label" for="editposinner"> {{#t}}app.poslist.lokalnyi_nomer{{/t}}</label>
                                  <div class="col-6 col">
                                     <input class="form-control" zippy="editposinner"/>
                                 </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-6 col-form-label" for="editfiscalnumber"> Наступний ФС документа</label>
+                                <label class="col-6 col-form-label" for="editfiscalnumber"> {{#t}}app.poslist.nastupnyi_fs_dokumenta{{/t}}</label>
                                  <div class="col-6 col">
                                      <input class="form-control" zippy="editfiscalnumber"/>
                                 </div>
@@ -164,18 +164,18 @@
                             {{/ppo}}
                             {{#checkbox}}
                              <div class="mb-2">
-                                <label for="editcbkey"> Ліцензійний ключ CheckBox</label>
+                                <label for="editcbkey"> {{#t}}app.poslist.litsenziinyi_kliuch_checkbox{{/t}}</label>
                                 <input class="form-control" zippy="editcbkey"/>
                             </div>
                              <div class="mb-2">
-                                <label for="editcbpin"> ПІН код касира</label>
+                                <label for="editcbpin"> {{#t}}app.poslist.pin_kod_kasyra{{/t}}</label>
                                 <input class="form-control" zippy="editcbpin"/>
                             </div>
                            
                             {{/checkbox}}          
                             {{#vkassa}}
                              <div class="mb-2">
-                                <label for="editvktoken"> Токен ВчасноКаса</label>
+                                <label for="editvktoken"> {{#t}}app.poslist.token_vchasnokasa{{/t}}</label>
                                 <input class="form-control" zippy="editvktoken"/>
                             </div>
                      
@@ -183,9 +183,9 @@
                             {{/vkassa}}          
                             {{#fiscal}}
                            <div class="mb-2">
-                                <label for="editautoshift">Автоматично закривати зміну в</label>
+                                <label for="editautoshift">{{#t}}app.poslist.avtomatychno_zakryvaty_zminu_v{{/t}}</label>
                                 <select zippy="editautoshift" class="form-control  ">
-                                    <option value="0">Не закривати</option>
+                                    <option value="0">{{#t}}app.poslist.ne_zakryvaty{{/t}}</option>
                                     <option value="19">19:00</option>
                                     <option value="20">20:00</option>
                                     <option value="21">21:00</option>
@@ -193,18 +193,18 @@
                                     <option value="23">23:00</option>
                                 </select>
                             </div>
-                            <small>Має бути активований  <a target="_blank" href="https://zippy.com.ua/zstoreusage#cron" >планувальник</a> </small>
+                            <small>{{#t}}app.poslist.maie_buty_aktyvovanyi{{/t}}  <a target="_blank" href="https://zippy.com.ua/zstoreusage#cron" >{{#t}}app.poslist.planuvalnyk{{/t}}</a> </small>
                             {{/fiscal}}                            
                    
                             {{#freg}}
                                 <div class="form-check">
                                     <input zippy="editusefreg" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label text-bold" for="editusefreg">Використовувати фіскальний реєстратор</label>
-                                    <br> <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
+                                    <label class="form-check-label text-bold" for="editusefreg">{{#t}}app.poslist.vykorystovuvaty_fiskalnyi_reiestrator{{/t}}</label>
+                                    <br> <small><a href="https://zippy.com.ua/ext#id17">{{#t}}common.opys{{/t}}</a></small>
                    
                                 </div> 
                                  <div class="mb-2">
-                                    <label for="editscriptfreg">Скрипт</label>
+                                    <label for="editscriptfreg">{{#t}}app.poslist.skrypt{{/t}}</label>
                                     <textarea style="height:500px" class="form-control" zippy="editscriptfreg">
                                     </textarea>
                                 </div>    
@@ -213,8 +213,8 @@
                          </div>
                     
                  <div class="col-12">
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary ms-4 ">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  "> 
+                                <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary ms-4 ">
+                                <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  "> 
                             </div>
                 </div>                            
                 </form>
@@ -223,30 +223,30 @@
           <div class="row">
             
             <form class="col-6 col-md-6  col-xl-4" zippy="keyform" enctype="multipart/form-data">
-                <h5>Завантаження ключа та сертифікату</h5>
-            <small>Опис роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ext#id6">тут</a> </small>
+                <h5>{{#t}}app.poslist.zavantazhennia_kliucha_ta_sertyfikatu{{/t}}</h5>
+            <small>{{#t}}app.poslist.opys_roboty_z_kliuchamy{{/t}} <a  target="_blank" href="https://zippy.com.ua/ext#id6">{{#t}}common.tut{{/t}}</a> </small>
                   
             
                              
                 <div class="mb-2">
-                    <label for="password">Пароль </label>
+                    <label for="password">{{#t}}common.parol{{/t}} </label>
                     <input  required="on"  class="form-control" type="password" zippy="password">
-                    <small>Пароль не буде записаний в системі</small>
+                    <small>{{#t}}app.poslist.parol_ne_bude_zapysanyi_v{{/t}}</small>
                 </div>
                 <div class="mb-2">
-                    <label for="keyfile">Файл ключа </label>
+                    <label for="keyfile">{{#t}}app.poslist.fail_kliucha{{/t}} </label>
                     <input class="form-control" type="file" zippy="keyfile">
                   
                 </div>
                 <div class="mb-2">
-                    <label for="certfile">Файл сертифікату </label>
+                    <label for="certfile">{{#t}}app.poslist.fail_sertyfikatu{{/t}} </label>
                     <input class="form-control" type="file" zippy="certfile">
-   <small>Для jks ключів (ПриватБанк) необов'язково</small>                      
+   <small>{{#t}}app.poslist.dlia_jks_kliuchiv_pryvatbank_neoboviazko{{/t}}</small>                      
                 </div>
                <div class="form-check">
                    <input zippy="loadsert" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="loadsert"> Завантажити сертифікат</label>
-                  <br> <small>Завантажити з АЦСК якщо нема  файлу з сертифікатом</small>
+                   <label class="form-check-label" for="loadsert"> {{#t}}app.poslist.zavantazhyty_sertyfikat{{/t}}</label>
+                  <br> <small>{{#t}}app.poslist.zavantazhyty_z_atssk_iakshcho_nema{{/t}}</small>
                </div>                              
 
              
@@ -254,15 +254,15 @@
 
                 <div class="form-check">
                    <input zippy="outher" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="outher">Використати зовнішній сервер</label>
-                  <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
+                   <label class="form-check-label" for="outher">{{#t}}app.poslist.vykorystaty_zovnishnii_server{{/t}}</label>
+                  <br> <small>{{#t}}app.poslist.iakshcho_pomylka_z_taimautom_zavantazhen{{/t}}</small>
                </div>                              
                  
               <div class="mb-2">
-                <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-secondary me-1 ">
-                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  me-2 ">
+                <input zippy="cancelppo" type="button" value="{{#t}}common.do_pereliku{{/t}}" class="btn btn-secondary me-1 ">
+                <input zippy="send" type="button" value="{{#t}}common.zavantazhyty{{/t}}" class="btn btn-primary  me-2 ">
                 
-                <input zippy="delppo" type="button" value="Видалити" class="btn btn-danger  ">  
+                <input zippy="delppo" type="button" value="{{#t}}common.vydalyty{{/t}}" class="btn btn-danger  ">  
       
                </div>  
             </form>

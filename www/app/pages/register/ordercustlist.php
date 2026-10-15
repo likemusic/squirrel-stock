@@ -43,7 +43,7 @@ class OrderCustList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => __('register.ordercustlist.otkrytye'), 3 => __('register.accountentrylist.vse')), 0));
 
         $doclist = $this->add(new DataView('doclist', new OrderCustDataSource($this), $this, 'doclistOnRow'));
 

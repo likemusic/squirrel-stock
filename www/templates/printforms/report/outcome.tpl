@@ -4,13 +4,13 @@
     <tr>
 
         <td style="  font-weight: bolder;" align="center" colspan="7">
-            Період з {{datefrom}} по {{dateto}} <br>  
+            {{#t}}common.period_z_po_2{{/t}} <br>  
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="7">
-            Продажі за  товарами <br 
+            {{#t}}print.outcome.prodazhi_za_tovaramy{{/t}} <br 
         </td>
     </tr>
     <tr style=" font-weight: bolder;">
@@ -19,15 +19,15 @@
     </td>
 </tr>
     <tr style="font-weight: bolder;">
-        <th align="center" style="border: solid black 1px">Док.</th>
-        <th style="border: solid black 1px">Найменування</th>
-        <th style="border: solid black 1px">Код</th>
+        <th align="center" style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.kod{{/t}}</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.na_sumu{{/t}}</th>
       {{^noshowpartion}}
-        <th align="right" style="border: solid black 1px">Прибуток</th>
-        <th align="right" style="border: solid black 1px">Приб.,%</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
       {{/noshowpartion}}
 
       <th> </th>
@@ -73,20 +73,20 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за покупцями <br> <br>
+        {{#t}}print.outcome.prodazhi_za_pokuptsiamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th align="center"  style="border: solid black 1px">Док.</th>
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+    <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+    <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
-    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+    <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
     <th></th>    
@@ -127,14 +127,14 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за датами <br> <br>
+        {{#t}}print.outcome.prodazhi_za_datamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th style="border: solid black 1px;width:120px;">Дата</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th style="border: solid black 1px;width:120px;">{{#t}}common.data{{/t}}</th>
  
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">{{#t}}common.na_sumu{{/t}}</th>
     
     <th></th>
     <th></th>
@@ -171,15 +171,15 @@
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Послуги та роботи <br><br>
+        {{#t}}print.income.posluhy_ta_roboty{{/t}} <br><br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="3" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
   
     <th></th>
     <th></th>
@@ -212,20 +212,20 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за категоріями <br> <br>
+        {{#t}}print.outcome.prodazhi_za_katehoriiamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="3" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
  
      {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
-    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+    <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -268,7 +268,7 @@
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за компаніями <br> <br>
+        {{#t}}print.outcome.prodazhi_za_kompaniiamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style=" font-weight: bolder;">
@@ -277,15 +277,15 @@
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-      <th align="center"  style="border: solid black 1px">Док.</th>
-  <th colspan="3" style="border: solid black 1px">Найменування</th>
+      <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+  <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
-    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+    <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -329,19 +329,19 @@
 {{#_type7}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за  складами <br> <br>
+        {{#t}}print.outcome.prodazhi_za_skladamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="3" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
      {{^noshowpartion}}
 
-   <th align="right" style="border: solid black 1px">Прибуток</th>
-   <th align="right" style="border: solid black 1px">Приб.,%</th>
+   <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+   <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -382,20 +382,20 @@
 {{#_type8}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за джерелами <br> <br>
+        {{#t}}print.outcome.prodazhi_za_dzherelamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th align="center"  style="border: solid black 1px">Док.</th>
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+    <th colspan="2" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
-         <th align="right" style="border: solid black 1px">Кіл.</th>
+         <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
-    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+    <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
        <th> </th>
@@ -436,20 +436,20 @@
 {{#_type12}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за брендами  {{brand}}<br> <br>
+        {{#t}}print.outcome.prodazhi_za_brendamy{{/t}}<br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="2" style="border: solid black 1px">Найменування</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th colspan="2" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
-          <th align="right" style="border: solid black 1px">Кіл.</th>
+          <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
       {{^noshowpartion}}
 
-  <th align="right" style="border: solid black 1px">Прибуток</th>
-  <th align="right" style="border: solid black 1px">Приб.,%</th>
+  <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+  <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
      <th> </th>
@@ -488,20 +488,20 @@
 {{#_type13}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажі за постачальниками <br> <br>
+        {{#t}}print.outcome.prodazhi_za_postachalnykamy{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
 
-    <th colspan="4" style="border: solid black 1px">Найменування</th>
+    <th colspan="4" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
-    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+    <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
 
     <th></th>    
@@ -543,7 +543,7 @@
 {{#_type14}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Товар за датами <br> 
+        {{#t}}print.outcome.tovar_za_datamy{{/t}} <br> 
     </td>
 </tr>
  
@@ -554,15 +554,15 @@
 </tr>
  
 <tr style="font-weight: bolder;">
-     <th align="center"  style="border: solid black 1px">Док.</th>
-   <th style="border: solid black 1px;width:120px;">Дата</th>
+     <th align="center"  style="border: solid black 1px">{{#t}}print.outcome.dok{{/t}}</th>
+   <th style="border: solid black 1px;width:120px;">{{#t}}common.data{{/t}}</th>
  
-    <th align="right" style="border: solid black 1px;width:100px;">Кіл.</th>
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">{{#t}}common.kil{{/t}}</th>
+    <th align="right" style="border: solid black 1px;width:100px;">{{#t}}common.na_sumu{{/t}}</th>
      {{^noshowpartion}}
 
-  <th align="right" style="border: solid black 1px">Прибуток</th>
-  <th align="right" style="border: solid black 1px">Приб.,%</th>
+  <th align="right" style="border: solid black 1px">{{#t}}common.prybutok{{/t}}</th>
+  <th align="right" style="border: solid black 1px">{{#t}}print.outcome.pryb{{/t}}</th>
     {{/noshowpartion}}
     <th></th>
 

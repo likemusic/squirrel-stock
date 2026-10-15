@@ -87,7 +87,7 @@ class InvoiceCust extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РВ-000000';
+        return __('doc.invoicecust.rv_000000');
     }
 
     public function getRelationBased() {

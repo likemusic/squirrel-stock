@@ -47,7 +47,7 @@ class OrderCust extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ЗП-000000';
+        return __('doc.ordercust.zp_000000');
     }
 
     public function getRelationBased() {

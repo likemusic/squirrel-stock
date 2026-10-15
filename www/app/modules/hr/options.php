@@ -16,7 +16,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -58,7 +58,7 @@ class Options extends \App\Pages\Base
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
         if (strlen($pricetype) < 2) {
-            $this->setError('Не вказано тип ціни');
+            $this->setError(__('common.ne_vkazano_typ_tsiny'));
             return;
         }
 
@@ -77,11 +77,11 @@ class Options extends \App\Pages\Base
         $modules['hrssl'] = $this->cform->ssl->isChecked() ? 1 : 0;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
         $token=  \App\Modules\HR\Helper::connect();
         if(strlen($token)>0) {
-           $this->setSuccess('Успішне з`єднання ');
+           $this->setSuccess(__('mod.hr.options.uspishne_ziednannia'));
         }
 
     }

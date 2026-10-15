@@ -1,18 +1,18 @@
  
    <table class="ctable" border="0" cellpadding="1" cellspacing="0"  }>
     <tr>
-        <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звіт</td>
+        <td colspan="2" style="font-weight:bolder;text-align:center" >{{#t}}print.zrep.z_zvit{{/t}}</td>
     </tr>
    
    {{#test}}
    <tr>
-        <td colspan="2" style=" text-align:center" >Тестовий режим</td>
+        <td colspan="2" style=" text-align:center" >{{#t}}common.testovyi_rezhym{{/t}}</td>
     </tr>
    {{/test}}
     
     <tr>
 
-        <td colspan="2"  > Дата  {{date}}</td>
+        <td colspan="2"  > {{#t}}print.zrep.data{{/t}}</td>
     </tr>
     <tr>
 
@@ -26,23 +26,23 @@
     </tr>
   <tr>
 
-        <td  > ЄДРПОУ/ІПН</td>
+        <td  > {{#t}}print.zrep.iedrpou_ipn{{/t}}</td>
         <td  > {{inn}} </td>
     </tr>
     <tr>
 
-        <td  > ФН терм.</td>
+        <td  > {{#t}}print.zrep.fn_term{{/t}}</td>
         <td  > {{fnpos}} </td>
     </tr>
     <tr>
 
-        <td  > ФН док.</td>
+        <td  > {{#t}}print.zrep.fn_dok{{/t}}</td>
         <td  > {{fndoc}} </td>
     </tr>
 
    <tr>
 
-        <td  > <b>Продаж</b></td>
+        <td  > <b>{{#t}}app.eqentry.prodazh{{/t}}</b></td>
         <td  >  </td>
     </tr>
     {{#payments}}
@@ -54,13 +54,13 @@
     {{/payments}}
    <tr>
 
-        <td  >Кількість чеків</td>
+        <td  >{{#t}}print.zrep.kilkist_chekiv{{/t}}</td>
         <td style="text-align:right" > {{cnt}} </td>
     </tr>
  
    <tr>
 
-        <td  > <b>Повернення</b></td>
+        <td  > <b>{{#t}}common.povernennia{{/t}}</b></td>
         <td  >  </td>
     </tr>
     {{#rpayments}}
@@ -72,7 +72,7 @@
     {{/rpayments}}    
    <tr>
 
-        <td  >Кількість чеків</td>
+        <td  >{{#t}}print.zrep.kilkist_chekiv{{/t}}</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
  

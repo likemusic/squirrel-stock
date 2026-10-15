@@ -222,7 +222,7 @@ class TTN extends \App\Pages\Base
                         $nosent = $order->getNotSendedItem();
                         
                         if( count($nosent)  == 0){
-                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                           $this->setWarn(__('doc.goodsissue.pozytsii_po_tsomu_zamovlenniu_vzhe')) ;
                         } else
                         { 
                            $this->_itemlist = [];
@@ -236,7 +236,7 @@ class TTN extends \App\Pages\Base
                            } 
                         }
                         if($order->getHD('paytype',0) == 3){
-                            $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
+                            $this->setWarn(__('doc.ttn.v_zamovlenni_ne_peredbachena_oplata')) ;
                             App::Redirect("\\App\\Pages\\Register\\OrderList");
                             return; 
                         }
@@ -279,7 +279,7 @@ class TTN extends \App\Pages\Base
                         foreach($basedoc->unpackDetails('detaildata') as $k=>$v) {
                             
                            if($v instanceof \App\Entity\Service) {
-                               $this->setWarn('Послуги не  можуть додаватись до накладної') ;
+                               $this->setWarn(__('doc.goodsissue.posluhy_ne_mozhut_dodavatys_do')) ;
                                continue;
                            }
                            $this->_itemlist[$k] =$v;
@@ -402,7 +402,7 @@ class TTN extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }        
         $item = Item::findBarCode($code,$store_id);
@@ -423,7 +423,7 @@ class TTN extends \App\Pages\Base
       
         if ($item == null) {
 
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
@@ -431,7 +431,7 @@ class TTN extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("Товару {$item->itemname} немає на складі");
+            $this->setWarn(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
 
@@ -446,7 +446,7 @@ class TTN extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
+                $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -501,7 +501,7 @@ class TTN extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -518,12 +518,12 @@ class TTN extends \App\Pages\Base
 
         if ($item->quantity > $qstock) {
 
-            $this->setWarn('Введено більше товару, чим є в наявності');
+            $this->setWarn(__('common.vvedeno_bilshe_tovaru_chym_ie'));
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -532,7 +532,7 @@ class TTN extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('Невірний номер серії');
+                $this->setWarn(__('common.nevirnyi_nomer_serii'));
             } else {
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
@@ -637,7 +637,7 @@ class TTN extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
 
         if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
-            $this->setError('Не вказана декларація служби доставки');
+            $this->setError(__('doc.ttn.ne_vkazana_deklaratsiia_sluzhby_dostavky'));
             return;
         }
 
@@ -667,7 +667,7 @@ class TTN extends \App\Pages\Base
 
                     if($this->_changedpos) {
                         if($this->_changedpos) {
-                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ "  ;
+                            $msg=  __('doc.ttn.u_dokumenta_stvorenoho_na_pidstavi', ['document_number' => $this->_doc->document_number, 'document_number2' => $basedoc->document_number]).\App\System::getUser()->username.__('doc.goodsissue.zmineno_perelik_tmts')  ;
                             \App\Entity\Notify::toSystemLog($msg) ;
                         }
 
@@ -739,7 +739,7 @@ class TTN extends \App\Pages\Base
             }
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->weight->setText("Загальна вага {$weight} кг");
+        $this->docform->weight->setText(__('doc.ttn.zahalna_vaha_kh', ['weight' => $weight]));
         $this->docform->weight->setVisible($weight > 0);
     }
 
@@ -750,7 +750,7 @@ class TTN extends \App\Pages\Base
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
 
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
 
         if (false == $this->_doc->checkUniqueNumber()) {
@@ -758,21 +758,21 @@ class TTN extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
 
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         $c = $this->docform->customer->getKey();
 
         if ($c == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError(__('common.ne_zadano_kontrahenta'));
         }
 
 
@@ -841,7 +841,7 @@ class TTN extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -853,7 +853,7 @@ class TTN extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
@@ -861,7 +861,7 @@ class TTN extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }

@@ -1,21 +1,21 @@
 <html>
  <head>
-        <title> Повідомлення   </title>
+        <title> {{#t}}common.povidomlennia{{/t}}   </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
-                <h4>Повідомлення</h4>
+                <h4>{{#t}}common.povidomlennia{{/t}}</h4>
                 <div class=" navbar">
                     <form zippy="filter"  >
                        <div class="row  ">
                       <div class="col-auto  ">
-                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="{{#t}}common.poshuk_po_kontentu{{/t}}">
                       </div>
                       <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="Шукати">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.shukaty{{/t}}">
                      </div>
                      </div>    
                     </form>
@@ -29,10 +29,10 @@
                             &nbsp;&nbsp;&nbsp;<i zippy="sendericon" ></i> <span zippy="sender"></span>
                             <p zippy="msg">
                             </p>
-                            <a zippy="nanswer"  >Відповісти</a>
+                            <a zippy="nanswer"  >{{#t}}app.notifylist.vidpovisty{{/t}}</a>
     
                         </td>
-                        <td><span zippy="newn" class="badge text-bg info">Нове</span></td>
+                        <td><span zippy="newn" class="badge text-bg info">{{#t}}common.nove{{/t}}</span></td>
 
 
                     </tr>
@@ -41,24 +41,24 @@
 
             </div>
             <div class="col-12 col-md-4 col-xl-3">
-              <h4>Відправити повідомлення</h4> 
+              <h4>{{#t}}app.notifylist.vidpravyty_povidomlennia{{/t}}</h4> 
                 <form zippy="msgform"  >
 
                      <div class="mb-2">
-                        <label for="msguser">Отримувач</label>
+                        <label for="msguser">{{#t}}app.notifylist.otrymuvach{{/t}}</label>
 
                         <select class="form-control" zippy="msguser">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="msgtext">Повідомлення</label>
+                        <label for="msgtext">{{#t}}common.povidomlennia{{/t}}</label>
                         <textarea class="form-control"   zippy="msgtext"    ></textarea>
                     </div>
 
                  
                      <div class="mb-2"> 
-                        <input type="submit" class="  btn btn-success  " value="Відправити">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.vidpravyty{{/t}}">
                        </div>
                         
                     </form>            

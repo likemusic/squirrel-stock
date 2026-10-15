@@ -70,7 +70,7 @@ class Helper
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гість';
+        $_SESSION['userlogin'] = __('app.helper.hist');
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
@@ -212,69 +212,69 @@ class Helper
         $mdata = array();
         if(($modules['note'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => "База знань"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => __('common.baza_znan')));
             }
         }
 
 
         if(($modules['shop'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/Admin/ProductList", 'meta_type' => 6, 'description' => "Товари в онлайн каталозі"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/Admin/ProductList", 'meta_type' => 6, 'description' => __('app.helper.tovary_v_onlain_katalozi')));
             }
         }
 
 
         if(($modules['wc'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => "Замовлення (WC)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => __('app.helper.zamovlennia_wc')));
             }
         }
         if(($modules['wc'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => "Товари (WC)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => __('app.helper.tovary_wc')));
             }
         }
 
         if(($modules['promua'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => "Замовлення (PU)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => __('app.helper.zamovlennia_pu')));
             }
         }
 
         if(($modules['issue'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => "Завдання (Проекти)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10014, 'meta_name' => "/Issue/Pages/IssueList", 'meta_type' => 6, 'description' => __('app.helper.zavdannia_proekty')));
             }
         }
         if(($modules['issue'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' => "Проекти",));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10017, 'meta_name' => "/Issue/Pages/ProjectList", 'meta_type' => 6, 'description' => __('common.proekty'),));
             }
         }
 
         if(($modules['ocstore'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => "Замовлення (Опенкарт)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10005, 'meta_name' => "/OCStore/Orders", 'meta_type' => 6, 'description' => __('app.helper.zamovlennia_openkart')));
             }
         }
         if(($modules['ocstore'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'ocstore') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => __('app.helper.tovary_openkart')));
             }
         }
         if(($modules['checkbox'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10020, 'meta_name' => "/CB/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10020, 'meta_name' => "/CB/XRep", 'meta_type' => 6, 'description' => __('common.kh_zvit')));
             }
         }
         if(($modules['vkassa'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'vkassa') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10021, 'meta_name' => "/VK/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10021, 'meta_name' => "/VK/XRep", 'meta_type' => 6, 'description' => __('common.kh_zvit')));
             }
         }
         if(($modules['ppo'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'ppo') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10022, 'meta_name' => "/PPO/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10022, 'meta_name' => "/PPO/XRep", 'meta_type' => 6, 'description' => __('common.kh_zvit')));
             }
         }
       
@@ -856,19 +856,19 @@ class Helper
      * @return mixed
      */
     public static function getValName($vn) {
-        if($vn == 'Гривня') {
+        if($vn == __('app.helper.hryvnia')) {
             return 'UAH';
         }
-        if($vn == 'Долар') {
+        if($vn == __('app.helper.dolar')) {
             return 'USD';
         }
-        if($vn == 'Євро') {
+        if($vn == __('app.helper.ievro')) {
             return 'EUR';
         }
-        if($vn == 'Рубль') {
+        if($vn == __('app.helper.rubl')) {
             return 'RUB';
         }
-        if($vn == 'Лей') {
+        if($vn == __('app.helper.lei')) {
             return 'MDL';
         }
     }
@@ -1424,7 +1424,7 @@ class Helper
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
-            Helper::log("Міграція бонус");
+            Helper::log(__('app.helper.mihratsiia_bonus'));
             $conn->BeginTrans();
             try {
                 $conn->Execute("delete from custacc where optype=1 ");
@@ -1450,7 +1450,7 @@ class Helper
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
         if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
-            Helper::log("Міграція баланс");
+            Helper::log(__('app.helper.mihratsiia_balans'));
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг
             $conn->BeginTrans();
@@ -1516,7 +1516,7 @@ class Helper
        
         $migration6118 = \App\Helper::getKeyVal('migration6118'); 
         if($migration6118 != "done"  ) {
-            Helper::log("Міграція 6118");
+            Helper::log(__('app.helper.mihratsiia_6118'));
          
             \App\Helper::setKeyVal('migration6118', "done");           
         
@@ -1551,7 +1551,7 @@ class Helper
         
         $migration12 = \App\Helper::getKeyVal('migration12');  
         if($migration12 != "done" && version_compare($vdb,'6.12.0')>=0) {
-            Helper::log("Міграція 12");
+            Helper::log(__('app.helper.mihratsiia_12'));
          
             \App\Helper::setKeyVal('migration12', "done");           
          
@@ -1582,7 +1582,7 @@ class Helper
             
         $migration6180 = \App\Helper::getKeyVal('migration6180'); 
         if($migration6180 != "done"  ) {
-            Helper::log("Міграція 6180");
+            Helper::log(__('app.helper.mihratsiia_6180'));
          
             \App\Helper::setKeyVal('migration6180', "done");           
         
@@ -1607,7 +1607,7 @@ class Helper
     
         $migration811 = \App\Helper::getKeyVal('migration811'); 
         if($migration811 != "done"  ) {
-            Helper::log("Міграція 811");
+            Helper::log(__('app.helper.mihratsiia_811'));
          
             \App\Helper::setKeyVal('migration811', "done");           
         
@@ -1639,7 +1639,7 @@ class Helper
       
         $migration812 = \App\Helper::getKeyVal('migration812'); 
         if($migration812 != "done"  ) {
-            Helper::log("Міграція 812");
+            Helper::log(__('app.helper.mihratsiia_812'));
          
             \App\Helper::setKeyVal('migration812', "done");           
         
@@ -1662,7 +1662,7 @@ class Helper
   
         $migration821 = \App\Helper::getKeyVal('migration821'); 
         if($migration821 != "done"  )    {
-            Helper::log("Міграція  8.2.1");
+            Helper::log(__('app.helper.mihratsiia_8_2_1'));
             $conn->BeginTrans();
             try {
                 $conn->Execute("update options set optvalue ='8.2.0' where optname='version'  and optvalue='8.1.0'");
@@ -1683,7 +1683,7 @@ class Helper
       
         $migration822 = \App\Helper::getKeyVal('migration822'); 
         if($migration822 != "done"  )    {
-            Helper::log("Міграція  8.2.2");
+            Helper::log(__('app.helper.mihratsiia_8_2_2'));
             $conn->BeginTrans();
             try {
                 $conn->Execute("update metadata set disabled =1  where meta_name='StockList'  ");
@@ -1705,7 +1705,7 @@ class Helper
   
         $migration828 = \App\Helper::getKeyVal('migration828'); 
         if($migration828 != "done"  ) {
-            Helper::log("Міграція 828");
+            Helper::log(__('app.helper.mihratsiia_828'));
          
             \App\Helper::setKeyVal('migration828', "done");           
         

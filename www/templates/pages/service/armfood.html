@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title> АРМ касира  </title>
+        <title> {{#t}}service.armfood.arm_kasyra{{/t}}  </title>
 
     </head>
     <body>
@@ -16,14 +16,14 @@
 
             </div>
         <div class="col-12 col-md-4 col-xl-3   " >
-             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повідомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i style="cursor:pointer"  onclick="onBell(this)" title="{{#t}}service.armfood.zvukove_povidomlennia{{/t}}" class="fa fa-bell-slash text-secondary"></i>  
             </div>              
         </div>
 
 
         <div style="display:none" id="ireadyp" class="row"  >
             <div   class="col-12 col-md-8 col-xl-6 mb-2"> 
-                 <b class="me-2">Готових позицій <span id="ireadyc"  class="badge text-bg-success rounded-pill" > </span>                </b>
+                 <b class="me-2">{{#t}}service.armfood.hotovykh_pozytsii{{/t}} <span id="ireadyc"  class="badge text-bg-success rounded-pill" > </span>                </b>
                   
              <table id="ireadyt" class="ctable"   >
             </table>
@@ -35,12 +35,12 @@
         <form zippy="setupform">
         <div class="row">
                 <div class="col-auto">
-                      <h3>АРМ касира</h3>
+                      <h3>{{#t}}service.armfood.arm_kasyra{{/t}}</h3>
                     </div>
                 <div class="col-auto pt-2 lt-4">
                      {{#isadmins}}
-                        <a   zippy="options" class="  ms-4"><i class="fa fa-cog"></i> Налаштування</a>
-                        <a   zippy="variations" class="  ms-4"><i class="fa fa-check-double"></i> Варіації</a>
+                        <a   zippy="options" class="  ms-4"><i class="fa fa-cog"></i> {{#t}}common.nalashtuvannia{{/t}}</a>
+                        <a   zippy="variations" class="  ms-4"><i class="fa fa-check-double"></i> {{#t}}service.armfood.variatsii{{/t}}</a>
                        {{/isadmins}}
                </div>    
              </div>    
@@ -49,36 +49,36 @@
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="mb-2 row">
-                        <label class="col-6 col-form-label" for="nal">Готівкова каса</label>
+                        <label class="col-6 col-form-label" for="nal">{{#t}}service.armfood.hotivkova_kasa{{/t}}</label>
                         <div class="col-6">
                             <select class="form-select" zippy="nal">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-6 col-form-label" for="beznal">Безготівковий рахунок</label>
+                        <label class="col-6 col-form-label" for="beznal">{{#t}}common.bezhotivkovyi_rakhunok{{/t}}</label>
                         <div class="col-6">
                             <select class="form-select" zippy="beznal">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-6 col-form-label" for="pos">POS термінал</label>
+                        <label class="col-6 col-form-label" for="pos">{{#t}}common.pos_terminal{{/t}}</label>
                         <div class="col-6">
                             <select class="form-select" zippy="pos">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                         </div>
                     </div>
 
 
                     <div class="mb-2 row">
-                        <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
+                        <label class="col-6 col-form-label"   for="store">{{#t}}service.armfood.sklad_kukhnia{{/t}}</label>
                         <div class="col-6">
                             <select class="form-select" zippy="store">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                         
                          <div class="form-check form-check-inline">
                             <input zippy="menuimages" class="form-check-input" type="checkbox"    > 
-                            <label class="form-check-label" for="menuimages">  Показувати зображення в  меню</label>
+                            <label class="form-check-label" for="menuimages">  {{#t}}service.armfood.pokazuvaty_zobrazhennia_v_meniu{{/t}}</label>
                         </div>
                        </div>
                     </div>
@@ -98,7 +98,7 @@
                         
                          <div class="form-check form-check-inline">
                             <input zippy="modeof" class="form-check-input" type="checkbox"    > 
-                            <label class="form-check-label" for="modeof">  Режим офіціанта (для мобільних телефонів)</label>
+                            <label class="form-check-label" for="modeof">  {{#t}}service.armfood.rezhym_ofitsianta_dlia_mobilnykh_telefon{{/t}}</label>
                         </div>
                        </div>
                     </div>
@@ -115,23 +115,23 @@
         
         <div class="row"  zippy="docpanel">
             <div class="col-12"> 
-               <h4>Оформлення замовлення</h4>
+               <h4>{{#t}}service.armfood.oformlennia_zamovlennia{{/t}}</h4>
               <div zippy="navbar" class="navbar nav justify-content-start">
  
-                <strong><a class="me-4" zippy="toorderlist"><i class="fa fa-list"></i> Список чеків</a></strong>  
+                <strong><a class="me-4" zippy="toorderlist"><i class="fa fa-list"></i> {{#t}}common.spysok_chekiv{{/t}}</a></strong>  
                    {{^modeof}} 
                    {{#fiscal}}
                        
-                      <a class="me-4" zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
-                         <a class="me-4" zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
+                      <a class="me-4" zippy="openshift"><i class="fa fa-bullhorn"></i> {{#t}}service.armfood.vidkryty_zminu{{/t}}</a>
+                         <a class="me-4" zippy="closeshift"><i class="fa fa-gavel"></i> {{#t}}service.armfood.zakryty_zminu{{/t}}</a>
                      
-                        <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-2" title="Службове внесення" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
-                        <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="Службова видача" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
+                        <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-2" title="{{#t}}common.sluzhbove_vnesennia{{/t}}" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
+                        <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="{{#t}}common.sluzhbova_vydacha{{/t}}" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
                         
                       
                       
                         {{#fiscaltestmode}}
-                         <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
+                         <small><i class="fa fa-exclamation-triangle"></i> {{#t}}common.testovyi_rezhym{{/t}}</small>
                         {{/fiscaltestmode}}
                         
                            </div>
@@ -159,7 +159,7 @@
 
                         </div> 
                         <div    class="col-12 mb-2">
-                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">{{#t}}service.armfood.zakryty_meniu{{/t}}</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> {{#t}}service.armfood.rozfasovka{{/t}}    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="{{#t}}service.armfood.napryklad_vidkorkuvaty_pliashku_abo_pake{{/t}} "></i>  </small>
                         </div>           
                     </div >        
                     <div   zippy="prodpan" class="row  mt-4">
@@ -176,7 +176,7 @@
                                             <b style="display:block"   zippy="prodname"> </b> 
                                           
                                            
-                                        <b   zippy="prodprice" style="font-size:large; "></b> грн   &nbsp; &nbsp;&nbsp;&nbsp;
+                                        <b   zippy="prodprice" style="font-size:large; "></b> {{#t}}service.armfood.hrn_nbsp_nbsp_nbsp_nbsp{{/t}}
                                         <span   zippy="prodval"> </span> 
 
 
@@ -184,12 +184,12 @@
 
                         </div>   
                           <div    class="col-12 mt-2">
-                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">{{#t}}service.armfood.zakryty_meniu{{/t}}</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> {{#t}}service.armfood.rozfasovka{{/t}}    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="{{#t}}service.armfood.napryklad_vidkorkuvaty_pliashku_abo_pake{{/t}} "></i>  </small>
                      </div>       
                     </div > 
                     <div   zippy="varprodpan" class="row  mt-4">
                         <div    class="col-12 mb-2">
-                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopvar">Назад</a>  
+                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopvar">{{#t}}common.nazad{{/t}}</a>  
                         </div>
                          <div    class="col-12 col-xl-10 mb-2">
                        
@@ -199,7 +199,7 @@
                               <tr zippy="varprodlist">
                                   <td class="  pt-2" zippy="prodvarname"></td>
                                   <td class="text-end pt-2" zippy="prodvarprice"></td>
-                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success ps-2">Додати</a></td>
+                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success ps-2">{{#t}}common.dodaty{{/t}}</a></td>
                               </tr>
                          </table>       
                        </div>      
@@ -215,21 +215,21 @@
                         <form zippy="navform"  >                   
                            <div class="row  ">
                             <div class="col-auto  ">
-                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-success ms-4"> 
+                              <input  zippy="baddnewpos"  type="submit" value="{{#t}}common.dodaty_pozytsiiu{{/t}}  "   class="btn btn-success ms-4"> 
                            </div> 
                            <div class="col-auto  ">
-                             <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
+                             <input placeholder="{{#t}}service.armfood.shvydkyi_poshuk{{/t}}" zippy="itemfast" class="form-control"   >                            
                            </div> 
                            <div class="col-auto  ">
                              <input  zippy="addfast"  type="submit" value="+"   class="btn btn-success ms-4">     
                             </div> 
                             {{#usescanner}}
                              <div class="col-auto  ">
-                               <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
+                               <input autofocus="on" placeholder="{{#t}}common.shtrykh_kod_2{{/t}}"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
                             </div> 
                             {{/usescanner}}
                             <div class="col-auto  ">
-                              <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
+                              <input placeholder="{{#t}}service.armfood.promokod{{/t}}"  style="width:150px"  zippy="promocode" class="form-control">
                             </div> 
                           </div> 
                         </form> 
@@ -247,23 +247,23 @@
                                   
                                       {{#baricon}}                                                     
                                     <th class="text-center">
-                                      <i title="Бар" class="fa fa-mug-hot"></i>     
+                                      <i title="{{#t}}common.bar{{/t}}" class="fa fa-mug-hot"></i>     
                                       </th>
                                       {{/baricon}} 
                                      {{#packicon}}   
                                      <th class="text-center">
-                                   <i title="З собою" class="fa fa-bag-shopping"></i>   
+                                   <i title="{{#t}}service.armfood.z_soboiu_2{{/t}}" class="fa fa-bag-shopping"></i>   
                                       </th>  
                                       {{/packicon}}
                                       
-                                    <th>Назва</th>
-                                    <th>Код</th>
-                                    <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
-                                    <th class="text-center ">Кіл.</th>
-                                    <th class="text-end"><i title="Акційна знижка" class="fa fa-gift"></i> ,%</th>
-                                    <th class="text-end">Ціна</th>
-                                    <th class="text-end">Сума</th>
-                                    <th >Стан </th>
+                                    <th>{{#t}}common.nazva{{/t}}</th>
+                                    <th>{{#t}}common.kod{{/t}}</th>
+                                    <th>   {{#useexcise}}     {{#t}}service.armfood.ak_marky{{/t}}     {{/useexcise}}    </th>
+                                    <th class="text-center ">{{#t}}common.kil{{/t}}</th>
+                                    <th class="text-end"><i title="{{#t}}service.armfood.aktsiina_znyzhka{{/t}}" class="fa fa-gift"></i> ,%</th>
+                                    <th class="text-end">{{#t}}common.tsina{{/t}}</th>
+                                    <th class="text-end">{{#t}}common.suma{{/t}}</th>
+                                    <th >{{#t}}common.stan{{/t}} </th>
                                     
                                   
                                    
@@ -314,7 +314,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                          
-                                    <td    colspan="6"  class="text-end text-bold">Всього:</td>
+                                    <td    colspan="6"  class="text-end text-bold">{{#t}}common.vsoho{{/t}}</td>
                                      
                                      
                                     <td zippy="totalamount" class="text-end text-bold"></td>
@@ -327,7 +327,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-end   ">Знижка:</td>
+                                    <td colspan="6" class="text-end   ">{{#t}}common.znyzhka_2{{/t}}</td>
                                     
                                     <td  class="d-flex justify-content-end   ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice form-control-sm">
@@ -340,7 +340,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-end   ">Списати  бонуси:</td>
+                                    <td colspan="6" class="text-end   ">{{#t}}service.armfood.spysaty_bonusy{{/t}}</td>
                                    
                                 
                                     <td  class="d-flex justify-content-end  ">
@@ -361,25 +361,25 @@
                                  
                               </div>
                                <div class="col-12">
-                                        Кіл. <a zippy="qtymin_of" class="btn btn-info btn-sm me-1">-</a>
+                                        {{#t}}common.kil{{/t}} <a zippy="qtymin_of" class="btn btn-info btn-sm me-1">-</a>
                                         <span zippy="qty_of"></span>
                                         <a zippy="qtyplus_of" class="btn btn-info  btn-sm ms-1">+</a>
-                                        &nbsp;Ціна <span zippy="price_of"></span>
-                                        &nbsp;Сума <span zippy="amount_of"></span>
+                                        {{#t}}service.armfood.nbsp_tsina{{/t}} <span zippy="price_of"></span>
+                                        {{#t}}service.armfood.nbsp_suma{{/t}} <span zippy="amount_of"></span>
                               </div>
                                <div class="col-12">
                                 {{#baricon}}   
-                                  <i title="Бар" class="fa fa-mug-hot"></i>    <a zippy="forbaron_of" ><i class="fa fa-toggle-on text-success"></i></a> <a zippy="forbaroff_of" ><i class="fa fa-toggle-off"></i></a> 
+                                  <i title="{{#t}}common.bar{{/t}}" class="fa fa-mug-hot"></i>    <a zippy="forbaron_of" ><i class="fa fa-toggle-on text-success"></i></a> <a zippy="forbaroff_of" ><i class="fa fa-toggle-off"></i></a> 
                                     {{/baricon}}   
                                         &nbsp;&nbsp;
                                     {{#packicon}}
-                                   <i title="З собою" class="fa fa-bag-shopping"></i>    <a zippy="myselfon_of"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff_of"><i class="fa fa-toggle-off"></i></a> 
+                                   <i title="{{#t}}service.armfood.z_soboiu_2{{/t}}" class="fa fa-bag-shopping"></i>    <a zippy="myselfon_of"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff_of"><i class="fa fa-toggle-off"></i></a> 
                                     {{/packicon}}   &nbsp;&nbsp;
                                   <span zippy="state_of"></span> &nbsp; &nbsp;  <a zippy="removeitem_of"  ><i class="fa fa-trash text-danger" ></i></a>
                               </div>
                            </div>
                             <div class="col-12 "> 
-                             <div class="row "><b>Всього на суму:  </b>  <b zippy="totalamount_of">   </b> 
+                             <div class="row "><b>{{#t}}common.vsoho_na_sumu{{/t}}  </b>  <b zippy="totalamount_of">   </b> 
                      
                            </div>
                            </div>
@@ -391,15 +391,15 @@
                             <div class="  col-6 col-xl-4">
                                  {{^modeof}} 
                                 <div class="mb-2">
-                                    <label   for="customer">Клієнт</label>
+                                    <label   for="customer">{{#t}}common.kliient{{/t}}</label>
                                     <div class="input-group  ">
 
                                      
-                                       <input  zippy="customer" class="form-control" placeholder="Почніть вводити..."  > 
+                                       <input  zippy="customer" class="form-control" placeholder="{{#t}}common.pochnit_vvodyty{{/t}}"  > 
                                     
                                     
 
-                                        <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                                        <a title="{{#t}}common.dodaty_novoho{{/t}}" class="btn btn-success" zippy="addcust" >+</a>
                                     
                                    
                                           <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
@@ -413,7 +413,7 @@
 
                                 {{#tables}}
                                 <div class="mb-2 row">
-                                    <label class="col-4 col-form-label" for="table">Номер столу</label>
+                                    <label class="col-4 col-form-label" for="table">{{#t}}service.armfood.nomer_stolu{{/t}}</label>
                                    <div class="col-7">
                                     <input pattern="[0-9]+"  style="width:100px;" zippy="table" class="form-control"  > 
                                    </div>
@@ -427,7 +427,7 @@
                            
  
                                 <div class="mb-2 row">
-                                    <label  class="col-4 col-form-label" for="notes">Коментар </label>
+                                    <label  class="col-4 col-form-label" for="notes">{{#t}}common.komentar{{/t}} </label>
                                     <div class="col-7">
                                     <input  zippy="notes" class="form-control"  > 
                                      </div>
@@ -441,26 +441,26 @@
 
 
                                 <div class="mb-2">
-                                    <label   for="execuser">Виконавець</label>
+                                    <label   for="execuser">{{#t}}common.vykonavets{{/t}}</label>
 
                                     <select class="form-select" zippy="execuser">
-                                        <option value="0">Поточний користувач </option>
+                                        <option value="0">{{#t}}service.armfood.potochnyi_korystuvach{{/t}} </option>
                                     </select>
 
 
                                 </div>
                                 <div class="mb-2">
-                                    <label   for="delivery">Доставка</label>
+                                    <label   for="delivery">{{#t}}common.dostavka{{/t}}</label>
 
                                     <select class="form-select" zippy="delivery">
-                                        <option value="0">Без доставки </option>
+                                        <option value="0">{{#t}}register.gilist.bez_dostavky{{/t}} </option>
                                     </select>
 
 
                                 </div>
                                 <div class="mb-2">
 
-                                    <label   for="contact" >Контакт</label>
+                                    <label   for="contact" >{{#t}}common.kontakt{{/t}}</label>
 
 
                                     <input    zippy="contact" class="form-control">
@@ -468,7 +468,7 @@
                                 </div>                           
                                 <div class="mb-2">
 
-                                    <label   data-label="address" for="address"  >Адреса</label>
+                                    <label   data-label="address" for="address"  >{{#t}}common.adresa_2{{/t}}</label>
 
 
                                     <input   zippy="address" class="form-control"> 
@@ -477,7 +477,7 @@
 
                                 <div class="mb-2 row">
 
-                                    <label  class="col-5 col-form-label" for="time" >Час доставки</label>
+                                    <label  class="col-5 col-form-label" for="time" >{{#t}}common.chas_dostavky{{/t}}</label>
                                      <div class="col-5">
                                         <input   class="form-control"   zippy="dt"  >
                                     </div> 
@@ -497,22 +497,22 @@
 
                         <div class="row">
                         <div class=" col-12  col-md-6 pt-4">
-                                      <input zippy="btosave" type="submit" value="Від класти"   class="btn btn-success ms-4 ms-4">
+                                      <input zippy="btosave" type="submit" value="{{#t}}service.armfood.vid_klasty{{/t}}"   class="btn btn-success ms-4 ms-4">
                            
                                      
                                        
                                         {{#diffbp}}  
                                          {{#modeof}}  <br>  {{/modeof}} 
                                         <div class="form-check form-check-inline">
-                                            <label  class="form-check-label" >Чек для</label>
+                                            <label  class="form-check-label" >{{#t}}service.armfood.chek_dlia{{/t}}</label>
                                         </div>
                                          <div class="form-check form-check-inline">
                                             <input zippy="bpprod" class="form-check-input" type="radio"   >
-                                            <label class="form-check-label" for="bpprod">  кухні</label>
+                                            <label class="form-check-label" for="bpprod">  {{#t}}service.armfood.kukhni{{/t}}</label>
                                         </div>
                                          <div class="form-check form-check-inline">
                                             <input zippy="bpbar" class="form-check-input" type="radio"    > 
-                                            <label class="form-check-label" for="bpbar">  бару</label>
+                                            <label class="form-check-label" for="bpbar">  {{#t}}service.armfood.baru{{/t}}</label>
                                         </div>
                                   {{/diffbp}}      
                             </div>
@@ -520,14 +520,14 @@
                                  {{^modeof}}
                                  <div class="form-check form-check-inline ms-4">
                                     <input zippy="passprod" class="form-check-input" type="checkbox"    > 
-                                    <label class="form-check-label" for="passprod"> Не відправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
+                                    <label class="form-check-label" for="passprod"> {{#t}}service.armfood.ne_vidpravliaty_v_vyrobnytstvo{{/t}} <small> <i class="fa fa-info-circle" title="{{#t}}service.armfood.napryklad_karaoke{{/t}}"></i> </small> </label>
                                 </div>
                                   {{/modeof}}
-                            <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success ms-4">
+                            <input zippy="btoprod" type="submit" value="{{#t}}common.na_vykonannia{{/t}}"   class="btn btn-success ms-4">
                             
-                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success ms-4">
+                            <input zippy="btodel" type="submit" value="{{#t}}service.armfood.v_dostavku{{/t}}"   class="btn btn-success ms-4">
 
-                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success ms-4">
+                            <input zippy="btopay" type="submit" value="{{#t}}common.oplatyty{{/t}}"   class="btn btn-success ms-4">
    
                         </div>
                         </div>
@@ -536,7 +536,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Кількість</h5>
+                            <h5 class="modal-title">{{#t}}common.kilkist{{/t}}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -561,7 +561,7 @@
                     <div class="modal-dialog modal-dialog-centered  modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Акцизні маркм</h5>
+                                <h5 class="modal-title">{{#t}}service.armfood.aktsyzni_markm{{/t}}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                     
                                 </button>
@@ -569,18 +569,18 @@
                             <div class="modal-body">
                              <input  type="hidden" zippy="akitemid" >
                              <div class="mb-2">
-                                <label for="aklist">Перелік</label>
+                                <label for="aklist">{{#t}}common.perelik{{/t}}</label>
                                 <textarea   class="form-control"   zippy="aklist"></textarea>
-                                <small>По одній на строку по кількісті в позиції</small>
+                                <small>{{#t}}service.armfood.po_odnii_na_stroku_po{{/t}}</small>
 
                             </div>  
                              <div class="form-check">
                                 <input zippy="akpass" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="akpass">Пропустити марки</label>
-                                <br> <small>Наприклад для алкоголю на розлив</small>
+                                <label class="form-check-label" for="akpass">{{#t}}service.armfood.propustyty_marky{{/t}}</label>
+                                <br> <small>{{#t}}service.armfood.napryklad_dlia_alkoholiu_na_rozlyv{{/t}}</small>
 
                             </div> 
-                            <input type="submit" value="Зберегти" zippy="saveak" class="ms-2 btn btn-info  ">
+                            <input type="submit" value="{{#t}}common.zberehty{{/t}}" zippy="saveak" class="ms-2 btn btn-info  ">
           
                             </div>
 
@@ -598,16 +598,16 @@
 
                         <div class="col-12 col-md-4 col-xl-3 ms-4 ">   
                             <div class="mb-2">
-                                <label   >Каса, рахунок</label>
+                                <label   >{{#t}}common.kasa_rakhunok{{/t}}</label>
                                 <br>
 
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfnal" class="form-check-input" type="radio"   >
-                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> Готівка</label>
+                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> {{#t}}common.hotivka{{/t}}</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfbeznal" class="form-check-input" type="radio"    >
-                                    <label class="form-check-label" for="pfbeznal"><i class="fa fa-credit-card"></i> Банк. карта</label>
+                                    <label class="form-check-label" for="pfbeznal"><i class="fa fa-credit-card"></i> {{#t}}service.armfood.bank_karta{{/t}}</label>
                                 </div>
 
 
@@ -616,7 +616,7 @@
                       
                             
                             <div class="mb-2 row">
-                                <label class="col-7 col-form-label"  for="pfforpay" >До сплати</label>
+                                <label class="col-7 col-form-label"  for="pfforpay" >{{#t}}common.do_splaty{{/t}}</label>
                                  <div class="col-5">
                                 <input zippy="pfforpay" readonly  style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
@@ -627,34 +627,34 @@
                  
                             
                             <div class="mb-2 row">
-                                <label class="col-7 col-form-label" for="pfpayed"  >Внесено оплату</label>
+                                <label class="col-7 col-form-label" for="pfpayed"  >{{#t}}common.vneseno_oplatu_2{{/t}}</label>
                                 <div class="col-5">
                                 <input autofocus="on" autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
                             </div>
                             <div class="mb-2 row">
 
-                                <label class="col-7 col-form-label" for="pfrest"  >Решта   </label>
+                                <label class="col-7 col-form-label" for="pfrest"  >{{#t}}service.armfood.reshta{{/t}}   </label>
                                   <div class="col-5">
                                 <input readonly   zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
                                  </div>
                             </div>
                             <div class="mb-2 row">
                       
-                                <label class="col-7 col-form-label"   for="pfexch2b" data-label="pfexch2b">Бонуси</label>
+                                <label class="col-7 col-form-label"   for="pfexch2b" data-label="pfexch2b">{{#t}}common.bonusy{{/t}}</label>
                                  <div class="col-5">
                                 <input   class="form-control" type="text" style="width:100px;" zippy="pfexch2b">
                                 </div>
-                                <small>     Занести частину або всю решту в бонуси </small>
+                                <small>     {{#t}}service.armfood.zanesty_chastynu_abo_vsiu_reshtu{{/t}} </small>
                                  
                            </div>                            
                             <div class="mb-2 row">
                              
-                              <label  class="col-5 col-form-label" data-label="pftrans"  for="pftrans">№ транзакції</label>
+                              <label  class="col-5 col-form-label" data-label="pftrans"  for="pftrans">{{#t}}service.armfood.tranzaktsii{{/t}}</label>
                             <div class="col-7">                              
                               <input zippy="pftrans" class="form-control "  />
                             </div>  
-                            <small  data-label="pftrans" >Код з банківського терміналу при оплаті карткою</small>
+                            <small  data-label="pftrans" >{{#t}}service.armfood.kod_z_bankivskoho_terminalu_pry{{/t}}</small>
                             
 
                         </div>           
@@ -662,16 +662,15 @@
                         </div>
                         <div class="col-12   ">  
                             <div class="mb-2">
-                                <a zippy="bbackitems" class="btn btn-info"> &lt; Назад</a>
+                                <a zippy="bbackitems" class="btn btn-info"> {{#t}}common.lt_nazad{{/t}}</a>
 
                                 &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Оплатити > "   class="btn btn-success">
        
                             
                            {{#fiscal}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фіскалізацію  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> {{#t}}service.armfood.vidklasty_fiskalizatsiiu{{/t}}  
                            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="На випадок збою інтернету фіскалізацію можна пропустити.
-                                    Чек може бути фіскалізований зі списку чеків "></i>
+                                   title="{{#t}}service.armfood.na_vypadok_zboiu_internetu_fiskalizatsii{{/t}} "></i>
                                               
                             {{/fiscal}}                            
                                            
@@ -687,9 +686,9 @@
                         <div zippy="checktext"></div> 
                         <br>
                          {{^freg}}
-                        <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a    zippy="btoprint"  class="btn  btn-info">{{#t}}common.druk{{/t}}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          {{/freg}}
-                        <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;  
+                        <a zippy="bnewcheck"  class="btn  btn-success">{{#t}}common.nove_zamovlennia{{/t}}</a> &nbsp;&nbsp;  
 
                     </div>
                 </div> 
@@ -699,8 +698,8 @@
 
                         <div zippy="billtext"></div> 
                         <br>
-                        <a    zippy="btoprintbill"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
-                        <a zippy="bnewcheck2"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
+                        <a    zippy="btoprintbill"  class="btn  btn-info">{{#t}}common.druk{{/t}}</a>&nbsp;&nbsp;&nbsp;
+                        <a zippy="bnewcheck2"  class="btn  btn-success">{{#t}}common.nove_zamovlennia{{/t}}</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
                 </div> 
@@ -713,8 +712,8 @@
         <div class="row" zippy="orderlistpan">
 
             <div class="col-12  " >
-                <h4>Перелік замовлень</h4>
-                <a  class="btn btn-success" zippy="neworder">Нове замовлення</a>  &nbsp;&nbsp;&nbsp;
+                <h4>{{#t}}service.armfood.perelik_zamovlen{{/t}}</h4>
+                <a  class="btn btn-success" zippy="neworder">{{#t}}common.nove_zamovlennia{{/t}}</a>  &nbsp;&nbsp;&nbsp;
             </div>
 
             <div class="col-12 col-md-11 xl-9" >
@@ -725,38 +724,38 @@
                                 <div class="col-auto  ">
                                   <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                                </div>
-                                <label class="col-form-label col-auto" for="searchcust"> Клієнт </label>
+                                <label class="col-form-label col-auto" for="searchcust"> {{#t}}common.kliient{{/t}} </label>
                                <div class="col-auto  ">
-                                <input placeholder="Почніть вводити..." class="form-control me-2" type="text" zippy="searchcust"  >
+                                <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control me-2" type="text" zippy="searchcust"  >
                                </div>
                                <div class="col-auto  ">
-                                <input type="submit" class="  btn btn-success  " value="Шукати">
+                                <input type="submit" class="  btn btn-success  " value="{{#t}}common.shukaty{{/t}}">
                                </div>
                              </div>
                             </form>
                         </div>
 
-                  <a zippy="refresh" >&nbsp;&nbsp;<i class="fa fa-undo"></i>  <b>Оновити</b> </a>
+                  <a zippy="refresh" >&nbsp;&nbsp;<i class="fa fa-undo"></i>  <b>{{#t}}common.onovyty{{/t}}</b> </a>
                   {{^modeof}}
                      <div class="table-responsive-lg  "    >
              
                 <table class="table  table-sm">
                     <tr>
 
-                        <th>Номер</th>
-                        <th class="text-end">Час</th>
+                        <th>{{#t}}common.nomer{{/t}}</th>
+                        <th class="text-end">{{#t}}service.armfood.chas{{/t}}</th>
                         {{#tables}}
-                        <th class="text-end">Стіл</th>
+                        <th class="text-end">{{#t}}service.armfood.stil{{/t}}</th>
                         {{/tables}}
 
                         <th ></th>
 
-                        <th >Статус</th>
-                        <th >Виконавець</th>
+                        <th >{{#t}}common.status{{/t}}</th>
+                        <th >{{#t}}common.vykonavets{{/t}}</th>
                                           
-                        <th >Позиції</th>
+                        <th >{{#t}}print.outfood.pozytsii{{/t}}</th>
 
-                        <th class="text-end">Сума</th>
+                        <th class="text-end">{{#t}}common.suma{{/t}}</th>
                         <th ></th>
                         <th ></th>
                         <th ></th>
@@ -775,7 +774,7 @@
                         <td ><a zippy="docnumber"></a></td>
                         <td class="text-end" zippy="doctime"></td>
                         {{#tables}} <td zippy="tablenumber" class="text-end"></td>  {{/tables}}
-                        <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
+                        <td ><i zippy="delivery" title="{{#t}}common.dostavka{{/t}}" class="fa fa-bicycle"></i></td>
 
                         <td class="text-nowrap  " zippy="state">  </td>
                         <td  zippy="author">  </td>
@@ -786,20 +785,20 @@
   
 
                         <td zippy="docnotes"></td>
-                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-running"></i> Бігунок</a></td>
-                        <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
-                        <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
-                        <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
-                        <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
-                        <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
-                        <td  ><span style="cursor:pointer"  zippy="checkdolg" >Оплата боргу</span></td>
+                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-running"></i> {{#t}}service.armfood.bihunok{{/t}}</a></td>
+                        <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> {{#t}}common.rakhunok{{/t}}</a></td>
+                        <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> {{#t}}common.oplatyty{{/t}}</a></td>
+                        <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> {{#t}}common.redahuvaty{{/t}}</a></td>
+                        <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> {{#t}}common.zakryty{{/t}}</a></td>
+                        <td ><a zippy="brrefuse" class="text-danger"> {{#t}}register.orderlist.anuliuvaty{{/t}}</a></td>
+                        <td  ><span style="cursor:pointer"  zippy="checkdolg" >{{#t}}service.armfood.oplata_borhu{{/t}}</span></td>
                      
                     {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фіскалізувати</a>
+                        <td  ><a zippy="checkfisc" >{{#t}}service.armfood.fiskalizuvaty{{/t}}</a>
                         </td>
                          {{/fiscal}}                        
                    {{#freg}}
-                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фіскалізувати</span></td>
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >{{#t}}service.armfood.fiskalizuvaty{{/t}}</span></td>
                          {{/freg}}                        
                     </tr>
 
@@ -812,20 +811,20 @@
                        <div class="col-12">
                            <a zippy="docnumber_of"></a>&nbsp;
                            <span zippy="doctime_of"></span>  &nbsp; 
-                           <span zippy="docamount_of"></span> грн   &nbsp;
-                           {{#tables}} Стіл <span zippy="tablenumber_of"></span>     {{/tables}}
+                           <span zippy="docamount_of"></span> {{#t}}service.armfood.hrn_nbsp{{/t}}
+                           {{#tables}} {{#t}}service.armfood.stil{{/t}} <span zippy="tablenumber_of"></span>     {{/tables}}
                        </div>
                         <div class="col-12">
-                            Статус: <span zippy="state_of"></span>  &nbsp; 
+                            {{#t}}service.armfood.status{{/t}} <span zippy="state_of"></span>  &nbsp; 
                        </div>
                         <div zippy="docnotes_of" class="col-12"> </div>
                         <div zippy="rtlist_of" class="col-12"> </div>
                         <div class="col-12">
-                          <a zippy="brrunner_of" class="btn btn-sm btn-primary me-2">  Бігунок</a> 
-                          <a zippy="brprint_of" class="btn btn-sm btn-info me-2">  Рахунок</a> 
-                          <a zippy="brpay_of" class="btn btn-sm btn-primary me-2">  Оплатити</a> 
-                          <a zippy="bredit_of" class="btn btn-sm btn-info me-2">  Редагувати</a> 
-                          <a zippy="brclose_of" class="btn btn-sm btn-success">  Закрити</a> 
+                          <a zippy="brrunner_of" class="btn btn-sm btn-primary me-2">  {{#t}}service.armfood.bihunok{{/t}}</a> 
+                          <a zippy="brprint_of" class="btn btn-sm btn-info me-2">  {{#t}}common.rakhunok{{/t}}</a> 
+                          <a zippy="brpay_of" class="btn btn-sm btn-primary me-2">  {{#t}}common.oplatyty{{/t}}</a> 
+                          <a zippy="bredit_of" class="btn btn-sm btn-info me-2">  {{#t}}common.redahuvaty{{/t}}</a> 
+                          <a zippy="brclose_of" class="btn btn-sm btn-success">  {{#t}}common.zakryty{{/t}}</a> 
                           
                        </div>   
                        
@@ -855,24 +854,24 @@
         </div>
 
         <form zippy="editcust">
-            <h3>&nbsp;Новий покупець </h3>
+            <h3>{{#t}}common.nbsp_novyi_pokupets{{/t}} </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="mb-2">
-                        <label for="editcustname">Ім'я </label>
+                        <label for="editcustname">{{#t}}common.imia{{/t}} </label>
                         <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="mb-2">
-                        <label for="editphone">Телефон</label>
+                        <label for="editphone">{{#t}}common.telefon{{/t}}</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
                    
 
 
                     <div class="mb-2">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  ms-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary ms-2">                        
+                        <input type="button" zippy="cancelcust" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary  ms-2">
+                        <input zippy="savecust" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary ms-2">                        
                     </div>
                 </div>
             </div>
@@ -890,7 +889,7 @@
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#rtag').printThis();  closeModal('prform')  "
-                                                      class="btn btn-success  ">Друк</a></td>
+                                                      class="btn btn-success  ">{{#t}}common.druk{{/t}}</a></td>
                             </tr>
                         </table>
                     </div>
@@ -901,143 +900,143 @@
                    
                   <div class="row">
                         <div class="col-12 col-md-4 col-xl-3">
-                              <h4>Налаштування кафе</h4>
+                              <h4>{{#t}}service.armfood.nalashtuvannia_kafe{{/t}}</h4>
                             <div class="mb-2">
-                                <label for="foodworktype">Тип закладу</label>  
+                                <label for="foodworktype">{{#t}}service.armfood.typ_zakladu{{/t}}</label>  
                                 <select class="form-select" zippy="foodworktype">
-                                    <option value="0">Фастфуд</option>
-                                    <option value="1">Фастфуд (з кухнею)</option>
-                                    <option value="2">Кафе</option>
+                                    <option value="0">{{#t}}service.armfood.fastfud{{/t}}</option>
+                                    <option value="1">{{#t}}service.armfood.fastfud_z_kukhneiu{{/t}}</option>
+                                    <option value="2">{{#t}}app.admin.kafe{{/t}}</option>
 
                                 </select>
                                <details>
-                                   <summary  >Опис типів</summary>
+                                   <summary  >{{#t}}service.armfood.opys_typiv{{/t}}</summary>
                                         
                                     <small class="compact"    >
-                                      <b>Фастфуд</b> - оплата  зразу, замовлення  закривається по  оплаті.  АРМ кухні (бару) не використовується.<br>
-                                      <b>Фастфуд з кухнею</b> - оплата  зразу, замовлення відправляється в виробництво (на  кухню). Замовлення закривається коли видано клієнту (кнопка Видано в  АРМ кухні)<br>
-                                      <b>Кафе</b> -   замовлення відправляється в виробництво. Замовлення закривається коли видано клієнту  і оплачено. Оплату приймає офіціант.
+                                      <b>{{#t}}service.armfood.fastfud{{/t}}</b> {{#t}}service.armfood.oplata_zrazu_zamovlennia_zakryvaietsia_p{{/t}}<br>
+                                      <b>{{#t}}service.armfood.fastfud_z_kukhneiu_2{{/t}}</b> {{#t}}service.armfood.oplata_zrazu_zamovlennia_vidpravliaietsi{{/t}}<br>
+                                      <b>{{#t}}app.admin.kafe{{/t}}</b> {{#t}}service.armfood.zamovlennia_vidpravliaietsia_v_vyrobnyts{{/t}}
                                      
                                     </small> 
                                  </details>  
                             </div>    
                             <div class="mb-2">
-                                <label for="foodpricetype">Тип цін</label>
+                                <label for="foodpricetype">{{#t}}service.armfood.typ_tsin{{/t}}</label>
                                 <select class="form-select" zippy="foodpricetype">
                                 </select>
                             </div>
                           
                            <div class="mb-2">
-                                <label for="foodpricetypeout">Тип цін на  винос</label>
+                                <label for="foodpricetypeout">{{#t}}service.armfood.typ_tsin_na_vynos{{/t}}</label>
                                 <select class="form-select" zippy="foodpricetypeout">
-                                 <option value="0">Не  вказано</option>
+                                 <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
-                                <small>Якщо відрізняються  від основної</small>
+                                <small>{{#t}}service.armfood.iakshcho_vidrizniaiutsia_vid_osnovnoi{{/t}}</small>
                             </div>
                           
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodtables">Показувати номери столиків (в  кафе)</label>
+                                <label class="form-check-label" for="foodtables">{{#t}}service.armfood.pokazuvaty_nomery_stolykiv_v_kafe{{/t}}</label>
                                
                             </div>
                              <div class="form-check">
                                 <input zippy="foodbell" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodbell">Кнопка (в меню по QR)    виклику офіціанта   </label>
+                                <label class="form-check-label" for="foodbell">{{#t}}service.armfood.knopka_v_meniu_po_qr{{/t}}   </label>
                                
                             </div>
 
 
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="fooddelivery">Можливість доставки</label>
+                                <label class="form-check-label" for="fooddelivery">{{#t}}service.armfood.mozhlyvist_dostavky{{/t}}</label>
                              <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Можливість створювати доставку з АРМ касира (по дзвінку клієнта)"></i>    
+                                   title="{{#t}}service.armfood.mozhlyvist_stvoriuvaty_dostavku_z_arm{{/t}}"></i>    
                                
                             </div>
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodpack">Вибір можливості упаковки з собою.</label>
+                                <label class="form-check-label" for="foodpack">{{#t}}service.armfood.vybir_mozhlyvosti_upakovky_z_soboiu{{/t}}</label>
                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні"></i> 
+                                   title="{{#t}}service.armfood.stavytsia_iakshcho_ie_obydva_varianty{{/t}}"></i> 
                                 
                             </div>
                              <div class="form-check">
                                 <input zippy="diffbp" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="diffbp">Окремі замовлення для кухні і бару</label>
+                                <label class="form-check-label" for="diffbp">{{#t}}service.armfood.okremi_zamovlennia_dlia_kukhni_i{{/t}}</label>
                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Якщо кухня і бар  вимагають окремі  чеки"></i> 
+                                   title="{{#t}}service.armfood.iakshcho_kukhnia_i_bar_vymahaiut{{/t}}"></i> 
                                 
                             </div>
                            </div>
                         <div class="col-12 col-md-4 col-xl-3">
                            
-                          <h4>Налаштування меню</h4>    
+                          <h4>{{#t}}common.nalashtuvannia_meniu{{/t}}</h4>    
                          <small>
-                                 Детальніше про доступ до сторінки меню по QR  коду <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
+                                 {{#t}}service.armfood.detalnishe_pro_dostup_do_storinky{{/t}} <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">{{#t}}common.tut{{/t}}</a>. 
                                 </small>
                        
                             <div class="mb-2 row">
-                                <label class="col-4 col-form-label"  for="goodname">Назва закладу</label>
+                                <label class="col-4 col-form-label"  for="goodname">{{#t}}service.armfood.nazva_zakladu{{/t}}</label>
                                  <div class="col-8">
                                     <input class="form-control" type="text" zippy="goodname">
                                 </div>                            
                             </div>                            
                             <div class="mb-2 row">
-                                <label class="col-4 col-form-label"  for="goodaddress">Адреса  </label>
+                                <label class="col-4 col-form-label"  for="goodaddress">{{#t}}common.adresa_2{{/t}}  </label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" zippy="goodaddress">
                                 </div>                            
                             </div>                            
                             <div class="mb-2 row">
-                                <label class="col-4 col-form-label" for="goodphone">Телефон</label>
+                                <label class="col-4 col-form-label" for="goodphone">{{#t}}common.telefon{{/t}}</label>
                                 <div class="col-6">
                                   <input class="form-control" type="text" zippy="goodphone">
                                </div>                            
                             </div>                            
                               
                          <div class="mb-2">
-                                <label  >Розклад роботи</label>
+                                <label  >{{#t}}service.armfood.rozklad_roboty{{/t}}</label>
                                 
                                 <table class="ctable">
-                                  <tr><td>Пн-Пт. </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
-                                   <td>Сб. </td><td><input zippy="timesa" style="width:100px" class="form-control"  > </td> 
-                                  <td>Нд. </td><td><input zippy="timesu" style="width:100px" class="form-control"  > </td></tr>
+                                  <tr><td>{{#t}}service.armfood.pn_pt{{/t}} </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
+                                   <td>{{#t}}service.armfood.sb{{/t}} </td><td><input zippy="timesa" style="width:100px" class="form-control"  > </td> 
+                                  <td>{{#t}}service.armfood.nd{{/t}} </td><td><input zippy="timesu" style="width:100px" class="form-control"  > </td></tr>
                                 </table>
                                 
 
                             </div>                            
                          <div class="mb-2">
-                            <label   for="foodlogo">Логотип</label>
+                            <label   for="foodlogo">{{#t}}common.lohotyp{{/t}}</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="foodlogo"/>
                          
                         </div>
 
                              <div class="mb-2">
-                                <label for="foodbasemenu">Основне меню</label>
+                                <label for="foodbasemenu">{{#t}}service.armfood.osnovne_meniu{{/t}}</label>
                                 <select class="form-select"  zippy="foodbasemenu">
-                                     <option value="0">Не вказано</option>
+                                     <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
-                                <span>Якщо не вказано береться верхній рівень</span>
+                                <span>{{#t}}service.armfood.iakshcho_ne_vkazano_beretsia_verkhnii{{/t}}</span>
                             </div> 
 
                              <div class="mb-2">
-                                <label for="foodmenu2">Додаткове меню</label>
+                                <label for="foodmenu2">{{#t}}service.armfood.dodatkove_meniu{{/t}}</label>
                                 <select class="form-select"  zippy="foodmenu2">
-                                     <option value="0">Не вказано</option>
+                                     <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                               <select class="form-select"  zippy="foodmenu3">
-                                     <option value="0">Не вказано</option>
+                                     <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
                               <select class="form-select"  zippy="foodmenu4">
-                                     <option value="0">Не вказано</option>
+                                     <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
-                                <span>Наприклад меню бару. Не виводиться якщо не вказано</span>
+                                <span>{{#t}}service.armfood.napryklad_meniu_baru_ne_vyvodytsia{{/t}}</span>
                             </div> 
                             </div>
                             
                             <div class="col-12">
-                                <a zippy="cancelopt" class="btn btn-secondary"  >Скасувати</a>
-                                <button class="btn btn-success" type="submit">Зберегти</button>
+                                <a zippy="cancelopt" class="btn btn-secondary"  >{{#t}}common.skasuvaty{{/t}}</a>
+                                <button class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                                
                             </div>
                         </div>
@@ -1046,15 +1045,15 @@
          
          <div zippy="varpan" >
              <div class="col-12">
-                 <a zippy="backvar"    ><i class="fa fa-arrow-circle-left"></i> До АРМ</a>
-                 <h5>Товари з варіаціями</h5>
+                 <a zippy="backvar"    ><i class="fa fa-arrow-circle-left"></i> {{#t}}service.armfood.do_arm{{/t}}</a>
+                 <h5>{{#t}}service.armfood.tovary_z_variatsiiamy{{/t}}</h5>
                  <form zippy="varbaseform"  > 
                        <div class="row  ">
                        <div class="col-auto  ">
-                      <select  zippy="varbaseitem" class="form-select select2 "> <option value="0">Не вибрано</option> </select>
+                      <select  zippy="varbaseitem" class="form-select select2 "> <option value="0">{{#t}}common.ne_vybrano{{/t}}</option> </select>
                      </div>  
                       <div class="col-auto  ">
-                      <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >
+                      <input   type="submit" class="btn btn-success  ms-2" value="{{#t}}common.dodaty{{/t}}"  >
                     </div> </div>   
                  </form>  
                   
@@ -1064,7 +1063,7 @@
                        <tr zippy="varbaselist">
                            <td zippy="vbname"></td> 
                            <td zippy="vbcode"></td> 
-                           <td  ><a zippy="varlistedit">Варіації</a></td> 
+                           <td  ><a zippy="varlistedit">{{#t}}service.armfood.variatsii{{/t}}</a></td> 
                        
                            <td  ><a zippy="vbdel"><i class="fa fa-trash"></a></td> 
                        </tr>
@@ -1074,15 +1073,15 @@
          </div>
          <div zippy="varpandet" >
              <div class="col-12">
-                 <a zippy="backvardet"    ><i class="fa fa-arrow-circle-left"></i> До переліку </a>
-                 <h5>Варіації для <span zippy="vbbasename"></span></h5>
+                 <a zippy="backvardet"    ><i class="fa fa-arrow-circle-left"></i> {{#t}}common.do_pereliku{{/t}} </a>
+                 <h5>{{#t}}service.armfood.variatsii_dlia{{/t}} <span zippy="vbbasename"></span></h5>
                  <form zippy="vardetform"  > 
                     <div class="row  ">
                        <div class="col-auto  ">
-                    <select  zippy="vardetitem" class="form-select select2 "> <option value="0">Не вибрано</option> </select>
+                    <select  zippy="vardetitem" class="form-select select2 "> <option value="0">{{#t}}common.ne_vybrano{{/t}}</option> </select>
                       </div> 
                      <div class="col-auto  ">
-                    <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >
+                    <input   type="submit" class="btn btn-success  ms-2" value="{{#t}}common.dodaty{{/t}}"  >
                     </div>  </div> 
                  </form>  
                   
@@ -1105,7 +1104,7 @@
                 <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title ">Відкрити пляшку або пакет</h5> 
+                            <h5 class="modal-title ">{{#t}}service.armfood.vidkryty_pliashku_abo_paket{{/t}}</h5> 
                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -1114,16 +1113,16 @@
                         <div class="modal-body">
                              <form zippy="trform">
                             <div class="mb-2">
-                                <label for="tritemfrom" > Вхідний ТМЦ (1 шт)  </label>
-                                <input placeholder="Почніть вводити " zippy="tritemfrom" class="form-control"  >
+                                <label for="tritemfrom" > {{#t}}service.armfood.vkhidnyi_tmts_1_sht{{/t}}  </label>
+                                <input placeholder="{{#t}}common.pochnit_vvodyty_3{{/t}} " zippy="tritemfrom" class="form-control"  >
                             </div>
                              <div class="mb-2">
-                                <label for="tritemto" > Вихідний ТМЦ (інгредієнт)</label>
-                                <input placeholder="Почніть вводити " zippy="tritemto" class="form-control"  >
+                                <label for="tritemto" > {{#t}}service.armfood.vykhidnyi_tmts_inhrediient{{/t}}</label>
+                                <input placeholder="{{#t}}common.pochnit_vvodyty_3{{/t}} " zippy="tritemto" class="form-control"  >
                             </div>
                              <div class="mb-2 row">
                                 <div class="col-auto pt-2">
-                                   <label for="tritemqty" > Кількість</label>
+                                   <label for="tritemqty" > {{#t}}common.kilkist{{/t}}</label>
                                 </div>
                                  <div class="col-auto">
                                     <input style="width:75px" pattern="[0-9\.]+" zippy="tritemqty" class="form-control"  >
@@ -1133,7 +1132,7 @@
                                 </div>
                                 
                             </div>
-                              <small>Буде  створено  документ Перекомплектація (розфасовка)</small>
+                              <small>{{#t}}service.armfood.bude_stvoreno_dokument_perekomplektatsii{{/t}}</small>
                              </form>
                         </div>
 
@@ -1146,7 +1145,7 @@
                 <div class="modal-dialog modal-sm modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3  class="modal-title ">Оплата боргу </h3>  
+                            <h3  class="modal-title ">{{#t}}service.armfood.oplata_borhu{{/t}} </h3>  
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -1159,7 +1158,7 @@
                                 
                                     <div class="row mb-2">
                                    
-                                     <label   class="col-4 col-form-label" for="pbnumber">Чек </label>
+                                     <label   class="col-4 col-form-label" for="pbnumber">{{#t}}common.chek{{/t}} </label>
                                       
                                      <div class="col-8"> 
                                         <input  class="form-control-plaintext"  zippy="pbnumber" readonly     />
@@ -1167,7 +1166,7 @@
                                     </div>
                                     <div class="row mb-2">
                                        
-                                       <label class="col-4 col-form-label" for for="pbsum">Сума</label>
+                                       <label class="col-4 col-form-label" for for="pbsum">{{#t}}common.suma{{/t}}</label>
                                        
                                        <div class="col-8"> 
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="pbsum"/>
@@ -1175,22 +1174,22 @@
                                     </div>
                                      <div class="row mb-2">
                                      
-                                        <label class="col-4 col-form-label"   for="pbpay">Рахунок</label>
+                                        <label class="col-4 col-form-label"   for="pbpay">{{#t}}common.rakhunok{{/t}}</label>
                                           
                                        <div class="col-8"> 
                                      
                                         <select   class="form-select"   zippy="pbpay"  >
-                                            <option value="0" selected="">Не вказано </option>
-                                            <option value="1">Готівка </option>
-                                            <option value="2">Картка </option>
+                                            <option value="0" selected="">{{#t}}common.ne_vkazano{{/t}} </option>
+                                            <option value="1">{{#t}}common.hotivka{{/t}} </option>
+                                            <option value="2">{{#t}}service.armfood.kartka{{/t}} </option>
                                         </select>
                                         </div> 
                                     </div>
                   
                                     <div class="mb-2">
-                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">{{#t}}common.skasuvaty{{/t}}</button>
       
-                                       <input   type="submit" value="Оплатити" class="btn btn-primary">
+                                       <input   type="submit" value="{{#t}}common.oplatyty{{/t}}" class="btn btn-primary">
                                         
                                     </div>
                                 </div>
@@ -1205,7 +1204,7 @@
                 <div class="modal-dialog modal-sm modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4  class="modal-title ">Службове внесення </h4>  
+                            <h4  class="modal-title ">{{#t}}common.sluzhbove_vnesennia{{/t}} </h4>  
  
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
@@ -1220,7 +1219,7 @@
                                     
                                     <div class="row mb-2">
                                        
-                                       <label class="col-4 col-form-label" for for="sinsum">Сума</label>
+                                       <label class="col-4 col-form-label" for for="sinsum">{{#t}}common.suma{{/t}}</label>
                                        
                                        <div class="col-8"> 
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="sinsum"/>
@@ -1228,11 +1227,11 @@
                                     </div>
                                    <div class="  mb-2">
                                        
-                                       <label class=" form-label"   for="siniostate">Стаття доходу</label>
+                                       <label class=" form-label"   for="siniostate">{{#t}}service.armfood.stattia_dokhodu{{/t}}</label>
                                        
                                       
                                          <select   class="form-select"   zippy="siniostate"  >
-                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
+                                            <option value="0" selected="">{{#t}}service.armfood.bez_statti_napryklad_inkasatsiia{{/t}} </option>
                                           
                                         </select>
                              
@@ -1241,9 +1240,9 @@
                                    
                   
                                     <div class="mb-2">
-                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">{{#t}}common.skasuvaty{{/t}}</button>
       
-                                        <input   type="submit" value="Виконати" class="btn btn-primary">
+                                        <input   type="submit" value="{{#t}}common.vykonaty{{/t}}" class="btn btn-primary">
                                         
                                     </div>
                                 </div>
@@ -1257,7 +1256,7 @@
                 <div class="modal-dialog modal-sm modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4  class="modal-title ">Службова  видача </h4>  
+                            <h4  class="modal-title ">{{#t}}common.sluzhbova_vydacha{{/t}} </h4>  
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -1271,7 +1270,7 @@
                                     
                                     <div class="row mb-2">
                                        
-                                       <label class="col-4 col-form-label" for for="soutsum">Сума</label>
+                                       <label class="col-4 col-form-label" for for="soutsum">{{#t}}common.suma{{/t}}</label>
                                        
                                        <div class="col-8"> 
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="soutsum"/>
@@ -1279,11 +1278,11 @@
                                     </div>
                                      <div class="  mb-2">
                                        
-                                       <label class=" form-label" for for="soutiostate">Стаття розходу</label>
+                                       <label class=" form-label" for for="soutiostate">{{#t}}service.armfood.stattia_rozkhodu{{/t}}</label>
                                        
                                       
                                          <select   class="form-select"   zippy="soutiostate"  >
-                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
+                                            <option value="0" selected="">{{#t}}service.armfood.bez_statti_napryklad_inkasatsiia{{/t}} </option>
                                          
                                         </select>
                              
@@ -1293,9 +1292,9 @@
                       
                   
                                     <div class="mb-2">
-                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">{{#t}}common.skasuvaty{{/t}}</button>
       
-                                        <input   type="submit" value="Виконати" class="btn btn-primary">
+                                        <input   type="submit" value="{{#t}}common.vykonaty{{/t}}" class="btn btn-primary">
                                         
                                     </div>
                                 </div>

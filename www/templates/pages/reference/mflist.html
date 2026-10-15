@@ -1,23 +1,23 @@
 <html>
     <head>
-            <title> Каси та банківскі рахунки </title>
+            <title> {{#t}}reference.mflist.kasy_ta_bankivski_rakhunky{{/t}} </title>
   </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-7 col-xl-5">
                 <div zippy="mftable">
-                    <h3>Каси та банківскі рахунки</h3>
-                    <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                    <h3>{{#t}}reference.mflist.kasy_ta_bankivski_rakhunky{{/t}}</h3>
+                    <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table    table-sm">
                         <tr>
-                            <th>Назва</th>
+                            <th>{{#t}}common.nazva{{/t}}</th>
                             {{#usebranch}}
-                            <th>Філія</th>
+                            <th>{{#t}}common.filiia{{/t}}</th>
                             {{/usebranch}}
 
-                            <th>Опис</th>
-                            <th class="text-end">Баланс</th>
+                            <th>{{#t}}common.opys{{/t}}</th>
+                            <th class="text-end">{{#t}}common.balans{{/t}}</th>
 
                             <th></th>
                         </tr>
@@ -30,8 +30,8 @@
                             <td zippy="description"></td>
                             <td class="text-end" zippy="amount"></td>
 
-                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                          &nbsp;&nbsp;      <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
+                            <td style="width:75px"><a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a>
+                          &nbsp;&nbsp;      <a zippy="delete" title="{{#t}}common.vyluchyty{{/t}}"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     </table>
@@ -47,47 +47,47 @@
         <div class="row">
             <div class="col-6 col-lg-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="editmf_name">Назва</label>
+                        <label for="editmf_name">{{#t}}common.nazva{{/t}}</label>
                         <input autofocus="on"   class="form-control" zippy="editmf_name"/>
                     </div>
                     <div class="form-check">
                         <input zippy="editbeznal" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editbeznal">Безготівковий рахунок</label>
+                        <label class="form-check-label" for="editbeznal">{{#t}}common.bezhotivkovyi_rakhunok{{/t}}</label>
 
                     </div>
            
                    <div class="mb-2">
-                        <label for="editcom" data-label="editcom">Комісія сервісів, процент</label>
+                        <label for="editcom" data-label="editcom">{{#t}}reference.mflist.komisiia_servisiv_protsent{{/t}}</label>
                         <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editcom"/>
-                        <small data-label="editcom">Наприклад комісія маркетплейса. Списується як витрати </small>
+                        <small data-label="editcom">{{#t}}reference.mflist.napryklad_komisiia_marketpleisa_spysuiet{{/t}} </small>
                     </div>
            
            
                     
                     {{#usebranch}}
                     <div class="mb-2">
-                        <label for="editbranch">Філія</label>
+                        <label for="editbranch">{{#t}}common.filiia{{/t}}</label>
                         <select class="form-select" zippy="editbranch">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
                     {{/usebranch}}
                     <div class="mb-2">
-                        <label for="editmf_description">Опис</label>
+                        <label for="editmf_description">{{#t}}common.opys{{/t}}</label>
                         <textarea class="form-control" zippy="editmf_description"></textarea>
                     </div>
                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                    <label class="form-check-label" for="editdisabled">{{#t}}common.ne_vykorystovuietsia{{/t}}</label>
                 </div>
            </div>
             <div class="col-6 col-lg-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="editbank" data-label="editbank">Назва  банку, МФО </label>
+                        <label for="editbank" data-label="editbank">{{#t}}reference.mflist.nazva_banku_mfo{{/t}} </label>
                         <input class="form-control" type="text" zippy="editbank">
                     </div>
                     <div class="mb-2">
-                        <label for="editbankacc" data-label="editbankacc">Розрахунковий рахунок</label>
+                        <label for="editbankacc" data-label="editbankacc">{{#t}}reference.mflist.rozrakhunkovyi_rakhunok{{/t}}</label>
                         <input class="form-control" type="text" zippy="editbankacc">
                     </div>
                      <div class="mb-2">
@@ -95,13 +95,13 @@
                         <input class="form-control" type="text" zippy="editiban">
                    </div> 
                     <div class="mb-2">
-                            <label for="editpayname" data-label="editpayname">Платник/Одержувач</label>
+                            <label for="editpayname" data-label="editpayname">{{#t}}reference.mflist.platnyk_oderzhuvach{{/t}}</label>
                             <input class="form-control" type="text" zippy="editpayname">
                             
                     </div>                    
                                  
                     <div class="mb-2 row">
-                            <label class="col-6 col-form-label" for="edittin" data-label="edittin">ЄДРПОУ/ІПН</label>
+                            <label class="col-6 col-form-label" for="edittin" data-label="edittin">{{#t}}print.zrep.iedrpou_ipn{{/t}}</label>
                             <div class="col-6">
                                 <input class="form-control" type="text" zippy="edittin">
                             </div>
@@ -110,22 +110,22 @@
                     </div>                    
                           
                     <div class="mb-2 row">
-                        <label class="col-8 col-form-label" for="editbtran" data-label="editbtran">Процент за  еквайринг, списання </label>
+                        <label class="col-8 col-form-label" for="editbtran" data-label="editbtran">{{#t}}reference.mflist.protsent_za_ekvairynh_spysannia{{/t}} </label>
                         <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtran"/>
                          </div>
-                        <small  data-label="editbtran">Процент, який банк бере за   списання суми з рахунку. </small>
+                        <small  data-label="editbtran">{{#t}}reference.mflist.protsent_iakyi_bank_bere_za{{/t}} </small>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-8 col-form-label" for="editbtranin" data-label="editbtranin">Процент за  еквайринг, зарахування </label>
+                        <label class="col-8 col-form-label" for="editbtranin" data-label="editbtranin">{{#t}}reference.mflist.protsent_za_ekvairynh_zarakhuvannia{{/t}} </label>
                         <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtranin"/>
                         </div>
-                        <small data-label="editbtranin">Процент, який банк бере за зарахування суми на рахунок </small>
+                        <small data-label="editbtranin">{{#t}}reference.mflist.protsent_iakyi_bank_bere_za_2{{/t}} </small>
                     </div>
                      <div class="form-check">
                         <input zippy="editback" type="checkbox" class="form-check-input">
-                        <label  data-label="editback" class="form-check-label" for="editback">Повертати процент при поверненні товару</label>
+                        <label  data-label="editback" class="form-check-label" for="editback">{{#t}}reference.mflist.povertaty_protsent_pry_povernenni_tovaru{{/t}}</label>
                     </div>
      
            </div>
@@ -135,8 +135,8 @@
                 
                 
                   <div class="mb-2">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
-                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">
+                    <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                     
                  </div>
             </div>

@@ -182,7 +182,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getNumberTemplate() {
-        return 'РО-000000';
+        return __('doc.invoice.ro_000000');
     }
 
     public function getRelationBased() {
@@ -214,7 +214,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getEmailSubject() {
-        return  "Рахунок до оплати номер ".$this->document_number ;
+        return  __('doc.invoice.rakhunok_do_oplaty_nomer').$this->document_number ;
     }
 
     public function supportedExport() {

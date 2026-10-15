@@ -1,38 +1,38 @@
 <html>
    <head>
-        <title> Звіт по виробництву   </title>
+        <title> {{#t}}print.prod.zvit_po_vyrobnytstvu{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h2>Звіт по виробництву</h2>
+                <h2>{{#t}}print.prod.zvit_po_vyrobnytstvu{{/t}}</h2>
                 <div class="navbar">
                     <form zippy="filter"  >
                       <div class="row  ">
-                        <label class="col-form-label col-auto" for="from">З</label>
+                        <label class="col-form-label col-auto" for="from">{{#t}}common.z{{/t}}</label>
                           <div class="col-auto  ">
                             <input class="form-control ms-sm-2" style="width: 120px" type="text" zippy="from">
                          </div>
-                        <label class="col-form-label col-auto" for="to">по</label>
+                        <label class="col-form-label col-auto" for="to">{{#t}}common.po{{/t}}</label>
                           <div class="col-auto  ">
                             <input class="form-control ms-sm-2" style="width: 120px" type="text" zippy="to">
                          </div>
 
-                        <label class="col-form-label col-auto" for="parea">Виробнича ділянка</label>
+                        <label class="col-form-label col-auto" for="parea">{{#t}}common.vyrobnycha_dilianka{{/t}}</label>
                           <div class="col-auto  ">
                           <select class="form-control ms-sm-2" zippy="parea">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
-                       <label class="col-form-label col-auto" for="emp">Співробітник</label>
+                       <label class="col-form-label col-auto" for="emp">{{#t}}common.spivrobitnyk{{/t}}</label>
                           <div class="col-auto  ">
                           <select class="form-control ms-sm-2" zippy="emp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
                           <div class="col-auto  ">
-                        <input zippy="onreport" class="btn btn-primary  " type="submit" value="ОК">
+                        <input zippy="onreport" class="btn btn-primary  " type="submit" value="{{#t}}common.ok{{/t}}">
                       </div>
                      </div>
                     </form>
@@ -41,9 +41,9 @@
 
                 <div zippy="detail">
                     <div>
-                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/prod" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/prod" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/prod" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/prod" target="_blank" title="{{#t}}common.eksport_v_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
                     </div>
                     <div  class="table-responsive-lg mt-2" zippy="preview"  >
                     </div>

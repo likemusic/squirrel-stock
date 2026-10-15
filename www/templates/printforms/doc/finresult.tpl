@@ -5,14 +5,14 @@
 
     <tr style="font-weight: bolder;">
         <td>
-            Фінансові результати {{document_number}}    від {{date}}
+            {{#t}}print.finresult.finansovi_rezultaty_vid{{/t}}
         </td>
  
     </tr>
     {{#isbalans}}
   <tr  >
         <td>
-         Баланс рахунку 79:  <b>{{balans}}</b>
+         {{#t}}print.finresult.balans_rakhunku_79{{/t}}  <b>{{balans}}</b>
         </td>
       
     </tr>

@@ -7,19 +7,19 @@
         <div class="row ">
             <div class="col-12     ">
     
-              <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-info"> Оновити sitemap.xml</a>
+              <a onclick="updateSiteMap()"  href="javascript:void(0)"  class="btn btn-info"> {{#t}}mod.shop.custom.onovyty_sitemap_xml{{/t}}</a>
                                           
             </div>
            <div class="col-12    col-md-6   col-xl-4   ">
-                <h4>Новинки</h4>
+                <h4>{{#t}}mod.shop.custom.novynky{{/t}}</h4>
                 <form zippy="newform"  >
                    <div class="row  ">
-                    <label class="col-form-label col-auto" for="newitem">Товар:</label>
+                    <label class="col-form-label col-auto" for="newitem">{{#t}}mod.shop.custom.tovar{{/t}}</label>
                     <div class="col-auto  ">
-                    <input placeholder="Почніть вводити.." class="form-control  ms-sm-2" zippy="newitem"/>
+                    <input placeholder="{{#t}}common.pochnit_vvodyty_2{{/t}}" class="form-control  ms-sm-2" zippy="newitem"/>
                     </div>
                      <div class="col-auto  ">
-                    <input class="btn btn-success  " type="submit" value="Додати">
+                    <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
                   </div>  
                   </div>  
                 </form>  
@@ -44,8 +44,8 @@
               <div class="row">
                <div class="col-12 col-md-10   col-xl-8 " zippy="pagespan">
           
-                <h4>Кастомні сторінки   </h4>
-                <a class="btn btn-info" zippy="padd">Додати</a>
+                <h4>{{#t}}mod.shop.custom.kastomni_storinky{{/t}}   </h4>
+                <a class="btn btn-info" zippy="padd">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table table-sm">
                    <tr zippy="plist">
                      <td zippy="ptitle"></td>
@@ -66,39 +66,39 @@
                  
                  <form zippy="pageform">
                   <input type="hidden" zippy="oldlink">
-                <h4>Редагування сторінки</h4>  
+                <h4>{{#t}}mod.shop.custom.redahuvannia_storinky{{/t}}</h4>  
                     <div class="mb-2">
-                        <label for="pagetitle">Назва    </label>
+                        <label for="pagetitle">{{#t}}common.nazva{{/t}}    </label>
                         <input required="required" style="width:300px;" zippy="pagetitle" class="form-control ">
 
-                    <small>Для відображення в  меню</small>
+                    <small>{{#t}}mod.shop.custom.dlia_vidobrazhennia_v_meniu{{/t}}</small>
                 </div> 
                   <div class="mb-2">
-                        <label for="pagelink">Відносне  посилання (SEO посилання)   </label>
+                        <label for="pagelink">{{#t}}mod.shop.custom.vidnosne_posylannia_seo_posylannia{{/t}}   </label>
                         <input pattern="[0-9a-z_]+" required="on"  style="width:200px;" zippy="pagelink" class="form-control ">
 
-                        <small>Не включаючи адресу сайту. Допускаються тільки  латиничні символи (наприклад:  news,  about_us,  dostavka)</small>
+                        <small>{{#t}}mod.shop.custom.ne_vkliuchaiuchy_adresu_saitu_dopuskaiut{{/t}}</small>
                         
                     </div> 
                     <div class="mb-2">
-                        <label for="pageorder">Порядковий  номер    </label>
+                        <label for="pageorder">{{#t}}mod.shop.custom.poriadkovyi_nomer{{/t}}    </label>
                         <input pattern="[0-9]+" required="required" style="width:40px;" zippy="pageorder" class="form-control ">
 
-                        <small>Номер  порядку виводу  в  меню</small>
+                        <small>{{#t}}mod.shop.custom.nomer_poriadku_vyvodu_v_meniu{{/t}}</small>
                         
                     </div> 
                     <div class="mb-2">
-                        <label for="pagetext">Зміст  </label>
+                        <label for="pagetext">{{#t}}common.zmist{{/t}}  </label>
                         <textarea zippy="pagetext" class="form-control ">
                         </textarea>
-                       <small>Зображення повинні бути якомога меншого розміру.</small>
+                       <small>{{#t}}mod.shop.custom.zobrazhennia_povynni_buty_iakomoha_mensh{{/t}}</small>
                         
                     </div>      
      
                   <div class="mb-2">
 
-                        <a class="btn btn-secondary" zippy="pcancel">Скасувати</a>
-                        <button class="btn btn-primary" type="submit">Зберегти</button>
+                        <a class="btn btn-secondary" zippy="pcancel">{{#t}}common.skasuvaty{{/t}}</a>
+                        <button class="btn btn-primary" type="submit">{{#t}}common.zberehty{{/t}}</button>
 
                     </div>
                 </form>      
@@ -107,8 +107,8 @@
  
               <div class="col-12 col-md-10   col-xl-8 " zippy="articlesspan">
           
-                <h4>Статті блогу   </h4>
-                <a class="btn btn-info" zippy="artadd">Додати</a>
+                <h4>{{#t}}mod.shop.custom.statti_blohu{{/t}}   </h4>
+                <a class="btn btn-info" zippy="artadd">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table table-sm">
                    <tr zippy="artlist">
                      <td zippy="artdate"></td>
@@ -127,36 +127,36 @@
               <div class="col-12 col-xl-10  ">
                 <form zippy="articleform">
                   <input type="hidden" zippy="artid">
-                  <h4>Редагування статті</h4>  
+                  <h4>{{#t}}mod.shop.custom.redahuvannia_statti{{/t}}</h4>  
                      <div class="mb-2 row">
-                        <label class="col-2 col-form-label" for="adate">Дата      </label>
+                        <label class="col-2 col-form-label" for="adate">{{#t}}common.data{{/t}}      </label>
                        <div  class="col-5"> 
                            <input required="on"    zippy="adate" class="form-control ">
                        </div>      
                     </div>                      
                      <div class="mb-2">
-                        <label for="atitle">Заголовок    </label>
+                        <label for="atitle">{{#t}}common.zaholovok{{/t}}    </label>
                         <input required="on"    zippy="atitle" class="form-control ">
                            
                     </div>                      
                      <div class="mb-2">
-                        <label for="ashort"> Короткий  текст      </label>
+                        <label for="ashort"> {{#t}}mod.shop.custom.korotkyi_tekst{{/t}}      </label>
                         <textarea      zippy="ashort" class="form-control "></textarea>
-                        <small>Для попереднього перегляду</small>
+                        <small>{{#t}}mod.shop.custom.dlia_poperednoho_perehliadu{{/t}}</small>
                     </div>                      
                       
                     <div class="mb-2">
-                        <label for="along"> Основний  текст    </label>    
+                        <label for="along"> {{#t}}mod.shop.custom.osnovnyi_tekst{{/t}}    </label>    
                         <textarea  style="width:400px"    zippy="along" class="form-control "></textarea>
                     </div>                      
                      <div class="form-check">
                         <input zippy="apublic" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="apublic"> Опублікувати</label>
+                        <label class="form-check-label" for="apublic"> {{#t}}mod.shop.custom.opublikuvaty{{/t}}</label>
                     </div>          
                      <div class="mb-2">
 
-                        <a class="btn btn-secondary" zippy="artcancel">Скасувати</a>
-                       &nbsp; &nbsp; <button class="btn btn-primary" type="submit">Зберегти</button>
+                        <a class="btn btn-secondary" zippy="artcancel">{{#t}}common.skasuvaty{{/t}}</a>
+                       &nbsp; &nbsp; <button class="btn btn-primary" type="submit">{{#t}}common.zberehty{{/t}}</button>
 
                     </div>       
                 </form>         

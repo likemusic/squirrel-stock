@@ -1,6 +1,6 @@
 <html>
       <head>
-        <title> АРМ кухні  </title>
+        <title> {{#t}}service.armprodfood.arm_kukhni_2{{/t}}  </title>
 
     </head>
 
@@ -8,29 +8,29 @@
         <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3   " >
-                <h3>АРМ кухні</h3>
+                <h3>{{#t}}service.armprodfood.arm_kukhni_2{{/t}}</h3>
                 
           
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
-             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повідомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="{{#t}}service.armfood.zvukove_povidomlennia{{/t}}" class="fa fa-bell-slash text-secondary"></i>  
             </div>
             
       
             <div class="w-100"></div>
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <input id="forbar"  class="ms-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ms-2">Оновити</a>
+        <input id="forbar"  class="ms-2" type="checkbox" v-model="forbar"  > <label for="forbar">{|#t|}common.bar{|/t|}</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ms-2">{|#t|}common.onovyty{|/t|}</a>
           <div class="table-responsive-lg  "    >
                
         <table class="table table-striped">
         <tr>
-           <th>Замовлення</th>
-           <th>Блюдо</th>
-           <th>Кіл.</th>
-           <th>Стіл</th>
+           <th>{|#t|}common.zamovlennia{|/t|}</th>
+           <th>{|#t|}service.armprodfood.bliudo{|/t|}</th>
+           <th>{|#t|}common.kil{|/t|}</th>
+           <th>{|#t|}service.armfood.stil{|/t|}</th>
            <th></th>
-           <th>Рецепт</th>
+           <th>{|#t|}service.armprodfood.retsept{|/t|}</th>
            <th></th>
            <th></th>
            <th></th>
@@ -46,9 +46,9 @@
                   data-bs-placement="bottom" v-bind:data-bs-content="item.techcard" ></i>          
         
         </td> 
-        <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">На виготовлення</a></td> 
-        <td><a v-show="item.foodstate == 1 || item.foodstate == 2"   v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success ms-2">Готово</a></td> 
-        <td><a  v-show="item.foodstate == 3"   v-on:click="onSend(item.document_id,item.rowid, index) " class="btn btn-success ms-2">Видано</a></td> 
+        <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">{|#t|}service.armprodfood.na_vyhotovlennia{|/t|}</a></td> 
+        <td><a v-show="item.foodstate == 1 || item.foodstate == 2"   v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success ms-2">{|#t|}service.armfood.hotovo{|/t|}</a></td> 
+        <td><a  v-show="item.foodstate == 3"   v-on:click="onSend(item.document_id,item.rowid, index) " class="btn btn-success ms-2">{|#t|}service.armfood.vydano{|/t|}</a></td> 
     </tr>    
         </table>
         

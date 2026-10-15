@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="5" align="center">
-            <b> Інвентаризація № {{document_number}} від {{date}}</b> <br>
+            <b> {{#t}}print.inventory.inventaryzatsiia_vid{{/t}}</b> <br>
         </td>
     </tr>
    <tr>
@@ -10,14 +10,14 @@
     
     <tr>
         <td colspan="5">
-            <b> Склад:</b> {{store}}
+            <b> {{#t}}print.inventory.sklad{{/t}}</b> {{store}}
         </td>
 
     </tr>
     {{#storeemp}}
     <tr>
         <td colspan="4">
-            <b>Співробітник:</b> {{storeemp}}
+            <b>{{#t}}common.spivrobitnyk_2{{/t}}</b> {{storeemp}}
         </td>
     </tr>
  
@@ -25,7 +25,7 @@
     {{#reserved}}
   <tr>
         <td colspan="5">
-            <small>Враховуючи зарезервовані</small>
+            <small>{{#t}}print.inventory.vrakhovuiuchy_zarezervovani{{/t}}</small>
         </td>
 
     </tr>
@@ -33,13 +33,13 @@
 
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.nazva{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.artykul{{/t}}</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
 
 
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Факт</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kil{{/t}}</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}app.main.fakt{{/t}}</th>
     </tr>
        {{#_detaillost}}
     <tr>
@@ -81,7 +81,7 @@
        {{#summinus}}  
    <tr>
         <td  >
-            <b> Недостача на суму:   </b>
+            <b> {{#t}}print.inventory.nedostacha_na_sumu{{/t}}   </b>
         </td>
       <td colspan="4" align="right" style="color:red">
             <b>  {{summinus}}   </b>
@@ -92,7 +92,7 @@
    {{#sumplus}} 
    <tr>
         <td  >
-           <b>  Надлишки на суму:  </b>
+           <b>  {{#t}}print.inventory.nadlyshky_na_sumu{{/t}}  </b>
         </td> 
            <td colspan="4" align="right">
              <b>  {{sumplus}}   </b>

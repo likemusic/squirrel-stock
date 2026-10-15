@@ -164,7 +164,7 @@ class Inventory extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ІН-000000';
+        return __('doc.inventory.in_000000');
     }
  
     public function getRelationBased() {

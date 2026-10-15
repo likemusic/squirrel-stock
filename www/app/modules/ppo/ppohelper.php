@@ -44,7 +44,7 @@ class PPOHelper
             $cert = @unserialize(@base64_decode($pos->ppocert));
 
             if ($key == null || $cert == null) {
-                $msg = "Не завантажений ключ або сертифікат";
+                $msg = __('mod.ppo.ppohelper.ne_zavantazhenyi_kliuch_abo_sertyfikat');
                 $msg = str_replace("'", "\"", $msg) ;
                 return array('success' => false, 'data' => $msg);
             }
@@ -58,14 +58,14 @@ class PPOHelper
             $return = PPO::send($signed, $type);
 
 
-            if (strpos($return, 'Номер документа повинен дорівнювати') > 0) {
+            if (strpos($return, __('mod.ppo.ppohelper.nomer_dokumenta_povynen_dorivniuvaty')) > 0) {
                 $arr = explode(' ', $return);
                 if ($arr[count($arr) - 1] > 0) {
                     return array('success' => false, 'doclocnumber' => $arr[count($arr) - 1], 'data' => $return);
 
                 }
             }
-            if (strpos($return, 'помилки') > 0) {
+            if (strpos($return, __('mod.ppo.ppohelper.pomylky')) > 0) {
 
                 return array('success' => false, 'data' => $return);
             }
@@ -121,7 +121,7 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData( );
         if($firm== null){
-            return array('success' => false, 'data' => 'Не вказані дані компанії');
+            return array('success' => false, 'data' => __('mod.ppo.ppohelper.ne_vkazani_dani_kompanii'));
         }
         if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;

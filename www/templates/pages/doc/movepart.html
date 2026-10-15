@@ -1,26 +1,26 @@
 <html>
     <head>
-          <title> Переміщення партій ТМЦ</title>
+          <title> {{#t}}doc.movepart.peremishchennia_partii_tmts{{/t}}</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Переміщення партій ТМЦ</h3>
+            <h3> {{#t}}doc.movepart.peremishchennia_partii_tmts{{/t}}</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
 
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -28,17 +28,17 @@
                     </div>
                 <div class="col-12 col-md-6 col-xl-4">
                            <div class="mb-2">
-                            <label for="fromstock">З партії</label>
+                            <label for="fromstock">{{#t}}doc.movepart.z_partii{{/t}}</label>
                             <input class="form-control" zippy="fromstock" >
                               
                         </div>
                         <div class="mb-2">
-                            <label for="tostock">В  партію</label>
+                            <label for="tostock">{{#t}}doc.movepart.v_partiiu{{/t}}</label>
                             <input class="form-control" zippy="tostock">
 
                         </div>  
                         <div class="mb-2">
-                          <label for="qty">Кіл. </label>
+                          <label for="qty">{{#t}}common.kil{{/t}} </label>
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="qty"  required="on" >
 
                     </div>
@@ -50,9 +50,9 @@
 
             <div class="row">
                 <div class="col-11 col-md-6 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>

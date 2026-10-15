@@ -1,27 +1,27 @@
 <html>
   <head>
-        <title>  Платіжний календар  </title>
+        <title>  {{#t}}register.paytable.platizhnyi_kalendar{{/t}}  </title>
 
     </head>
 
     <body>
-        <h3>Платіжний календар </h3>
+        <h3>{{#t}}register.paytable.platizhnyi_kalendar{{/t}} </h3>
         <div class="row">
 
 
             <div class="col-12  col-md-10  col-xl-8" zippy="listpan">
  
-                <a zippy="addnew" class="btn btn-success mb-1">Додати</a>
-                <br><span class="badge text-bg danger">Прострочено</span> &nbsp;
-                 <span class="badge text-bg warning">Недостатньо  коштів</span>&nbsp;
-                 <small >Коштів на  всіх рахунках <b> {{allcost}} </b></small>
+                <a zippy="addnew" class="btn btn-success mb-1">{{#t}}common.dodaty{{/t}}</a>
+                <br><span class="badge text-bg danger">{{#t}}app.jobs.prostrocheno{{/t}}</span> &nbsp;
+                 <span class="badge text-bg warning">{{#t}}register.paytable.nedostatno_koshtiv{{/t}}</span>&nbsp;
+                 <small >{{#t}}register.paytable.koshtiv_na_vsikh_rakhunkakh{{/t}} <b> {{allcost}} </b></small>
                 <table class="table table-sm    ">
                      <tr>
-                       <th>Дата</th>
-                       <th>Прибуток</th>
-                       <th>Видаток</th>
-                       <th>Призначення</th>
-                       <th>Контрагент</th>
+                       <th>{{#t}}common.data{{/t}}</th>
+                       <th>{{#t}}common.prybutok{{/t}}</th>
+                       <th>{{#t}}common.vydatok{{/t}}</th>
+                       <th>{{#t}}register.paylist.pryznachennia{{/t}}</th>
+                       <th>{{#t}}common.kontrahent{{/t}}</th>
                        <th></th>
                        <th></th>
                        <th></th>
@@ -38,8 +38,8 @@
                         <td zippy="customer"  ></td>
                         <td><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
  
-                        <td><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a></td>
-                        <td><a title="Видалити" zippy="delete"><i class="fa fa-trash text-danger"></i></a></td>
+                        <td><a title="{{#t}}common.redahuvaty{{/t}}" zippy="edit"><i class="fa fa-edit"></i></a></td>
+                        <td><a title="{{#t}}common.vydalyty{{/t}}" zippy="delete"><i class="fa fa-trash text-danger"></i></a></td>
 
                     </tr>
                 </table>
@@ -52,41 +52,41 @@
  
                 <form zippy="addeventform"   >
                    <div class="mb-2">
-                        <label  >Тип</label>
+                        <label  >{{#t}}common.typ{{/t}}</label>
                         <br>
                         <div class="form-check form-check-inline">
                             <input zippy="addeventin" class="form-check-input" type="radio"   >
-                            <label class="form-check-label" for="addeventin"> Прибуток</label>
+                            <label class="form-check-label" for="addeventin"> {{#t}}common.prybutok{{/t}}</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input zippy="addeventout" class="form-check-input" type="radio"    >
-                            <label class="form-check-label" for="addeventout"> Видаток</label>
+                            <label class="form-check-label" for="addeventout"> {{#t}}common.vydatok{{/t}}</label>
                         </div>
                    </div>      
                     <div class="mb-2">
-                        <label for="addeventdate">Дата платежу</label>
+                        <label for="addeventdate">{{#t}}register.paytable.data_platezhu{{/t}}</label>
                         <input style="width:150px"  class="form-control "   zippy="addeventdate"  required="on" >
                     </div>
 
                     <div class="mb-2">
-                        <label for="addeventamount">Сума платежу</label>
+                        <label for="addeventamount">{{#t}}register.paytable.suma_platezhu{{/t}}</label>
                         <input style="width:150px"  class="form-control qtyprice"   zippy="addeventamount"  required="on" >
                     </div>
                     <div class="mb-2">
-                        <label for="addeventtitle">Призначення </label>
+                        <label for="addeventtitle">{{#t}}register.paylist.pryznachennia{{/t}} </label>
                         <input  required="on"  class="form-control" zippy="addeventtitle">
                     </div>
                     <div class="mb-2">
-                        <label for="addeventcust">Контрагент </label>
+                        <label for="addeventcust">{{#t}}common.kontrahent{{/t}} </label>
                         <input   class="form-control" zippy="addeventcust">
                     </div>
                     <div class="mb-2">
-                        <label for="addeventdesc">Коментар</label>
+                        <label for="addeventdesc">{{#t}}common.komentar{{/t}}</label>
                         <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                     </div>
                     <div class="mb-2">  
-                       <a zippy="cancel" class="btn btn-secondary  ms-4">Скасувати</a>
-                       <input class="btn btn-success  " type="submit" value="Зберегти">
+                       <a zippy="cancel" class="btn btn-secondary  ms-4">{{#t}}common.skasuvaty{{/t}}</a>
+                       <input class="btn btn-success  " type="submit" value="{{#t}}common.zberehty{{/t}}">
                      </div>
                    
                 </form>
@@ -94,19 +94,19 @@
                 <form zippy="editeventform" >
               
                     <div class="mb-2">
-                        <label for="editeventdate">Дата платежу</label>
+                        <label for="editeventdate">{{#t}}register.paytable.data_platezhu{{/t}}</label>
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventdate">
                     </div>
                     <div class="mb-2">
-                        <label for="editeventamount">Сума платежу</label>
+                        <label for="editeventamount">{{#t}}register.paytable.suma_platezhu{{/t}}</label>
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventamount">
                     </div>
                     <div class="mb-2">
-                        <label for="editeventdesc">Коментар</label>
+                        <label for="editeventdesc">{{#t}}common.komentar{{/t}}</label>
                         <textarea class="form-control" zippy="editeventdesc" style=" height:120px;"></textarea>
                     </div>
-                    <a zippy="canceledit" class="btn btn-secondary  me-2">Скасувати</a> &nbsp;
-                    <input class="btn btn-success ms-4 " type="submit" value="Зберегти">
+                    <a zippy="canceledit" class="btn btn-secondary  me-2">{{#t}}common.skasuvaty{{/t}}</a> &nbsp;
+                    <input class="btn btn-success ms-4 " type="submit" value="{{#t}}common.zberehty{{/t}}">
                      
                 </form>
 

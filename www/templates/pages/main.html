@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title>Дашборд</title>
+      <title>{{#t}}common.dashbord{{/t}}</title>
       
        
         <script src="/assets/js/chart.umd.js?v=441"></script><script src="/assets/js/gcharts-local.js?v=1"></script>
@@ -16,7 +16,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{biorders}}</h4>
-                    <p>Замовлень</p>
+                    <p>{{#t}}app.main.zamovlen{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -24,7 +24,7 @@
                <div class="info-box bg-primary  text-white">
                   <div class="inner">
                     <h4>{{biitemscnt}}</h4>
-                    <p>ТМЦ   (на суму)</p>
+                    <p>{{#t}}app.main.tmts_na_sumu{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -32,7 +32,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{binal}}</h4>
-                    <p>Готівка</p>
+                    <p>{{#t}}common.hotivka{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -40,7 +40,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{bibeznal}}</h4>
-                    <p>Безготівка</p>
+                    <p>{{#t}}common.bezhotivka{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -48,7 +48,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{bicredit}}</h4>
-                    <p>Кред. борг</p>
+                    <p>{{#t}}app.main.kred_borh{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -57,7 +57,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{bidebet}}</h4>
-                    <p>Деб. борг</p>
+                    <p>{{#t}}app.main.deb_borh{{/t}}</p>
                   </div>
              </div>
             </div>
@@ -69,13 +69,13 @@
 
         <div class="row">
             <div   class="col-12    ">
-             <h4>Статистика за 
-                  {{#mc3}} три місяці  {{/mc3}}  
-                  {{^mc3}} <a onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=1">  3 місяці </a> {{/mc3}}  
-                  {{#mc6}} 6 місяців {{/mc6}}  
-                  {{^mc6}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=2"> 6 місяців </a> {{/mc6}}  
-                  {{#mc12}} 12 місяців {{/mc12}}  
-                  {{^mc12}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=3"> 12 місяців </a> {{/mc12}}  
+             <h4>{{#t}}app.main.statystyka_za{{/t}} 
+                  {{#mc3}} {{#t}}app.main.try_misiatsi{{/t}}  {{/mc3}}  
+                  {{^mc3}} <a onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=1">  {{#t}}app.main.3_misiatsi{{/t}} </a> {{/mc3}}  
+                  {{#mc6}} {{#t}}app.main.6_misiatsiv{{/t}} {{/mc6}}  
+                  {{^mc6}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=2"> {{#t}}app.main.6_misiatsiv{{/t}} </a> {{/mc6}}  
+                  {{#mc12}} {{#t}}app.main.12_misiatsiv{{/t}} {{/mc12}}  
+                  {{^mc12}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=3"> {{#t}}app.main.12_misiatsiv{{/t}} </a> {{/mc12}}  
                   
                   
              
@@ -128,19 +128,19 @@
          
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Критична кількість </h4>
-                        <small>Товари для яких задана мінімальна кількість на складі та актуальна кількість менше заданої</small>
-                        <br><a zippy="mqcsv">Експорт у Excel</a>
+                        <h4>{{#t}}app.main.krytychna_kilkist{{/t}} </h4>
+                        <small>{{#t}}app.main.tovary_dlia_iakykh_zadana_minimalna{{/t}}</small>
+                        <br><a zippy="mqcsv">{{#t}}common.eksport_u_excel{{/t}}</a>
                         <table class="table   table-sm">
                             <tr>
                               
                            
-                                <th>Товар</th>
-                                <th>Код</th>
-                                <th>Поставив</th>
+                                <th>{{#t}}common.tovar{{/t}}</th>
+                                <th>{{#t}}common.kod{{/t}}</th>
+                                <th>{{#t}}app.main.postavyv{{/t}}</th>
 
-                                <th class="text-end">Факт</th>
-                                <th class="text-end">Мін.</th>
+                                <th class="text-end">{{#t}}app.main.fakt{{/t}}</th>
+                                <th class="text-end">{{#t}}app.main.min{{/t}}</th>
                             </tr>
                             <tr zippy="mqlist">
                                
@@ -160,17 +160,17 @@
             {{#usesnumberdate}}
                    <div   class="card ">
                     <div   class="card-body">
-                        <h4>Прострочені товари</h4>
-                        <small>Товари для котрих закінчився термін придатності</small>
-                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <h4>{{#t}}app.main.prostrocheni_tovary{{/t}}</h4>
+                        <small>{{#t}}app.main.tovary_dlia_kotrykh_zakinchyvsia_termin{{/t}}</small>
+                        <br><a zippy="sdcsv">{{#t}}common.eksport_u_excel{{/t}}</a>
                         <table class="table   table-sm">
                             <tr>
 
-                                <th>Склад</th>
-                                <th>Товар</th>
-                                <th>Серія</th>
-                                <th>Придатний до</th>
-                                <th class="text-end">Кіл.</th>
+                                <th>{{#t}}common.sklad{{/t}}</th>
+                                <th>{{#t}}common.tovar{{/t}}</th>
+                                <th>{{#t}}common.seriia{{/t}}</th>
+                                <th>{{#t}}common.prydatnyi_do{{/t}}</th>
+                                <th class="text-end">{{#t}}common.kil{{/t}}</th>
                             </tr>
                             <tr zippy="sdlist" >
                                 <td zippy="wsd_storename"></td>

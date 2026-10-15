@@ -1,12 +1,12 @@
 <html>
    <head>
-        <title> Повернення від покупців   </title>
+        <title> {{#t}}print.returnselled.povernennia_vid_pokuptsiv{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Повернення від покупців
+                <h3>{{#t}}print.returnselled.povernennia_vid_pokuptsiv{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom" data-bs-content="Товари, повернення по котрим більше 1%"></i>
@@ -17,9 +17,9 @@
 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/noliq" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/noliq" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/noliq" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/noliq" target="_blank" title="{{#t}}common.eksport_v_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
 
                     </div>
                     <div  class="table-responsive-lg  mt-2" zippy="preview"  >

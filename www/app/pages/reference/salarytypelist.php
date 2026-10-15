@@ -125,12 +125,12 @@ class SalaryTypeList extends \App\Pages\Base
 
         $code = intval($this->_st->salcode);
         if ($code < 100 || $code > 999) {
-            $this->setError('Невірний код');
+            $this->setError(__('reference.salarytypelist.nevirnyi_kod'));
             return;
         }
         $c = SalType::getFirst("salcode=" . $this->_st->salcode);
         if ($c != null && $isnew) {
-            $this->setError('Код вже існує');
+            $this->setError(__('reference.salarytypelist.kod_vzhe_isnuie'));
             return;
 
         }
@@ -148,7 +148,7 @@ class SalaryTypeList extends \App\Pages\Base
         $coderesult = $this->optform->optresult->getValue();
 
         if($codebaseincom==0) {
-           $this->setError('Не вказано поле  основної зарплати') ;
+           $this->setError(__('reference.salarytypelist.ne_vkazano_pole_osnovnoi_zarplaty')) ;
            return;
         }
         
@@ -176,20 +176,20 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         if($opt['codebaseincom']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
+           $this->addAjaxResponse(__('reference.salarytypelist.toastr_error_ne_vkazano_pole'));
            return;
         }
         if($opt['coderesult']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле до видачі')");
+           $this->addAjaxResponse(__('reference.salarytypelist.toastr_error_ne_vkazano_pole_2'));
            return;
         }
         if($opt['codeall']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле всього нараховано')");
+           $this->addAjaxResponse(__('reference.salarytypelist.toastr_error_ne_vkazano_pole_3'));
            return;
         }
         System::setOptions('salary', $opt);
 
-        $this->addAjaxResponse("toastr.success('Збережено')");
+        $this->addAjaxResponse(__('reference.salarytypelist.toastr_success_zberezheno'));
 
     }
 
@@ -200,7 +200,7 @@ class SalaryTypeList extends \App\Pages\Base
         System::setOptions('salary', $opt);
 
 
-        $this->addAjaxResponse("toastr.success('Збережено')");
+        $this->addAjaxResponse(__('reference.salarytypelist.toastr_success_zberezheno'));
 
     }
 

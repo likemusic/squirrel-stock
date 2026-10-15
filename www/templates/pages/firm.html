@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Дані компанії  </title>
+        <title>  {{#t}}app.base.dani_kompanii{{/t}}  </title>
 
     </head>
 
@@ -9,7 +9,7 @@
         <div class="row">
              
          <div class="col-12   ">
-                <h5>Дані компанії</h5>
+                <h5>{{#t}}app.base.dani_kompanii{{/t}}</h5>
            </div>
          <div class="col-12   ">           
            <form zippy="firmform">  
@@ -17,27 +17,27 @@
                <div class="col-12 col-md-4 col-xl-3 ">
                        
                             <div class="mb-2">
-                                <label for="firm_name">Назва</label>
+                                <label for="firm_name">{{#t}}common.nazva{{/t}}</label>
                                 <input  required="on"  class="form-control" zippy="firm_name"/>
                             </div>
 
                            
                             <div class="mb-2">
-                                <label for="phone">Телефон  </label>
+                                <label for="phone">{{#t}}common.telefon{{/t}}  </label>
                                 <input class="form-control" type="text" zippy="phone">
                             </div>
                             <div class="mb-2">
-                                <label for="address">Адреса </label>
+                                <label for="address">{{#t}}common.adresa_2{{/t}} </label>
                                 <input class="form-control" type="text" zippy="address">
                             </div>  
                          <div class="mb-2">
-                                <label for="city">Місто </label>
+                                <label for="city">{{#t}}common.misto{{/t}} </label>
                                 <input class="form-control" type="text" zippy="city">
                             </div>  
                        
                          <div class="form-check">
                             <input     zippy="isjur" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
+                            <label class="form-check-label" for="isjur">{{#t}}app.firm.iurydychna_osoba_tov{{/t}} </label>
                            
                         </div>  
                          
@@ -45,7 +45,7 @@
 
                  {{#vdoc}}
                      <div class="mb-2">
-                        <label for="vdoc">Токен Вчасно.EDO</label>
+                        <label for="vdoc">{{#t}}app.firm.token_vchasno_edo{{/t}}</label>
                         <input type="text" zippy="vdoc" class="form-control" />
                     </div> 
                       {{/vdoc}}           
@@ -57,46 +57,46 @@
                            
                            
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
+                                <label class="col-3 col-form-label" for="tin">{{#t}}common.iedrpou{{/t}} </label>
                                <div class="col-6">
                                  <input class="form-control" type="text" zippy="tin">
                               </div>
                             </div>
                             <div class="mb-2 row">
-                                 <label class="col-3 col-form-label" for="inn">ІПН </label>
+                                 <label class="col-3 col-form-label" for="inn">{{#t}}common.ipn{{/t}} </label>
                               <div class="col-6">
                                  <input class="form-control" type="text" zippy="inn">
-                                  <small>Якщо платник ПДВ</small>
+                                  <small>{{#t}}app.firm.iakshcho_platnyk_pdv{{/t}}</small>
                               </div>
                                
                             </div> 
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
+                                <label class="col-3 col-form-label" for="koatuu">{{#t}}app.firm.koatuu{{/t}}</label>
                                <div class="col-6">
                                     <input class="form-control " type="number" zippy="koatuu">
                                 </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="kopfg">КОПФГ</label>
+                                <label class="col-3 col-form-label" for="kopfg">{{#t}}app.firm.kopfh{{/t}}</label>
                                <div class="col-6">
                                 <input class="form-control " type="number" zippy="kopfg">
                               </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="kodu">КОДУ</label>
+                                <label class="col-3 col-form-label" for="kodu">{{#t}}app.firm.kodu{{/t}}</label>
                                  <div class="col-6">
                                    <input class="form-control " type="number" zippy="kodu">
                                 </div>
                             </div>
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="kved">КВЕД</label>
+                                <label class="col-3 col-form-label" for="kved">{{#t}}app.firm.kved{{/t}}</label>
                                   <div class="col-6">
                                    <input class="form-control " zippy="kved">
                                 </div>
                             </div>
                             {{#hideblock}}
                             <div class="mb-2 row">
-                                <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
+                                <label class="col-3 col-form-label" for="gni">{{#t}}app.firm.kod_dpi{{/t}}</label>
                                <div class="col-6">
                                  <input class="form-control " type="number" zippy="gni">
                                </div>
@@ -107,40 +107,39 @@
                           
               <div class="col-12 col-md-3 col-xl-2 "   >
                 <div class="mb-2">
-                        <label for="logo">Логотип </label>
+                        <label for="logo">{{#t}}common.lohotyp{{/t}} </label>
                         <input class="form-control" type="text" zippy="logo">
-                        <small class="form-text text-muted">Шлях до файлу логотипа відносно кореня сайту. Наприклад,
-                            '/upload/logo.png'</small>
+                        <small class="form-text text-muted">{{#t}}app.firm.shliakh_do_failu_lohotypa_vidnosno{{/t}}</small>
                     </div>
                     <div class="mb-2">
-                        <label for="stamp">Печатка </label>
+                        <label for="stamp">{{#t}}app.firm.pechatka{{/t}} </label>
                         <input class="form-control" type="text" zippy="stamp">
-                        <small class="form-text text-muted">Шлях до файлу зображення відносно кореня сайту. </small>
+                        <small class="form-text text-muted">{{#t}}app.firm.shliakh_do_failu_zobrazhennia_vidnosno{{/t}} </small>
                     </div>
                     <div class="mb-2">
-                        <label for="sign">Підпис (факсиміле) </label>
+                        <label for="sign">{{#t}}app.firm.pidpys_faksymile{{/t}} </label>
                         <input class="form-control" type="text" zippy="sign">
-                        <small class="form-text text-muted">Шлях до зображення відносно кореня сайту. </small>
+                        <small class="form-text text-muted">{{#t}}app.firm.shliakh_do_zobrazhennia_vidnosno_korenia{{/t}} </small>
                     </div>                          
                   </div>      
 
            <div class="col-12 col-md-3 col-xl-4 "   >
-                    <b>Альтернативні дані</b>  <br>                     
-                    <small>Для вибору в продажних документах від різних ФОПів</small> 
+                    <b>{{#t}}app.firm.alternatyvni_dani{{/t}}</b>  <br>                     
+                    <small>{{#t}}app.firm.dlia_vyboru_v_prodazhnykh_dokumentakh{{/t}}</small> 
                     <table class="ctable">                      
-                      <tr><td>Назва, тел.</td><td>ЄДРПОУ</td><td>Адреса</td><td></td></tr>
+                      <tr><td>{{#t}}app.firm.nazva_tel{{/t}}</td><td>{{#t}}common.iedrpou{{/t}}</td><td>{{#t}}common.adresa_2{{/t}}</td><td></td></tr>
                       <tr zippy="fopslist"><td><input required="on" class="form-control "   zippy="fopname"></td>
                       <td> <input  required="on" style="width:150px" class="form-control "   zippy="fopedrpou"></td>
                       <td> <input  required="on"  class="form-control "   zippy="fopaddress"></td>
                       <td><a zippy="delfop"><i class="fa fa-trash"></i></a></td></tr>
                     </table>  
-                     <button zippy="addfop" class="btn btn-success btn-sm" type="submit">Додати</button>
+                     <button zippy="addfop" class="btn btn-success btn-sm" type="submit">{{#t}}common.dodaty{{/t}}</button>
                                              
                   </div>      
    
                      <div class="col-12 text-center   ">                                             
                            
-                               <button zippy="save" class="btn btn-success" type="submit">Зберегти</button>
+                               <button zippy="save" class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                               
                          </div>                        
                    </div>                        

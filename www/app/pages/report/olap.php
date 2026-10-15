@@ -71,34 +71,34 @@ class OLAP extends \App\Pages\Base
 
         $options=\App\System::getOptions('common')  ;
 
-        $dim['document_date'] = "Дата";
-        $dim['customer_name'] = "Контрагент";
+        $dim['document_date'] = __('common.data');
+        $dim['customer_name'] = __('common.kontrahent');
   
-        $dim['username'] = "Співробітник";
+        $dim['username'] = __('common.spivrobitnyk');
 
         if($type  < 4) {
-            $dim['itemname'] = "ТМЦ";
-            $dim['cat_name'] = "Категорія";
-            $dim['storename'] = "Склад";
+            $dim['itemname'] = __('common.tmts');
+            $dim['cat_name'] = __('common.katehoriia');
+            $dim['storename'] = __('common.sklad');
 
 
         }
 
         if($type==4 || $type==7 ) {
-            $dim['service_name'] = "Послуга";
+            $dim['service_name'] = __('report.olap.posluha');
 
         }
       
 
         if($type==5) {
-            $dim['mf_name'] = "Рахунок";
+            $dim['mf_name'] = __('common.rakhunok');
 
         }
         if($type  == 6) {
-            $dim['itemname'] = "ТМЦ";
-            $dim['cat_name'] = "Категорія";
-            $dim['storename'] = "Склад";
-            $dim['service_name'] = "Послуга";
+            $dim['itemname'] = __('common.tmts');
+            $dim['cat_name'] = __('common.katehoriia');
+            $dim['storename'] = __('common.sklad');
+            $dim['service_name'] = __('report.olap.posluha');
 
 
         }
@@ -107,7 +107,7 @@ class OLAP extends \App\Pages\Base
         if ($options['usebranch'] == 1) {
             $id = \App\System::getBranch();
             if ($id == 0) {
-                $dim['branch_name'] = "Філія";
+                $dim['branch_name'] = __('common.filiia');
             }
         }
 
@@ -128,11 +128,11 @@ class OLAP extends \App\Pages\Base
         $hor = $this->startform->sthor->getValue();
         $ver = $this->startform->stver->getValue();
         if($type==0) {
-            $this->setError('Не вибраний тип') ;
+            $this->setError(__('report.olap.ne_vybranyi_typ')) ;
             return;
         }
         if($hor==$ver) {
-            $this->setError('Виміри однакові') ;
+            $this->setError(__('report.olap.vymiry_odnakovi')) ;
             return;
         }
 

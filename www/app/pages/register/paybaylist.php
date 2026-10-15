@@ -317,7 +317,7 @@ GROUP BY c.customer_name,
         $amount = 0;
         $ret = 0;
         if($mf==0 ) {
-            $this->setError('Не вибрана каса') ;
+            $this->setError(__('register.paybaylist.ne_vybrana_kasa')) ;
             return;
         }      
       
@@ -340,7 +340,7 @@ GROUP BY c.customer_name,
             $b = \App\Entity\MoneyFund::Balance() ;
 
             if($b[$mf] < ($ret - $amount ) ) {
-                $this->setError('Сума  на рахунку недостатня  для  оплати');
+                $this->setError(__('common.suma_na_rakhunku_nedostatnia_dlia'));
                 return;
             }
         }  
@@ -439,7 +439,7 @@ GROUP BY c.customer_name,
                  $this->updateDocs();
                  $this->onBack(null);  
       
-                 $this->setSuccess('Створено касовий ордер');
+                 $this->setSuccess(__('register.paybaylist.stvoreno_kasovyi_order'));
 
                  return;
             }
@@ -455,7 +455,7 @@ GROUP BY c.customer_name,
         }        
         $this->onBack(null);  
       
-        $this->setSuccess('Оплата додана');
+        $this->setSuccess(__('register.paybaylist.oplata_dodana'));
 
         $this->updateDocs();
        

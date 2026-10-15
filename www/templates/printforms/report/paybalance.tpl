@@ -2,19 +2,19 @@
  
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Прибутки та видатки
+            {{#t}}print.paybalance.prybutky_ta_vydatky{{/t}}
         </td>
     </tr>
    
     <tr>
 
         <td align="center" colspan="3">
-            Період з {{datefrom}} по {{dateto}} <br>
+            {{#t}}common.period_z_po_2{{/t}} <br>
         </td>
     </tr>
      <tr>
         <td colspan="3">
-            <b>Прибутки</b>
+            <b>{{#t}}print.paybalance.prybutky{{/t}}</b>
         </td>
     </tr>
 
@@ -42,7 +42,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">{{#t}}common.vsoho{{/t}}</td>
 
         <td align="right">{{tin}}</td>
         <td></td>
@@ -50,7 +50,7 @@
     <tr>
 
         <td colspan="3">
-            <b>Видатки</b> 
+            <b>{{#t}}print.paybalance.vydatky{{/t}}</b> 
         </td>
     </tr>
 
@@ -77,14 +77,14 @@
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">{{#t}}common.vsoho{{/t}}</td>
 
         <td align="right">{{tout}}</td>
         <td></td>
     </tr>
     <tr style="font-weight: bolder;">
 
-        <td align="right">Баланс:</td>
+        <td align="right">{{#t}}print.balance.balans{{/t}}</td>
 
         <td align="right">{{total}}</td>
         <td></td>
@@ -95,7 +95,7 @@
    
      <tr> 
         <td colspan="3"> <br>
-            <b>Деталізація по ТМЦ </b>
+            <b>{{#t}}print.paybalance.detalizatsiia_po_tmts{{/t}} </b>
         </td>       
     </tr>    
     
@@ -113,59 +113,59 @@
   {{#isfin}}  
   <tr style="font-weight: bolder;">
 
-        <td> <br>Фінансові показники</td>
+        <td> <br>{{#t}}print.paybalance.finansovi_pokaznyky{{/t}}</td>
 
         <td></td>
         <td></td>
 
     </tr>
     <tr>
-        <td>Проход:</td>
+        <td>{{#t}}print.paybalance.prokhod{{/t}}</td>
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Виручка (відпускна ціна на кількість) мінус витрати основної діяльності   (затрати на закупку)"></i>
+               title="{{#t}}print.paybalance.vyruchka_vidpuskna_tsina_na_kilkist{{/t}}"></i>
         </td>
     </tr>
     <tr>
-        <td>Змінні витрати :</td>
+        <td>{{#t}}print.paybalance.zminni_vytraty{{/t}}</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Витрати основної діяльності"></i>
+               title="{{#t}}print.paybalance.vytraty_osnovnoi_diialnosti{{/t}}"></i>
         </td>
     </tr>
     <tr>
-        <td>Операційні витрати:</td>
+        <td>{{#t}}print.paybalance.operatsiini_vytraty{{/t}}</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Всі витрати мінус змінні витрати "></i>
+               title="{{#t}}print.paybalance.vsi_vytraty_minus_zminni_vytraty{{/t}} "></i>
         </td>
     </tr>
     <tr>
-        <td>Чистий прибуток:</td>
+        <td>{{#t}}print.paybalance.chystyi_prybutok{{/t}}</td>
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Прохід  мінус операційні витрати (виручка мінус всі витрати)"></i>
+               title="{{#t}}print.paybalance.prokhid_minus_operatsiini_vytraty_vyruch{{/t}}"></i>
         </td>
     </tr>
    {{#isinv}}   
     <tr>
-        <td>Інвестиції:</td>
+        <td>{{#t}}print.paybalance.investytsii{{/t}}</td>
         <td align="right"> {{inv}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="ТМЦ на складі та основні фонди на балансі"></i>
+               title="{{#t}}print.paybalance.tmts_na_skladi_ta_osnovni{{/t}}"></i>
         </td>
     </tr>
     <tr>
-        <td>Віддача від інвестицій (ROI),%:</td>
+        <td>{{#t}}print.paybalance.viddacha_vid_investytsii_roi{{/t}}</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Прохід  на інвестиції"></i>
+               title="{{#t}}print.paybalance.prokhid_na_investytsii{{/t}}"></i>
         </td>
     </tr>
     {{/isinv}}     

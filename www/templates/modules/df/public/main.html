@@ -3,10 +3,10 @@
         <div class="row ">
             <div class="col-12 col-md-10 col-xl-8">
                 
-                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/Order">Нове замовлення</a>
+                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/Order">{{#t}}common.nove_zamovlennia{{/t}}</a>
                  {{#isff}}
-                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/IncomeItem">Оприходувати ТМЦ</a>
-                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/OutcomeItem">Списати ТМЦ</a>
+                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/IncomeItem">{{#t}}mod.df.main.oprykhoduvaty_tmts{{/t}}</a>
+                 <a class="btn btn-success btn-sm me-2" href="/index.php?p=App/Modules/DF/Public/OutcomeItem">{{#t}}mod.df.main.spysaty_tmts{{/t}}</a>
                   
                  {{/isff}}
                  
@@ -14,12 +14,12 @@
                   <thead>  <tr>
                       
 
-                         <th class="text-nowrap  ">Тип документа</th>
-                        <th  >Номер</th>
-                        <th  >Дата</th>
+                         <th class="text-nowrap  ">{{#t}}common.typ_dokumenta{{/t}}</th>
+                        <th  >{{#t}}common.nomer{{/t}}</th>
+                        <th  >{{#t}}common.data{{/t}}</th>
              
-                        <th class="text-end   ">Сума</th>
-                        <th  > Статус </th>
+                        <th class="text-end   ">{{#t}}common.suma{{/t}}</th>
+                        <th  > {{#t}}common.status{{/t}} </th>
                    
                       
 
@@ -55,16 +55,16 @@
                 <div class="col-12" zippy="docpan">
                   <div class=" navbar nav d-flex justify-content-start"  >
                     
-                         <a zippy="bedit" class="btn btn-success btn-sm  me-2 ms-4">Редагувати</a>
-                         <a zippy="bcancel" class="btn btn-secondary btn-sm  ms-2"> Скасувати</a>                         
-                         <a zippy="bdel" class="btn btn-danger btn-sm  ms-2"> Видалити</a>                         
+                         <a zippy="bedit" class="btn btn-success btn-sm  me-2 ms-4">{{#t}}common.redahuvaty{{/t}}</a>
+                         <a zippy="bcancel" class="btn btn-secondary btn-sm  ms-2"> {{#t}}common.skasuvaty{{/t}}</a>                         
+                         <a zippy="bdel" class="btn btn-danger btn-sm  ms-2"> {{#t}}common.vydalyty{{/t}}</a>                         
                          
                    </div>
                    <div    >
                     
-                        <a   style="cursor:pointer" onclick=" $('#docview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a   href="/index.php?p=App/Pages/ShowReport&arg=xls/order" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a   href="/index.php?p=App/Pages/ShowReport&arg=pdf/order" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf me-2"></i></a>
+                        <a   style="cursor:pointer" onclick=" $('#docview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a   href="/index.php?p=App/Pages/ShowReport&arg=xls/order" target="_blank" title="{{#t}}common.eksport_u_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a   href="/index.php?p=App/Pages/ShowReport&arg=pdf/order" target="_blank" title="{{#t}}common.eksport_u_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i></a>
                       
                    </div>
                    

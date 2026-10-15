@@ -274,7 +274,7 @@ class Helper
                 if ($status_code !== 200) {
               
        
-                    $result = array('success' => false, 'errors' => "Код  ".$status_code);
+                    $result = array('success' => false, 'errors' => __('mod.np.helper.kod').$status_code);
          
                 }                
                 curl_close($ch);

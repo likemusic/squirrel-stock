@@ -26,7 +26,7 @@ class TTNList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -126,7 +126,7 @@ class TTNList extends \App\Pages\Base
         if (count($errors) > 0) {
             $this->setError(Implode('<br>', $errors));
         }
-        $this->setSuccess("Оновлено {$cnt} ТТН");
+        $this->setSuccess(__('mod.np.ttnlist.onovleno_ttn', ['cnt' => $cnt]));
 
         $this->doclist->Reload();
 

@@ -7,7 +7,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Вибір ТМЦ</h5>
+                            <h5 class="modal-title">{|#t|}widgets.catitemlist.vybir_tmts{|/t|}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -15,19 +15,19 @@
                         <div id="vitemlist" class="modal-body">    
                              <form    >
                                <div class="row  ">
-                                <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
+                                <label class="col-form-label col-auto" for="wissearchkey">{|#t|}common.poshuk_2{|/t|}</label>
                                  <div class="col-auto  ">
                                     <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control ms-sm-2" type="text"  >
                                   </div> 
-                                <label class="col-form-label col-auto" for="wissearchcat">категорія</label>
+                                <label class="col-form-label col-auto" for="wissearchcat">{|#t|}common.katehoriia_2{|/t|}</label>
                                   <div class="col-auto  ">
                                 <select v-model="wissearchcat" class="form-control ms-sm-2"  >
-                                    <option value="0">Не задано</option>
+                                    <option value="0">{|#t|}common.ne_zadano{|/t|}</option>
                                     <option v-for="cat in cats"    v-bind:value="cat.key">{{cat.value}}</option>
                                                                        
                                 </select>
                                   </div> 
-                                <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
+                                <label class="col-form-label col-auto" for="wissearchmanufacturer">{|#t|}common.brend{|/t|} </label>
                                  <div class="col-auto  ">
                                     <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control ms-sm-2" zippy="wissearchmanufacturer"/>
                                     <datalist id="wissearchmanlist">
@@ -37,21 +37,21 @@
                                  </div> 
                                  <div class="col-auto  pt-2`">
                                    <div class="form-check  ms-sm-2">
-                                     <label for="wissearchonstore" class="form-check-label">В наявності </label> 
+                                     <label for="wissearchonstore" class="form-check-label">{|#t|}common.v_naiavnosti{|/t|} </label> 
                                      <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  me-2"  >
                                   </div> 
                                  </div> 
                                  <div class="col-auto  ">
-                                <input v-on:click.prevent="onSearch" class="btn btn-success  " type="button" value="ОК">
+                                <input v-on:click.prevent="onSearch" class="btn btn-success  " type="button" value="{|#t|}common.ok{|/t|}">
                                 </div> 
                               </div>    
                             </form>     
                             <table class="table table-sm table-hover">
                         <tr >
-                          <th    > Назва</th>
-                          <th    > Артикул </th>
-                          <th    > Штрих-код</th>
-                          <th    > Бренд</th>
+                          <th    > {|#t|}common.nazva{|/t|}</th>
+                          <th    > {|#t|}common.artykul{|/t|} </th>
+                          <th    > {|#t|}common.shtrykh_kod{|/t|}</th>
+                          <th    > {|#t|}common.brend{|/t|}</th>
                    
                         </tr>
                         

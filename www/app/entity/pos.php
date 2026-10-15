@@ -103,12 +103,12 @@ class Pos extends \ZCL\DB\Entity
 
 
         if($cnt >0) {
-            return "Термінал вже використаний в чеках";
+            return __('app.pos.terminal_vzhe_vykorystanyi_v_chekakh');
         }
 
         $st = \App\Modules\PPO\PPOHelper::rroState($this->fiscalnumber, $this) ;
         if($st['ShiftState'] ==1) {
-            return "Відкрита зміна";
+            return __('app.pos.vidkryta_zmina');
         }
 
         return "";

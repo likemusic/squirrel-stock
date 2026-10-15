@@ -80,7 +80,7 @@ class IncomeItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОТ-000000';
+        return __('doc.incomeitem.ot_000000');
     }
 
     public   function DoAcc() {

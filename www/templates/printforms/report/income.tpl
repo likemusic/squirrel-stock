@@ -4,21 +4,21 @@
     <tr>
 
         <td align="center" colspan="4">
-            Період з {{datefrom}} по {{dateto}} <br> <br>
+            {{#t}}common.period_z_po_2{{/t}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупівлі по товарам <br><br>
+            {{#t}}print.income.zakupivli_po_tovaram{{/t}} <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px">Найменування</th>
-        <th style="border: solid black 1px">Код</th>
+        <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.kod{{/t}}</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.na_sumu{{/t}}</th>
 
     </tr>
     {{#_detail}}
@@ -43,14 +43,14 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по постачальникам <br> <br>
+        {{#t}}print.income.zakupivli_po_postachalnykam{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -72,13 +72,13 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по датам <br> <br>
+        {{#t}}print.income.zakupivli_po_datam{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th style="border: solid black 1px;width:120px;">Дата</th>
+    <th style="border: solid black 1px;width:120px;">{{#t}}common.data{{/t}}</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
     <th></th>
     <th></th>
 
@@ -104,15 +104,15 @@
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-         Послуги та роботи <br><br>
+         {{#t}}print.income.posluhy_ta_roboty{{/t}} <br><br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
     
-    <th align="right" style="border: solid black 1px; ">Кіл.</th>
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.kil{{/t}}</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
     
  
 </tr>
@@ -136,14 +136,14 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Закупівлі по категоріям <br> <br>
+        {{#t}}print.income.zakupivli_po_katehoriiam{{/t}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+    <th colspan="3" style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">{{#t}}common.na_sumu{{/t}}</th>
  
 
  

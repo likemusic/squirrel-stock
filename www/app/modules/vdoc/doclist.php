@@ -23,7 +23,7 @@ class DocList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'vdoc') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -113,14 +113,14 @@ class DocList extends \App\Pages\Base
 
         $firm = \App\Helper::getFirmData()   ;
         if(strlen($firm['vdoc'])==0) {
-            return "Не задано токен Вчасно в довіднику  компаній";
+            return __('mod.vdoc.doclist.ne_zadano_token_vchasno_v');
         }
         if(strlen($firm['tin'])==0) {
-            return "Компанія повинна мати ЄДРПОУ";
+            return __('mod.vdoc.doclist.kompaniia_povynna_maty_iedrpou');
         }
      
         if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
-            return "Не заданий ключ для КЕП";
+            return __('mod.vdoc.doclist.ne_zadanyi_kliuch_dlia_kep');
         }
       
              

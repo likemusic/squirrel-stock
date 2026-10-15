@@ -105,7 +105,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(),$pricetype))->onChange($this, 'OnChangePriceType');
  
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (напр. оплачено в IM)',2=>'Післяплата (в журналі розрахунків)',3=>'Оплата касовим чеком,РФ або ВН'], $paytype ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>__('doc.order.vnesty_zrazu_napr_oplacheno_v'),2=>__('doc.order.pisliaplata_v_zhurnali_rozrakhunkiv'),3=>__('doc.order.oplata_kasovym_chekom_rf_abo')], $paytype ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
@@ -150,7 +150,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem' );
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new ClickLink('opencatpan', $this, 'onOpenCatPan'));
-        $this->editdetail->add(new Label('tocustorder','В закупку' ));
+        $this->editdetail->add(new Label('tocustorder',__('common.v_zakupku') ));
 
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new Label('pricestock'));
@@ -373,7 +373,7 @@ class Order extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -409,7 +409,7 @@ class Order extends \App\Pages\Base
             }
             
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo(__('common.pozytsiia_dodana')) ;
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
@@ -458,12 +458,12 @@ class Order extends \App\Pages\Base
         $item = Item::findBarCode($code,$store_id??0);
  
         if ($item == null) {
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
  
         if($item->useserial==1 && $common['usesnumber'] >0){
-            $this->setWarn("Товар потребує вводу серійного номеру");
+            $this->setWarn(__('doc.order.tovar_potrebuie_vvodu_seriinoho_nomeru'));
             return;
         }
         foreach ($this->_tovarlist as $ri => $_item) {
@@ -553,10 +553,10 @@ class Order extends \App\Pages\Base
            $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayhouse'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' буд '. $this->docform->bayhouse->getText() );   
+           $this->_doc->headerdata['npaddressfull']  .= (__('doc.order.bud'). $this->docform->bayhouse->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayflat'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' кв '. $this->docform->bayflat->getText() );   
+           $this->_doc->headerdata['npaddressfull']  .= (__('doc.order.kv'). $this->docform->bayflat->getText() );   
         }
         if(strlen($this->_doc->headerdata['npaddressfull'])==0) {
            $this->_doc->headerdata['npaddressfull']  = $this->_doc->headerdata['npaddress'];   
@@ -618,11 +618,11 @@ class Order extends \App\Pages\Base
                 $this->_doc->headerdata['payed'] = $this->_doc->payed;
          
                 if ($this->_doc->payed > $this->_doc->payamount) {
-                    $this->setError('Внесена сума більше необхідної');
+                    $this->setError(__('common.vnesena_suma_bilshe_neobkhidnoi'));
                     return;
                 }
                 if ($this->_doc->headerdata['payment']==0) {
-                    $this->setError('Не вказана  каса');
+                    $this->setError(__('doc.order.ne_vkazana_kasa'));
                     return;
                 }
                 if ($this->_doc->payed == 0) {
@@ -709,27 +709,27 @@ class Order extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError(__('common.ne_zadano_kontrahenta'));
         }
 
        if ($this->_doc->headerdata['paytype'] == 0) {
-            $this->setError("Не задано тип оплати");
+            $this->setError(__('doc.order.ne_zadano_typ_oplaty'));
        }
 
        return !$this->isError();
@@ -754,10 +754,10 @@ class Order extends \App\Pages\Base
         $qty = $item->getQuantity() ; 
         if($store>0) {
            $oq = $item->getQuantity() ;
-           $qtymdg= "На  складі ". H::fqty( $qty) .", на інших складах ". H::fqty($oq - $qty);    
+           $qtymdg= __('doc.order.na_skladi'). H::fqty( $qty) .__('doc.order.na_inshykh_skladakh'). H::fqty($oq - $qty);    
            
         }   else {
-           $qtymdg= "Наявність: ".  H::fqty($qty );    
+           $qtymdg= __('doc.order.naiavnist').  H::fqty($qty );    
         }
         
         
@@ -795,11 +795,11 @@ class Order extends \App\Pages\Base
             $d= $customer->getDiscount();
 
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка {$d}%";
+                $disctext = __('common.postiina_znyzhka', ['d' => $d]);
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                    $disctext = __('common.narakhovano_bonusiv', ['bonus' => $bonus]);
                 }
             }
             $this->docform->custinfo->setText($disctext);
@@ -847,7 +847,7 @@ class Order extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -857,14 +857,14 @@ class Order extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }
@@ -1047,7 +1047,7 @@ class Order extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $item = new Item();
@@ -1056,7 +1056,7 @@ class Order extends \App\Pages\Base
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
               return;
         }  
         

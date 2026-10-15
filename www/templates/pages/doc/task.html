@@ -1,13 +1,13 @@
 <html>
     <head>
-          <title> Виробничий  наряд</title>
+          <title> {{#t}}doc.task.vyrobnychyi_nariad{{/t}}</title>
     </head>
 
     <body>
  
 
         
-            <h3> Виробничий  наряд
+            <h3> {{#t}}doc.task.vyrobnychyi_nariad{{/t}}
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-bs-toggle="popover"
                     data-bs-placement="bottom" data-bs-content="Документ, що фіксує виконання виробничих завдань.
                    Для списання витратних матеріалів на підставі наряду, можна створити документ  
@@ -21,21 +21,21 @@
                 <form zippy="docform">            
                      <div class="col-12">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
 
                     <div class="mb-2">
-                        <label for="parea">Виробнича ділянка</label>
+                        <label for="parea">{{#t}}common.vyrobnycha_dilianka{{/t}}</label>
                         <select class="form-control" zippy="parea">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
     
 
                 
                     <div class="mb-2">
-                        <label for="document_date"> Дата початку</label>
+                        <label for="document_date"> {{#t}}doc.task.data_pochatku{{/t}}</label>
                         <div class="input-group">
                             <input   class="form-control"   zippy="document_date"  required="on" >
                             <span class="input-group-text">:</span>
@@ -44,25 +44,25 @@
                     </div>
 
                     <div class="mb-2">
-                        <label for="taskhours">Кіл. годин</label>
+                        <label for="taskhours">{{#t}}doc.task.kil_hodyn{{/t}}</label>
 
                         <input style="width:100px;" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="taskhours">
                     </div>
                    <div class="mb-2">
-                        <label for="customer">Замовник</label>
-                        <input placeholder="Почніть вводити..." class="form-control" type="text" zippy="customer">
+                        <label for="customer">{{#t}}common.zamovnyk{{/t}}</label>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control" type="text" zippy="customer">
                     </div>
                     <div class="mb-2">
-                        <label for="notes">Примітка</label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}}</label>
 
                         <textarea class="form-control" type="text" zippy="notes"></textarea>
 
                     </div>
                  </div>  
                 <div class="col-11 col-md-7 col-xl-7 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary   ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary   ms-2">
-                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn btn-secondary   ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary   ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.na_vykonannia{{/t}}" class="btn btn-success  ms-2 ">
                 </div>
               </form> 
                 </div> 
@@ -72,26 +72,26 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Роботи</b></h6>
+                    <h6><b>{{#t}}common.roboty{{/t}}</b></h6>
            <div class="navbar">
 
              <form zippy="editdetail"  >
                        <div class="row  ">
                          <div class="col-auto  ">
                         <select zippy="editservice" class="form-control select2  me-1">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                          </div>
             
-                        <label class="col-form-label col-auto"   for="editqty">Кіл.</label>
+                        <label class="col-form-label col-auto"   for="editqty">{{#t}}common.kil{{/t}}</label>
                         <div class="col-auto  ">
                         <input class="form-control me-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"     style="width: 75px;">
                          </div>
-                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати" class="ms-2" for="editcost">Вартість</label>
+                        <label class="col-form-label col-auto" title="{{#t}}doc.task.roztsinky_dlia_narakhuvannia_zarplaty{{/t}}" class="ms-2" for="editcost">{{#t}}common.vartist{{/t}}</label>
                         <div class="col-auto  ">
-                           <input title="Розцінки для  нарахування зарплати" class="form-control me-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                           <input title="{{#t}}doc.task.roztsinky_dlia_narakhuvannia_zarplaty{{/t}}" class="form-control me-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                          </div>
-                        <label class="col-form-label col-auto" for="editdesc">Коментар  </label>
+                        <label class="col-form-label col-auto" for="editdesc">{{#t}}common.komentar{{/t}}  </label>
                         <div class="col-auto  ">
                            <input class="form-control  me-2" type="text" zippy="editdesc"                          >
                         </div>
@@ -128,29 +128,29 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Готова продукція</b></h6>
+                    <h6><b>{{#t}}common.hotova_produktsiia{{/t}}</b></h6>
           <div class="navbar">
 
              <form zippy="editdetailprod"  >
                      <div class="row  ">
                        <div class="col-auto  ">
                        <select zippy="editprod" class="form-control select2  me-1">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                           </div>  
-                        <label class="col-form-label col-auto"   for="editqtyprod">Кіл.</label>
+                        <label class="col-form-label col-auto"   for="editqtyprod">{{#t}}common.kil{{/t}}</label>
                         <div class="col-auto  ">
                         <input class="form-control me-1" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"         style="width: 75px;">
                          </div>  
-                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати"   for="editprodcost">Вартість</label>
+                        <label class="col-form-label col-auto" title="{{#t}}doc.task.roztsinky_dlia_narakhuvannia_zarplaty{{/t}}"   for="editprodcost">{{#t}}common.vartist{{/t}}</label>
                         <div class="col-auto  ">
-                          <input title="Розцінки для  нарахування зарплати" class="form-control  me-1" type="text" zippy="editprodcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                          <input title="{{#t}}doc.task.roztsinky_dlia_narakhuvannia_zarplaty{{/t}}" class="form-control  me-1" type="text" zippy="editprodcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                          </div>  
-                        <label class="col-form-label col-auto" title="Облікова  ціна  при оприходуванні на  склад"   for="editprodprice">Собівартість</label>
+                        <label class="col-form-label col-auto" title="{{#t}}doc.task.oblikova_tsina_pry_oprykhoduvanni_na{{/t}}"   for="editprodprice">{{#t}}doc.task.sobivartist{{/t}}</label>
                         <div class="col-auto  ">
-                          <input title="Облікова  ціна  при оприходуванні на  склад" class="form-control  me-1" type="text" zippy="editprodprice" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                          <input title="{{#t}}doc.task.oblikova_tsina_pry_oprykhoduvanni_na{{/t}}" class="form-control  me-1" type="text" zippy="editprodprice" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                         </div>    
-                        <label class="col-form-label col-auto" for="editdescprod">Коментар  </label>
+                        <label class="col-form-label col-auto" for="editdescprod">{{#t}}common.komentar{{/t}}  </label>
                         <div class="col-auto  ">
                         <input class="form-control  me-1" type="text" zippy="editdescprod"                          >
                        </div>  
@@ -188,16 +188,16 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Виконавці</b></h6>
+                    <h6><b>{{#t}}common.vykonavtsi{{/t}}</b></h6>
               <div class="navbar  ">    
                 <form zippy="editdetail3"  >
                 <div class="row">
                      <div class="col-auto  ">
                         <select zippy="editemp" class="form-control  me-2  ">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                      </div>
-                        <label class="col-form-label col-auto"   for="editktu">КТУ</label>
+                        <label class="col-form-label col-auto"   for="editktu">{{#t}}doc.task.ktu{{/t}}</label>
                        <div class="col-auto  ">
                         <input zippy="editktu" class="form-control qtyprice me-2 " pattern="[0-9,\.]+" style="width:50px" >
                        </div>     
@@ -223,13 +223,13 @@
                   <div class="col-12 ">
 
               
-                     <h6><b>Устаткування</b></h6>
+                     <h6><b>{{#t}}doc.task.ustatkuvannia{{/t}}</b></h6>
                      
                <form zippy="editdetail4"  >
                       <div class="row  ">
                        <div class="col-auto  ">
                          <select zippy="editeq" class="form-control select2">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                          </select>
                        </div>
                          

@@ -3,11 +3,11 @@
 <font bold="true">b</font>
 <text>{{name}}</text>
 <font bold="false">a</font> 
-<text>Код {{code}}</text>
-<text>Вага {{qty}} Ціна {{price}} </text>
-<text bold="true">Всього {{sum}}  </text>
+<text>{{#t}}print.item_sticker.kod{{/t}}</text>
+<text>{{#t}}print.item_sticker_ps.vaha_tsina{{/t}} </text>
+<text bold="true">{{#t}}print.item_sticker_ps.vsoho{{/t}}  </text>
  {{#term}}
-<text  >Придатний до   {{term}}  </text>      
+<text  >{{#t}}print.item_sticker.prydatnyi_do{{/t}}  </text>      
  {{/term}}  
 <align>center</align>
  

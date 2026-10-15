@@ -1,15 +1,15 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
         <td colspan="2">
-          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
-          {{^isfinished}}  Квитанція до {{/isfinished}} 
+          {{#isfinished}}  {{#t}}common.akt_vykonanykh_robit{{/t}} {{/isfinished}} 
+          {{^isfinished}}  {{#t}}common.kvytantsiia_do{{/t}} {{/isfinished}} 
         
         
          {{document_number}}</td>
     </tr>
     <tr>
 
-        <td colspan="2">від {{date}}</td>
+        <td colspan="2">{{#t}}common.vid_2{{/t}}</td>
     </tr>
     <tr>
 
@@ -35,20 +35,20 @@
 
     {{#isdevice}}
     <tr>
-        <td colspan="2"> Прийнято від клієнта</td>
+        <td colspan="2"> {{#t}}print.serviceact_bill.pryiniato_vid_kliienta{{/t}}</td>
     </tr>
     <tr>
         <td colspan="2"> {{device}}</td>
     </tr>
     <tr>
-        <td colspan="2"> с/н {{serial}}</td>
+        <td colspan="2"> {{#t}}print.serviceact_bill.s_n{{/t}}</td>
     </tr>
     {{/isdevice}}
 
     {{#iswork}}
 
     <tr>
-        <td colspan="2">Роботи:</td>
+        <td colspan="2">{{#t}}print.serviceact_bill.roboty{{/t}}</td>
     </tr>
     {{#slist}}
     <tr>
@@ -61,7 +61,7 @@
   
     {{#isitems}}
    <tr>
-        <td colspan="2">Комплектуючі:</td>
+        <td colspan="2">{{#t}}print.serviceact_bill.komplektuiuchi{{/t}}</td>
     </tr>
     {{#ilist}}
     <tr>
@@ -74,7 +74,7 @@
    
     {{#istotal}}
     <tr>
-        <td align="right">Всього:</td>
+        <td align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{total}}</td>
     </tr>
     {{/istotal}}
@@ -84,7 +84,7 @@
 
     {{#ispay}}
     <tr>
-        <td colspan="2">Оплати:</td>
+        <td colspan="2">{{#t}}common.oplaty{{/t}}</td>
     </tr>
     {{#plist}}
     <tr>
@@ -103,7 +103,7 @@
 
     </tr>
     <tr>
-        <td>Виконавець</td>
+        <td>{{#t}}common.vykonavets{{/t}}</td>
         <td>________</td>
     </tr>
     <tr>
@@ -111,7 +111,7 @@
 
     </tr>
     <tr>
-        <td>Клієнт</td>
+        <td>{{#t}}common.kliient{{/t}}</td>
         <td>________</td>
     </tr>
 </table>

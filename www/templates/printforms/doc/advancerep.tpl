@@ -1,12 +1,12 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="6" align="center">
-            <b> Авансовий звіт № {{document_number}} від {{date}}</b> <br>
+            <b> {{#t}}print.advancerep.avansovyi_zvit_vid{{/t}}</b> <br>
         </td>
     </tr>
     {{#isdetail}}
     <tr>
-        <td><b>На склад:</b> </td> 
+        <td><b>{{#t}}common.na_sklad_2{{/t}}</b> </td> 
         <td colspan="5">
              {{to}}
         </td>
@@ -14,7 +14,7 @@
 
    {{#storeemp}}
     <tr>
-         <td><b>На співробітника:</b> </td> 
+         <td><b>{{#t}}common.na_spivrobitnyka_2{{/t}}</b> </td> 
        <td colspan="5">
              {{storeemp}}
         </td>
@@ -23,14 +23,14 @@
     {{/storeemp}}    
      {{/isdetail}} 
     <tr>
-          <td><b>Від співробітника:</b> </td> 
+          <td><b>{{#t}}print.advancerep.vid_spivrobitnyka{{/t}}</b> </td> 
       <td colspan="5">
              {{emp}}
         </td>
     </tr>
     {{#examount}}
     <tr>
-         <td><b>Сума повернення:</b> </td> 
+         <td><b>{{#t}}print.advancerep.suma_povernennia{{/t}}</b> </td> 
        <td colspan="5">
              {{examount}}
         </td>
@@ -38,13 +38,13 @@
    {{/examount}}  
   {{#spentamount}}
     <tr>
-         <td><b>Сума витрат:</b> </td> 
+         <td><b>{{#t}}print.advancerep.suma_vytrat{{/t}}</b> </td> 
        <td colspan="5">
              {{spentamount}}
         </td>
     </tr>
    <tr>
-         <td><b>Тип витрат:</b> </td> 
+         <td><b>{{#t}}print.advancerep.typ_vytrat{{/t}}</b> </td> 
        <td colspan="5">
              {{spenttypename}}
         </td>
@@ -53,15 +53,15 @@
 
     {{#isdetail}}  
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kod{{/t}}</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.od{{/t}}</th>
 
 
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ціна</th>
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Сума</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kil{{/t}}</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.tsina{{/t}}</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.suma{{/t}}</th>
 
     </tr>
     {{#_detail}}
@@ -79,7 +79,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">На суму:</td>
+        <td style="border-top:1px #000 solid;" colspan="6" align="right">{{#t}}common.na_sumu_2{{/t}}</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     

@@ -1,10 +1,10 @@
  <table class="table  table-sm">
    <tr><th colspan="2">{{name}}</th></tr>
-   <tr><td>Тел.</td><td>{{phone}}</td></tr>
-   <tr><td>ЄДРПОУ</td><td>{{edrpou}}</td></tr>
+   <tr><td>{{#t}}common.tel_2{{/t}}</td><td>{{phone}}</td></tr>
+   <tr><td>{{#t}}common.iedrpou{{/t}}</td><td>{{edrpou}}</td></tr>
    {{#smscode}} 
-   <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
-   <br><small> Відправка коду на телефон для перевірки номеру   </small>
+   <tr><td colspan="2">   {{#t}}print.cinfo.sms_kod_nbsp_nbsp{{/t}}<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">{{#t}}common.vidpravyty{{/t}}</a>   
+   <br><small> {{#t}}print.cinfo.vidpravka_kodu_na_telefon_dlia{{/t}}   </small>
    </td></tr>
   {{/smscode}}
    
@@ -15,31 +15,31 @@
      <tr><td>Viber</td><td>{{{viber}}}</td></tr>
    {{/viber}}  
    {{#telega}}
-     <tr><td>Телеграм</td><td>{{{telega}}}</td></tr>
+     <tr><td>{{#t}}common.telehram{{/t}}</td><td>{{{telega}}}</td></tr>
    {{/telega}}  
    {{#address}}   
-     <tr><td>Адреса</td><td>{{address}}</td></tr>
+     <tr><td>{{#t}}common.adresa_2{{/t}}</td><td>{{address}}</td></tr>
    {{/address}}   
       
    {{#bonus}}
-   <tr><td>Бонуси</td><td>   {{bonus}}</td></tr>
+   <tr><td>{{#t}}common.bonusy{{/t}}</td><td>   {{bonus}}</td></tr>
    {{/bonus}}
   {{#dolg}}
-   <tr><td>Борг  </td><td>   {{dolg}} <small>(+дебет -кредит)</small></td></tr>
+   <tr><td>{{#t}}print.cinfo.borh{{/t}}  </td><td>   {{dolg}} <small>{{#t}}print.cinfo.debet_kredyt{{/t}}</small></td></tr>
    {{/dolg}}
   {{#disc}}
-   <tr><td>Постійна знижка</td><td>   {{disc}}</td></tr>
+   <tr><td>{{#t}}print.cinfo.postiina_znyzhka{{/t}}</td><td>   {{disc}}</td></tr>
 
    {{/disc}}
-   <tr><td>Покупок на  суму</td><td>   {{sumall}}</td></tr>
+   <tr><td>{{#t}}print.cinfo.pokupok_na_sumu{{/t}}</td><td>   {{sumall}}</td></tr>
    
    {{#comment}}   
-   <tr><td colspan="2">Примітка: {{comment}}</td></tr>
+   <tr><td colspan="2">{{#t}}print.cinfo.prymitka{{/t}}</td></tr>
    {{/comment}}    
    
    {{#last}}
-     <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
-     <tr><td colspan="2"> Останні товари: </td></tr>
+     <tr><td colspan="2"> {{#t}}print.cinfo.ostannii_dokument_vid_na_sumu{{/t}}</td></tr>
+     <tr><td colspan="2"> {{#t}}print.cinfo.ostanni_tovary{{/t}} </td></tr>
      <tr><td colspan="2"> 
          <table      style="font-size:smaller">
             {{#goods}}

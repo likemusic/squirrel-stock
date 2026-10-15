@@ -129,7 +129,7 @@ class POSCheck extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             if($this->_doc->headerdata['arm']==1) {
-                $this->setWarn('Чек створено в АРМ касира')  ;
+                $this->setWarn(__('doc.poscheck.chek_stvoreno_v_arm_kasyra'))  ;
                 App::Redirect("\\App\\Pages\\Service\\ARMPos",$this->_doc);
 
                 return;
@@ -206,7 +206,7 @@ class POSCheck extends \App\Pages\Base
 
                         if (count($list) > 0) {
 
-                            $this->setWarn('У замовлення вже є продажі');
+                            $this->setWarn(__('doc.poscheck.u_zamovlennia_vzhe_ie_prodazhi'));
                         }
 
 
@@ -252,12 +252,12 @@ class POSCheck extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.poscheck.nariad') . $basedoc->document_number);
                         $this->_serlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
             } else {
-                $this->setWarn('Чек слід створювати через  АРМ касира')  ;
+                $this->setWarn(__('doc.poscheck.chek_slid_stvoriuvaty_cherez_arm'))  ;
             }
         }
 
@@ -385,7 +385,7 @@ class POSCheck extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $item = Item::load($id);
@@ -397,11 +397,11 @@ class POSCheck extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
+            $this->setWarn(__('common.vvedeno_bilshe_tovaru_chym_ie'));
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -410,7 +410,7 @@ class POSCheck extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('Невірний номер серії');
+                $this->setWarn(__('common.nevirnyi_nomer_serii'));
             }
         }
 
@@ -443,7 +443,7 @@ class POSCheck extends \App\Pages\Base
         $id = $this->editserdetail->editser->getKey();
         if ($id == 0) {
 
-            $this->setError("Не обрано послугу або роботу");
+            $this->setError(__('common.ne_obrano_posluhu_abo_robotu'));
             return;
         }
 
@@ -547,7 +547,7 @@ class POSCheck extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                        $this->setError(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                         return;
                     }
                 }
@@ -729,7 +729,7 @@ class POSCheck extends \App\Pages\Base
         }
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
 
@@ -739,7 +739,7 @@ class POSCheck extends \App\Pages\Base
         $item = Item::findBarCode($code,$store_id);
  
         if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
+            $this->setError(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
@@ -748,7 +748,7 @@ class POSCheck extends \App\Pages\Base
 
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
-            $this->setError("Товару {$item->itemname} немає на складі");
+            $this->setError(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
@@ -774,7 +774,7 @@ class POSCheck extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
+                $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -808,35 +808,35 @@ class POSCheck extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError("Не введено позиції");
+            $this->setError(__('common.ne_vvedeno_pozytsii'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
 
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError(__('common.iakshcho_u_borh_abo_peredoplata'));
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
 
         //изза  фискализации
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payamount > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
 
 
@@ -903,11 +903,11 @@ class POSCheck extends \App\Pages\Base
             $customer = Customer::load($customer_id);
             $d = $customer->getDiscount();
             if ($d > 0) {
-                $this->docform->discount->setText("Постоянная скидка " . $d . '%');
+                $this->docform->discount->setText(__('doc.poscheck.postoiannaia_skydka') . $d . '%');
                 $this->docform->discount->setVisible(true);
             } else {
                 if ($customer->bonus > 0) {
-                    $this->docform->discount->setText("Бонусы " . $customer->bonus);
+                    $this->docform->discount->setText(__('doc.poscheck.bonusy') . $customer->bonus);
                     $this->docform->discount->setVisible(true);
                 }
             }
@@ -932,7 +932,7 @@ class POSCheck extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -941,14 +941,14 @@ class POSCheck extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }

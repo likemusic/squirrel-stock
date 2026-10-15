@@ -351,22 +351,22 @@ class ARMPos extends \App\Pages\Base
         $this->_mfbeznal = $this->form1->mfbeznal->getValue();
 
         if ($this->pos == null) {
-            $this->setError("Не обрано термінал");
+            $this->setError(__('service.armpos.ne_obrano_terminal'));
             return;
         }
         if ($this->_mfnal == 0) {
-            $this->setError("Не обрана готівкова каса");
+            $this->setError(__('service.armpos.ne_obrana_hotivkova_kasa'));
             return;
         }
 
 
         if ($this->_store_id == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
             return;
         }
 
         if (strlen($this->_pt) == 0) {
-            $this->setError("Не вказано тип ціни");
+            $this->setError(__('common.ne_vkazano_typ_tsiny'));
             return;
         }
 
@@ -497,7 +497,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form2->customer->setText($bd->customer_name);
             if($bd->meta_name=='ServiceAct') {
                 if($bd->getHD('paytype',0) != 3){
-                    $this->setWarn('В Акті не повинно бути оплати якщо оплата  чеком  ') ;
+                    $this->setWarn(__('service.armpos.v_akti_ne_povynno_buty')) ;
                     App::Redirect("\\App\\Pages\\Register\\SerList");
                     return; 
                 }                
@@ -506,7 +506,7 @@ class ARMPos extends \App\Pages\Base
             }
             if($bd->meta_name=='Order') {
                 if($bd->getHD('paytype',0) != 3){
-                    $this->setWarn('В Замовленні не повинно бути оплати якщо оплата  чеком  ') ;
+                    $this->setWarn(__('service.armpos.v_zamovlenni_ne_povynno_buty')) ;
                     App::Redirect("\\App\\Pages\\Register\\OrderList");
                     return; 
                 }
@@ -528,7 +528,7 @@ class ARMPos extends \App\Pages\Base
     //к  оплате      
     public function topayOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError('Не введено позиції');
+            $this->setError(__('common.ne_vvedeno_pozytsii'));
             return;
         }
 
@@ -544,7 +544,7 @@ class ARMPos extends \App\Pages\Base
         }
 
         if(($this->_paytype==0 || $this->_paytype=='') && $payamount > 0) {
-            $this->setError('Не вказаний тип оплати');
+            $this->setError(__('service.armpos.ne_vkazanyi_typ_oplaty'));
             return;
 
         }
@@ -608,7 +608,7 @@ class ARMPos extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setError("У  контрагента  всього {$b} бонусів на рахунку");                
+                $this->setError(__('service.armfood.u_kontrahenta_vsoho_bonusiv_na', ['b' => $b]));                
                 return;
             }
         }
@@ -624,7 +624,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
        
-        $stext='Додати...';
+        $stext=__('service.armfood.dodaty');
         $list=$item->aklist ?? '';
         if(strlen($list) > 0) {
           $stext = str_replace(",", ", ",$list)  ;
@@ -744,7 +744,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не вибраний товар");
+            $this->setError(__('service.armpos.ne_vybranyi_tovar'));
             return;
         }
 
@@ -754,7 +754,7 @@ class ARMPos extends \App\Pages\Base
 
         $item->quantity = doubleval($this->docpanel->editdetail->editquantity->getText());
         if ($item->quantity == 0) {
-            $this->setError("Не введена  кількість");
+            $this->setError(__('service.armpos.ne_vvedena_kilkist'));
             return;
         }
         
@@ -769,11 +769,11 @@ class ARMPos extends \App\Pages\Base
             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
+            $this->setWarn(__('common.vvedeno_bilshe_tovaru_chym_ie'));
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -781,7 +781,7 @@ class ARMPos extends \App\Pages\Base
             $slist = $item->getSerials($store);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError(__('common.nevirnyi_nomer_serii'));
                 return;
             }
         }
@@ -831,7 +831,7 @@ class ARMPos extends \App\Pages\Base
         
         $this->_rowid = -1;
         $this->_editrow =  false;
-        $this->setSuccess("Позиція додана");
+        $this->setSuccess(__('common.pozytsiia_dodana'));
      //   $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;        
 
     }
@@ -840,7 +840,7 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->editserdetail->editser->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано послугу або роботу");
+            $this->setError(__('common.ne_obrano_posluhu_abo_robotu'));
             return;
         }
 
@@ -848,7 +848,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->quantity = doubleval( $this->docpanel->editserdetail->editserquantity->getText());
         if ($ser->quantity == 0) {
-            $this->setError("Не введена  кількість");
+            $this->setError(__('service.armpos.ne_vvedena_kilkist'));
             return;
         }
         
@@ -1059,7 +1059,7 @@ class ARMPos extends \App\Pages\Base
             $disctext = "";
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка {$d}%";
+                $disctext = __('common.postiina_znyzhka', ['d' => $d]);
 
                 $tmp=[];
                 foreach($this->_itemlist as $i) {
@@ -1087,7 +1087,7 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                    $disctext = __('common.narakhovano_bonusiv', ['bonus' => $bonus]);
                 }
             }
             $this->docpanel->form2->custinfo->setText($disctext);
@@ -1114,7 +1114,7 @@ class ARMPos extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -1124,14 +1124,14 @@ class ARMPos extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }
@@ -1157,7 +1157,7 @@ class ARMPos extends \App\Pages\Base
     public function tosaveOnClick($sender) {
 
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError('Не введено позиції');
+            $this->setError(__('common.ne_vvedeno_pozytsii'));
             return;
         }
         $this->_doc->document_number = $this->_doc->nextNumber();
@@ -1166,7 +1166,7 @@ class ARMPos extends \App\Pages\Base
             $next = $this->_doc->nextNumber();
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
                 return  ;
             }
         }
@@ -1206,7 +1206,7 @@ class ARMPos extends \App\Pages\Base
 
         if($this->_doc->document_id >0) {
             if($this->_doc->hasEntries() || $this->_doc->hasPayments()) {
-               $this->setError("Чек вже був проведений. Створіть новий чек")  ;
+               $this->setError(__('service.armpos.chek_vzhe_buv_provedenyi_stvorit'))  ;
                return;
             }
         }
@@ -1220,7 +1220,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form3->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
@@ -1247,25 +1247,25 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError(__('common.iakshcho_u_borh_abo_peredoplata'));
             return;
         }
  
         if (doubleval($this->_doc->headerdata['bonus']) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Якщо у борг    або нарахування бонусів має бути обраний контрагент");
+            $this->setError(__('service.armpos.iakshcho_u_borh_abo_narakhuvannia'));
             return;
         }
 
         if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Для нарахування бонуса має бути обраний контрагент");
+            $this->setError(__('service.armpos.dlia_narakhuvannia_bonusa_maie_buty'));
             return;
         }
         if (doubleval($this->_doc->headerdata['prepaid']) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Якщо передоплата має бути обраний контрагент");
+            $this->setError(__('service.armpos.iakshcho_peredoplata_maie_buty_obranyi'));
             return;
         }
         if (doubleval($this->_doc->headerdata['exchange']) >0 && doubleval($this->_doc->headerdata['payedcard'] >0)) {
-            $this->setError("При оплаті карткою решта має бути 0");
+            $this->setError(__('service.armpos.pry_oplati_kartkoiu_reshta_maie'));
             return;
         }
  
@@ -1326,7 +1326,7 @@ class ARMPos extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        throw new \Exception("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                        throw new \Exception(__('common.na_skladi_vsoho').H::fqty($qty).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
                     }
                 }
             }
@@ -1423,7 +1423,7 @@ class ARMPos extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
             if($isnew) {
                $this->_doc->document_id =0;                
             }
@@ -1470,22 +1470,22 @@ class ARMPos extends \App\Pages\Base
                   foreach($stlst as $st) {
                       if(trim($st)=='')  continue;
                       if(\App\Entity\Excise::checkFormat($st) ==false){
-                         $this->setWarn("Невірний формат марки " . $st);
+                         $this->setWarn(__('service.armfood.nevirnyi_format_marky') . $st);
                          return; 
                       }
                       $exists=\App\Entity\Excise::checkUsed($st) ;
                       if($exists != null){
-                         $this->setWarn("Марка вже використана в   " . $exists->document_number);
+                         $this->setWarn(__('service.armfood.marka_vzhe_vykorystana_v') . $exists->document_number);
                          return; 
                       }
                   }
                    
                   if(count($stlst)  !=  count(array_unique($stlst) ) ) {
-                     $this->setWarn("Марки дублюються" );
+                     $this->setWarn(__('service.armfood.marky_dubliuiutsia') );
                      return;  
                   }           
                   if(count($stlst)  !=  $item->quantity) {
-                     $this->setWarn("Кількість марок не  відповідає  кількості в  позиції " );
+                     $this->setWarn(__('service.armfood.kilkist_marok_ne_vidpovidaie_kilkosti') );
                      return;  
                   }
               }
@@ -1508,7 +1508,7 @@ class ARMPos extends \App\Pages\Base
             $ret = $cb->OpenShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
+                $this->setSuccess(__('service.armfood.zmina_vidkryta'));
             } else {
                 $this->setError($ret);
             }
@@ -1538,7 +1538,7 @@ class ARMPos extends \App\Pages\Base
             $ret = $vk->OpenShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
+                $this->setSuccess(__('service.armfood.zmina_vidkryta'));
             } else {
                 $this->setError($ret);
             }
@@ -1571,7 +1571,7 @@ class ARMPos extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна відкрита");
+            $this->setSuccess(__('service.armfood.zmina_vidkryta'));
 
             $this->pos->fiscdocnumber++;
             $this->pos->save();
@@ -1610,7 +1610,7 @@ class ARMPos extends \App\Pages\Base
             $ret = $cb->CloseShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна закрита");
+                $this->setSuccess(__('common.zmina_zakryta'));
             } else {
                 $this->setError($ret);
             }
@@ -1623,7 +1623,7 @@ class ARMPos extends \App\Pages\Base
             $ret = $vk->CloseShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна закрита");
+                $this->setSuccess(__('common.zmina_zakryta'));
             } else {
                 $this->setError($ret);
             }
@@ -1679,7 +1679,7 @@ class ARMPos extends \App\Pages\Base
         } else {
             
       
-               $this->setSuccess("Зміна закрита");    
+               $this->setSuccess(__('common.zmina_zakryta'));    
         
             
             if ($ret['doclocnumber'] > 0) {
@@ -1772,7 +1772,7 @@ class ARMPos extends \App\Pages\Base
                     $doc->headerdata["checkbox"] = $ret['checkid'];
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
-                    $this->setSuccess("Виконано");
+                    $this->setSuccess(__('common.vykonano'));
                 } else {
 
                     throw new \Exception($ret);
@@ -1828,7 +1828,7 @@ class ARMPos extends \App\Pages\Base
                         $this->pos->fiscdocnumber++;
                         $this->pos->save();
 
-                        $this->setSuccess("Виконано");
+                        $this->setSuccess(__('common.vykonano'));
                    
                 }
 
@@ -1841,7 +1841,7 @@ class ARMPos extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $doc->meta_desc);
       
             
             return;
@@ -1857,7 +1857,7 @@ class ARMPos extends \App\Pages\Base
         $pay =  $sender->pbpay->getValue();
         
         if($pay==0) {
-            $this->setError("Не вибрана  оплата");
+            $this->setError(__('service.armfood.ne_vybrana_oplata'));
             return;
         }
         
@@ -1872,11 +1872,11 @@ class ARMPos extends \App\Pages\Base
         $doc = Document::load($id);
         $am= H::fa($doc->payamount -   $doc->payed);
         if( $sum==0 ) {
-            $this->setError("Не вказана  сума");
+            $this->setError(__('service.armfood.ne_vkazana_suma'));
             return;
         }
         if($sum > $am ) {
-            $this->setError("Сума більшк боргу");
+            $this->setError(__('service.armfood.suma_bilshk_borhu'));
             return;
         }
       
@@ -1896,7 +1896,7 @@ class ARMPos extends \App\Pages\Base
                     if($sum == $am) {
                         $doc->updateStatus(Document::STATE_PAYED);
                     }
-                    $this->setSuccess("Виконано");
+                    $this->setSuccess(__('common.vykonano'));
                 } else {
 
                     throw new \Exception($ret);
@@ -1964,7 +1964,7 @@ class ARMPos extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $doc->meta_desc);
       
             
             return;
@@ -1999,14 +1999,14 @@ class ARMPos extends \App\Pages\Base
                $doc= \App\Entity\Doc\Document::create('IncomeMoney') ;
                $doc->setHD('type',   $sender->siniostate->getValue() );
                $doc->setHD('detail', 0);
-               $doc->notes='Службове внесення';
+               $doc->notes=__('common.sluzhbove_vnesennia');
 
            }
            if( $type==2) {
                $doc= \App\Entity\Doc\Document::create('OutcomeMoney') ;
                $doc->setHD('type',  $sender->soutiostate->getValue());
                $doc->setHD('detail', 0);
-               $doc->notes='Службова  видача';
+               $doc->notes=__('service.armfood.sluzhbova_vydacha');
 
            }
            
@@ -2079,7 +2079,7 @@ class ARMPos extends \App\Pages\Base
                     $this->pos->save();
   
                 } else {
-                    throw new \Exception("Не повернено фіскальний номер");
+                    throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
                 }                
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['error']);
@@ -2089,7 +2089,7 @@ class ARMPos extends \App\Pages\Base
             }
             
                
-            $this->setSuccess("Виконано");   
+            $this->setSuccess(__('common.vykonano'));   
         } catch(\Throwable $ee) {
             global $logger;
           
@@ -2276,7 +2276,7 @@ class ARMPos extends \App\Pages\Base
          ));
 
         $qty = $item->getQuantity($store);
-        $this->docpanel->form2->storeqtysm->setText("На складі: ".H::fqty($qty) );
+        $this->docpanel->form2->storeqtysm->setText(__('service.armpos.na_skladi').H::fqty($qty) );
 
 
     }
@@ -2353,7 +2353,7 @@ class ARMPos extends \App\Pages\Base
         }  
           
         if ($item == null) {
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             \App\Application::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
                 
             return;
@@ -2401,7 +2401,7 @@ class ARMPos extends \App\Pages\Base
             }
 
             if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
+                $this->setWarn(__('common.potribna_partiia_vyrobnyka'));
                 $this->docpanel->editdetail->setVisible(true);
                 $this->docpanel->form2->setVisible(false);
 
@@ -2430,12 +2430,12 @@ class ARMPos extends \App\Pages\Base
 
         $id = $this->docpanel->form2->addtovarsm->getKey();
         if ($id == 0) {
-            $this->setError("Не вибрано товар");
+            $this->setError(__('service.armpos.ne_vybrano_tovar'));
             return;
         }
         $n = trim($this->docpanel->form2->addtovarsm->getText());
         if (strlen($n) == 0) {
-            $this->setError("Не вибрано товар");
+            $this->setError(__('service.armpos.ne_vybrano_tovar'));
             return;
         }
 
@@ -2445,7 +2445,7 @@ class ARMPos extends \App\Pages\Base
 
         $item->quantity = doubleval($this->docpanel->form2->qtysm->getText());
         if ($item->quantity == 0) {
-            $this->setError("Не введена  кількість");
+            $this->setError(__('service.armpos.ne_vvedena_kilkist'));
             return;
         }
 
@@ -2496,7 +2496,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->calcTotal();
 
-        $this->setSuccess("Позиція додана");
+        $this->setSuccess(__('common.pozytsiia_dodana'));
 
     }
 
@@ -2520,11 +2520,11 @@ class ARMPos extends \App\Pages\Base
         
 
         if (  $qty <= 0  ) {
-            $this->setError("Товару {$item->itemname} не залишилось на складі");
+            $this->setError(__('service.armpos.tovaru_ne_zalyshylos_na_skladi', ['itemname' => $item->itemname]));
             return;            
         }
         if ($item->minqty > 0 && $qty < $item->minqty   ) {
-            $this->setWarn("Товару {$item->itemname} залишилось менше  мінімальної кількості");
+            $this->setWarn(__('service.armpos.tovaru_zalyshylos_menshe_minimalnoi_kilk', ['itemname' => $item->itemname]));
             return;                        
         }        
     }

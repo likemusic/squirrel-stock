@@ -1,10 +1,10 @@
 <font bold="true">a</font>
  
-<text>Рахунок {{document_number}}</text>
+<text>{{#t}}print.orderfood_billforpay.rakhunok{{/t}}</text>
   
     
 <font >a</font>
-<text>від {{date}}</text>
+<text>{{#t}}common.vid_2{{/t}}</text>
 <align>left</align>
 
  
@@ -15,7 +15,7 @@
 <text>{{address}}</text>    
  
     {{#customer_name}}
-<text>Покупець: {{customer_name}}</text>    
+<text>{{#t}}common.pokupets_3{{/t}}</text>    
 
     {{/customer_name}}
     
@@ -36,21 +36,21 @@
 <font bold="true">a</font>
 
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>{{#t}}common.vsoho_2{{/t}}</text>
 <font >a</font>
  
 
  
     {{#isdisc}}
-<text>Знижка: {{totaldisc}}</text>
+<text>{{#t}}common.znyzhka_3{{/t}}</text>
  
     {{/isdisc}}
    {{#bonus}}
- <text>Списано бонусів: {{bonus}}</text>
+ <text>{{#t}}print.orderfood_bill_ps.spysano_bonusiv{{/t}}</text>
  
     {{/bonus}}
 
- <text>До сплати: {{payamount}}</text>
+ <text>{{#t}}common.do_splaty_3{{/t}}</text>
  
     
  

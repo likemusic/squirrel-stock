@@ -90,7 +90,7 @@ class ProdMove extends Document
                 if($user != null){
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id; 
-                    $n->message = "Нараховано до сплати {$ua->amount } ({$this->document_number})"    ;
+                    $n->message = __('doc.prodmove.narakhovano_do_splaty', ['amount' => $ua->amount , 'document_number' => $this->document_number])    ;
                     $n->sender_id =  \App\Entity\Notify::SYSTEM;
                     $n->save();   
                 }                   
@@ -115,7 +115,7 @@ class ProdMove extends Document
                 if($user != null){
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id; 
-                    $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                    $n->message = __('doc.prodmove.narakhovano_do_splaty_2', ['cost' => $cost, 'document_number' => $this->document_number])    ;
                     $n->sender_id =  \App\Entity\Notify::SYSTEM;
                     $n->save();   
                 }                
@@ -149,7 +149,7 @@ class ProdMove extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПЕ-000000';
+        return __('doc.prodmove.pe_000000');
     }
 
     public function getRelationBased() {

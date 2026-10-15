@@ -76,7 +76,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments', "Відгуків (".intval($product->comments).") "));
+        $this->add(new Label('comments', __('mod.shop.catalog.vidhukiv').intval($product->comments).") "));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -99,16 +99,16 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore->setText('Знято з продажу');
+            $this->onstore->setText(__('mod.shop.productview.zniato_z_prodazhu'));
             $this->buy->setVisible(false);
         } else {
 
             if ($product->getQuantityShop() > 0 || $this->_tvars["isfood"]==true) {
-                $this->onstore->setText('В наявності');
-                $this->buy->setValue('Купити');
+                $this->onstore->setText(__('common.v_naiavnosti'));
+                $this->buy->setValue(__('mod.shop.productview.kupyty'));
             } else {
-                $this->onstore->setText('Під замовлення');
-                $this->buy->setValue('Замовити');
+                $this->onstore->setText(__('mod.shop.productview.pid_zamovlennia'));
+                $this->buy->setValue(__('mod.shop.productview.zamovyty'));
             }
         }
 
@@ -195,9 +195,9 @@ class ProductView extends Base
         $item = $datarow->getDataItem();
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
-        $nodata = "Немає даних";
-        $yes = "Є";
-        $no = "Немає";
+        $nodata = __('mod.shop.productlist.nemaie_danykh');
+        $yes = __('common.ie');
+        $no = __('common.nemaie');
         $value = $item->attributevalue;
         if ($item->attributetype == 2) {
             $meashure = $item->valueslist;
@@ -230,7 +230,7 @@ class ProductView extends Base
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
 
-        $this->setSuccess("Товар доданий до кошика");
+        $this->setSuccess(__('common.tovar_dodanyi_do_koshyka'));
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
     }
@@ -241,7 +241,7 @@ class ProductView extends Base
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
 
-            $this->setWarn('Додавати можна тільки товари з однакової категорії');
+            $this->setWarn(__('mod.shop.productview.dodavaty_mozhna_tilky_tovary_z'));
             return;
         }
         // App::RedirectURI('/pcat/'.$product->group_id)  ;
@@ -254,7 +254,7 @@ class ProductView extends Base
         $capchacode = $this->formcomment->capcha->getCode();
         $this->formcomment->capchacode->setText('');
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
-            $this->setError("Невірний код капчі");
+            $this->setError(__('app.userlogin.nevirnyi_kod_kapchi'));
 
             return;
         }
@@ -290,7 +290,7 @@ class ProductView extends Base
     public function OnAddCommentRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         if ($item->moderated == 1) {
-            $item->comment = "Скасовано модератором";
+            $item->comment = __('mod.shop.productview.skasovano_moderatorom');
         }
         $datarow->add(new Label("nick", $item->author));
         $datarow->add(new Label("comment", $item->comment));
@@ -326,7 +326,7 @@ class ProductView extends Base
         $product->comments = $conn->GetOne("select count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
-        $this->comments->setText("Вігуків({$product->comments})");
+        $this->comments->setText(__('mod.shop.productview.vihukiv', ['comments' => $product->comments]));
     }
 
     public function imglistOnRow($row) {

@@ -25,7 +25,7 @@ class Image extends \ZCL\DB\Entity
         parent::beforeSave();
 
         if(strlen($this->content ??'') > (1024*1024) ) {
-            throw new \Exception('Розмір файлу більше 1M');
+            throw new \Exception(__('common.rozmir_failu_bilshe_1m'));
         }    
     }
     

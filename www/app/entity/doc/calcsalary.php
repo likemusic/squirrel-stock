@@ -143,7 +143,7 @@ class CalcSalary extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'НЗ-000000';
+        return __('doc.calcsalary.nz_000000');
     }
     public   function DoAcc() {
         if(\App\System::getOption("common",'useacc')!=1 ) return;

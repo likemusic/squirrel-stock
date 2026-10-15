@@ -20,7 +20,7 @@ class CheckBox
 
     public function PinCodeAuth() {
         if(strlen($this->pin_code)==0 || strlen($this->license_key)==0) {
-            return "Не задано параметри  для  CheckBox ";
+            return __('mod.cb.checkbox.ne_zadano_parametry_dlia_checkbox');
         }
         $body = [
             'pin_code' => $this->pin_code
@@ -267,12 +267,12 @@ class CheckBox
         if($disc > 0) {
             if($doc->headerdata['bonus'] >0) {
                 $bonus = intval(round($doc->headerdata['bonus']*100));
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $bonus,  "mode"=> "VALUE");
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> __('reference.customerlist.bonusy'). $doc->headerdata['bonus'] .__('mod.cb.checkbox.hrn'), "value"=> $bonus,  "mode"=> "VALUE");
                 $disc  = $disc -  $bonus;
                 
             }
             if($disc >0) {
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc/100 ." грн", "value"=> $disc,  "mode"=> "VALUE");
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> __('doc.orderfood.znyzhka'). $disc/100 .__('mod.cb.checkbox.hrn'), "value"=> $disc,  "mode"=> "VALUE");
             }
         }
 
@@ -290,27 +290,27 @@ class CheckBox
 
             $payed =  doubleval($doc->payed) ;
             if ($doc->headerdata['payment'] == 0 && $payed > 0) {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=> intval(round( $payed*100)));
+                $payment=array("type"=>"CASH","label"=>__('common.hotivka'),"value"=> intval(round( $payed*100)));
                 $check["payments"][] = $payment;
 
             }
             if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
-                    $payment=array("type"=>"CARD","label"=>"Банківська карта","value"=>intval(round( $payed*100)));
+                    $payment=array("type"=>"CARD","label"=>__('mod.cb.checkbox.bankivska_karta'),"value"=>intval(round( $payed*100)));
                 } else {
-                    $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round( $payed*100)));
+                    $payment=array("type"=>"CASH","label"=>__('common.hotivka'),"value"=>intval(round( $payed*100)));
                 }
                 $check["payments"][] = $payment;
 
             }
         } else {
             if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=> intval(round($doc->headerdata['payed'] * 100)));
+                $payment=array("type"=>"CASH","label"=>__('common.hotivka'),"value"=> intval(round($doc->headerdata['payed'] * 100)));
                 $check["payments"][] = $payment;
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $payment=array("type"=>"CARD","label"=>"Банківська карта","value"=> intval(round($doc->headerdata['payedcard'] * 100)));
+                $payment=array("type"=>"CARD","label"=>__('mod.cb.checkbox.bankivska_karta'),"value"=> intval(round($doc->headerdata['payedcard'] * 100)));
                 $check["payments"][] = $payment;
             }
 
@@ -319,14 +319,14 @@ class CheckBox
 
         if ($payed < $doc->payamount) {
 
-            $payment=array("type"=>"CASHLESS","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100)));
+            $payment=array("type"=>"CASHLESS","label"=>__('common.kredyt'),"value"=> intval(round(($doc->payamount - $payed) * 100)));
             $check["payments"][] = $payment;
 
         }
 
 
         if($doc->headerdata["prepaid"] >0) {
-            $payment=array("type"=>"CASHELESS","label"=>"Передплата","value"=> intval(round($doc->headerdata["prepaid"] * 100)));
+            $payment=array("type"=>"CASHELESS","label"=>__('common.peredplata'),"value"=> intval(round($doc->headerdata["prepaid"] * 100)));
             $check["payments"][] = $payment;
         }
 
@@ -397,7 +397,7 @@ class CheckBox
                 
         }
   
-        throw new \Exception("Не повернено фіскальний номер");
+        throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
    
 
     }
@@ -417,7 +417,7 @@ class CheckBox
         $type = (int)$type;
         $payed =  doubleval($sum) ;
         if($payed==0  || $type==0)  {
-            return 'Невірні двні';
+            return __('mod.cb.checkbox.nevirni_dvni');
         }
 
         $good=[];
@@ -461,11 +461,11 @@ class CheckBox
         if (  $sum > 0) {
          
             if ($type == 2) {
-                $payment=array("type"=>"CARD","label"=>"Післяплата","value"=> intval(round($payed*100)));
+                $payment=array("type"=>"CARD","label"=>__('app.options.pisliaplata'),"value"=> intval(round($payed*100)));
             } 
             
            if ($type == 1) {
-                $payment=array("type"=>"CASH","label"=>"Післяплата","value"=>intval(round($payed*100)));
+                $payment=array("type"=>"CASH","label"=>__('app.options.pisliaplata'),"value"=>intval(round($payed*100)));
             }
             $check["payments"][] = $payment;
 

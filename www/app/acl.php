@@ -44,7 +44,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg("Немає права перегляду звіту ". self::$_metasdesc[$rep]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_perehliadu_zvitu'). self::$_metasdesc[$rep]);
             App::RedirectError();
         }
         return false;
@@ -65,7 +65,7 @@ class ACL
             return true;
         }
 
-        System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
+        System::setErrorMsg(__('app.acl.nemaie_prava_dostupu_do_dovidnyka'). self::$_metasdesc[$ref]);
 
         App::RedirectError();
         return false;
@@ -86,7 +86,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_dostupu_do_dovidnyka'). self::$_metasdesc[$ref]);
         }
         return false;
     }
@@ -106,7 +106,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права видалення із довідника " . self::$_metasdesc[$ref]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_vydalennia_iz_dovidnyka') . self::$_metasdesc[$ref]);
         }
         return false;
     }
@@ -127,7 +127,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg("Немає права перегляду журналу  " . self::$_metasdesc[$reg]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_perehliadu_zhurnalu') . self::$_metasdesc[$reg]);
             App::RedirectError();
         }
         return false;
@@ -149,7 +149,7 @@ class ACL
 
             if ($user->user_id != $doc->user_id) {
                 if ($showerror == true) {
-                    System::setErrorMsg("Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
+                    System::setErrorMsg(__('app.acl.nemaie_prava_perehliadu_dokumenta') . self::$_metasdesc[$doc->meta_name]);
                 }
                 if ($inreg == false) {
                     App::RedirectError();
@@ -167,7 +167,7 @@ class ACL
 
 
         if ($showerror == true) {
-            System::setErrorMsg("Немає права перегляду документа ".  self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_perehliadu_dokumenta_2').  self::$_metasdesc[$doc->meta_name]);
 
             if ($inreg == false) {
                 App::RedirectError();
@@ -192,7 +192,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
                 if ($showerror == true) {
-                    System::setErrorMsg("Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
+                    System::setErrorMsg(__('app.acl.nemaie_prava_redahuvannia_dokumenta') . self::$_metasdesc[$doc->meta_name]);
                 }
                 if ($inreg == false) {
                     App::RedirectError();
@@ -210,7 +210,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg("Немає права редагування документа  ". self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_redahuvannia_dokumenta_2'). self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -234,7 +234,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
                 if ($showerror == true) {
-                    System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+                    System::setErrorMsg(__('app.acl.nemaie_prava_vydalennia_dokumenta') . self::$_metasdesc[$doc->meta_name]);
                 }
                 if ($inreg == false) {
                     App::RedirectError();
@@ -252,7 +252,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_vydalennia_dokumenta') . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -288,7 +288,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права проведення документа " . self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_provedennia_dokumenta') . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -320,7 +320,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права зміни статусу документа " . self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_zminy_statusu_dokumenta') . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -352,7 +352,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права скасування документа ". self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_skasuvannia_dokumenta'). self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -376,7 +376,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права доступу до сторінки " . self::$_metasdesc[$ser]);
+            System::setErrorMsg(__('app.acl.nemaie_prava_dostupu_do_storinky') . self::$_metasdesc[$ser]);
 
             App::RedirectError();
         }
@@ -426,7 +426,7 @@ class ACL
         if ($id > 0) {
             return $id;
         }
-        \App\System::setErrorMsg('Для створення документу має бути вибрана філія');
+        \App\System::setErrorMsg(__('app.acl.dlia_stvorennia_dokumentu_maie_buty'));
         \App\Application::Redirect("\\App\\Pages\\Blank");
     }
 

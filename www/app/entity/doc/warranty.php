@@ -46,7 +46,7 @@ class Warranty extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ГТ-000000';
+        return __('doc.warranty.ht_000000');
     }
 
 }

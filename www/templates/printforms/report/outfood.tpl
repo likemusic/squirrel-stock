@@ -2,13 +2,13 @@
 
     <tr>
         <td align="center" colspan="3">
-            <h4> Звіт по кафе </h4>
+            <h4> {{#t}}print.outfood.zvit_po_kafe{{/t}} </h4>
         </td>
     </tr>
     <tr>
 
         <td colspan="3">
-            Період з <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
+            {{#t}}common.period_z{{/t}} <b>{{datefrom}}</b> {{#t}}common.po{{/t}} <b>{{dateto}}</b> <br>
         </td>
     </tr>
     {{#isd1}}
@@ -16,19 +16,19 @@
     <tr>
 
         <td colspan="3">
-            <h5> Замовлення </h5>
+            <h5> {{#t}}common.zamovlennia{{/t}} </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
-        <th style="border: solid black 1px">День</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
-        <th align="right" style="border: solid black 1px">Сер. чек</th>
+        <th style="border: solid black 1px">{{#t}}print.outfood.den{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.na_sumu{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.outfood.ser_chek{{/t}}</th>
 
 
         </tr>
@@ -56,17 +56,17 @@
     <tr>
 
         <td colspan="3"><br>
-            <h5>Позиції   </h5>
+            <h5>{{#t}}print.outfood.pozytsii{{/t}}   </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kil{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.na_sumu{{/t}}</th>
        </tr>
         
         {{#_detail2}}

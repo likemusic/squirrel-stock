@@ -174,7 +174,7 @@ class ServiceList extends \App\Pages\Base
         $this->_service->nds = $this->servicedetail->editnds->getText();
         $this->_service->notes = $this->servicedetail->editnotes->getText();
         if ($this->_service->service_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;
@@ -259,13 +259,13 @@ class ServiceList extends \App\Pages\Base
         $colnotes  = $this->importform->cform->colnotes->getValue();
        
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError(__('common.ne_vkazano_kolonku_z_nazvoiu'));
             return;
         }
 
         $file = $this->importform->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -338,7 +338,7 @@ class ServiceList extends \App\Pages\Base
         }
 
        $this->servicetable->servicelist->Reload();
-       $this->setSuccess("Імпортовано {$cnt} позицій ");
+       $this->setSuccess(__('reference.servicelist.importovano_pozytsii', ['cnt' => $cnt]));
     }
     
     
@@ -391,7 +391,7 @@ class ServiceList extends \App\Pages\Base
         $form=  $this->setpanel->setform;
         $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано ТМЦ");
+            $this->setError(__('common.ne_obrano_tmts'));
             return;
         }
 

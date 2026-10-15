@@ -210,7 +210,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ProdIssue');
             if (count($d) > 0) {
 
-                $this->setWarn('Вже існує документ Списання на виробництво');
+                $this->setWarn(__('register.tasklist.vzhe_isnuie_dokument_spysannia_na'));
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
             return;
@@ -219,7 +219,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ProdReceipt');
             if (count($d) > 0) {
 
-                $this->setWarn('Вже існує документ Оприбуткування з виробництво');
+                $this->setWarn(__('register.tasklist.vzhe_isnuie_dokument_oprybutkuvannia_z'));
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, $this->_task->document_id);
             return;
@@ -228,7 +228,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ServiceAct');
             if (count($d) > 0) {
 
-                $this->setWarn('Вже існує документ Акт виконаних робіт');
+                $this->setWarn(__('register.tasklist.vzhe_isnuie_dokument_akt_vykonanykh'));
             }
             Application::Redirect("\\App\\Pages\\Doc\\ServiceAct", 0, $this->_task->document_id);
             return;

@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Звіт по заробітній платі
+            {{#t}}common.zvit_po_zarobitnii_plati{{/t}}
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="3">
-            Період з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+            {{#t}}print.salaryrep.period_z_po{{/t}}
         </td>
     </tr>
     {{#isemp}}
@@ -31,7 +31,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-end">Всього:</td>
+        <td class="text-end">{{#t}}common.vsoho{{/t}}</td>
 
         <td class="text-end">{{total}}</td>
       <td></td>
@@ -39,7 +39,7 @@
      <tr >
 
         <td style="font-weight: bolder;" colspan="3">
-         <br>   Нарахування та утримання
+         <br>   {{#t}}app.empacc.narakhuvannia_ta_utrymannia{{/t}}
         </td>
     </tr>
     {{#_detail2}}

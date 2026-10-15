@@ -59,7 +59,7 @@ class Menu extends \Zippy\Html\WebPage
         $this->_tvars['secondm3']  = $options['foodmenu3'] > 0;
         $this->_tvars['secondm4']  = $options['foodmenu4'] > 0;
 
-        $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : 'Основне меню' ;
+        $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : __('service.armfood.osnovne_meniu') ;
         $this->_tvars['smname']= $options['foodmenuname']  ;  
         $this->_tvars['smname3']= $options['foodmenuname3']  ;  
         $this->_tvars['smname4']= $options['foodmenuname4']  ;  

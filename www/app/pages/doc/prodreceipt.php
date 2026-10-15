@@ -97,7 +97,7 @@ class ProdReceipt extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText('Замовлення ' . $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.prodreceipt.zamovlennia') . $basedoc->document_number);
                         
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getProdprice($this->_doc->headerdata['store'],"",true);
@@ -107,7 +107,7 @@ class ProdReceipt extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.poscheck.nariad') . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                 
                         foreach ($basedoc->unpackDetails('prodlist') as $item) {
@@ -215,7 +215,7 @@ class ProdReceipt extends \App\Pages\Base
         $item = Item::load($id);
 
         if ($item == null) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -226,7 +226,7 @@ class ProdReceipt extends \App\Pages\Base
                $ids= array_keys($st->itemlist) ; 
                
                if(!in_array($item->item_id,$ids)) {
-                    $this->setError( "ТМЦ не в переліку  на  етапі");
+                    $this->setError( __('doc.prodmove.tmts_ne_v_pereliku_na'));
                     return;
           
                }
@@ -238,7 +238,7 @@ class ProdReceipt extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->price = $this->editdetail->editprice->getDouble();
         if ($item->price == 0) {
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn(__('common.ne_vkazana_tsina'));
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -246,7 +246,7 @@ class ProdReceipt extends \App\Pages\Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -359,21 +359,21 @@ class ProdReceipt extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
 
 

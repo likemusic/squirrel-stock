@@ -1,6 +1,6 @@
 <html>
     <head>
-    <title> Проекти   </title>
+    <title> {{#t}}common.proekty{{/t}}   </title>
 
     </head>
 
@@ -10,26 +10,26 @@
     
         <div class="row"  id="vapp" >
             <div v-show="this.mode=='list'" class="col-12   ">
-                <h2>Проекти</h2>
+                <h2>{|#t|}common.proekty{|/t|}</h2>
                 <div class="navbar  ">
                     <form>    
                        <div class="row  ">
                          <div class="col-auto  ">
-                        <input  v-model="searchtext" placeholder="Пошук..." class="form-control me-2" type="text"  >
+                        <input  v-model="searchtext" placeholder="{|#t|}common.ph.search{|/t|}" class="form-control me-2" type="text"  >
                          </div>
-                        <label class="col-form-label col-auto" for="searchstate">статус </label>
+                        <label class="col-form-label col-auto" for="searchstate">{|#t|}mod.issue.projectlist.status{|/t|} </label>
                          <div class="col-auto  ">
                         <select v-model="searchstate" class="form-control  me-2   "  >
-                            <option value="0">Відкриті</option>
+                            <option value="0">{|#t|}common.vidkryti{|/t|}</option>
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option>                            
                         </select>
                         </div>
-                        <label class="col-form-label col-auto" for="searchcust">замовник </label>
+                        <label class="col-form-label col-auto" for="searchcust">{|#t|}mod.issue.projectlist.zamovnyk{|/t|} </label>
                          <div class="col-auto  ">
                         <select v-model="searchcust" class="form-control     "  >
-                           <option value="0">Не обрано</option>
+                           <option value="0">{|#t|}common.ne_obrano{|/t|}</option>
                 
                            <option v-for="option in custlist" :value="option.key">
                               {{ option.value }}
@@ -37,7 +37,7 @@
                        </select>
                         </div>
                        <div class="col-auto  ">
-                        <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="ОК">
+                        <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="{|#t|}common.ok{|/t|}">
                         </div>
                      </div>
                         
@@ -46,13 +46,13 @@
                 </div>
             </div>
             <div v-show="this.mode=='list'" class="col-12 col-md-10 col-xl-8 ">
-                <a  v-on:click.prevent="add()"  class="btn btn-primary  ">Новий проект</a>
+                <a  v-on:click.prevent="add()"  class="btn btn-primary  ">{|#t|}mod.issue.projectlist.novyi_proekt{|/t|}</a>
                 <table class="table table-bordered  table-sm">
                     <tr>
-                        <th>Назва</th>
-                        <th>Замовник</th>
-                        <th>Статус</th>
-                        <th colspan="3" class="text-center">Завдання</th>
+                        <th>{|#t|}common.nazva{|/t|}</th>
+                        <th>{|#t|}common.zamovnyk{|/t|}</th>
+                        <th>{|#t|}common.status{|/t|}</th>
+                        <th colspan="3" class="text-center">{|#t|}common.zavdannia{|/t|}</th>
 
                         <th></th>
                         <th></th>
@@ -62,19 +62,19 @@
                         <td  >{{project.project_name}}</td>
                         <td  >{{project.customer_name}}</td>
                         <td  >{{project.status}}</td>
-                        <td style="width:40px" ><span   title="Нові" class="badge text-bg success  " v-show="project.inew>0">{{project.inew}}</span></td>
-                        <td style="width:40px"><span   title="В роботі" class="badge text-bg primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
-                        <td style="width:40px"><span   title="Закриті" class="badge text-bg secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
+                        <td style="width:40px" ><span   title="{|#t|}common.novi{|/t|}" class="badge text-bg success  " v-show="project.inew>0">{{project.inew}}</span></td>
+                        <td style="width:40px"><span   title="{|#t|}common.v_roboti{|/t|}" class="badge text-bg primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
+                        <td style="width:40px"><span   title="{|#t|}common.zakryti{|/t|}" class="badge text-bg secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
 
                         <td>
-                            <a  v-show="project.allowedit" v-on:click.prevent="show(project.project_id)"   title="Перегляд" href="javascript:void(0)" ><i class="fa fa-eye"></i></a>
+                            <a  v-show="project.allowedit" v-on:click.prevent="show(project.project_id)"   title="{|#t|}common.perehliad{|/t|}" href="javascript:void(0)" ><i class="fa fa-eye"></i></a>
                          </td>
                          <td>   
-                            <a  v-show="project.allowedit" v-on:click.prevent="edit(project.project_id)"   title="Редагувати" href="javascript:void(0)" ><i class="fa fa-edit"></i></a>
+                            <a  v-show="project.allowedit" v-on:click.prevent="edit(project.project_id)"   title="{|#t|}common.redahuvaty{|/t|}" href="javascript:void(0)" ><i class="fa fa-edit"></i></a>
                          </td>
                          <td>
                            
-                            <a  v-show="project.allowdel" v-on:click.prevent="del(project.project_id,project.project_name)"   title="Вилучити" href="javascript:void(0)" ><i class="fa fa-trash"></i></a>
+                            <a  v-show="project.allowdel" v-on:click.prevent="del(project.project_id,project.project_name)"   title="{|#t|}common.vyluchyty{|/t|}" href="javascript:void(0)" ><i class="fa fa-trash"></i></a>
                          </td>
                     </tr>
                 </table>
@@ -89,22 +89,22 @@
                         <div class="col-12 col-md-8  col-xl-6">
 
                             <div class="mb-2">
-                                <label for="editname"> Назва</label>
+                                <label for="editname"> {|#t|}common.nazva{|/t|}</label>
                                 <input v-model="editname" id="editname" name="editname" class="form-control" type="text"    >
                             </div>
                             <div class="mb-2">
-                                <label for="editcust"> Замовник </label>
-                                <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="Почніть вводити ..."></typeahead>   
+                                <label for="editcust"> {|#t|}common.zamovnyk{|/t|} </label>
+                                <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="{|#t|}mod.issue.projectlist.pochnit_vvodyty{|/t|}"></typeahead>   
 
                             </div>
                             <div class="mb-2">
-                                <label for="editdesc"> Опис </label>
+                                <label for="editdesc"> {|#t|}common.opys{|/t|} </label>
                                 <div  id="editdesc" class="form-control me-2"  ></div>
                             </div>
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
                             <div class="mb-2">
-                                <label> Перелік учасників </label>
+                                <label> {|#t|}mod.issue.projectlist.perelik_uchasnykiv{|/t|} </label>
                               
                                 <div v-for="user in users">
                                   <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
@@ -117,8 +117,8 @@
                         <div class="col-12 col-md-4  col-xl-4">
 
                             <div class="mb-2">
-                                <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-secondary ">
-                                <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ms-2 "> 
+                                <input v-on:click.prevent="onback"  type="button" value="{|#t|}common.skasuvaty{|/t|}" class="btn btn-secondary ">
+                                <input v-on:click.prevent="onsave" type="button" value="{|#t|}common.zberehty{|/t|}" class="btn btn-primary ms-2 "> 
                             </div>
 
                         </div>
@@ -127,13 +127,13 @@
             </div>            
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
                 <h4>{{title}} </h4>
-                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> До переліку</a>
-                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До переліку завдань</a>
-                &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Створити завдання</a>
+                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> {|#t|}common.do_pereliku{|/t|}</a>
+                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  {|#t|}mod.issue.projectlist.do_pereliku_zavdan{|/t|}</a>
+                &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> {|#t|}mod.issue.projectlist.stvoryty_zavdannia{|/t|}</a>
 
                 <form   >
                       <div class="row  ">
-                        <label class="col-form-label col-auto" for="stlist">Статус </label>
+                        <label class="col-form-label col-auto" for="stlist">{|#t|}common.status{|/t|} </label>
                          <div class="col-auto  ">
                         <select id="stlist" v-on:change="onchstatus" v-model="currstatus" class="form-control   ms-1  " >
                            <option v-for="option in stlist" :value="option.key">
@@ -148,12 +148,12 @@
 
                 <form id="fileaddform"    enctype="multipart/form-data">
                        <div class="row  "> 
-                        <label class="col-form-label col-auto"> Вибрати файл: </label>
+                        <label class="col-form-label col-auto"> {|#t|}common.vybraty_fail{|/t|} </label>
                          <div class="col-auto  ">
                           <input name="pfile" class="form-control me-2" type="file" >
                         </div>
                          <div class="col-auto  ">
-                          <input  v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати">
+                          <input  v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="{|#t|}common.dodaty{|/t|}">
                        </div>
                       </div>
                     </form>
@@ -161,13 +161,13 @@
                     <div v-for="f in filelist"  style="float:left">
 
                         <i class="fa fa-paperclip"></i> <a :href="f.url" target="_blank">{{f.filename}}</a>
-                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)" href="javascript:void(0)"   class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
+                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)" href="javascript:void(0)"   class="text-danger  text-bold" title="{|#t|}common.vyluchyty{|/t|}">x</a>&nbsp;&nbsp;
 
                     </div>
 
 
                     <hr>
-                    <h4>Коментарі</h4>
+                    <h4>{|#t|}common.komentari{|/t|}</h4>
                     <table style="width:400px" class="table table-sm">
                         <tr v-for="msg in msglist" >
                             <td>
@@ -176,23 +176,23 @@
                                 <br><span  >{{msg.data}}</span>
 
                             </td>
-                            <td valign="top"><a v-show="msg.candel" v-on:click.prevent="delmsg(msg.message_id)"   title="Вилучити" href="javascript:void(0)"  class="text-danger text-bold">x</a></td>
+                            <td valign="top"><a v-show="msg.candel" v-on:click.prevent="delmsg(msg.message_id)"   title="{|#t|}common.vyluchyty{|/t|}" href="javascript:void(0)"  class="text-danger text-bold">x</a></td>
                         </tr>
                     </table>
                     
 
                     <form >
-                        <label> Коментар: </label>
+                        <label> {|#t|}common.komentar_2{|/t|} </label>
                         <div class="mb-2">
                             <textarea v-model="msg" class="form-control"  style="width:400px;height:120px;"></textarea>
                         </div>
-                        <input   v-on:click.prevent="onmsg"  class="btn btn-success  " type="button" value="Додати">
+                        <input   v-on:click.prevent="onmsg"  class="btn btn-success  " type="button" value="{|#t|}common.dodaty{|/t|}">
                     </form>
  
                          
           </div>
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
-                <h4>Опис</h4>
+                <h4>{|#t|}common.opys{|/t|}</h4>
                 <p v-html="desc"></p>
           </div>
         </div>

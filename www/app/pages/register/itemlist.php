@@ -43,7 +43,7 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
 
         $catlist = array();
-        $catlist[-1] = "Без категорії";
+        $catlist[-1] = __('common.bez_katehorii');
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -300,8 +300,8 @@ class ItemList extends \App\Pages\Base
         $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st}  and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
-           $this->_tvars["i_lastsell"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
-           $this->_tvars["i_lastsell"] .= (' Продано  '. H::fqty(0-$e->quantity) .' по '. H::fa($e->outprice)  ) ; 
+           $this->_tvars["i_lastsell"] =  $d->document_number .__('doc.document.vid'). H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastsell"] .= (__('register.itemlist.prodano'). H::fqty(0-$e->quantity) .__('register.itemlist.po'). H::fa($e->outprice)  ) ; 
         }
 
         $this->detailpanel->iformbay->setVisible(false);
@@ -309,8 +309,8 @@ class ItemList extends \App\Pages\Base
         $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity > 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsReceipt')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
-           $this->_tvars["i_lastbay"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
-           $this->_tvars["i_lastbay"] .= (' Закуплено  '. H::fqty($e->quantity) .' по '. H::fa($e->partion)  ) ; 
+           $this->_tvars["i_lastbay"] =  $d->document_number .__('doc.document.vid'). H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastbay"] .= (__('register.itemlist.zakupleno'). H::fqty($e->quantity) .__('register.itemlist.po'). H::fa($e->partion)  ) ; 
            
            $this->detailpanel->iformbay->setVisible(true);
            $this->detailpanel->iformbay->iformbayqty->setText($e->quantity);
@@ -339,7 +339,7 @@ class ItemList extends \App\Pages\Base
                 $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
                 $sell =   $conn->GetOne($sql)  ;
                 $sell =  number_format($sell/$interval->days*30, 1, '.', '');
-                $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в міс.";
+                $this->_tvars["i_avgout"] = __('register.itemlist.serednia_prodazha_v_mis', ['sell' => $sell]);
                 
                 
             }  
@@ -360,7 +360,7 @@ class ItemList extends \App\Pages\Base
           $r = $this->addItemToCO([$this->_item->item_id,$qty]);
           if($r==""){
              $sender->iformbayqty->setText('') ;                 
-             $this->setSuccess('Додано') ;
+             $this->setSuccess(__('register.iostate.dodano')) ;
           } else {
               $this->setError($r) ;
           }
@@ -381,15 +381,15 @@ class ItemList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменуваня";
-        $header['B1'] = "Артикул";
-        $header['C1'] = "Штрих-код";
-        $header['D1'] = "Од.";
-        $header['E1'] = "Категорія";
-        $header['F1'] = "Бренд";
-        $header['G1'] = "Комірка";
-        $header['H1'] = "Кіл.";
-        $header['I1'] = "Обл. ціна";
+        $header['A1'] = __('register.itemlist.naimenuvania');
+        $header['B1'] = __('common.artykul');
+        $header['C1'] = __('common.shtrykh_kod');
+        $header['D1'] = __('common.od');
+        $header['E1'] = __('common.katehoriia');
+        $header['F1'] = __('common.brend');
+        $header['G1'] = __('common.komirka');
+        $header['H1'] = __('common.kil');
+        $header['I1'] = __('common.obl_tsina');
         if($this->_tvars["noshowpartion"] == true) {
             $header['I1'] ='';
         }
@@ -410,8 +410,8 @@ class ItemList extends \App\Pages\Base
             $header['N1'] = $common['price5'];
         }
 
-        $header['O1'] = "На суму";
-        $header['P1'] = "Опис";
+        $header['O1'] = __('common.na_sumu');
+        $header['P1'] = __('common.opys');
 
         $i = 1;
         foreach ($list as $item) {

@@ -1,35 +1,35 @@
 <html>
     <head>
-          <title> Замовлення</title>
+          <title> {{#t}}common.zamovlennia{{/t}}</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Замовлення </h3>
+            <h3>{{#t}}common.zamovlennia{{/t}} </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number"  required="on" readonly="on" >
                     </div>
                    <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>   
                    <div class="mb-2">
-                        <label for="outnumber"> Зовнішній номер</label>
+                        <label for="outnumber"> {{#t}}common.zovnishnii_nomer{{/t}}</label>
                         <input class="form-control" type="text" zippy="outnumber" style="width:100px"    >
-                      <small>  Наприклад номер замовлення на  маркетплейсі </small>
+                      <small>  {{#t}}mod.df.order.napryklad_nomer_zamovlennia_na_marketple{{/t}} </small>
                     </div>   
                  
               
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <textarea class="form-control" zippy="notes"></textarea>
-                        <small>Додаткова інформація (наприклад  про оплату)  </small>
+                        <small>{{#t}}mod.df.order.dodatkova_informatsiia_napryklad_pro_opl{{/t}}  </small>
 
                     </div>
 
@@ -40,7 +40,7 @@
                                       
                     
                     <div class="mb-2">
-                        <label for="delivery">Доставка</label>
+                        <label for="delivery">{{#t}}common.dostavka{{/t}}</label>
 
                         <select class="form-control" zippy="delivery">
 
@@ -49,34 +49,34 @@
                     </div>
                      {{#np}}
                         <div class="mb-2">
-                            <label for="deliverynp">Тип доставки НП</label>
+                            <label for="deliverynp">{{#t}}doc.order.typ_dostavky_np{{/t}}</label>
                              <select zippy="deliverynp" class="form-control     ">
-                                <option value="0">Відділення</option>
-                                <option value="1">Поштомат</option>
-                                <option value="2">За адресою</option>
+                                <option value="0">{{#t}}common.viddilennia{{/t}}</option>
+                                <option value="1">{{#t}}common.poshtomat{{/t}}</option>
+                                <option value="2">{{#t}}common.za_adresoiu{{/t}}</option>
                             </select>
                         </div>                     
                        <div class="mb-2">
-                        <label for="baycity">Населений пункт</label>
+                        <label for="baycity">{{#t}}common.naselenyi_punkt{{/t}}</label>
 
-                        <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="baycity" class="form-control   "/>
 
                     </div>
                     <div class="mb-2">
-                        <label for="baypoint">Відділення</label>
+                        <label for="baypoint">{{#t}}common.viddilennia{{/t}}</label>
 
-                        <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
-                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="baypoint" class="form-control   "/>
+                         <small>{{#t}}common.dlia_poshuku_po_nomeru_dodaite{{/t}}</small>
                     </div>                    
                        {{/np}}
                     <div class="mb-2">
-                        <label data-label="address" for="address">Адреса</label>
+                        <label data-label="address" for="address">{{#t}}common.adresa_2{{/t}}</label>
                         <textarea zippy="address" class="form-control"></textarea>
                     </div>
                      <div class="mb-2 row">
-                            <label for="bayhouse">Буд.</label>
+                            <label for="bayhouse">{{#t}}common.bud{{/t}}</label>
                             <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
-                            <label for="bayflat">Кв. </label>
+                            <label for="bayflat">{{#t}}common.kv{{/t}} </label>
                             <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
                      </div>                    
                 </div>
@@ -85,21 +85,21 @@
                 <div class="col-12 col=md-10 col-xl-8 ">
                
                   
-                    <a zippy="addrow" class="btn btn-primary  ">Додати товар</a>
+                    <a zippy="addrow" class="btn btn-primary  ">{{#t}}common.dodaty_tovar{{/t}}</a>
                     <table class="table table-sm">
                         <tr>
-                            <th>Назва</th>
-                            <th>Код</th>
-                            <th>Од.</th>
+                            <th>{{#t}}common.nazva{{/t}}</th>
+                            <th>{{#t}}common.kod{{/t}}</th>
+                            <th>{{#t}}common.od{{/t}}</th>
                             <th  > </th>
 
-                            <th class="text-end">Кіл.</th>
+                            <th class="text-end">{{#t}}common.kil{{/t}}</th>
                             {{#isds}}
-                            <th class="text-end"> Склад. ціна</th>                            
+                            <th class="text-end"> {{#t}}print.order_df.sklad_tsina{{/t}}</th>                            
                             {{/isds}}
-                            <th class="text-end">Прод. ціна</th>
+                            <th class="text-end">{{#t}}common.prod_tsina{{/t}}</th>
 
-                            <th class="text-end">Сума</th>
+                            <th class="text-end">{{#t}}common.suma{{/t}}</th>
 
                             <th  ></th>
                         </tr>
@@ -122,7 +122,7 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-end">На суму:</td>
+                            <td colspan="5" class="text-end">{{#t}}common.na_sumu_2{{/t}}</td>
                             {{#isds}}
                             <td zippy="totalfrom" class="text-end">     </td>
                             {{/isds}}
@@ -137,9 +137,9 @@
             </div>
             <div class="row">
                 <div class="col-9 d-flex justify-content-end pt-4">
-                    <a   class="btn btn-secondary  ms-2 " href="/partner">Скасувати</a>
-                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ms-2 ">
-                     <input zippy="execdoc" type="submit"   value="В обробку" class="btn btn-success  ms-2 ">
+                    <a   class="btn btn-secondary  ms-2 " href="/partner">{{#t}}common.skasuvaty{{/t}}</a>
+                      <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ms-2 ">
+                     <input zippy="execdoc" type="submit"   value="{{#t}}mod.df.order.v_obrobku{{/t}}" class="btn btn-success  ms-2 ">
 
                    
 
@@ -152,42 +152,42 @@
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
                 <form zippy="editdetail">
-                    <h4>Введення товару </h4>
+                    <h4>{{#t}}common.vvedennia_tovaru{{/t}} </h4>
                     <div class="mb-2">
-                        <label for="edittovar">Назва</label>
+                        <label for="edittovar">{{#t}}common.nazva{{/t}}</label>
                       
-                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control " zippy="edittovar"/>
                        </div>  
                         <div class="mb-2">                                             
-                        <a zippy="openitemsel">Відкрити довідник</a>
+                        <a zippy="openitemsel">{{#t}}common.vidkryty_dovidnyk{{/t}}</a>
                        
                         {{#isds}}
                         
-                        <br>   Складська ціна:   <span zippy="pricefrom"></span>
+                        <br>   {{#t}}mod.df.order.skladska_tsina{{/t}}   <span zippy="pricefrom"></span>
                         {{/isds}}   
                         
                     </div>
                     <div class="mb-2">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">{{#t}}common.kilkist{{/t}}</label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on"                                pattern="[0-9,\.\s]+" style="width: 100px;">
 
                     </div>
                     <div class="mb-2">
-                        <label for="editprice">Продажна ціна </label>
+                        <label for="editprice">{{#t}}mod.df.order.prodazhna_tsina{{/t}} </label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
 
                     </div>
 
                     <div class="mb-2">
-                        <label for="editdesc">Коментар </label>
+                        <label for="editdesc">{{#t}}common.komentar{{/t}} </label>
                         <input   class="form-control" type="text" zippy="editdesc"     >
 
                     </div>
 
                     <div class="mb-2">
                       
-                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary ">
-                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
+                         <input type="button" zippy="cancelrow" value="{{#t}}common.do_pereliku{{/t}}" class="btn btn-secondary ">
+                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary ">
                     </div>
                 </form>
 
@@ -199,17 +199,17 @@
 
                     <form zippy="wisfilter"  >
                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
+                        <label class="col-form-label col-auto" for="wissearchkey">{{#t}}common.poshuk_2{{/t}}</label>
                         <div class="col-auto  ">
                         <input class="form-control ms-sm-2" type="text" zippy="wissearchkey">
                          </div>
-                        <label class="col-form-label col-auto" for="wissearchcat">категорія</label>
+                        <label class="col-form-label col-auto" for="wissearchcat">{{#t}}common.katehoriia_2{{/t}}</label>
                         <div class="col-auto  ">
                         <select class="form-control ms-sm-2" zippy="wissearchcat">
-                            <option value="0">Не задано</option>
+                            <option value="0">{{#t}}common.ne_zadano{{/t}}</option>
                         </select>
                          </div>
-                        <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
+                        <label class="col-form-label col-auto" for="wissearchmanufacturer">{{#t}}common.brend{{/t}} </label>
                         <div class="col-auto  ">
                         <input autocomplete="off" list="wissearchmanlist" class="form-control me-2" zippy="wissearchmanufacturer"/>
                          </div>
@@ -224,13 +224,13 @@
                          
                    <div class="col-auto  ">       
                      <div class="form-check  pt-2">
-                       <label for="wissearchonstore" class="form-check-label">В наявності </label> 
+                       <label for="wissearchonstore" class="form-check-label">{{#t}}common.v_naiavnosti{{/t}} </label> 
                        <input type="checkbox" zippy="wissearchonstore" class="form-check-input  me-2"  >
                       </div> 
                        </div>                 
                       {{/isds}}       
                     <div class="col-auto  ">      
-                        <input class="btn btn-success  " type="submit" value="ОК">
+                        <input class="btn btn-success  " type="submit" value="{{#t}}common.ok{{/t}}">
                         </div>
                     </form>
                 </div>

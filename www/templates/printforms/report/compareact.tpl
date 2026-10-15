@@ -3,24 +3,24 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Акт звірки від {{date}}<br>
+            {{#t}}print.compareact.akt_zvirky_vid{{/t}}<br>
         </td>
     </tr>
    <tr style=" font-weight: bolder;">
         <td  colspan="5">
-            Контрагент {{cust}}<br><br>
+            {{#t}}print.compareact.kontrahent{{/t}}<br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px">Дата</th>
-        <th style="border: solid black 1px">Номер</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.nomer{{/t}}</th>
 
-        <th align="right" style="border: solid black 1px">Дебет</th>
-        <th align="right" style="border: solid black 1px">Кредит</th>
-        <th align="right" style="border: solid black 1px">Сальдо</th>
-        <th style="border: solid black 1px">Тип документу</th>
-        <th  style="border: solid black 1px">Оплати</th>
-        <th  style="border: solid black 1px">Примітка</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.debet{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}common.kredyt{{/t}}</th>
+        <th align="right" style="border: solid black 1px">{{#t}}print.compareact.saldo{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}print.compareact.typ_dokumentu{{/t}}</th>
+        <th  style="border: solid black 1px">{{#t}}print.compareact.oplaty{{/t}}</th>
+        <th  style="border: solid black 1px">{{#t}}common.prymitka{{/t}}</th>
 
     </tr>
     {{#_detail}}

@@ -1,51 +1,51 @@
 <html>
     <head>
-          <title> Переміщення ТМЦ</title>
+          <title> {{#t}}doc.moveitem.peremishchennia_tmts{{/t}}</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Переміщення ТМЦ</h3>
+            <h3> {{#t}}doc.moveitem.peremishchennia_tmts{{/t}}</h3>
             {{#usebranch}}
-            <small>Переміщення між філіями  виконується документом Списання ТМЦ</small>
+            <small>{{#t}}doc.moveitem.peremishchennia_mizh_filiiamy_vykonuiets{{/t}}</small>
             {{/usebranch}}
             <div class="row">
                 <div class="col-12 col-md-3">
 
                     <div class="mb-2">
-                        <label for="store">Зі складу <small class="text-danger">*</small></label>
+                        <label for="store">{{#t}}common.zi_skladu{{/t}} <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
                      {{#storeemp}}
                      <div class="mb-2">
-                        <label for="storeemp">Зі співробітника</label>
+                        <label for="storeemp">{{#t}}common.zi_spivrobitnyka{{/t}}</label>
                         <select class="form-control  " zippy="storeemp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
-                        <small> Матеріально відповідальна  особа</small>
+                        <small> {{#t}}common.materialno_vidpovidalna_osoba{{/t}}</small>
                     </div> 
                       {{/storeemp}}                     
                     <div class="mb-2">
-                        <label for="tostore">На склад <small class="text-danger">*</small></label>
+                        <label for="tostore">{{#t}}common.na_sklad{{/t}} <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="tostore">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
 
                     </div>
             {{#storeemp}}
                      <div class="mb-2">
-                        <label for="tostoreemp">На співробітника</label>
+                        <label for="tostoreemp">{{#t}}common.na_spivrobitnyka{{/t}}</label>
                         <select class="form-control  " zippy="tostoreemp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
-                        <small> Матеріально відповідальна  особа</small>
+                        <small> {{#t}}common.materialno_vidpovidalna_osoba{{/t}}</small>
                     </div> 
                       {{/storeemp}}                      
                     <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -54,11 +54,11 @@
                 </div>
                   <div class="col-12 col-md-3">
                         <div class="mb-2">
-                        <label for="document_number">Номер документа <small class="text-danger">*</small></label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}} <small class="text-danger">*</small></label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date"> Дата <small class="text-danger">*</small></label>
+                        <label for="document_date"> {{#t}}common.data{{/t}} <small class="text-danger">*</small></label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>          
                 </div>
@@ -67,27 +67,27 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off"   autofocus="on"   type="text" zippy="barcode" onkeydown="onBarCode()">
+                        {{#t}}common.shtrykh_kod_nbsp{{/t}}<input autocomplete="off"   autofocus="on"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         <a zippy="addcode" class="btn btn-success btn-sm me-1">+</a>
                        
 
 
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a class="btn btn-primary  " zippy="addrow">Додати позицію</a>
+                    &nbsp; <a class="btn btn-primary  " zippy="addrow">{{#t}}common.dodaty_pozytsiiu{{/t}}</a>
 
                     {{#usesnumberitem}}
-                       &nbsp;&nbsp;  <a zippy="opensn"  > Введення за  серійними номерами</a>
+                       &nbsp;&nbsp;  <a zippy="opensn"  > {{#t}}common.vvedennia_za_seriinymy_nomeramy{{/t}}</a>
                     {{/usesnumberitem}}                    
                     
                     <table class="table table-sm">
                         <tr>
-                            <th>Назва</th>
-                            <th>Артикул</th>
-                            <th>Од.</th>
-                             <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                            <th>{{#t}}common.nazva{{/t}}</th>
+                            <th>{{#t}}common.artykul{{/t}}</th>
+                            <th>{{#t}}common.od{{/t}}</th>
+                             <th>{{#usesnumber}}{{#t}}common.seriia{{/t}} {{/usesnumber}}</th>
                  
-                            <th   class="text-end">Кіл.</th>
+                            <th   class="text-end">{{#t}}common.kil{{/t}}</th>
 
                           
                             <th  ></th>
@@ -115,9 +115,9 @@
 
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary ms-2">
-                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary ms-2">
+                     <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>
@@ -132,12 +132,12 @@
             <div class="col-12 col-md-4">
                
                  <form zippy="editdetail">
-                  <h4>Введення товару </h4>
+                  <h4>{{#t}}common.vvedennia_tovaru{{/t}} </h4>
                 <div class="mb-2">
-                    <label for="edititem">Найменування</label>
-                    <input    class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
-                     <a zippy="openitemsel">Відкрити довідник</a>
-                  <br>  Наявність: <span zippy="qtystock"></span>
+                    <label for="edititem">{{#t}}common.naimenuvannia{{/t}}</label>
+                    <input    class="form-control" zippy="edititem" placeholder="{{#t}}common.pochnit_vvodyty{{/t}} ">
+                     <a zippy="openitemsel">{{#t}}common.vidkryty_dovidnyk{{/t}}</a>
+                  <br>  {{#t}}common.naiavnist{{/t}} <span zippy="qtystock"></span>
 
 
                 </div>
@@ -145,10 +145,10 @@
                 <div class="mb-2">
 
                          {{^usesnumberitem}}
-                        <label for="editsnumber">Серія (партія) виробника </label>
+                        <label for="editsnumber">{{#t}}common.seriia_partiia_vyrobnyka{{/t}} </label>
                          {{/usesnumberitem}}
                          {{#usesnumberitem}}
-                        <label for="editsnumber">Серійний номер </label>
+                        <label for="editsnumber">{{#t}}common.seriinyi_nomer{{/t}} </label>
                          {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
@@ -156,7 +156,7 @@
                 </div>
                 {{/usesnumber}}
                 <div class="mb-2">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">{{#t}}common.kilkist{{/t}}</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                             required="on"  pattern="[0-9,\.]+"/>
@@ -164,8 +164,8 @@
                 </div>
 
                 <div class="mb-2">
-                    <input type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-secondary  me-2">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-primary">
+                    <input type="button" zippy="cancelrow" value="{{#t}}common.skasuvaty{{/t}}" class="btn   btn-secondary  me-2">
+                    <input zippy="saverow" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn  btn-primary">
                     
                 </div>
                  </form>
@@ -180,25 +180,25 @@
    
     
      <form zippy="editsnitem">
-            <h3>&nbsp; Введення за  серійними номерами</h3>
+            <h3>{{#t}}common.nbsp_vvedennia_za_seriinymy_nomeramy{{/t}}</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="mb-2">
-                        <label for="editsnitemname">Назва </label>
-                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required="on" />
+                        <label for="editsnitemname">{{#t}}common.nazva{{/t}} </label>
+                        <input  autofocus="on"   placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control " zippy="editsnitemname"  required="on" />
                     </div>
                     <div class="mb-2">
-                        <label for="editsn">Серійні номери</label>
+                        <label for="editsn">{{#t}}common.seriini_nomery{{/t}}</label>
                         <textarea style="height:400px;" class="form-control" type="text" zippy="editsn"> </textarea>
-                        <small>По номеру в  рядку</small>
+                        <small>{{#t}}common.po_nomeru_v_riadku{{/t}}</small>
                     </div>
           
                
                     
                     <div class="mb-2">
-                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-secondary me-2">
-                        <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-primary">
+                        <input type="button" zippy="cancelsnitem" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2">
+                        <input zippy="savesnitem" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                         
                     </div>
                 </div>

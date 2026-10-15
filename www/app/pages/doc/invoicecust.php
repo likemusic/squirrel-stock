@@ -242,7 +242,7 @@ class InvoiceCust extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -252,7 +252,7 @@ class InvoiceCust extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getDouble();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn(__('common.ne_vkazana_tsina'));
         }
         $item->pricends= $item->price + $item->price * $item->nds();
  
@@ -326,7 +326,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError(__('common.fail_bilshe_10_mb'));
             return;
         }
 
@@ -362,8 +362,8 @@ class InvoiceCust extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                H::addFile($file, $this->_doc->document_id, __('common.skan'), \App\Entity\Message::TYPE_DOC);
+                $id = H::addFile($file, $this->_doc->document_id, __('common.skan'), \App\Entity\Message::TYPE_DOC);
                 $imagedata = getimagesize($file["tmp_name"]);
                 if ($imagedata[0] > 0) {
                     $this->_doc->headerdata["scan"] = $id;
@@ -459,25 +459,25 @@ class InvoiceCust extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не обрано постачальника");
+            $this->setError(__('common.ne_obrano_postachalnyka'));
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
  
 
@@ -515,7 +515,7 @@ class InvoiceCust extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $item = new Item();
@@ -524,7 +524,7 @@ class InvoiceCust extends \App\Pages\Base
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
               return;
         }  
 

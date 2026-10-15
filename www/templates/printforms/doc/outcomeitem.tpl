@@ -1,19 +1,19 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="6" align="center">
-            <b>Списання ТМЦ № {{document_number}} від {{date}}</b> <br>
+            <b>{{#t}}print.outcomeitem.spysannia_tmts_vid{{/t}}</b> <br>
         </td>
     </tr>
     <tr>
         <td colspan="6">
-            <b> Зі складу:</b> {{from}}
+            <b> {{#t}}common.zi_skladu_2{{/t}}</b> {{from}}
         </td>
 
     </tr>
    {{#storeemp}}
     <tr>
         <td colspan="6">
-            <b>Зі співробітника:</b> {{storeemp}}
+            <b>{{#t}}print.moveitem.zi_spivrobitnyka{{/t}}</b> {{storeemp}}
         </td>
     </tr>
  
@@ -21,7 +21,7 @@
    {{#customer}}
     <tr>
         <td colspan="6">
-            <b>Партнер:</b> {{customer}}
+            <b>{{#t}}print.incomeitem.partner{{/t}}</b> {{customer}}
         </td>
     </tr>
  
@@ -32,14 +32,14 @@
 
     <tr style="font-weight: bolder;">
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.nazva{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kod{{/t}}</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.od{{/t}}</th>
 
 
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
-        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">На суму</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kil{{/t}}</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.na_sumu{{/t}}</th>
 
     </tr>
     {{#_detail}}
@@ -56,7 +56,7 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td align="right" colspan="5"><b>Всього:</b></td>
+        <td align="right" colspan="5"><b>{{#t}}common.vsoho{{/t}}</b></td>
           <td align="right">{{amount}}</td>
     </tr>   
     

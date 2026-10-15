@@ -1,19 +1,19 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Прибутковий ордер № {{document_number}} від {{date}}</b> <br>
+            <b> {{#t}}print.incomemoney.prybutkovyi_order_vid{{/t}}</b> <br>
         </td>
     </tr>
 
 
     <tr>
         <td colspan="4">
-            <b>На рахунок:</b> {{to}}
+            <b>{{#t}}print.incomemoney.na_rakhunok{{/t}}</b> {{to}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Сума:</b> {{amount}}
+            <b>{{#t}}common.suma_2{{/t}}</b> {{amount}}
         </td>
     </tr>
     <tr>
@@ -25,21 +25,21 @@
     {{#customer}}
     <tr>
         <td colspan="4">
-            <b>Контрагент:</b> {{customer}}
+            <b>{{#t}}common.kontrahent_2{{/t}}</b> {{customer}}
         </td>
     </tr>
     {{/customer}}
     {{#contract}}
     <tr>
         <td colspan="4">
-            <b>Договір:</b> {{contract}}
+            <b>{{#t}}print.incomemoney.dohovir{{/t}}</b> {{contract}}
         </td>
     </tr>
     {{/contract}}
     {{#emp}}
     <tr>
         <td colspan="4">
-            <b>Співробітник:</b> {{emp}}
+            <b>{{#t}}common.spivrobitnyk_2{{/t}}</b> {{emp}}
         </td>
     </tr>
     {{/emp}}

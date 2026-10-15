@@ -2,117 +2,117 @@
  
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Управлінський  баланс
+            {{#t}}print.balance.upravlinskyi_balans{{/t}}
         </td>
     </tr>
   
     <tr>
 
         <td align="center" colspan="2">
-            На {{datefrom}}  <br>
+            {{#t}}print.balance.na{{/t}}  <br>
         </td>
     </tr>
  
  
    <tr>
 
-        <td colspan="2">            <b>Активи</b>         </td>
+        <td colspan="2">            <b>{{#t}}print.balance.aktyvy{{/t}}</b>         </td>
     </tr>
     {{#amat}}
     <tr>
-        <td > Матеріали та  комплектуючі        </td>
+        <td > {{#t}}common.materialy_ta_komplektuiuchi{{/t}}        </td>
         <td align="right"> {{amat}}  </td>
     </tr>
     {{/amat}}
    
     {{#aprod}}    
     <tr>
-        <td > Напівфабрикати та  готова  продукція        </td>
+        <td > {{#t}}print.balance.napivfabrykaty_ta_hotova_produktsiia{{/t}}        </td>
         <td align="right">  {{aprod}}      </td>
     </tr>
     {{/aprod}} 
     {{#ambp}}      
     <tr>
-        <td >   МШП        </td>
+        <td >   {{#t}}common.mshp{{/t}}        </td>
         <td align="right">     {{ambp}}               </td>
     </tr>
     {{/ambp}}   
 
     {{#aitem}}                 
     <tr>
-        <td >Товари        </td>
+        <td >{{#t}}common.tovary{{/t}}        </td>
         <td align="right">    {{aitem}}      </td>
     </tr>
     {{/aitem}}                 
     {{#aother}}                 
     <tr>
-        <td >  Інші ТМЦ    </td>
+        <td >  {{#t}}print.balance.inshi_tmts{{/t}}    </td>
         <td align="right">     {{aother}}     </td>
     </tr>
     {{/aother}}                     
     {{#anal}}                 
     <tr>
-        <td >  Готівка        </td>
+        <td >  {{#t}}common.hotivka{{/t}}        </td>
         <td align="right">   {{anal}}                        </td>
     </tr>
     {{/anal}}                     
     {{#abnal}}                 
     <tr>
-        <td >  Безготівка        </td>
+        <td >  {{#t}}common.bezhotivka{{/t}}        </td>
         <td align="right">  {{abnal}}   </td>
     </tr>
     {{/abnal}}                     
     {{#debet}}
     <tr>  
-        <td >Борг  контрагентів       </td>
+        <td >{{#t}}print.balance.borh_kontrahentiv{{/t}}       </td>
         <td align="right">     {{debet}}              </td>
     </tr>
     {{/debet}} 
     {{#aemp}}                 
     <tr>
-        <td >  Співробітники (видані  аванси тощо)        </td>
+        <td >  {{#t}}print.balance.spivrobitnyky_vydani_avansy_toshcho{{/t}}        </td>
         <td align="right">        {{aemp}}             </td>
     </tr>
     {{/aemp}}                 
    {{#aeq}}                 
     <tr>
-        <td >  Балансова вартість ОЗ        </td>
+        <td >  {{#t}}print.balance.balansova_vartist_oz{{/t}}        </td>
         <td align="right">        {{aeq}}             </td>
     </tr>
     {{/aeq}}                 
     
     {{#aprodrest}}                 
     <tr>
-        <td >  Незавершене виробництво       </td>
+        <td >  {{#t}}print.balance.nezavershene_vyrobnytstvo{{/t}}       </td>
         <td align="right">        {{aprodrest}}             </td>
     </tr>
     {{/aprodrest}}                 
     
     
      <tr style="font-weight: bolder;">
-        <td align="right">Всього:</td>
+        <td align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{atotal}}</td>
     </tr>   
     
    <tr>
-        <td colspan="2">     <b>Пасиви</b>        </td>    </tr>
+        <td colspan="2">     <b>{{#t}}print.balance.pasyvy{{/t}}</b>        </td>    </tr>
 
     {{#credit}}
     <tr>  
-        <td >  Борг  контрагентам       </td>
+        <td >  {{#t}}print.balance.borh_kontrahentam{{/t}}       </td>
         <td align="right">     {{credit}}              </td>
     </tr>
     {{/credit}} 
  
     {{#pemp}}                 
     <tr>
-        <td >  Співробітники (зарплата до видачі тощо)        </td>
+        <td >  {{#t}}print.balance.spivrobitnyky_zarplata_do_vydachi_toshch{{/t}}        </td>
         <td align="right">    {{pemp}}               </td>
     </tr>
      {{/pemp}}
 
      <tr style="font-weight: bolder;">
-        <td align="right">Всього:</td>
+        <td align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{ptotal}}</td>
     </tr>   
      <tr >
@@ -120,7 +120,7 @@
         <td ></td>
     </tr>   
      <tr style=";font-weight: bolder;">
-        <td align="right">Баланс:</td>
+        <td align="right">{{#t}}print.balance.balans{{/t}}</td>
         <td align="right">{{bal}}</td>
     </tr>   
     

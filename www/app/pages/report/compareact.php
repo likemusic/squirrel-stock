@@ -75,7 +75,7 @@ class CompareAct extends \App\Pages\Base
         $cust_id = $this->filter->cust->getKey();
 
         if($cust_id ==0) {
-            $this->setError('Не вибраний  контрагент') ;
+            $this->setError(__('report.compareact.ne_vybranyi_kontrahent')) ;
             return;
         }
  

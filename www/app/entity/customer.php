@@ -144,7 +144,7 @@ class Customer extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return  "Контрагент використовується в документах";
+            return  __('app.customer.kontrahent_vykorystovuietsia_v_dokumenta');
         }
         return "";
     }

@@ -1,26 +1,26 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
     <tr    >
         <td align="center" colspan="3">
-            <h4  >Обмеження системи </h4>
+            <h4  >{{#t}}print.toc.obmezhennia_systemy{{/t}} </h4>
         </td>
     </tr>
  
     {{#isdetail1}}
   <tr    >
         <td  colspan="3"  >
-            <b  >Актуальність складів  </b>   
+            <b  >{{#t}}print.toc.aktualnist_skladiv{{/t}}  </b>   
         </td>
     </tr>    
  <tr  >
         <td  colspan="3"  >
-            <small  > Товари, яких не виявилось на складі на момент замовлення </small>   
+            <small  > {{#t}}print.toc.tovary_iakykh_ne_vyiavylos_na{{/t}} </small>   
         </td>
     </tr>  
    <tr>
        
-        <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Артикул </th>
-        <th   style="border: solid black 1px" align="right">На суму </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.tovar{{/t}} </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.artykul{{/t}} </th>
+        <th   style="border: solid black 1px" align="right">{{#t}}common.na_sumu{{/t}} </th>
 
     </tr>      
     {{#_detail1}}
@@ -39,20 +39,19 @@
     {{#isdetail2}}
   <tr    >
         <td  colspan="3"  >
-           <br> <b  >Затримка відправки  товару по замовленню</b>   
+           <br> <b  >{{#t}}print.toc.zatrymka_vidpravky_tovaru_po_zamovlenniu{{/t}}</b>   
         </td>
     </tr>    
  <tr  >
         <td  colspan="3"  >
-            <small  >   Для замовлень з різницею між датою замовлення і  
-            відправкою  більше двох днів (сер.значення)  </small>   
+            <small  >   {{#t}}print.toc.dlia_zamovlen_z_riznytseiu_mizh{{/t}}  </small>   
         </td>
     </tr>  
    <tr>
        
-        <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Артикул </th>
-        <th   style="border: solid black 1px" align="right">Дні </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.tovar{{/t}} </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.artykul{{/t}} </th>
+        <th   style="border: solid black 1px" align="right">{{#t}}app.timesheet.dni{{/t}} </th>
 
     </tr>      
     {{#_detail2}}
@@ -71,22 +70,21 @@
   {{#isdetail3}}
   <tr    >
         <td  colspan="3"  >
-           <br> <b  >Затримка поставок  ТМЦ </b>   
+           <br> <b  >{{#t}}print.toc.zatrymka_postavok_tmts{{/t}} </b>   
         </td>
     </tr>    
  <tr  >
         <td  colspan="3"  >
         
-            <small    >  Для заявок з різницею між датою створення і  
-                  створенням вхідного документу більше    двох днів (сер.значення)       
+            <small    >  {{#t}}print.toc.dlia_zaiavok_z_riznytseiu_mizh{{/t}}       
          </small>   
         </td>
     </tr>  
    <tr>
        
-        <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Артикул </th>
-        <th   style="border: solid black 1px" align="right">Дні </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.tovar{{/t}} </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.artykul{{/t}} </th>
+        <th   style="border: solid black 1px" align="right">{{#t}}app.timesheet.dni{{/t}} </th>
 
     </tr>      
     {{#_detail3}}
@@ -105,19 +103,19 @@
   {{#isdetail4}}
   <tr    >
         <td  colspan="3"  >
-           <br> <b  >Затримка поставок ТМЦ після оплати   </b>   
+           <br> <b  >{{#t}}print.toc.zatrymka_postavok_tmts_pislia_oplaty{{/t}}   </b>   
         </td>
     </tr>    
  <tr  >
         <td  colspan="3"  >
-            <small  >  Затримка  створення прибуткової накладної  більше двох днів після оплати вхідного рахунку  (сер.значення)  </small>   
+            <small  >  {{#t}}print.toc.zatrymka_stvorennia_prybutkovoi_nakladno{{/t}}  </small>   
         </td>
     </tr>  
    <tr>
        
-        <th colspan="2"  style="border: solid black 1px"  >Постачальник </th>
+        <th colspan="2"  style="border: solid black 1px"  >{{#t}}common.postachalnyk{{/t}} </th>
      
-        <th   style="border: solid black 1px" align="right">Дні </th>
+        <th   style="border: solid black 1px" align="right">{{#t}}app.timesheet.dni{{/t}} </th>
 
     </tr>      
     {{#_detail4}}
@@ -135,19 +133,19 @@
    {{#isdetail5}}
   <tr    >
         <td  colspan="3"  >
-           <br> <b  >Неліквідні товари  </b>   
+           <br> <b  >{{#t}}common.nelikvidni_tovary{{/t}}  </b>   
         </td>
     </tr>    
  <tr  >
         <td  colspan="3"  >
-            <small  > Товари на складах, які не мали жодного продажу </small>   
+            <small  > {{#t}}print.toc.tovary_na_skladakh_iaki_ne{{/t}} </small>   
         </td>
     </tr>  
    <tr>
        
-        <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Артикул </th>
-        <th   style="border: solid black 1px" align="right">На суму </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.tovar{{/t}} </th>
+        <th   style="border: solid black 1px"  >{{#t}}common.artykul{{/t}} </th>
+        <th   style="border: solid black 1px" align="right">{{#t}}common.na_sumu{{/t}} </th>
 
     </tr>      
     {{#_detail5}}

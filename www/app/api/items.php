@@ -140,7 +140,7 @@ class items extends JsonRPC
     // запись  ТМЦ.
     public function save($args) {
         if (strlen($args['item_code']) == 0) {
-            throw new \Exception("Не задано артикул");
+            throw new \Exception(__('api.docs.ne_zadano_artykul'));
         }
 
         $code = Item::qstr($args['item_code']);
@@ -176,7 +176,7 @@ class items extends JsonRPC
         }
 
         if (strlen($item->itemname) == 0) {
-            throw new \Exception("Не вказано назву");
+            throw new \Exception(__('api.items.ne_vkazano_nazvu'));
         }
         if (strlen( $args['imageurl'] ) > 0) {
 
@@ -263,7 +263,7 @@ class items extends JsonRPC
     }
      public function custitemsave($args) {
         if (strlen($args['cust_name']) == 0) {
-            throw new \Exception("Не задано назву");
+            throw new \Exception(__('api.items.ne_zadano_nazvu'));
         }
       
         $item = new CustItem();
@@ -318,7 +318,7 @@ class items extends JsonRPC
     }
      public function custitemadd($args) {
         if (strlen($args['origcode']) == 0) {
-            throw new \Exception("Не задано артикул");
+            throw new \Exception(__('api.docs.ne_zadano_artykul'));
         }
       
         $item = new SubstItem();

@@ -1,23 +1,23 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
-        <td align="center" colspan="2"> <h4>Х-Звіт </h4></td>
+        <td align="center" colspan="2"> <h4>{{#t}}common.kh_zvit{{/t}} </h4></td>
     </tr>
     <tr>
 
-        <td  > Створено</td> <td  > {{created_at}}</td>
+        <td  > {{#t}}common.stvoreno{{/t}}</td> <td  > {{created_at}}</td>
          
     </tr>   
    <tr>
-         <td  >  Каса на  початок</td> <td align="right" > {{initial}}</td>
+         <td  >  {{#t}}print.cb_xrep.kasa_na_pochatok{{/t}}</td> <td align="right" > {{initial}}</td>
     </tr>    
   <tr>
-        <td  > <b>Реалізація</b></td>        <td  >  </td>
+        <td  > <b>{{#t}}common.realizatsiia{{/t}}</b></td>        <td  >  </td>
     </tr>    
     <tr>
-        <td  > Чеків  </td>        <td  align="right"> {{cnt}}</td>
+        <td  > {{#t}}common.chekiv{{/t}}  </td>        <td  align="right"> {{cnt}}</td>
     </tr>    
    <tr>
-        <td  > Оплати:</td>        <td  >  </td>
+        <td  > {{#t}}common.oplaty{{/t}}</td>        <td  >  </td>
     </tr>  
      {{#pays}} 
     <tr>
@@ -26,13 +26,13 @@
       {{/pays}}   
  
   <tr>
-        <td  > <b>Повернення</b></td>        <td  >  </td>
+        <td  > <b>{{#t}}common.povernennia{{/t}}</b></td>        <td  >  </td>
     </tr>    
     <tr>
-        <td  > Чеків  </td>        <td align="right" > {{rcnt}}</td>
+        <td  > {{#t}}common.chekiv{{/t}}  </td>        <td align="right" > {{rcnt}}</td>
     </tr>    
    <tr>
-        <td  > Оплати:</td>        <td  >  </td>
+        <td  > {{#t}}common.oplaty{{/t}}</td>        <td  >  </td>
     </tr>  
      {{#rpays}} 
     <tr>
@@ -41,16 +41,16 @@
       {{/rpays}}   
         {{#sin}} 
     <tr>
-        <td  > Сдужбове  внесення</td>        <td   align="right" > {{sin}}</td>      
+        <td  > {{#t}}print.cb_xrep.sduzhbove_vnesennia{{/t}}</td>        <td   align="right" > {{sin}}</td>      
     </tr>  
       {{/sin}}   
      {{#sout}} 
     <tr>
-        <td  > Службова  видача</td>        <td   align="right" > {{sout}}</td>    
+        <td  > {{#t}}common.sluzhbova_vydacha{{/t}}</td>        <td   align="right" > {{sout}}</td>    
     </tr>  
       {{/sout}}  
      <tr>
-         <td  > Баланс</td> <td align="right" > {{balance}}</td>
+         <td  > {{#t}}common.balans{{/t}}</td> <td align="right" > {{balance}}</td>
     </tr>    
 
  

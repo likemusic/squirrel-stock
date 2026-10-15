@@ -1,61 +1,61 @@
 <html>
     <head>
-          <title> Ручна проводка</title>
+          <title> {{#t}}doc.manualentry.ruchna_provodka{{/t}}</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Ручна проводка</h3>
+            <h3> {{#t}}doc.manualentry.ruchna_provodka{{/t}}</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                      <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>   
                      <div class="mb-2">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">{{#t}}common.prymitka{{/t}} </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
                     </div>
                 </div>
                  <div class="col-12 col-md-4 col-xl-3">
-                     <b>Генерація  проводок початкових залишків </b>
-                     <br><small>Слід виконувати  на  кінець звітного періоду з закритими розрахунками, завершеним  виробництвом тощо</small>
+                     <b>{{#t}}doc.manualentry.heneratsiia_provodok_pochatkovykh_zalysh{{/t}} </b>
+                     <br><small>{{#t}}doc.manualentry.slid_vykonuvaty_na_kinets_zvitnoho{{/t}}</small>
                     <div class="mb-2">
-                       <input zippy="generate" type="submit" value="Згенерувати" class="btn   btn-primary ">
+                       <input zippy="generate" type="submit" value="{{#t}}doc.manualentry.zheneruvaty{{/t}}" class="btn   btn-primary ">
                       
                     </div>
                     
                  <div class="form-check">
                     <input zippy="reloaddoc" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="reloaddoc">Перепровести  проводки, старші дати документа </label>
+                    <label class="form-check-label" for="reloaddoc">{{#t}}doc.manualentry.pereprovesty_provodky_starshi_daty_dokum{{/t}} </label>
                     
                 </div>
                  <div class="form-check">
                     <input zippy="removedoc" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="removedoc">Видалити проводки до дати документа </label>
+                    <label class="form-check-label" for="removedoc">{{#t}}doc.manualentry.vydalyty_provodky_do_daty_dokumenta{{/t}} </label>
                     
                 </div>
-                 <small> <i class="fa fa-exclamation-triangle"></i> Дані операції не відміняються  при  скасуванні документу</small>
+                 <small> <i class="fa fa-exclamation-triangle"></i> {{#t}}doc.manualentry.dani_operatsii_ne_vidminiaiutsia_pry{{/t}}</small>
                    
                </div>
 
             </div>
           <div class="row">
                 <div class="col-12 col-md-7 col-xl-5">
-                    <a zippy="addrow" class="btn btn-primary  ">Додати  </a>
+                    <a zippy="addrow" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}  </a>
                     <table class="table table-sm">
                         <tr>
 
-                            <th>Дебет</th>
-                            <th>Кредит</th>
-                            <th class="text-end">Сума</th>
+                            <th>{{#t}}common.debet{{/t}}</th>
+                            <th>{{#t}}common.kredyt{{/t}}</th>
+                            <th class="text-end">{{#t}}common.suma{{/t}}</th>
                          
 
                             <th  ></th>
@@ -76,9 +76,9 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-7 col-xl-5  d-flex justify-content-end pt-4 ">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary   ms-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary   ms-2">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>
@@ -86,30 +86,30 @@
 
         </form>
  <form zippy="editdetail">
-            <h4>Нова  проводка </h4>
+            <h4>{{#t}}doc.manualentry.nova_provodka{{/t}} </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
            
                     <div class="mb-2">
-                        <label for="editdt">Дебет</label>
+                        <label for="editdt">{{#t}}common.debet{{/t}}</label>
                         <select class="form-control" zippy="editdt">
-                          <option value="0">Не вказано</option>
+                          <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="editct">Кредит</label>
+                        <label for="editct">{{#t}}common.kredyt{{/t}}</label>
                         <select class="form-control" zippy="editct">
-                          <option value="0">Не вказано</option>
+                          <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label for="editamount">Сума</label>
+                        <label for="editamount">{{#t}}common.suma{{/t}}</label>
                         <input  style="width:120px" pattern="[0-9,\.\-]+" class="form-control qtyprice" type="text" zippy="editamount">
                     </div>
                   
                     <div class="mb-2">
-                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-secondary me-2">
-                        <input type="submit" zippy="submitrow" value="Додати" class="btn btn-secondary ">
+                        <input type="button" zippy="cancelrow" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2">
+                        <input type="submit" zippy="submitrow" value="{{#t}}common.dodaty{{/t}}" class="btn btn-secondary ">
                         
                     </div>
 

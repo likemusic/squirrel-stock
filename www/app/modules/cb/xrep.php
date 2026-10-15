@@ -26,7 +26,7 @@ class XRep extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'checkbox') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;

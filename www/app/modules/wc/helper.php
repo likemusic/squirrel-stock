@@ -69,7 +69,7 @@ class Helper
         }
 
 
-        System::setSuccessMsg("Успішне з`єднання");
+        System::setSuccessMsg(__('common.uspishne_ziednannia'));
 
 
     }

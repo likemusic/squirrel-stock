@@ -222,7 +222,7 @@ class CustItems extends \App\Pages\Base
 
     
         if ($this->_item->customer_id == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError(__('common.ne_obrano_postachalnyka'));
             return;
         }
 
@@ -335,26 +335,26 @@ class CustItems extends \App\Pages\Base
         $colqty =  $this->importform->colqty->getValue();
         $colcomment =  $this->importform->colcomment->getValue();
         if ( $colcustcode === '0') {
-            $this->setError('Не вказано колонку з кодом постачальника');
+            $this->setError(__('register.custitems.ne_vkazano_kolonku_z_kodom'));
             return;
         }
         if ($colcustname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError(__('common.ne_vkazano_kolonku_z_nazvoiu'));
             return;
         }
         if ($colprice === '0') {
-            $this->setError('Не вказано колонку з ціною');
+            $this->setError(__('register.custitems.ne_vkazano_kolonku_z_tsinoiu'));
             return;
         }
         if ($cust == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError(__('common.ne_obrano_postachalnyka'));
             return;
         }
 
         $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не обрано файл');
+            $this->setError(__('common.ne_obrano_fail'));
             return;
         }
         $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
@@ -437,7 +437,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
 
         }
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt]));
         $this->itemtable->listform->itemlist->Reload();
 
         $this->itemtable->setVisible(true);
@@ -479,7 +479,7 @@ class CustItems extends \App\Pages\Base
     public function cartOnClick($sender) {
         $ci =  $sender->getOwner()->getDataItem();
         if(intval($ci->cartqty)==0)  {
-            $this->setError('Не задана кількість ') ;
+            $this->setError(__('register.custitems.ne_zadana_kilkist')) ;
             return   ;
         }
       
@@ -566,7 +566,7 @@ class CustItems extends \App\Pages\Base
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кіл.;Ціна;Примітка;";
+       $line =__('register.custitems.postachalnyk_naimenuvannia_kod_shtrykh_k');
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        
@@ -641,7 +641,7 @@ class CustItems extends \App\Pages\Base
     public function OnSubmitX($sender) {
         $id=intval($this->xmlp->editformx->editcustx->getKey());
         if($id==0)  {
-            $this->setError('Не вибрано контрагента') ;
+            $this->setError(__('common.ne_vybrano_kontrahenta')) ;
             return;
         }   
         $code = $this->xmlp->editformx->editcodex->getText();
@@ -702,14 +702,14 @@ class CustItems extends \App\Pages\Base
         $json = trim( $this->xmlp->importformxsend->imxjson->getText() );
 
         if($json=="") {
-            $this->setError("Нема даних") ;
+            $this->setError(__('register.custitems.nema_danykh')) ;
             return;
         }
         $json = str_replace("\n","",$json) ;
         $json = str_replace("\r","",$json) ;
         $data=json_decode($json,true) ;
         if(!is_array($data)) {
-            $this->setError("Невірний json") ;
+            $this->setError(__('register.custitems.nevirnyi_json')) ;
             return;
         }
         
@@ -776,7 +776,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
 
         }
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ"); 
+        $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt])); 
          
         $this->xmlp->setVisible(false);
         $this->xmlp->importformx->setVisible(false);

@@ -28,7 +28,7 @@ class Subscribes extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
+            System::setErrorMsg(__('app.poslist.do_storinky_maie_dostup_tilky'));
             \App\Application::RedirectError();
             return  ;
         }
@@ -265,53 +265,53 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->attach = $this->editform->editattach->isCheCked() ? 1 : 0;
 
         if ($this->_sub->sub_type ==  0) {
-            $this->setError("Не вказано тип ");
+            $this->setError(__('app.subscribes.ne_vkazano_typ'));
             return;
         }
         if ($this->_sub->reciever_type ==  0) {
-            $this->setError("Не вказано отримувача ");
+            $this->setError(__('app.subscribes.ne_vkazano_otrymuvacha'));
             return;
         }
         if ($this->_sub->msg_type ==  0) {
-            $this->setError("Не вказано тип повідомлення  ");
+            $this->setError(__('app.subscribes.ne_vkazano_typ_povidomlennia'));
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
-            $this->setError("Не вказано користувача");
+            $this->setError(__('app.subscribes.ne_vkazano_korystuvacha'));
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->doctype == 0) {
-            $this->setError("Не вказано тип документу");
+            $this->setError(__('app.subscribes.ne_vkazano_typ_dokumentu'));
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->state == 0) {
-            $this->setError("Не вказано статус документу");
+            $this->setError(__('app.subscribes.ne_vkazano_status_dokumentu'));
             return;
         }
 
         if ($this->_sub->reciever_type != Subscribe::RSV_WH ) {
             if (strlen($this->_sub->msgtext) == 0) {
-                $this->setError("Не вказано текст повідомлення");
+                $this->setError(__('app.subscribes.ne_vkazano_tekst_povidomlennia'));
                 return;
             }
           
         }   
         
         if ($this->_sub->reciever_type == Subscribe::RSV_WH && strlen($this->_sub->url) == 0) {
-            $this->setError("Не вказано URL");
+            $this->setError(__('app.subscribes.ne_vkazano_url'));
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_TG && strlen($this->_sub->chat_id) == 0) {
-            $this->setError("Не вказано ID телеграм чату");
+            $this->setError(__('app.subscribes.ne_vkazano_id_telehram_chatu'));
             return;
         }
         
         if ($this->_sub->reciever_type == Subscribe::RSV_EMAIL && strlen($this->_sub->email) == 0) {
-            $this->setError("Не вказано e-mail");
+            $this->setError(__('app.subscribes.ne_vkazano_e_mail'));
             return;
         }
         if ($this->_sub->msg_type == Subscribe::MSG_EMAIL && strlen($this->_sub->msgsubject) == 0) {
-            $this->setError("Не вказано тему");
+            $this->setError(__('app.subscribes.ne_vkazano_temu'));
             return;
         }
        

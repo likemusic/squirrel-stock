@@ -1,13 +1,13 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{style}}}>
     <tr>
-        <td colspan="3">Замовлення {{document_number}}</td>
+        <td colspan="3">{{#t}}common.zamovlennia_2{{/t}}</td>
     </tr>
     <tr>
 
-        <td colspan="3">від {{date}}</td>
+        <td colspan="3">{{#t}}common.vid_2{{/t}}</td>
     </tr>
     <tr>
-        <td colspan="3"> Продавець:</td>
+        <td colspan="3"> {{#t}}common.prodavets_2{{/t}}</td>
     </tr>
     <tr>
 
@@ -20,7 +20,7 @@
     </tr>
 
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> {{#t}}common.pokupets_2{{/t}}</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -28,7 +28,7 @@
 
 
     <tr>
-        <td colspan="3">Доставка {{delivery}}</td>
+        <td colspan="3">{{#t}}print.order_bill.dostavka{{/t}}</td>
 
     </tr>
     <tr>
@@ -49,7 +49,7 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{total}}</td>
     </tr>
 

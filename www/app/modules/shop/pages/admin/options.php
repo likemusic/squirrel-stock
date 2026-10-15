@@ -26,7 +26,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
             App::RedirectError();
             return;
         }
@@ -117,7 +117,7 @@ class Options extends \App\Pages\Base
        
      
         System::setOptions("shop", $shop);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
     }
 
@@ -151,7 +151,7 @@ class Options extends \App\Pages\Base
         $shop['noshowempty'] = $this->shop->noshowempty->isChecked() ? 1 : 0;
 
         if(intval($shop['defbranch'])==0 &&  $this->_tvars["usebranch"]==true) {
-            $this->setError('Не вказана філія');
+            $this->setError(__('mod.shop.options.ne_vkazana_filiia'));
             return;
         }
         
@@ -161,7 +161,7 @@ class Options extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат');
+                $this->setError(__('mod.shop.options.nevirnyi_format'));
                 return;
             }
 
@@ -173,7 +173,7 @@ class Options extends \App\Pages\Base
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
 

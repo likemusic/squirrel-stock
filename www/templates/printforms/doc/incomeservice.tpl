@@ -1,7 +1,7 @@
 <table class="ctable"  >
     <tr>
         <td colspan="6">
-            Виконавець: {{customer_name}}
+            {{#t}}print.incomeservice.vykonavets{{/t}}
         </td>
 
 
@@ -9,7 +9,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="6">
-          Замовник: {{firm_name}}
+          {{#t}}print.incomeservice.zamovnyk{{/t}}
         </td>
 
     </tr>
@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="6">
-            Договір: {{contract}} від {{createdon}}
+            {{#t}}print.incomeservice.dohovir_vid{{/t}}
         </td>
 
     </tr>
@@ -30,7 +30,7 @@
     
     <tr style="font-weight: bolder;">
         <td colspan="6" align="center">
-            Отримані послуги № {{document_number}} від {{date}}
+            {{#t}}print.incomeservice.otrymani_posluhy_vid{{/t}}
         </td>
     </tr>
 
@@ -39,11 +39,11 @@
 <table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
         <th   style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Опис</th>
-        <th style="border: 1px solid black;" align="right">Кіл.</th>
-        <th style="border: 1px solid black;" align="right">Вартість</th>
-        <th style="border: 1px solid black;" align="right">Сума</th>
+        <th style="border: 1px solid black;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: 1px solid black;">{{#t}}common.opys{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.kil{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.vartist{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.suma{{/t}}</th>
  
          
      
@@ -63,18 +63,18 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" style="border-top: 1px solid black;" align="right">Всього:</td>
+        <td colspan="5" style="border-top: 1px solid black;" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">До сплати:</td>
+        <td colspan="5" align="right">{{#t}}common.do_splaty_2{{/t}}</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
    {{#payed}}  
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">Оплата:</td>
+        <td colspan="5" align="right">{{#t}}common.oplata_2{{/t}}</td>
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
@@ -86,11 +86,11 @@
    {{#hasitems}}
     <tr style="font-weight: bolder;">
         <th   style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Код</th>
-        <th style="border: 1px solid black;" align="right">Кіл.</th>
-        <th style="border: 1px solid black;" align="right">Ціна</th>
-        <th style="border: 1px solid black;" align="right">Сума</th>
+        <th style="border: 1px solid black;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: 1px solid black;">{{#t}}common.kod{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.kil{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.tsina{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.suma{{/t}}</th>
  
          
      
@@ -111,7 +111,7 @@
     {{/_detail2}}   
    
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">Всього:</td>
+        <td colspan="5" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td align="right">{{stotal}}</td>
     </tr>   
    {{/hasitems}}

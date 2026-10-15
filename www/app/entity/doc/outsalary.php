@@ -69,7 +69,7 @@ class OutSalary extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВЗ-000000';
+        return __('doc.outsalary.vz_000000');
     }
     public   function DoAcc() {
              if(\App\System::getOption("common",'useacc')!=1 ) return;

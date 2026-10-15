@@ -62,7 +62,7 @@ class Users extends \App\Pages\Base
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError(__('app.users.korystuvachamy_mozhut_upravliaty_tilky_k'));
 
             return;
         }
@@ -82,7 +82,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError(__('app.users.korystuvachamy_mozhut_upravliaty_tilky_k'));
 
             return;
         }
@@ -131,7 +131,7 @@ class Users extends \App\Pages\Base
         $this->user->userlogin = $this->editpan->editform->editlogin->getText();
         
         if (strlen($this->user->phone) > 0 && strlen($this->user->phone) != \App\Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_maie_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
        
@@ -143,7 +143,7 @@ class Users extends \App\Pages\Base
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
-                $this->setError('Неунікальний логін');
+                $this->setError(__('app.users.neunikalnyi_lohin'));
 
                 return;
             }
@@ -153,7 +153,7 @@ class Users extends \App\Pages\Base
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
 
-                    $this->setError('Неунікальний e-mail');
+                    $this->setError(__('app.users.neunikalnyi_e_mail'));
                     return;
                 }
             }
@@ -161,7 +161,7 @@ class Users extends \App\Pages\Base
         $rolename= $this->editpan->editform->editrole->getValueName();
         $this->user->role_id = $this->editpan->editform->editrole->getValue();
         if($this->user->role_id==0) {
-            $this->setError('Не вказана роль');
+            $this->setError(__('app.users.ne_vkazana_rol'));
             return;
         }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
@@ -179,7 +179,7 @@ class Users extends \App\Pages\Base
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 
-            $this->setError("Введіть пароль");
+            $this->setError(__('common.vvedit_parol'));
             return;
         }
         if($this->user->disabled ==1) {
@@ -195,7 +195,7 @@ class Users extends \App\Pages\Base
                 }
             }     
             if(count($barr)==0) {
-                $this->setError('Не вибрана  жодна  філія') ;
+                $this->setError(__('app.users.ne_vybrana_zhodna_filiia')) ;
                 return;
             }   
             $this->user->aclbranch = implode(',', $barr);
@@ -215,11 +215,11 @@ class Users extends \App\Pages\Base
                 }
             }
             if(count($sarr)==0 && $rolename != 'admins') {
-                $this->setWarn('Не вибраний  жоден склад') ;
+                $this->setWarn(__('app.users.ne_vybranyi_zhoden_sklad')) ;
                
             }   
             if(count($marr)==0 && $rolename != 'admins') {
-                $this->setWarn('Не вибраний  жоден  грошовий рахунок') ;
+                $this->setWarn(__('app.users.ne_vybranyi_zhoden_hroshovyi_rakhunok')) ;
                
             }   
  
@@ -249,7 +249,7 @@ class Users extends \App\Pages\Base
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError(__('app.users.korystuvachamy_mozhut_upravliaty_tilky_k'));
 
             return;
         }

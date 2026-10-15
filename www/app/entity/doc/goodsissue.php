@@ -188,7 +188,7 @@ class GoodsIssue extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -200,7 +200,7 @@ class GoodsIssue extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').H::fqty($item->getQuantity($this->headerdata['store'])).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
 
             }
 
@@ -242,7 +242,7 @@ class GoodsIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВН-000000';
+        return __('doc.goodsissue.vn_000000');
     }
 
     public function generatePosReport($ps=false) {

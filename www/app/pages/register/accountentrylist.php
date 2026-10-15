@@ -102,11 +102,11 @@ class AccountEntryList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Дата";
-        $header['B1'] = "Дебет";
-        $header['C1'] = "Кредит";
-        $header['D1'] = "Сума";
-        $header['E1'] = "Документ";
+        $header['A1'] = __('common.data');
+        $header['B1'] = __('common.debet');
+        $header['C1'] = __('common.kredyt');
+        $header['D1'] = __('common.suma');
+        $header['E1'] = __('common.dokument');
         $header['F1'] = "";
       
 

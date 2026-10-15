@@ -1,35 +1,35 @@
 <html>
    <head>
-          <title> Заявка постачальнику</title>
+          <title> {{#t}}doc.ordercust.zaiavka_postachalnyku{{/t}}</title>
     </head>
     <body>
          
  
-       <h3> Заявка постачальнику </h3>
+       <h3> {{#t}}doc.ordercust.zaiavka_postachalnyku{{/t}} </h3>
        
          
            <form class="row" zippy="docform" >
 
               <div class="col-12 col-md-6 col-xl-4">
                    <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="document_number">Номер документа</label>
+                        <label class="col-5 col-form-label" for="document_number">{{#t}}common.nomer_dokumenta{{/t}}</label>
                         <div class="col-7">
                             <input  class="form-control"  required="on"  zippy="document_number"  />
                         </div>
                   </div>
                   <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="customer">Постачальник</label>
+                        <label class="col-5 col-form-label" for="customer">{{#t}}common.postachalnyk{{/t}}</label>
                         <div class="col-7">
                            <div class="input-group  ">
-                              <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                              <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control " zippy="customer"/>
                         
-                              <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                              <a title="{{#t}}common.dodaty_novoho{{/t}}" class="btn btn-success" zippy="addcust" >+</a>
                             
                          </div>             
                         </div>
                   </div>
                  <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="notes">Примітка</label>
+                        <label class="col-5 col-form-label" for="notes">{{#t}}common.prymitka{{/t}}</label>
                         <div class="col-7">
                             <input zippy="notes"      class="form-control  "    />
                         </div>
@@ -37,13 +37,13 @@
               </div> 
               <div class="col-12 col-md-6 col-xl-4">
                    <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="document_date">Дата документа</label>
+                        <label class="col-5 col-form-label" for="document_date">{{#t}}common.data_dokumenta{{/t}}</label>
                         <div class="col-7">
                             <input  type="date" style="width:120px" class="form-control"  required="on"  zippy="document_date"  />
                         </div>
                   </div>
                   <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="delivery_date">Очікувана доставка</label>
+                        <label class="col-5 col-form-label" for="delivery_date">{{#t}}doc.ordercust.ochikuvana_dostavka{{/t}}</label>
                         <div class="col-7">
                             <input  type="date" style="width:120px" class="form-control"   zippy="delivery_date"  />
                         </div>
@@ -52,20 +52,20 @@
            
             </div>    
              <div class="col-10  col-lg-8">
-                    <a  zippy="addrow" class="btn btn-primary  ">Додати позицію</a>
+                    <a  zippy="addrow" class="btn btn-primary  ">{{#t}}common.dodaty_pozytsiiu{{/t}}</a>
 
                     <table class="table  table-sm">
                         <tr>
 
-                            <th>Найменування</th>
-                            <th>Артикул</th>
-                            <th>Код постачальника</th>
-                            <th>Од.</th>
+                            <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                            <th>{{#t}}common.artykul{{/t}}</th>
+                            <th>{{#t}}common.kod_postachalnyka{{/t}}</th>
+                            <th>{{#t}}common.od{{/t}}</th>
                             <th  > </th>
-                            <th class="text-end">Кіл.</th>
-                            <th class="text-end">Ціна</th>
+                            <th class="text-end">{{#t}}common.kil{{/t}}</th>
+                            <th class="text-end">{{#t}}common.tsina{{/t}}</th>
 
-                            <th class="text-end">Сума</th>
+                            <th class="text-end">{{#t}}common.suma{{/t}}</th>
 
                             <th  ></th>
                         </tr>
@@ -82,13 +82,13 @@
 
                             <td zippy="amount" class="text-end"></td>
 
-                            <td class="text-center"><a title="Перемістити" zippy="move"><i class="fa fa-arrow-right"></i> <i class="fa fa-file"></i></a>  </td>
-                            <td class="text-center"><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a>  </td>
-                            <td class="text-center"><a title="Видалити" zippy="delete"><i class="fa fa-trash"></i></a></td>
+                            <td class="text-center"><a title="{{#t}}doc.ordercust.peremistyty{{/t}}" zippy="move"><i class="fa fa-arrow-right"></i> <i class="fa fa-file"></i></a>  </td>
+                            <td class="text-center"><a title="{{#t}}common.redahuvaty{{/t}}" zippy="edit"><i class="fa fa-edit"></i></a>  </td>
+                            <td class="text-center"><a title="{{#t}}common.vydalyty{{/t}}" zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-end">Всього:</td>
+                            <td colspan="7" class="text-end">{{#t}}common.vsoho{{/t}}</td>
                             <td   class="text-end" zippy="total" > </td>
                             <td></td>
                             <td></td>
@@ -102,10 +102,10 @@
                
                <div class="col-9  col-lg-7  d-flex justify-content-end pt-4">
                
-                    <input type="button" zippy="backtolist" value="Скасувати"   class="btn btn-secondary  ms-2 ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary ms-2  ">
-                    <input zippy="execdoc"   type="submit" value="На виконання" class="btn btn-primary  ms-2 ">
-                     <input zippy="apprdoc"   type="submit" value="На затвердження" class="btn btn-success  ms-2 ">
+                    <input type="button" zippy="backtolist" value="{{#t}}common.skasuvaty{{/t}}"   class="btn btn-secondary  ms-2 ">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary ms-2  ">
+                    <input zippy="execdoc"   type="submit" value="{{#t}}common.na_vykonannia{{/t}}" class="btn btn-primary  ms-2 ">
+                     <input zippy="apprdoc"   type="submit" value="{{#t}}common.na_zatverdzhennia{{/t}}" class="btn btn-success  ms-2 ">
 
                
                </div>  
@@ -113,7 +113,7 @@
                     <div class="modal-dialog modal-dialog-centered  modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Переміщення</h5>
+                                <h5 class="modal-title">{{#t}}doc.ordercust.peremishchennia{{/t}}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                     
                                 </button>
@@ -121,12 +121,12 @@
                             <div class="modal-body">
                              <input  type="hidden" zippy="moveitemid" >
                              <div class="mb-2">
-                                <label for="movecust">Постачальник</label>
+                                <label for="movecust">{{#t}}common.postachalnyk{{/t}}</label>
                                 <input   class="form-control"   zippy="movecust"> 
 
                             </div>  
                           
-                            <input type="submit" value="Перемістити" zippy="savemove" class="ms-2 btn btn-info  ">
+                            <input type="submit" value="{{#t}}doc.ordercust.peremistyty{{/t}}" zippy="savemove" class="ms-2 btn btn-info  ">
           
                             </div>
 
@@ -140,25 +140,25 @@
             <div class="col-12 col-md-4 col-xl-3">
        
            <form zippy="editdetail"  >
-            <h4>Введення товару </h4>
+            <h4>{{#t}}common.vvedennia_tovaru{{/t}} </h4>
     
 
                 <div class="mb-2">
-                       <label for="edititem">Назва</label>
+                       <label for="edititem">{{#t}}common.nazva{{/t}}</label>
                        <div class="input-group  ">
-                              <input  placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                              <input  placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control " zippy="edititem"/>
                         
-                             <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                             <a title="{{#t}}common.dodaty_novyi{{/t}}" class="btn btn-success" zippy="addnewitem" >+</a>
                                            
                      </div>                    
                  
-                    <a zippy="openitemsel">Відкрити довідник</a>  
-                    <br>  На складі: <span zippy="qtystock"></span>
+                    <a zippy="openitemsel">{{#t}}common.vidkryty_dovidnyk{{/t}}</a>  
+                    <br>  {{#t}}common.na_skladi_2{{/t}} <span zippy="qtystock"></span>
                                         
                 </div>
 
                 <div class="mb-2 row">
-                    <label class="col-7 col-form-label" for="editquantity">Кількість</label>
+                    <label class="col-7 col-form-label" for="editquantity">{{#t}}common.kilkist{{/t}}</label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"    required="on" 
                            pattern="[0-9,\.]+"    />
@@ -167,7 +167,7 @@
 
 
                 <div class="mb-2 row">
-                    <label class="col-7 col-form-label" for="editprice">Ціна </label>
+                    <label class="col-7 col-form-label" for="editprice">{{#t}}common.tsina{{/t}} </label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"    required="on" 
                            pattern="[0-9,\.]+"                               >
@@ -176,23 +176,23 @@
               
                 <div class="mb-2 row">
 
-                    <label class="col-7 col-form-label" for="editcustcode">Код постачальника </label>
+                    <label class="col-7 col-form-label" for="editcustcode">{{#t}}common.kod_postachalnyka{{/t}} </label>
                     <div class="col-5" >
                     <input class="form-control " zippy="editcustcode"  />
                     
                     </div>
-                    <small>Наприклад, код з прайсу продавця</small>
+                    <small>{{#t}}common.napryklad_kod_z_praisu_prodavtsia{{/t}}</small>
                 </div>
               
                 <div class="mb-2">
-                    <label for="editdesc">Коментар </label>
+                    <label for="editdesc">{{#t}}common.komentar{{/t}} </label>
                     <input   class="form-control" type="text" zippy="editdesc"        >
 
                 </div>
 
                 <div class="mb-2">
-                    <input zippy="canceledit" type="button"   value="Скасувати" class="btn btn-secondary ">
-                    <input zippy="saveedit"  type="submit" value="Зберегти" class="btn btn-primary"> 
+                    <input zippy="canceledit" type="button"   value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary ">
+                    <input zippy="saveedit"  type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary"> 
                 </div>
            
     </form>
@@ -206,39 +206,39 @@
             <div class="col-12 col-md-4 col-xl-3">
             
        <form zippy="editnewitem">
-            <h3>&nbsp;Новий товар </h3>
+            <h3>{{#t}}common.nbsp_novyi_tovar{{/t}} </h3>
                                  
                     <div class="mb-2">
-                        <label for="editnewitemname">Назва </label>
+                        <label for="editnewitemname">{{#t}}common.nazva{{/t}} </label>
                         <input zippy="editnewitemname" class="form-control "    required="on" />
                     </div>
                     <div class="mb-2">
-                        <label for="editnewitemcode">Код</label>
+                        <label for="editnewitemcode">{{#t}}common.kod{{/t}}</label>
                         <input zippy="editnewitemcode" class="form-control" type="text"  />
                     </div>
                      <div class="mb-2">
-                        <label for="editnewitembrand">Виробник</label>
+                        <label for="editnewitembrand">{{#t}}doc.ordercust.vyrobnyk{{/t}}</label>
                         <input list="editnewitembrand" zippy="editnewitembrand" class="form-control" autocomplete="off"    />
                         
                     </div>
                    <div class="mb-2">
-                        <label for="editnewitemmsr">Од. вим.</label>
+                        <label for="editnewitemmsr">{{#t}}common.od_vym{{/t}}</label>
                         <input zippy="editnewitemmsr" class="form-control" type="text"   />
                     </div>
                     
                   <div class="mb-2">
-                        <label for="editnewcat">Категорія</label>
+                        <label for="editnewcat">{{#t}}common.katehoriia{{/t}}</label>
 
                         <select zippy="editnewcat" class="form-control" id="editnewcat">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
 
                         </select>
 
                     </div>
 
                     <div class="mb-2">
-                        <input  type="button" zippy="cancelnewitem"   value="Скасувати" class="btn btn-secondary me-2">
-                        <input  zippy="savenewitem"  type="button" value="Зберегти" class="btn btn-primary">
+                        <input  type="button" zippy="cancelnewitem"   value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2">
+                        <input  zippy="savenewitem"  type="button" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                     </div>
           
         </form>       
@@ -247,22 +247,22 @@
          <div class="row"> 
             <div class="col-12 col-md-4 col-xl-3">
          <form zippy="editcust">
-            <h5>&nbsp;Новий постачальник </h5>
+            <h5>{{#t}}doc.goodsreceipt.nbsp_novyi_postachalnyk{{/t}} </h5>
 
         
                     <div class="mb-2">
-                        <label for="editcustname">Назва </label>
+                        <label for="editcustname">{{#t}}common.nazva{{/t}} </label>
                         <input autofocus="on"   class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="mb-2">
-                        <label for="editphone">Телефон</label>
+                        <label for="editphone">{{#t}}common.telefon{{/t}}</label>
                         <input class="form-control" type="text" zippy="editphone"/>
                     </div>
               
 
                     <div class="mb-2">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary me-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
+                        <input type="button" zippy="cancelcust" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2">
+                        <input zippy="savecust" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                         
                     </div>
           

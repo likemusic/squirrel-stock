@@ -1,29 +1,29 @@
 <html>
     <head>
-      <title>Фіскалізовані чеки   </title>
+      <title>{{#t}}print.prrodoclist.fiskalizovani_cheky{{/t}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10  ">
-                <h3>Фіскалізовані чеки</h3>
+                <h3>{{#t}}print.prrodoclist.fiskalizovani_cheky{{/t}}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                         <div class="row  ">
-                        <label class="col-form-label col-auto" for="from">З</label>
+                        <label class="col-form-label col-auto" for="from">{{#t}}common.z{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="from">
                          </div>
-                        <label class="col-form-label col-auto" for="to">по</label>
+                        <label class="col-form-label col-auto" for="to">{{#t}}common.po{{/t}}</label>
                          <div class="col-auto  ">
                          <input class="form-control ms-sm-2" style="width: 110px" type="text" zippy="to">
                           </div>
-                        <label class="col-form-label col-auto" for="doc">Номер  </label>
+                        <label class="col-form-label col-auto" for="doc">{{#t}}common.nomer{{/t}}  </label>
                          <div class="col-auto  ">
                          <input  class="form-control ms-sm-2"   type="text" zippy="doc">
                           </div>
                          <div class="col-auto  ">
-                         <input class="btn btn-primary  " type="submit" value="ОК">
+                         <input class="btn btn-primary  " type="submit" value="{{#t}}common.ok{{/t}}">
                           </div>
                        </div>
 
@@ -33,9 +33,9 @@
       
                <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
-                        <a href="/showreport/xls/prrodoclist" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel me-2"></i></a>
-                        <a href="/showreport/pdf/prrodoclist" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf me-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/showreport/xls/prrodoclist" target="_blank" title="{{#t}}common.eksport_u_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/showreport/pdf/prrodoclist" target="_blank" title="{{#t}}common.eksport_u_pdf{{/t}}"><i class="fa fa-file-pdf me-2"></i> </a>
                     </div>
                     <div zippy="preview" class="table-responsive-sm">
                     </div>

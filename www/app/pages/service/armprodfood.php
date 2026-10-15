@@ -97,7 +97,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухні  " . $ee->getMessage());
+            $logger->error(__('service.armprodfood.arm_kukhni') . $ee->getMessage());
 
             return $this->jsonError($ee->getMessage())  ;
 
@@ -134,7 +134,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухні  " . $ee->getMessage());
+            $logger->error(__('service.armprodfood.arm_kukhni') . $ee->getMessage());
 
             return $this->jsonError($ee->getMessage())  ;
 
@@ -187,7 +187,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухні  " . $ee->getMessage());
+            $logger->error(__('service.armprodfood.arm_kukhni') . $ee->getMessage());
 
              return $this->jsonError($ee->getMessage())  ;
 
@@ -228,10 +228,10 @@ class ArmProdFood extends \App\Pages\Base
 
                 $notes = "";
                 if ($item->myself == 1) {
-                    $notes = "Із собою";
+                    $notes = __('service.armprodfood.iz_soboiu');
                 }
                 if ($item->del == true) {
-                    $notes = "Доставка";
+                    $notes = __('common.dostavka');
                 }
 
                 $itemlist[]=array(

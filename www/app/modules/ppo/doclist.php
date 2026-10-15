@@ -27,7 +27,7 @@ class DocList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -119,13 +119,13 @@ class DocList extends \App\Pages\Base
 
             $row['docdata'] = H::fd($doc->document_date);
             $row['docnumber'] = $doc->document_number;
-            $row['type'] = 'Касовий чек';
+            $row['type'] = __('common.kasovyi_chek');
             if($doc->meta_name == 'POSCheck' || $doc->meta_name == 'OrderFood') { 
                $header['cnt']++;
                $header['tam'] += $row['amount'];
             }           
             if($doc->meta_name == 'ReturnIssue' && ($doc->headerdata['docnumberback'] ?? '') != '') {
-               $row['type'] = 'Повернення для '. $doc->headerdata['docnumberback'];                
+               $row['type'] = __('mod.ppo.doclist.povernennia_dlia'). $doc->headerdata['docnumberback'];                
                $header['rcnt']++;
                $header['rtam'] += $row['amount'];
             }

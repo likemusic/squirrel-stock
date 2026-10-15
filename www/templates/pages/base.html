@@ -95,7 +95,7 @@
                 <ul class="sidebar-nav">
                        <li class="sidebar-item  ">
                             <a class="sidebar-link  "  href="/index.php?p=/App/Pages/Main"     >
-                              <i class="nav-icon fa fa-chart-pie"></i>    Дашборд    
+                              <i class="nav-icon fa fa-chart-pie"></i>    {{#t}}common.dashbord{{/t}}    
                             </a>
                         </li>
                         
@@ -104,7 +104,7 @@
                         <li class="sidebar-item">
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mndocs"                           >
                               <i class="nav-icon fa fa-file"></i>
-                                 Документи   
+                                 {{#t}}common.dokumenty{{/t}}   
                         </a> 
                           <ul id="mndocs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                {{#docmenu}}
@@ -145,7 +145,7 @@
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnreps"                           >
                               <i class="nav-icon fa fa-chart-bar"></i>
                                   
-                                 Звіти   
+                                 {{#t}}app.base.zvity{{/t}}   
                         </a> 
                           <ul id="mnreps" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                {{#repmenu}}
@@ -187,7 +187,7 @@
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnregs"                           >
                               <i class="nav-icon fa fa-list"></i>
                                         
-                                 Журнали   
+                                 {{#t}}app.base.zhurnaly{{/t}}   
                         </a> 
                           <ul id="mnregs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                {{#regmenu}}
@@ -230,7 +230,7 @@
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnrefs"                           >
                                 <i class="nav-icon fa fa-book"></i>
                                            
-                                 Довідники   
+                                 {{#t}}app.base.dovidnyky{{/t}}   
                         </a> 
                           <ul id="mnrefs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                {{#refmenu}}
@@ -273,7 +273,7 @@
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnsers"                           >
                                <i class="nav-icon fas fa-project-diagram"></i>
                                                
-                                   Сервісні сторінки   
+                                   {{#t}}app.base.servisni_storinky{{/t}}   
                         </a> 
                           <ul id="mnsers" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                {{#sermenu}}
@@ -318,57 +318,57 @@
                             
                               <i class="nav-icon fa fa-puzzle-piece"></i>
                                  
-                              <span>  Модулі  </span>  
+                              <span>  {{#t}}app.base.moduli{{/t}}  </span>  
                         </a>
                         <ul id="mnmodules" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                               
                           {{#shop}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodshop"     >
-                                         Онлайн каталог    
+                                         {{#t}}common.onlain_kataloh{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodshop" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/shop"     >
-                                                 Перейти до каталогу    
+                                                 {{#t}}app.base.pereity_do_katalohu{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/GroupList"     >
-                                                 Атрибути товарів    
+                                                 {{#t}}app.base.atrybuty_tovariv{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/ProductList"     >
-                                                 Значення атрибутів    
+                                                 {{#t}}app.base.znachennia_atrybutiv{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/VarList"     >
-                                                 Варіації товарів   
+                                                 {{#t}}app.base.variatsii_tovariv{{/t}}   
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/RecList"     >
-                                                 Рекомендовані товари    
+                                                 {{#t}}common.rekomendovani_tovary{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Dashboard"     >
-                                                 Дашборд    
+                                                 {{#t}}common.dashbord{{/t}}    
                                             </a>
                                         </li>
                                         {{#isadmins}}
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Custom"     >
-                                                 Кастомізація    
+                                                 {{#t}}app.base.kastomizatsiia{{/t}}    
                                             </a>
                                         </li>
                                      
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Options"     >
-                                                 Налаштування    
+                                                 {{#t}}common.nalashtuvannia{{/t}}    
                                             </a>
                                         </li>
                                     {{/isadmins}}  
@@ -381,18 +381,18 @@
                          {{#ocstore}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodocstore"     >
-                                         Обмін з ОпенКарт    
+                                         {{#t}}app.base.obmin_z_openkart{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodocstore" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Orders"     >
-                                                 Замовлення    
+                                                 {{#t}}common.zamovlennia{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Items"     >
-                                                 Товари    
+                                                 {{#t}}common.tovary{{/t}}    
                                             </a>
                                         </li>
                                       
@@ -400,7 +400,7 @@
                                     
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Options"     >
-                                                 Налаштування    
+                                                 {{#t}}common.nalashtuvannia{{/t}}    
                                             </a>
                                         </li>
                                     {{/isadmins}}  
@@ -411,18 +411,18 @@
                           {{#woocomerce}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodwc"     >
-                                         Обмін з Woocommerce    
+                                         {{#t}}app.base.obmin_z_woocommerce{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodwc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Orders"     >
-                                                 Замовлення    
+                                                 {{#t}}common.zamovlennia{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Items"     >
-                                                 Товари    
+                                                 {{#t}}common.tovary{{/t}}    
                                             </a>
                                         </li>
                                       
@@ -430,7 +430,7 @@
                                     
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Options"     >
-                                                 Налаштування    
+                                                 {{#t}}common.nalashtuvannia{{/t}}    
                                             </a>
                                         </li>
                                     {{/isadmins}}  
@@ -440,18 +440,18 @@
                          {{#horoshop}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodhor"     >
-                                         Обмін з Хорошоп    
+                                         {{#t}}app.base.obmin_z_khoroshop{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodhor" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Orders"     >
-                                                 Замовлення    
+                                                 {{#t}}common.zamovlennia{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Items"     >
-                                                 Товари    
+                                                 {{#t}}common.tovary{{/t}}    
                                             </a>
                                         </li>
                                       
@@ -459,7 +459,7 @@
                                     
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Options"     >
-                                                 Налаштування    
+                                                 {{#t}}common.nalashtuvannia{{/t}}    
                                             </a>
                                         </li>
                                     {{/isadmins}}  
@@ -470,7 +470,7 @@
                          {{#note}}
                               <li class="sidebar-item  ps-3">
                                    <a href="/index.php?p=App/Modules/Note/Pages/Main" class="sidebar-link  "      >
-                                         База знань    
+                                         {{#t}}common.baza_znan{{/t}}    
                                     </a>
                           </li> 
                          {{/note}}       
@@ -478,18 +478,18 @@
                          {{#issue}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodissue"     >
-                                         Проекти та завдання    
+                                         {{#t}}common.proekty_ta_zavdannia{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodissue" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/ProjectList"     >
-                                                 Проекти    
+                                                 {{#t}}common.proekty{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/IssueList"     >
-                                                 Завдання    
+                                                 {{#t}}common.zavdannia{{/t}}    
                                             </a>
                                         </li>
                                       
@@ -497,7 +497,7 @@
                                     
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/TimeSheet"     >
-                                                 Облік часу    
+                                                 {{#t}}app.base.oblik_chasu{{/t}}    
                                             </a>
                                         </li>
                                     
@@ -508,35 +508,35 @@
                          {{#ppo}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodppo"     >
-                                         ПРРО    
+                                         {{#t}}app.base.prro{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodppo" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/PPOList"     >
-                                                 Зареєстровані РРО    
+                                                 {{#t}}app.base.zareiestrovani_rro{{/t}}    
                                             </a>
                                         </li>
                                        <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/ZList"     >
-                                                 Журнал z-звітів    
+                                                 {{#t}}app.base.zhurnal_z_zvitiv{{/t}}    
                                             </a>
                                         </li>
                                       
                                          <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/XRep"     >
-                                                 Х-Звіт    
+                                                 {{#t}}common.kh_zvit{{/t}}    
                                             </a>
                                         </li>  
                                     
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/DocList"     >
-                                                 Список чеків    
+                                                 {{#t}}common.spysok_chekiv{{/t}}    
                                             </a>
                                         </li>
                                       <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/ZForm"     >
-                                                 Ручне закриття зміни    
+                                                 {{#t}}app.base.ruchne_zakryttia_zminy{{/t}}    
                                             </a>
                                         </li>
                                     
@@ -547,13 +547,13 @@
                            {{#checkbox}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodcb"     >
-                                         Чекбокс    
+                                         {{#t}}app.base.chekboks{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodcb" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/CB/XRep"     >
-                                                 Х-Звіт    
+                                                 {{#t}}common.kh_zvit{{/t}}    
                                             </a>
                                         </li>
                                    </ul>
@@ -562,13 +562,13 @@
                          {{#vkassa}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodvk"     >
-                                         ВчасноКаса    
+                                         {{#t}}common.vchasnokasa{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodvk" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/VK/XRep"     >
-                                                 Х-Звіт    
+                                                 {{#t}}common.kh_zvit{{/t}}    
                                             </a>
                                         </li>
                                    </ul>
@@ -578,20 +578,20 @@
                           {{#df}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmoddf"     >
-                                         Дропшипінг та  фулфілмент    
+                                         {{#t}}common.dropshypinh_ta_fulfilment{{/t}}    
                                     </a>
                             
                                    <ul id="mnmoddf" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/DF/Admin/Options"     >
-                                                Налаштування  
+                                                {{#t}}common.nalashtuvannia{{/t}}  
                                             </a>
                                         </li>
                                           {{/isadmins}}
                                     <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/DF/Admin/Orders"     >
-                                                Замовлення  
+                                                {{#t}}common.zamovlennia{{/t}}  
                                             </a>
                                         </li>
                                    </ul>
@@ -601,20 +601,20 @@
                           {{#np}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodnp"     >
-                                         Нова Пошта    
+                                         {{#t}}app.base.nova_poshta{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodnp" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/NP/Options"     >
-                                                Налаштування  
+                                                {{#t}}common.nalashtuvannia{{/t}}  
                                             </a>
                                         </li>
                                           {{/isadmins}}
                                     <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/NP/TTNList"     >
-                                                Перелік доставок  
+                                                {{#t}}app.base.perelik_dostavok{{/t}}  
                                             </a>
                                         </li>
                                    </ul>
@@ -624,20 +624,20 @@
                           {{#vdoc}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodvdoc"     >
-                                         Вчасно Документооборот    
+                                         {{#t}}app.base.vchasno_dokumentooborot{{/t}}    
                                     </a>
                             
                                    <ul id="mnmodvdoc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/VDoc/Options"     >
-                                                Налаштування  
+                                                {{#t}}common.nalashtuvannia{{/t}}  
                                             </a>
                                         </li>
                                           {{/isadmins}}
                                     <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/VDoc/DocList"     >
-                                               Документи
+                                               {{#t}}common.dokumenty{{/t}}
                                             </a>
                                         </li>
                                    </ul>
@@ -646,25 +646,25 @@
                          {{#promua}}
                               <li class="sidebar-item  ps-3">
                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodprom"     >
-                                         Обмін з PromUa 
+                                         {{#t}}app.base.obmin_z_promua{{/t}} 
                                     </a>
                             
                                    <ul id="mnmodprom" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Options"     >
-                                                Налаштування  
+                                                {{#t}}common.nalashtuvannia{{/t}}  
                                             </a>
                                         </li>
                                           {{/isadmins}}
                                          <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Orders"     >
-                                               Замовлення
+                                               {{#t}}common.zamovlennia{{/t}}
                                             </a>
                                         </li>
                                          <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Items"     >
-                                               Товари
+                                               {{#t}}common.tovary{{/t}}
                                             </a>
                                         </li>
                                         
@@ -685,30 +685,30 @@
                             aria-expanded="false" aria-controls="pages">
                             
                              <i class="nav-icon fa fa-cog"></i>
-                                Система    
+                                {{#t}}app.base.systema{{/t}}    
                         </a>
                         <ul id="mnsystem" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                               <li class="sidebar-item  ps-3">
                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnsettings"
                                aria-expanded="false" aria-controls="pages">
                        
-                                         Налаштування    
+                                         {{#t}}common.nalashtuvannia{{/t}}    
                                     </a>
                             
                                <ul id="mnsettings" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnsystem">
                                     <li class="sidebar-item  ">
                                         <a class="sidebar-link  "  href="/index.php?p=App/Pages/Options"     >
-                                             Загальні    
+                                             {{#t}}app.apihelp.zahalni{{/t}}    
                                         </a>
                                     </li>
                                   <li class="sidebar-item  ">
                                         <a class="sidebar-link  "  href="/index.php?p=App/Pages/Admin"     >
-                                             Адміністратор    
+                                             {{#t}}app.admin.administrator{{/t}}    
                                         </a>
                                     </li>
                                   <li class="sidebar-item  ">
                                         <a class="sidebar-link  "  href="/index.php?p=App/Pages/MenuList"     >
-                                             Налаштування меню    
+                                             {{#t}}common.nalashtuvannia_meniu{{/t}}    
                                         </a>
                                     </li>
                               
@@ -719,52 +719,52 @@
                                
                           <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/Firm"     >
-                                    Дані компанії   
+                                    {{#t}}app.base.dani_kompanii{{/t}}   
                             </a>
                          </li>  
                           {{#usebranch}}    
                          <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/BranchList"     >
-                                    Філії  
+                                    {{#t}}app.base.filii{{/t}}  
                             </a>
                          </li>   
                            {{/usebranch}}   
                          <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/Users"     >
-                                    Користувачі  
+                                    {{#t}}app.base.korystuvachi{{/t}}  
                             </a>
                          </li>      
                          
                           <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/Roles"     >
-                                    Ролі  
+                                    {{#t}}app.base.roli{{/t}}  
                             </a>
                          </li>      
                          <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/PosList"     >
-                                    Каси (POS термінали)  
+                                    {{#t}}app.base.kasy_pos_terminaly{{/t}}  
                             </a>
                          </li>      
                          <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/Subscribes"     >
-                                    Підписки  
+                                    {{#t}}app.base.pidpysky{{/t}}  
                             </a>
                          </li>      
                          <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/CronTab"     >
-                                    Планувальник  
+                                    {{#t}}common.planuvalnyk{{/t}}  
                             </a>
                          </li>      
                        <li class="sidebar-item ps-4">
                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/SystemLog"     >
-                                    Системний лог  
+                                    {{#t}}common.systemnyi_loh{{/t}}  
                             </a>
                          </li>      
                           {{#isadmin}} 
                             {{^noupdate}}  
                              <li class="sidebar-item ps-4">
                               <a class="sidebar-link  "  href="/index.php?p=App/Pages/Update"     >
-                                    Оновлення  
+                                    {{#t}}app.base.onovlennia{{/t}}  
                              </a>
                            </li>      
                             {{/noupdate}}     
@@ -782,7 +782,7 @@
                                      
                          <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/contacts"     >
                             <i class="nav-icon fas fa-phone-alt"></i>
-                                Тех. підтримка   
+                                {{#t}}app.base.tekh_pidtrymka{{/t}}   
                         </a>
                      </li>   
                         {{/isadmins}}  
@@ -790,7 +790,7 @@
                                      
                          <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/zstoreusage"     >
                             <i class="nav-icon fa fa-info-circle"></i>
-                                 Документація    
+                                 {{#t}}app.base.dokumentatsiia{{/t}}    
                         </a>
                      </li>     
               </ul>
@@ -829,10 +829,10 @@
                         <form zippy="nbform"  >
                         <div class="row  ">
                             
-                             <label class="col-form-label col-auto"  >Філія</label>
+                             <label class="col-form-label col-auto"  >{{#t}}common.filiia{{/t}}</label>
                             <div class="col-auto  ">
                             <select zippy="nbbranch" class="form-select ms-1 ">
-                                <option value="0">Всі доступні</option>
+                                <option value="0">{{#t}}app.base.vsi_dostupni{{/t}}</option>
                             </select>
                             </div>
                          </div>
@@ -845,7 +845,7 @@
                     {{#taskcnt}} 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/Jobs">
-                            <i title="Мої завдання" class="fa fa-gavel "></i>
+                            <i title="{{#t}}app.base.moi_zavdannia{{/t}}" class="fa fa-gavel "></i>
 
                             <span class="navbar-badge badge text-bg-warning">{{taskcnt}}</span>
 
@@ -855,7 +855,7 @@
 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
-                            <i title="Повідомлення" class="fa fa-bell "></i>
+                            <i title="{{#t}}common.povidomlennia{{/t}}" class="fa fa-bell "></i>
                             {{#notcnt}}
                             <span class="navbar-badge badge text-bg-warning">{{notcnt}}</span>
                             {{/notcnt}}
@@ -869,28 +869,28 @@
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i
-                                        class="fa fa-gavel"></i>  Мої завдання</a>
+                                        class="fa fa-gavel"></i>  {{#t}}app.base.moi_zavdannia{{/t}}</a>
                             </li>
                              {{#showtimesheet}} 
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i
-                                        class="fa fa-calendar-alt"></i> Облік роб. часу</a>
+                                        class="fa fa-calendar-alt"></i> {{#t}}app.base.oblik_rob_chasu{{/t}}</a>
                             </li>
                             {{/showtimesheet}} 
 
                             {{#isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/EmpAcc"><i
-                                        class="fa fa-money-bill-alt"></i> Особовий рахунок</a>
+                                        class="fa fa-money-bill-alt"></i> {{#t}}common.osobovyi_rakhunok{{/t}}</a>
                             </li>
                             {{/isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i>
-                                    Мій профіль</a>
+                                    {{#t}}common.mii_profil{{/t}}</a>
                             </li>
                             <li class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Вийти</a>
+                                <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> {{#t}}common.vyity{{/t}}</a>
                             </li>
                         </ul>
                     </li>
@@ -918,7 +918,7 @@
                                 {{{smart}}} 
                                 
                                  {{#isadmins}}
-                                 <small><a href="/index.php?p=App/Pages/Roles" title="Налаштування оперативного меню"><i class="fa fa-cog"></i> </a> </small>
+                                 <small><a href="/index.php?p=App/Pages/Roles" title="{{#t}}app.base.nalashtuvannia_operatyvnoho_meniu{{/t}}"><i class="fa fa-cog"></i> </a> </small>
                                  {{/isadmins}}
                                
                             </div>
@@ -946,7 +946,7 @@
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Інформація про контрагента </h5>
+                            <h5 class="modal-title">{{#t}}app.base.informatsiia_pro_kontrahenta{{/t}} </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
@@ -957,7 +957,7 @@
                         
                         
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{#t}}common.zakryty{{/t}}</button>
 
                       </div>
                     </div>
@@ -978,7 +978,7 @@
                              
                         </div>
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{#t}}common.zakryty{{/t}}</button>
 
                       </div>
                     </div>
@@ -989,18 +989,18 @@
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Друк етикеток</h5>
+                            <h5 class="modal-title">{{#t}}common.druk_etyketok{{/t}}</h5>
                          
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 
                             </button>
                         </div>
                         <div   class="modal-body">
-                        <small>Для виключення строки  з друку  виставте 0 </small>
+                        <small>{{#t}}app.base.dlia_vykliuchennia_stroky_z_druku{{/t}} </small>
                         <form  zippy="pr_itemsform">
                         <table class="table table-sm">
 
-                          <tr><td colspan="3" align="right"><a href="javascript:void(0)" onclick=" $('.pr_item').val(1) ">Виставити 1</a></td></tr>
+                          <tr><td colspan="3" align="right"><a href="javascript:void(0)" onclick=" $('.pr_item').val(1) ">{{#t}}app.base.vystavyty_1{{/t}}</a></td></tr>
                            <tr zippy="pr_items">
                               <td zippy="pr_itemname"></td>
                               <td zippy="pr_itemcode"></td>
@@ -1008,8 +1008,8 @@
                               </tr>
                        
                              <tr><td colspan="3" align="right">
-                             <button type="button" class="btn btn-secondary ms-4" data-bs-dismiss="modal">Закрити</button>
-                             <button zippy="btn_pr_items" type="submit" class="btn btn-primary"  >Друкувати</button>
+                             <button type="button" class="btn btn-secondary ms-4" data-bs-dismiss="modal">{{#t}}common.zakryty{{/t}}</button>
+                             <button zippy="btn_pr_items" type="submit" class="btn btn-primary"  >{{#t}}app.base.drukuvaty{{/t}}</button>
                               
                              </td></tr>
                             </table>   
@@ -1030,7 +1030,7 @@
                        <div  class="  d-flex justify-content-center"> 
                                 <a href="javascript:void(0)"
                                                       onclick="$('#pr_items_table').printThis();   closeModal('pr_items_pform') "
-                                                      class="btn btn-success  ">Друк</a>
+                                                      class="btn btn-success  ">{{#t}}common.druk{{/t}}</a>
                        </div>  
 
                     
@@ -1045,7 +1045,7 @@
                         <div  class="  d-flex justify-content-center"> 
                                 <a href="javascript:void(0)"
                                                       onclick="$('#pr_items_table').printThis();   closeModal('pr_items_pform') "
-                                                      class="btn btn-success  ">Друк</a>
+                                                      class="btn btn-success  ">{{#t}}common.druk{{/t}}</a>
                        </div>  
                         
                     </div>
@@ -1069,12 +1069,12 @@
                              
                         </div>
                         <div   class="mt-2">
-                             <span>Камера:</span> <select onchange="sel_camera()" id="camera_list"> </select>
+                             <span>{{#t}}app.base.kamera{{/t}}</span> <select onchange="sel_camera()" id="camera_list"> </select>
                          </div>  
                      </div>
                      <div class="modal-footer">
                   
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{#t}}common.zakryty{{/t}}</button>
 
                       </div>
                     </div>
@@ -1087,7 +1087,7 @@
     <dialog id="dialogwait">
                      
            <div class="spinner-border" role="status">
-                              <span class="sr-only">Завантаження...</span>
+                              <span class="sr-only">{{#t}}app.base.zavantazhennia{{/t}}</span>
                             </div>
                 
 

@@ -2,23 +2,23 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
-            Оприбуткування з виробництва № {{document_number}} від {{date}} <br>
+            {{#t}}print.prodreceipt.oprybutkuvannia_z_vyrobnytstva_vid{{/t}} <br>
         </td>
     </tr>
     <tr>
         <td colspan="8" valign="middle">
-            Виробнича ділянка <b>{{pareaname}}</b><br>
+            {{#t}}common.vyrobnycha_dilianka{{/t}} <b>{{pareaname}}</b><br>
         </td>
     </tr>
    <tr>
         <td colspan="8" valign="middle">
-            На склад <b>{{storename}}</b><br>
+            {{#t}}common.na_sklad{{/t}} <b>{{storename}}</b><br>
         </td>
     </tr>
     {{#emp}}
     <tr>
         <td colspan="6">
-            <b>Виконавець:</b> {{emp}}
+            <b>{{#t}}print.prodmove.vykonavets{{/t}}</b> {{emp}}
         </td>
     </tr>
  
@@ -30,13 +30,13 @@
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kod{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.od{{/t}}</th>
 
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >{{#t}}common.kil{{/t}}</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >{{#t}}common.tsina{{/t}}</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >{{#t}}common.suma{{/t}}</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -51,7 +51,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">{{#t}}common.razom{{/t}}</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 

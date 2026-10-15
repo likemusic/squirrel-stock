@@ -68,7 +68,7 @@ class OutcomeMoney extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВКО-000000';
+        return __('doc.outcomemoney.vko_000000');
     }
 
     public function getRelationBased() {

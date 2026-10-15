@@ -24,7 +24,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -33,7 +33,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
+            $this->setWarn(__('mod.ocstore.items.vykonaite_ziednannia_na_storintsi_nalash'));
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -86,7 +86,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
 
-            $this->setError("Невірна відповідь");
+            $this->setError(__('mod.ocstore.items.nevirna_vidpovid'));
            // \App\Helper::log($json);
             return;
         }
@@ -153,7 +153,7 @@ class Items extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('Не обрано товар');
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $data = json_encode($elist);
@@ -180,7 +180,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess("Експортовано ".count($elist)." товарів");
+        $this->setSuccess(__('common.eksportovano').count($elist).__('common.tovariv'));
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -222,7 +222,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('Оновлено');
+        $this->setSuccess(__('common.onovleno'));
     }
 
 
@@ -261,7 +261,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('Оновлено');
+        $this->setSuccess(__('common.onovleno'));
     }
 
     public function importOnSubmit($sender) {
@@ -271,7 +271,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
+            $this->setWarn(__('mod.ocstore.items.vykonaite_ziednannia_na_storintsi_nalash'));
             return;
         }
 
@@ -381,7 +381,7 @@ class Items extends \App\Pages\Base
             $i++;
         }
 
-        $this->setSuccess("Завантажено {$i} товарів");
+        $this->setSuccess(__('common.zavantazheno_tovariv', ['i' => $i]));
     }
 
     
@@ -430,7 +430,7 @@ class Items extends \App\Pages\Base
             $item->save(); 
             
         }  
-        $this->setSuccess("Оновлено ");
+        $this->setSuccess(__('common.onovleno_2'));
   
     }    
     public function onExportNames($sender) {
@@ -476,7 +476,7 @@ class Items extends \App\Pages\Base
             return;
         }
   
-        $this->setSuccess("Оновлено ");
+        $this->setSuccess(__('common.onovleno_2'));
   
     }    
     

@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Планувальник  </title>
+        <title>  {{#t}}common.planuvalnyk{{/t}}  </title>
 
     </head>
 
@@ -8,14 +8,14 @@
  
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6"  >
-                <h3>Планувальник               </h3>
-              <small>Для відправки  email та  підписок  за  роскладом слід використовувати зовнішній мененджер   
+                <h3>{{#t}}common.planuvalnyk{{/t}}               </h3>
+              <small>{{#t}}app.crontab.dlia_vidpravky_email_ta_pidpysok{{/t}}   
                     <br>   
-                   Адреса {{{url}}}   <a href="https://zippy.com.ua/zstoreusage#cron">Детальніше...</a>  </small>
+                   {{#t}}app.crontab.adresa{{/t}}   <a href="https://zippy.com.ua/zstoreusage#cron">{{#t}}app.crontab.detalnishe{{/t}}</a>  </small>
                 
                 <table class="ctable mb-2">
                       <tr>
-                      <td>Активовано</td> 
+                      <td>{{#t}}app.crontab.aktyvovano{{/t}}</td> 
                       <td>
                           <a  zippy="ton" ><i class="fa fa-toggle-on text-success"></i></a>
                           <a  zippy="toff"><i class="fa fa-toggle-off"></i></a> 
@@ -23,13 +23,13 @@
                       <td>  </td> 
                     </tr>
                     <tr>
-                      <td>Останній запуск</td> 
+                      <td>{{#t}}app.crontab.ostannii_zapusk{{/t}}</td> 
                       <td> {{lasttime}} </td> 
-                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустити</a> </td> 
+                      <td>  <a href="javascript:void(0);" onclick="startcron()" >{{#t}}app.crontab.perezapustyty{{/t}}</a> </td> 
                     </tr>
                 </table>
-                 <h5>Черга завдань</h5>
-                 <a zippy="update" >Оновити</a>
+                 <h5>{{#t}}app.crontab.cherha_zavdan{{/t}}</h5>
+                 <a zippy="update" >{{#t}}common.onovyty{{/t}}</a>
                 <table class="table table-sm mt-2  ">
                     <tr  zippy="nlist">
 
@@ -38,8 +38,8 @@
 
                        
                         <td>
-                        <a title="Запустити" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a title="Видалити" zippy="ndel"><i class="fa fa-trash"></i></a> 
+                        <a title="{{#t}}app.crontab.zapustyty{{/t}}" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a title="{{#t}}common.vydalyty{{/t}}" zippy="ndel"><i class="fa fa-trash"></i></a> 
                             </td>
 
 

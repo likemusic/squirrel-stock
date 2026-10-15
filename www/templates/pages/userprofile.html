@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>   Мій профіль </title>
+        <title>   {{#t}}common.mii_profil{{/t}} </title>
 
     </head>
 
@@ -10,45 +10,45 @@
             <div class="col-10  col-md-8 col-lg-6 col-xl-5">
             <div class="card">
              
-                <h4>Мій профіль</h4>
+                <h4>{{#t}}common.mii_profil{{/t}}</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
                         <div class="col-12 col-md-6 ">         
 
                       
                             <div class="mb-2  ">
-                                <label class="form-label" for="defstore">Склад за замовчуванням</label>
+                                <label class="form-label" for="defstore">{{#t}}app.userprofile.sklad_za_zamovchuvanniam{{/t}}</label>
 
                                 <select class="form-select" zippy="defstore">
-                                    <option value="0">Не встановлено</option>
+                                    <option value="0">{{#t}}common.ne_vstanovleno{{/t}}</option>
                                 </select>
                             </div>
                             <div class="mb-2  ">
-                                <label class="form-label" for="defmf">Грошовий рахунок за замовчуванням</label>
+                                <label class="form-label" for="defmf">{{#t}}app.userprofile.hroshovyi_rakhunok_za_zamovchuvanniam{{/t}}</label>
 
                                 <select class="form-select" zippy="defmf">
-                                    <option value="0">Не встановлено</option>
+                                    <option value="0">{{#t}}common.ne_vstanovleno{{/t}}</option>
                                 </select>
                             </div>
                       
                             <div class="mb-2  ">
-                                <label for="defsalesource">Джерело продаж за замовчуванням</label>
+                                <label for="defsalesource">{{#t}}app.userprofile.dzherelo_prodazh_za_zamovchuvanniam{{/t}}</label>
 
                                 <select class="form-select" zippy="defsalesource">
-                                    <option value="0">Не встановлено</option>
+                                    <option value="0">{{#t}}common.ne_vstanovleno{{/t}}</option>
                                 </select>
                             </div>
                             <div class="mb-2  ">
-                                <label  class="form-label" for="pagesize">Рядків в таблицях на сторінці </label>
+                                <label  class="form-label" for="pagesize">{{#t}}app.userprofile.riadkiv_v_tablytsiakh_na_storintsi{{/t}} </label>
 
                                 <select class="form-select" zippy="pagesize" style="width:100px;">
 
                                 </select>
-                                 <small><i class="fa fa-exclamation-triangle"></i> Велике значення  може  сповільнити  роботу програми</small>
+                                 <small><i class="fa fa-exclamation-triangle"></i> {{#t}}app.userprofile.velyke_znachennia_mozhe_spovilnyty_robot{{/t}}</small>
                                  </div>
 
                                 <div class="mb-2  ">
-                                    <label class="form-label" for="mainpage">Головна сторінка</label>
+                                    <label class="form-label" for="mainpage">{{#t}}app.userprofile.holovna_storinka{{/t}}</label>
 
                                     <select class="form-select" zippy="mainpage">
                                     </select>
@@ -63,7 +63,7 @@
 
                         <div class="col-12 col-md-6 ">         
                             <div class="mb-2">
-                                <label class="form-label" for="userlogin">Логін</label>
+                                <label class="form-label" for="userlogin">{{#t}}common.lohin{{/t}}</label>
                                 <span zippy="userlogin" class="form-control-plaintext"></span>
                             </div>
                             <div class="mb-2">
@@ -71,7 +71,7 @@
                                 <input type="email" class="form-control" zippy="email">
                             </div>
                             <div class="mb-2">
-                                <label for="phone">Телефон</label>
+                                <label for="phone">{{#t}}common.telefon{{/t}}</label>
                                 <input   class="form-control" zippy="phone">
                             </div>
                             <div class="  mb-2">
@@ -84,13 +84,13 @@
                             </div>
                            <div class="form-check">
                                 <input zippy="darkmode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="darkmode">Нічна тема </label>
+                                <label class="form-check-label" for="darkmode">{{#t}}app.userprofile.nichna_tema{{/t}} </label>
 
                             </div>
                               {{#showsidemenu}}  
                            <div class="form-check">
                                 <input zippy="collapsesidebar" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="collapsesidebar">Ховати бокове меню </label>
+                                <label class="form-check-label" for="collapsesidebar">{{#t}}app.userprofile.khovaty_bokove_meniu{{/t}} </label>
 
                             </div>
                               {{/showsidemenu}}  
@@ -98,7 +98,7 @@
                            {{#usebot}}
                              <div class="form-check">
                                 <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usebotfornotify">Дублювати повідомлення в телеграмі </label>
+                                <label class="form-check-label" for="usebotfornotify">{{#t}}app.userprofile.dubliuvaty_povidomlennia_v_telehrami{{/t}} </label>
 
                             </div>
                            {{/usebot}}
@@ -106,10 +106,9 @@
                            
                                   <div class="form-check">
                                     <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label" for="usemobileprinter">Відкривати друк в новій вкладці  </label> 
+                                    <label class="form-check-label" for="usemobileprinter">{{#t}}app.userprofile.vidkryvaty_druk_v_novii_vkladtsi{{/t}}  </label> 
                                    <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділитись. 
-                                    Стосується тільки системних принтерів"></i>
+                                   title="{{#t}}app.userprofile.dlia_mobilnykh_prystroiv_shchob_drukuvat{{/t}}"></i>
 
                                 </div>                             
                             
@@ -118,7 +117,7 @@
 
                     
                         <div class="col-12 d-flex justify-content-center  mt-2">         
-                             <button type="submit"   class="btn btn-primary">Зберегти</button>
+                             <button type="submit"   class="btn btn-primary">{{#t}}common.zberehty{{/t}}</button>
                         </div>
                     </div>            
                 </form>
@@ -128,27 +127,27 @@
             <div class="col-10 col-lg-3 col-md-3 col-xl-2">
                <div class="card">
                
-                <h4>Зміна пароля</h4>
+                <h4>{{#t}}common.zmina_parolia{{/t}}</h4>
                 <form role="form" zippy="passwordform">
 
                     <div class="mb-2">
-                        <label class="form-label" for="userpassword">Новий пароль</label>
+                        <label class="form-label" for="userpassword">{{#t}}app.userprofile.novyi_parol{{/t}}</label>
                         <input autocomplete="off" type="password" class="form-control" zippy="userpassword"  required="on" >
-                        <small class="compact">Перед введенням перевірте розкладку та регістр клавіатури </small>
+                        <small class="compact">{{#t}}app.userprofile.pered_vvedenniam_perevirte_rozkladku_ta{{/t}} </small>
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label" for="userpassword">Підтвердження</label>
+                        <label class="form-label" for="userpassword">{{#t}}common.pidtverdzhennia{{/t}}</label>
                         <input autocomplete="off" type="password" class="form-control " zippy="confirmpassword"  required="on" >
                     </div>
                     <div class="  d-flex justify-content-end  mt-2">
-                     <button type="submit"   class="btn btn-primary">Зберегти</button>
+                     <button type="submit"   class="btn btn-primary">{{#t}}common.zberehty{{/t}}</button>
                   </div>   
                 </form>
                 
                 {{#hideblock}}
-                 <h5>Двофакторна аутентифікація</h5>   
-                 <small class="compact">Відправка коду підтвердження  після логіну. Якщо нічого не вибрано - не використовується </small>
+                 <h5>{{#t}}app.userprofile.dvofaktorna_autentyfikatsiia{{/t}}</h5>   
+                 <small class="compact">{{#t}}app.userprofile.vidpravka_kodu_pidtverdzhennia_pislia_lo{{/t}} </small>
                 <form   zippy="otpform">
                     <div class="form-check">
                         <input zippy="otpemail" type="checkbox" class="form-check-input">
@@ -161,19 +160,19 @@
                     </div>  
                     <div class="form-check">
                         <input zippy="otptg" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="otptg">Телеграм </label>
+                        <label class="form-check-label" for="otptg">{{#t}}common.telehram{{/t}} </label>
                     </div>  
                            
                    <div class="  d-flex justify-content-end  mt-2">         
                      
-                   <button zippy="otpsave" type="submit"   class="btn btn-primary">Зберегти</button>
+                   <button zippy="otpsave" type="submit"   class="btn btn-primary">{{#t}}common.zberehty{{/t}}</button>
                    </div>
-                    <a  zippy="otptest" >Тестова відправка </a> <br>   
-                    <span>Резервний код:</span> <b zippy="otpcode">44444</b> 
+                    <a  zippy="otptest" >{{#t}}app.userprofile.testova_vidpravka{{/t}} </a> <br>   
+                    <span>{{#t}}app.userprofile.rezervnyi_kod{{/t}}</span> <b zippy="otpcode">44444</b> 
                      <small> 
-                    <a zippy="otprefresh" >  <i title="Оновити" class="fa fa-refresh"></i> </a>  
+                    <a zippy="otprefresh" >  <i title="{{#t}}common.onovyty{{/t}}" class="fa fa-refresh"></i> </a>  
                         <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                title=" Зберегти на випадок якщо відправка не спрацює "></i>
+                                title=" {{#t}}app.userprofile.zberehty_na_vypadok_iakshcho_vidpravka{{/t}} "></i>
                    </small>    
                    
                 </form>
@@ -185,91 +184,91 @@
                        
                         
                           
-                         <small>  <a href="/index.php?p=App/Pages/Options#printer">Параметри для етикеток і цінників</a> </small>
-                         <h4>Принтер чеків</h4>
-                          <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
+                         <small>  <a href="/index.php?p=App/Pages/Options#printer">{{#t}}app.options.parametry_dlia_etyketok_i_tsinnykiv{{/t}}</a> </small>
+                         <h4>{{#t}}app.userprofile.prynter_chekiv{{/t}}</h4>
+                          <small><a href="https://zippy.com.ua/ext#id10">{{#t}}common.opys{{/t}}</a></small>
                          <form zippy="printer">
                             <div class="mb-2">
-                                <label  class="form-label" for="prtype">Тип підключення</label>
+                                <label  class="form-label" for="prtype">{{#t}}app.userprofile.typ_pidkliuchennia{{/t}}</label>
                                 <select class="form-select" zippy="prtype">
-                                     <option value="0">Системний принтер</option>
-                                     <option value="1">Print сервер</option>
+                                     <option value="0">{{#t}}app.userprofile.systemnyi_prynter{{/t}}</option>
+                                     <option value="1">{{#t}}app.userprofile.print_server{{/t}}</option>
                                 </select>
-                                <small data-label="pserver">Опис <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a>  </small>
+                                <small data-label="pserver">{{#t}}common.opys{{/t}} <a href="https://zippy.com.ua/ext#id10" target="_blank">{{#t}}common.tut{{/t}}</a>  </small>
                             </div>    
                                  
                                 
                              <div class="mb-2">
-                                <label class="form-label" data-label="pserver" for="pserver">Адреса серверу</label>
+                                <label class="form-label" data-label="pserver" for="pserver">{{#t}}app.userprofile.adresa_serveru{{/t}}</label>
                                 <input class="form-control" zippy="pserver">
                                  
                             </div>
                              <div class="mb-2">
-                                <label class="form-label" data-label="pwsym" for="pwsym">Ширина (кіл. символів)</label>
+                                <label class="form-label" data-label="pwsym" for="pwsym">{{#t}}app.userprofile.shyryna_kil_symvoliv{{/t}}</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
                             </div>
                              <div class="mb-2">
-                                <label class="form-label" for="pcp">Кодова сторінка</label>
+                                <label class="form-label" for="pcp">{{#t}}app.userprofile.kodova_storinka{{/t}}</label>
                                 <select class="form-select" zippy="pcp">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
-                                <small data-label="pcp">Кодування, виставлене в  принтері</small>    
+                                <small data-label="pcp">{{#t}}app.userprofile.koduvannia_vystavlene_v_prynteri{{/t}}</small>    
                             </div>    
                                  
                                          
                              <div class="mb-2">
-                                <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
+                                <input zippy="savep" class="btn btn-primary" type="submit" value="{{#t}}common.zberehty{{/t}}">
                             </div>                            
                              <div class="mb-2">
-                                <a    zippy="pstest" >Тест принтера</a>
+                                <a    zippy="pstest" >{{#t}}app.userprofile.test_pryntera{{/t}}</a>
                             </div>                            
                          </form> 
                        
                          
                          
          
-                         <h4>Принтер етикеток</h4>     
-                          <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small> 
-                             <small>Кількість на позицію, задається в довіднику ТМЦ </small>
+                         <h4>{{#t}}app.userprofile.prynter_etyketok{{/t}}</h4>     
+                          <small><a href="https://zippy.com.ua/ext#id10">{{#t}}common.opys{{/t}}</a></small> 
+                             <small>{{#t}}app.userprofile.kilkist_na_pozytsiiu_zadaietsia_v{{/t}} </small>
                          <form zippy="printerlabel">
                             <div class="mb-2">
-                                <label class="form-label" for="prtypelabel">Тип підключення</label>
+                                <label class="form-label" for="prtypelabel">{{#t}}app.userprofile.typ_pidkliuchennia{{/t}}</label>
                                 <select class="form-select" zippy="prtypelabel">
-                                     <option value="0">Системний принтер</option>
-                                     <option value="1">Print сервер (режим  receipt)</option>
-                                     <option value="2">Print сервер (режим  label)</option>
+                                     <option value="0">{{#t}}app.userprofile.systemnyi_prynter{{/t}}</option>
+                                     <option value="1">{{#t}}app.userprofile.print_server_rezhym_receipt{{/t}}</option>
+                                     <option value="2">{{#t}}app.userprofile.print_server_rezhym_label{{/t}}</option>
                                 </select>
-                                <small data-label="prtypelabel"  >Опис <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a>  </small>
+                                <small data-label="prtypelabel"  >{{#t}}common.opys{{/t}} <a href="https://zippy.com.ua/ext#id10" target="_blank">{{#t}}common.tut{{/t}}</a>  </small>
                             </div>    
                                  
                                 
                              <div class="mb-2">
-                                <label class="form-label" data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
+                                <label class="form-label" data-label="pserverlabel" for="pserverlabel">{{#t}}app.userprofile.adresa_serveru{{/t}}</label>
                                 <input class="form-control" zippy="pserverlabel">
                                  
                             </div>
                              <div class="mb-2">
-                                <label class="form-label" data-label="pwsymlabel" for="pwsymlabel">Ширина (кіл. символів)</label>
+                                <label class="form-label" data-label="pwsymlabel" for="pwsymlabel">{{#t}}app.userprofile.shyryna_kil_symvoliv{{/t}}</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
-                                <small data-label="pcplabel"> Якщо строка  довша, буде  записано в другу строку (тег {{name2}})</small>    
+                                <small data-label="pcplabel"> {{#t}}app.userprofile.iakshcho_stroka_dovsha_bude_zapysano{{/t}}</small>    
                           
                             </div>
                              <div class="mb-2">
-                                <label class="form-label" for="pcplabel">Кодова сторінка</label>
+                                <label class="form-label" for="pcplabel">{{#t}}app.userprofile.kodova_storinka{{/t}}</label>
                                 <select class="form-select" zippy="pcplabel">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
-                                <small data-label="pcplabel">Кодування, виставлене в  принтері</small>    
+                                <small data-label="pcplabel">{{#t}}app.userprofile.koduvannia_vystavlene_v_prynteri{{/t}}</small>    
                             </div>    
                             
                                                                      
                              <div class="mb-2">
-                                <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Зберегти">
+                                <input zippy="saveplabel" class="btn btn-primary" type="submit" value="{{#t}}common.zberehty{{/t}}">
                             </div>                            
                              <div class="mb-2">
-                                <a   zippy="pstestlabel" >Тест принтера</a>
+                                <a   zippy="pstestlabel" >{{#t}}app.userprofile.test_pryntera{{/t}}</a>
                             </div>                            
                          </form>   
                           </div>
@@ -280,23 +279,23 @@
                 <div class="col-10  col-md-4 col-xl-2">
                    <div class="card">
                           
-                         <h4>Електронні ваги</h4>
-                          <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
+                         <h4>{{#t}}app.userprofile.elektronni_vahy{{/t}}</h4>
+                          <small><a href="https://zippy.com.ua/ext#id17">{{#t}}common.opys{{/t}}</a></small>
                    
                   
                          <form zippy="scaleform">
                            
                              <div class="mb-2">
-                                <label class="form-label"   for="scalescript">Скрипт</label>
+                                <label class="form-label"   for="scalescript">{{#t}}app.poslist.skrypt{{/t}}</label>
                                 <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
                               <div class="mb-2">
-                                <input   class="btn btn-primary" type="submit" value="Зберегти">
+                                <input   class="btn btn-primary" type="submit" value="{{#t}}common.zberehty{{/t}}">
                             </div>     
                                                
                              <div class="mb-2">
-                                <a id="testscale" href="#"    >Тест </a>
+                                <a id="testscale" href="#"    >{{#t}}app.userprofile.test{{/t}} </a>
                             </div> 
                                                                          
                         </form>       

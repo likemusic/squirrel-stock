@@ -189,7 +189,7 @@ class OrderFood extends Document
            
          
            if($p->showcheck==1 && $p->disc>0 ) {
-               $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
+               $header['promo']  = __('doc.orderfood.promokod'). $p->code . __('doc.orderfood.na_znyzhku', ['disc' => $p->disc]);
                break;
            }
         }  
@@ -225,7 +225,7 @@ class OrderFood extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ЗК-000000';
+        return __('doc.orderfood.zk_000000');
     }
 
     public function supportedExport() {
@@ -267,7 +267,7 @@ class OrderFood extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = $b;
-                    $ua->notes = "Бонус " ;
+                    $ua->notes = __('common.bonus') ;
              
                     $ua->save();
                     
@@ -306,7 +306,7 @@ class OrderFood extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -319,7 +319,7 @@ class OrderFood extends Document
 
 
             if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').H::fqty($item->getQuantity($this->headerdata['store'])).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
             }
 
             $am =   $this->getAmountReg()   ;

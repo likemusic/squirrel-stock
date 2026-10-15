@@ -1,25 +1,25 @@
 <html>
       <head>
-        <title> Розрахунки з покупцями  </title>
+        <title> {{#t}}app.account.rozrakhunky_z_pokuptsiamy{{/t}}  </title>
 
     </head>
  <body>
         <div class="row">
             <div class="col-12    col-xl-8  col-xxl-7 " zippy="clist">
-                <h3>Розрахунки з покупцями </h3>
-                <small>В списку тільки ті контрагенти з якими є  незакриті розрахунки. Борг покупцю  зазвичай - невідправлені товари </small>
+                <h3>{{#t}}app.account.rozrakhunky_z_pokuptsiamy{{/t}} </h3>
+                <small>{{#t}}register.paybaylist.v_spysku_tilky_ti_kontrahenty{{/t}} </small>
                 <div class="navbar">
                     <form zippy="filter"  >
                        <div class="row  "  >
 
-                        <label class="col-form-label col-auto" for="holdlist"> Холдинг </label>
+                        <label class="col-form-label col-auto" for="holdlist"> {{#t}}common.kholdynh{{/t}} </label>
                         <div class="col-auto  ">
                           <select class="form-select me-2" zippy="holdlist">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                           </select>
                          </div>
                         <div class="col-auto  ">
-                          <input type="submit" class="  btn btn-success  " value="ОК">
+                          <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                         </div> </div>
                     </form>
                 </div>
@@ -28,10 +28,10 @@
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Ім'я</th>
-                        <th>Тел.</th>
-                        <th class="text-end">Борг покупця</th>
-                        <th class="text-end">Борг покупцю</th>
+                        <th>{{#t}}common.imia{{/t}}</th>
+                        <th>{{#t}}common.tel_2{{/t}}</th>
+                        <th class="text-end">{{#t}}app.subscribes.borh_pokuptsia{{/t}}</th>
+                        <th class="text-end">{{#t}}register.paybaylist.borh_pokuptsiu{{/t}}</th>
 
                         <th></th>
                         <th></th>
@@ -41,21 +41,21 @@
                     </tr>
                     <tr zippy="custlist">
 
-                        <td><a zippy="customer_name" title="Відкрити профіль"></a></td>
+                        <td><a zippy="customer_name" title="{{#t}}register.paybaylist.vidkryty_profil{{/t}}"></a></td>
                         <td zippy="phone"></td>
 
                          <td zippy="amountd" class="text-end"></td>
                         <td zippy="amountc" class="text-end"></td>
                
-                        <td><a zippy="showdet">Деталізація</a></td>
-                          <td><a zippy="createpay">Внести оплату</a></td>
+                        <td><a zippy="showdet">{{#t}}common.detalizatsiia{{/t}}</a></td>
+                          <td><a zippy="createpay">{{#t}}common.vnesty_oplatu{{/t}}</a></td>
 
 
                     </tr>
                     <tr>
 
                         <td></td>
-                        <td class="text-end text-bold">Всього:</td>
+                        <td class="text-end text-bold">{{#t}}common.vsoho{{/t}}</td>
 
                        <td zippy="totamountd" class="text-end text-bold"></td>
                         <td zippy="totamountc" class="text-end text-bold"></td>
@@ -72,32 +72,32 @@
             </div>
 
             <div class="col-12  " zippy="plist">
-                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
+                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.do_pereliku_2{{/t}}</a>
                 <h3 zippy="cname"></h3>
                <form zippy="payform"  >
               <div class="row ">
                <div class="col-12 col-lg-8 col-xl-6   " >
-                  <small> <i class="fa fa-exclamation text-success"></i>  Щоб пропустити обробку документа поставте 0 в сумі</small>
+                  <small> <i class="fa fa-exclamation text-success"></i>  {{#t}}register.paybaylist.shchob_propustyty_obrobku_dokumenta_post{{/t}}</small>
                   {{#fiscal}}
-                 <br> <small><i class="fa fa-exclamation text-danger"></i>  Фіскалізовані чеки оплачуються  в  АРМ касира</small>
+                 <br> <small><i class="fa fa-exclamation text-danger"></i>  {{#t}}register.paybaylist.fiskalizovani_cheky_oplachuiutsia_v_arm{{/t}}</small>
                  {{/fiscal}}
                 <table class="table table-sm    ">
                     <tr>
 
-                        <th>Документ</th>
-                        <th>Номер</th>
-                        <th>Дата</th>
+                        <th>{{#t}}common.dokument{{/t}}</th>
+                        <th>{{#t}}common.nomer{{/t}}</th>
+                        <th>{{#t}}common.data{{/t}}</th>
                          {{#usebranch}}
-                        <th>Філія</th>
+                        <th>{{#t}}common.filiia{{/t}}</th>
                            {{/usebranch}}
 
 
-                        <th  >Сума</th>
+                        <th  >{{#t}}common.suma{{/t}}</th>
 
                        
 
                        
-                        <th>Перевести в статус</th>
+                        <th>{{#t}}register.paybaylist.perevesty_v_status{{/t}}</th>
                         
 
                     </tr>
@@ -116,7 +116,7 @@
 
 
                        
-                         <td  class="text-nowrap"  > <a zippy="stpayed">Оплачений</a> <a  zippy="stdone">Виконаний</a> <a  zippy="stclosed">Закритий</a>  </td>
+                         <td  class="text-nowrap"  > <a zippy="stpayed">{{#t}}common.oplachenyi{{/t}}</a> <a  zippy="stdone">{{#t}}common.vykonanyi{{/t}}</a> <a  zippy="stclosed">{{#t}}common.zakrytyi{{/t}}</a>  </td>
                         
                     </tr>
 
@@ -129,7 +129,7 @@
                      <div class="col-12">
                        <div class="input-group">
                   
-                        <label  >До сплати</label>
+                        <label  >{{#t}}common.do_splaty{{/t}}</label>
                          
                             <input zippy="pamount" readonly="on" style="width:75px;"         class="form-control me-2">
                         </div>
@@ -137,10 +137,10 @@
                       <div class="col-12">
                        <div class="input-group">
   
-                        <label   for="payment">рахунок</label>
+                        <label   for="payment">{{#t}}common.rakhunok_2{{/t}}</label>
                             
                             <select class="form-select  " zippy="payment">
-                               <option value="0">Не вказано</option>
+                               <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                             </select>
                           
                        </div>
@@ -148,22 +148,22 @@
   
                    <div class="col-12">
                        <div class="input-group">
-                      <label  >дата</label>
+                      <label  >{{#t}}register.paybaylist.data{{/t}}</label>
                       
                        <input zippy="pdate" style="width:100px;" class="form-control me-2 qtyprice">
                     </div>
                    </div>
                      
                         <div class="col-12"> 
-                          <input zippy="pcomment" placeholder="Коментар..." class="form-control me-2">
+                          <input zippy="pcomment" placeholder="{{#t}}register.paybaylist.komentar{{/t}}" class="form-control me-2">
                          </div>
                        
 
                        <div class="col-12  ">
-                          <button zippy="paybtn"  type="submit" class="  btn btn-success  me-2 ">Сплатити</button>
+                          <button zippy="paybtn"  type="submit" class="  btn btn-success  me-2 ">{{#t}}common.splatyty{{/t}}</button>
                       </div>
                         <div class="col-12  ">
-                          <button zippy="payorder" type="submit" class="  btn btn-success  me-2 " title="Створити прибутковий касовий  ордер">Створити КО</button>
+                          <button zippy="payorder" type="submit" class="  btn btn-success  me-2 " title="{{#t}}register.paybaylist.stvoryty_prybutkovyi_kasovyi_order{{/t}}">{{#t}}register.paybaylist.stvoryty_ko{{/t}}</button>
                       </div>
  
                      </div>
@@ -176,24 +176,23 @@
 
               
            <div class="col-12 col-lg-10 col-xl-8 " zippy="dlist">
-                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}reference.eqlist.do_spysku{{/t}}</a>
                 <h3 zippy="cnamed"></h3>
-                <small>                Прибуток - надходження від контрагента грошей або ТМЦ. 
-               Видаток - видача контрагенту грошей або ТМЦ </small>
+                <small>                {{#t}}register.paybaylist.prybutok_nadkhodzhennia_vid_kontrahenta{{/t}} </small>
                 <table class="table table-sm ">
                      <tr>
 
-                        <th  >Документ</th>
-                        <th  >Номер</th>
-                        <th  >Дата</th>
+                        <th  >{{#t}}common.dokument{{/t}}</th>
+                        <th  >{{#t}}common.nomer{{/t}}</th>
+                        <th  >{{#t}}common.data{{/t}}</th>
               
                          {{#usebranch}}
-                        <th>Філія</th>
+                        <th>{{#t}}common.filiia{{/t}}</th>
                          {{/usebranch}}
-                         <th  class="text-end">Прибуток</th>
-                        <th  class="text-end">Видаток</th>
-                        <th  class="text-end">Борг покупця</th>
-                        <th  class="text-end">Борг покупцю</th>
+                         <th  class="text-end">{{#t}}common.prybutok{{/t}}</th>
+                        <th  class="text-end">{{#t}}common.vydatok{{/t}}</th>
+                        <th  class="text-end">{{#t}}app.subscribes.borh_pokuptsia{{/t}}</th>
+                        <th  class="text-end">{{#t}}register.paybaylist.borh_pokuptsiu{{/t}}</th>
 
      
                           <th  ></th>
@@ -212,7 +211,7 @@
                       <td zippy="out" class="text-end"></td>
                       <td zippy="bc" class="text-end"></td>
                       <td zippy="bd" class="text-end"></td>
-                      <td  > &nbsp; <a zippy="showdet" title="Перегляд"><i class="fa fa-eye"></i></a></td>
+                      <td  > &nbsp; <a zippy="showdet" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a></td>
                     
                     </tr>                    
                 </table>

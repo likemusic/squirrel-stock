@@ -91,7 +91,7 @@ class ChatBot
         $text = $msg['text'] ?? '';
         $chat_id = $msg['chat']['id']?? '' ;
         if(strpos($text, "/help")===0) {
-            $this->sendMessage($chat_id, "Перелік команд:\nlogin логін пароль - вхід для користувача\nlogin телефон(". H::PhoneL()." цифр) пароль - вхід для контрагента\nlogout - вихід") ;
+            $this->sendMessage($chat_id, __('app.chatbot.perelik_komand_login_lohin_parol'). H::PhoneL().__('app.chatbot.tsyfr_parol_vkhid_dlia_kontrahenta')) ;
 
         }
         if(strpos($text, "login") === 0) {
@@ -136,7 +136,7 @@ class ChatBot
                 $u->save();
                 $this->sendMessage($chat_id, "Logout OK") ;
             } else {
-                $this->sendMessage($chat_id, "Ви не залогінені") ;
+                $this->sendMessage($chat_id, __('app.chatbot.vy_ne_zalohineni')) ;
             }
 
         }

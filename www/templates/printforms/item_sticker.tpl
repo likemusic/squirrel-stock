@@ -6,12 +6,12 @@
                 <td   colspan="3"  ><b> {{name}}</b></td>
             </tr>
            <tr  >
-                <td colspan="3"  >Код {{code}}</td>
+                <td colspan="3"  >{{#t}}print.item_sticker.kod{{/t}}</td>
             </tr>
             <tr  >
-                <td  >Вага</td>
-                <td  >Ціна</td>
-                <td style="font-size:18px" ><b> Сума</b></td>
+                <td  >{{#t}}common.vaha{{/t}}</td>
+                <td  >{{#t}}common.tsina{{/t}}</td>
+                <td style="font-size:18px" ><b> {{#t}}common.suma{{/t}}</b></td>
             </tr>
             <tr  >
                 <td  >{{qty}}</td>
@@ -21,7 +21,7 @@
              {{#term}}
              <tr  >
                 <td     colspan="3">
-               Придатний до   {{term}}
+               {{#t}}print.item_sticker.prydatnyi_do{{/t}}
                  </td>
                 </tr> 
            {{/term}}        

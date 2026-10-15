@@ -1,6 +1,6 @@
 <html>
      <head>
-        <title> Журнал продажів  </title>
+        <title> {{#t}}register.gilist.zhurnal_prodazhiv{{/t}}  </title>
 
     </head>
   <body>
@@ -8,7 +8,7 @@
             <div class="col-12 col-xl-11">
               
                     <div class="card-body">
-                        <h3>Журнал продажів </h3>
+                        <h3>{{#t}}register.gilist.zhurnal_prodazhiv{{/t}} </h3>
 
 
                          
@@ -27,7 +27,7 @@
                                </div>
                          <div class="col-12">
                            <div class="input-group">
-                                <label     for="salesource">Статус</label>
+                                <label     for="salesource">{{#t}}common.status{{/t}}</label>
                                
 
                                 <select class="form-select  " zippy="status">
@@ -39,10 +39,10 @@
                          <div class="col-12">
                            <div class="input-group">
                                       
-                                    <label     for="fstore"> склад </label>
+                                    <label     for="fstore"> {{#t}}common.sklad_2{{/t}} </label>
                                 
                                  <select class="form-select  " zippy="fstore">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                 </select>
                                  
                                 </div>
@@ -50,10 +50,10 @@
                          <div class="col-12">
                            <div class="input-group">
                                
-                                <label     for="salesource">Джерело продаж</label>
+                                <label     for="salesource">{{#t}}common.dzherelo_prodazh{{/t}}</label>
                                  
                                   <select class="form-select  " zippy="salesource">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                  </select>
                                
                                 </div>
@@ -61,44 +61,44 @@
                         <div class="col-12">
                            <div class="input-group">
                                
-                                <label    for="searchcust">Контрагент</label>
+                                <label    for="searchcust">{{#t}}common.kontrahent{{/t}}</label>
                                  
-                                    <input placeholder="Почніть вводити..."  class="form-control  " zippy="searchcust" >
+                                    <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}"  class="form-control  " zippy="searchcust" >
                                
                                 </div>
                                </div>
                                 <div class="col-12"> 
-                                   <input class="form-control  " type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                                   <input class="form-control  " type="text" zippy="searchtext" placeholder="{{#t}}common.poshuk_po_kontentu{{/t}}">
                                   </div>
                                 <div class="col-12">
-                                  <input type="submit" class="  btn btn-success  " value="ОК">
+                                  <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                                </div>
                               </div>
                             </form>
                          
-                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">Створити ВН</a>&nbsp;
-                        <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-primary mt-2 mb-3">Створити РФ</a>
-                        <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-primary mt-2 mb-3">Створити ТТН</a>
+                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_vn{{/t}}</a>&nbsp;
+                        <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_rf{{/t}}</a>
+                        <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_ttn{{/t}}</a>
 
-                        <br> <a zippy="csv">Експорт у Excel</a>
+                        <br> <a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
 
                         <table class="table   table-sm   ">
                             <tr>
 
-                                <th>Номер</th>
-                                <th>Дата</th>
-                                <th>Замовлення</th>
-                                <th>Клієнт</th>
+                                <th>{{#t}}common.nomer{{/t}}</th>
+                                <th>{{#t}}common.data{{/t}}</th>
+                                <th>{{#t}}common.zamovlennia{{/t}}</th>
+                                <th>{{#t}}common.kliient{{/t}}</th>
 
                                
 
-                                <th class="text-end">Сума</th>
+                                <th class="text-end">{{#t}}common.suma{{/t}}</th>
 
-                                <th>Статус</th>
+                                <th>{{#t}}common.status{{/t}}</th>
                           <th> </th>
                         <th> </th>
 
-                                <th>Примітка</th>
+                                <th>{{#t}}common.prymitka{{/t}}</th>
 
                                 <th></th>
 
@@ -116,15 +116,15 @@
                                 <td zippy="amount" class="text-end"></td>
 
                                 <td class="text-nowrap" zippy="state"></td>
-                       <td style="width:20px" ><i zippy="ispay" title="Очікує оплату" class="fa fa-credit-card"></i></td>
-                        <td style="width:20px" ><i zippy="istruck" title="Очікує відправку" class="fa fa-truck"></i></td>
+                       <td style="width:20px" ><i zippy="ispay" title="{{#t}}common.ochikuie_oplatu{{/t}}" class="fa fa-credit-card"></i></td>
+                        <td style="width:20px" ><i zippy="istruck" title="{{#t}}register.gilist.ochikuie_vidpravku{{/t}}" class="fa fa-truck"></i></td>
                                 
                                 <td zippy="onotes"></td>
 
                                 <td class="text-nowrap">
-                                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                    <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
 
-                                     &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+                                     &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i></a>
 
                                 </td>
 
@@ -152,36 +152,36 @@
                     
                                 {{#np}}
                                  <div class="col-12  ">
-                                  <button zippy="bnp" type="submit" class="  btn btn-success  me-2 " title="Створити експрес-накладну">Доставка НП</button>
+                                  <button zippy="bnp" type="submit" class="  btn btn-success  me-2 " title="{{#t}}register.gilist.stvoryty_ekspres_nakladnu{{/t}}">{{#t}}register.gilist.dostavka_np{{/t}}</button>
                                 </div>
                                 {{/np}}
                                  <div class="col-12  ">
-                                  <button zippy="bsend" type="submit" class="  btn btn-success  me-2 ">Відправлено</button>
+                                  <button zippy="bsend" type="submit" class="  btn btn-success  me-2 ">{{#t}}common.vidpravleno{{/t}}</button>
                                 </div>
                                  <div class="col-12  ">
-                                   <button zippy="bdevivered" type="submit" class="  btn btn-success  me-1 ">Доставлено</button>
+                                   <button zippy="bdevivered" type="submit" class="  btn btn-success  me-1 ">{{#t}}register.deliverylist.dostavleno{{/t}}</button>
                                 </div>
                                 <div class="col-12 p-x-4 ">
                                   &nbsp; 
                                 </div>
                                  <div class="col-12  ">
-                                <button zippy="bttn" type="submit" class="  btn btn-primary  me-2 ">Створити ТТН</button>
+                                <button zippy="bttn" type="submit" class="  btn btn-primary  me-2 ">{{#t}}register.gilist.stvoryty_ttn{{/t}}</button>
                                 </div>
                                  <div class="col-12  ">
-                                   <button zippy="bgi" type="submit" class="  btn btn-primary  me-2 ">Створити ВН</button>
+                                   <button zippy="bgi" type="submit" class="  btn btn-primary  me-2 ">{{#t}}register.gilist.stvoryty_vn{{/t}}</button>
                                 </div>
                                  <div class="col-12  ">
-                                <button zippy="bgar" type="submit" class="  btn btn-primary  me-2 ">Гарантійний талон</button>
+                                <button zippy="bgar" type="submit" class="  btn btn-primary  me-2 ">{{#t}}doc.warranty.harantiinyi_talon{{/t}}</button>
                                 </div>
                                  <div class="col-12  ">
-                                <button zippy="bret" type="submit" class="  btn btn-primary  me-2 ">Повернення</button>
+                                <button zippy="bret" type="submit" class="  btn btn-primary  me-2 ">{{#t}}common.povernennia{{/t}}</button>
                                 </div>
                                  <div class="col-12  ">
                                       <div class="input-group">
 
-                                    <label data-label="ship_number" > № декларації </label>
+                                    <label data-label="ship_number" > {{#t}}print.ttn.deklaratsii{{/t}} </label>
                                      <label  >
-                                     <i data-label="ship_number"  class="fa fa-info-circle " data-bs-toggle="tooltip" data-bs-placement="top" title="Номер декларації служби доставки."></i> 
+                                     <i data-label="ship_number"  class="fa fa-info-circle " data-bs-toggle="tooltip" data-bs-placement="top" title="{{#t}}register.gilist.nomer_deklaratsii_sluzhby_dostavky{{/t}}"></i> 
                                      </label>
                                      <input zippy="ship_number" style="width:250px;"  class="form-control ms-sm-2"> 
                                 </div>
@@ -208,34 +208,34 @@
         </div>
 
         <div zippy="nppan">
-            <h4>Створення експрес-накладної НП</h4>
-            <small>Роздрукувати наклейку  на  посилку можна  в  списку  ТТН в  меню модуля НП</small>
+            <h4>{{#t}}register.gilist.stvorennia_ekspres_nakladnoi_np{{/t}}</h4>
+            <small>{{#t}}register.gilist.rozdrukuvaty_nakleiku_na_posylku_mozhna{{/t}}</small>
             <form zippy="npform">
                 <div class="row">
                     <div class="col-12 col-md-6 col-xl-4">
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="npw">Вага</label>
+                            <label class="col-5 col-form-label" for="npw">{{#t}}common.vaha{{/t}}</label>
                              <div class="col-3">
                                <input pattern="[0-9,\.]+" type="text" zippy="npw" class="form-control qtyprice"/>
                             </div>
                         </div>
                        
                        <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="npv">Об`єм</label>
+                            <label class="col-5 col-form-label" for="npv">{{#t}}register.gilist.obiem{{/t}}</label>
                              <div class="col-3">
                                <input pattern="[0-9,\.]+" type="text" zippy="npv" class="form-control qtyprice"/>
                             </div>
                         </div>
                        
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="npcost">Оцінка, грн</label>
+                            <label class="col-5 col-form-label" for="npcost">{{#t}}register.gilist.otsinka_hrn{{/t}}</label>
                             <div class="col-3">
                                <input pattern="[0-9]+" type="text" zippy="npcost" class="form-control"/>
                            </div>
 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="npdate">Дата відправки</label>
+                            <label class="col-5 col-form-label" for="npdate">{{#t}}print.ttn.data_vidpravky{{/t}}</label>
                              <div class="col-3">
                     
                                <input type="text" zippy="npdate" class="form-control"/>
@@ -243,14 +243,14 @@
                         </div>
 
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="nppt">Хто сплачує</label>
+                            <label class="col-5 col-form-label" for="nppt">{{#t}}register.gilist.khto_splachuie{{/t}}</label>
                             <div class="col-3">
                               <select zippy="nppt" class="form-select   ">
                               </select>
                            </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="nppm">Тип оплати</label>
+                            <label class="col-5 col-form-label" for="nppm">{{#t}}common.typ_oplaty{{/t}}</label>
                              <div class="col-3">
                             <select zippy="nppm" class="form-select   ">
 
@@ -258,13 +258,13 @@
                           </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="npback">Зворотня доставка, грн </label>
+                            <label class="col-5 col-form-label" for="npback">{{#t}}register.gilist.zvorotnia_dostavka_hrn{{/t}} </label>
                                 <div class="col-3">
                             <input pattern="[0-9]+" type="text" zippy="npback" class="form-control"/>
                             </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-5 col-form-label" for="nppmback">Тип оплати зворотньої доставки</label>
+                            <label class="col-5 col-form-label" for="nppmback">{{#t}}register.gilist.typ_oplaty_zvorotnoi_dostavky{{/t}}</label>
                                 <div class="col-5">
                             <select zippy="nppmback" class="form-select   ">
 
@@ -272,20 +272,20 @@
                               </div>
                         </div>
                          <div class="mb-2">
-                            <label for="seltel">Тел. відправника</label>
+                            <label for="seltel">{{#t}}register.gilist.tel_vidpravnyka{{/t}}</label>
                             <input type="text" zippy="seltel" class="form-control"/>
                         </div>
                        <div class="mb-2">
-                        <label for="selcity">Місто відправника</label>
+                        <label for="selcity">{{#t}}register.gilist.misto_vidpravnyka{{/t}}</label>
 
                         <input zippy="selcity" class="form-control   "/>
 
                     </div>
                     <div class="mb-2">
-                        <label for="selpoint">Відділення відправника</label>
+                        <label for="selpoint">{{#t}}register.gilist.viddilennia_vidpravnyka{{/t}}</label>
 
-                        <input placeholder="Почніть вводити..." zippy="selpoint" class="form-control   "/>
-                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="selpoint" class="form-control   "/>
+                         <small>{{#t}}common.dlia_poshuku_po_nomeru_dodaite{{/t}}</small>
                     </div>
                   
 
@@ -295,81 +295,81 @@
                     <div class="col-12 col-md-4 col-xl-3">
 
                         <div class="mb-2">
-                            <label for="baylastname">Прізвище отримувача</label>
+                            <label for="baylastname">{{#t}}register.gilist.prizvyshche_otrymuvacha{{/t}}</label>
                             <input type="text" zippy="baylastname" class="form-control"/>
                         </div>
                         <div class="mb-2">
-                            <label for="bayfirstname">Ім'я отримувача</label>
+                            <label for="bayfirstname">{{#t}}register.gilist.imia_otrymuvacha{{/t}}</label>
                             <input type="text" zippy="bayfirstname" class="form-control"/>
                         </div>
                         <div class="mb-2">
-                            <label for="baymiddlename">По батькові отримувача</label>
+                            <label for="baymiddlename">{{#t}}register.gilist.po_batkovi_otrymuvacha{{/t}}</label>
                             <input type="text" zippy="baymiddlename" class="form-control"/>
                         </div>
                         <div class="mb-2">
-                            <label for="baytel">Тел. отримувача</label>
+                            <label for="baytel">{{#t}}register.gilist.tel_otrymuvacha{{/t}}</label>
                             <input type="text" zippy="baytel" class="form-control"/>
                         </div>
                         <div class="mb-2">
-                            <label for="deltype">Тип доставки</label>
+                            <label for="deltype">{{#t}}doc.goodsreceipt.typ_dostavky{{/t}}</label>
                              <select zippy="deltype" class="form-select     ">
-                                <option value="0">Відділення</option>
-                                <option value="1">Поштомат</option>
-                                <option value="2">За адресою</option>
+                                <option value="0">{{#t}}common.viddilennia{{/t}}</option>
+                                <option value="1">{{#t}}common.poshtomat{{/t}}</option>
+                                <option value="2">{{#t}}common.za_adresoiu{{/t}}</option>
                             </select>
                         </div>
                         
                      
                         <div class="mb-2">
-                            <label for="baycity">Місто отримувача</label>
+                            <label for="baycity">{{#t}}register.gilist.misto_otrymuvacha{{/t}}</label>
                             
-                            <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   ">                           
+                            <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="baycity" class="form-control   ">                           
                         </div>
                         <div class="mb-2">
-                            <label data-label="baypoint" for="baypoint">Відділення отримувача</label>
+                            <label data-label="baypoint" for="baypoint">{{#t}}register.gilist.viddilennia_otrymuvacha{{/t}}</label>
                             
-                           <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   ">                              
+                           <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="baypoint" class="form-control   ">                              
                         </div>
 
                         <div class="mb-2">
-                            <label data-label="npgab" for="gab">Габарит</label>
+                            <label data-label="npgab" for="gab">{{#t}}register.gilist.habaryt{{/t}}</label>
                             <select zippy="npgab" class="form-select   ">
-                                <option value="0">Ручне введення  </option>
+                                <option value="0">{{#t}}register.gilist.ruchne_vvedennia{{/t}}  </option>
                             </select>
                         </div>
 
                          <div class="mb-2 row" >
                               <div class="col-auto">
-                                <label data-label="npgw" class="mt-2"> Ш:</label>  
+                                <label data-label="npgw" class="mt-2"> {{#t}}register.gilist.sh{{/t}}</label>  
                              </div>
                              <div class="col-auto">
                                 <input zippy="npgw"  required="on"   class="form-control" style="width:75px"  type="number">  
                               </div>
                              <div class="col-auto">
-                                <label data-label="npgh" class="mt-2"> В:</label> 
+                                <label data-label="npgh" class="mt-2"> {{#t}}register.gilist.v{{/t}}</label> 
                                </div>
                              <div class="col-auto">
                                 <input zippy="npgh"  required="on"   class="form-control" style="width:75px"  type="number">  
                              </div>
                              <div class="col-auto">
-                                 <label data-label="npgd" class="mt-2"> Г:</label> 
+                                 <label data-label="npgd" class="mt-2"> {{#t}}register.gilist.h{{/t}}</label> 
                               </div>
                              <div class="col-auto">
                                  <input zippy="npgd"  required="on"   class="form-control" style="width:75px"  type="number">  
                              </div> 
                         </div>
                         <div class="mb-2">
-                            <label for="bayaddr">Адреса отримувача</label>
+                            <label for="bayaddr">{{#t}}register.gilist.adresa_otrymuvacha{{/t}}</label>
                             <input type="text" zippy="bayaddr" class="form-control"/>
                         </div>
                         <div class="mb-2 row">
-                            <label for="bayhouse">Буд.</label>
+                            <label for="bayhouse">{{#t}}common.bud{{/t}}</label>
                             <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
-                            <label for="bayflat">Кв. </label>
+                            <label for="bayflat">{{#t}}common.kv{{/t}} </label>
                             <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
                         </div>
                       <div class="mb-2">
-                            <label for="npdesc">Опис </label>
+                            <label for="npdesc">{{#t}}common.opys{{/t}} </label>
 
                             <textarea zippy="npdesc" class="form-control"></textarea>
 
@@ -378,23 +378,23 @@
                     </div>
 
                     <div class="col-12  col-md-8 col-xl-6 pb-4 pt-4">
-                        <h4>Дані по ТТН</h4>
+                        <h4>{{#t}}register.gilist.dani_po_ttn{{/t}}</h4>
                         <table class="table   table-sm">
                             <tr>
-                                <td>Покупець</td>
+                                <td>{{#t}}common.pokupets{{/t}}</td>
                                 <td zippy="npttncust"></td>
                             </tr>
                             <tr>
-                                <td>Адреса доставки</td>
+                                <td>{{#t}}common.adresa_dostavky{{/t}}</td>
                                 <td zippy="npttaddress"></td>
                             </tr>
                             <tr>
-                                <td>Примітка</td>
+                                <td>{{#t}}common.prymitka{{/t}}</td>
                                 <td zippy="npttnnotes"></td>
                             </tr>
                         </table>
                         <a data-bs-toggle="collapse" href="#collapsettn" aria-expanded="false" aria-controls="collapseExample">
-                            <h5>Перелік товарів <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
+                            <h5>{{#t}}common.perelik_tovariv{{/t}} <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
                         </a>
                         <div class="collapse" id="collapsettn">
                             <div class="card  card-body" zippy="printform"></div>
@@ -403,8 +403,8 @@
                     </div>
                     <div class="col-12 col-xl-7 ">
                         <div class="  d-flex justify-content-end">
-                            <a zippy="npcancel" class="btn btn-secondary ">Скасувати</a>
-                            &nbsp;&nbsp;<input type="submit" value="Створити" class="btn   btn-primary  "/>
+                            <a zippy="npcancel" class="btn btn-secondary ">{{#t}}common.skasuvaty{{/t}}</a>
+                            &nbsp;&nbsp;<input type="submit" value="{{#t}}common.stvoryty{{/t}}" class="btn   btn-primary  "/>
 
                         </div>
                     </div>

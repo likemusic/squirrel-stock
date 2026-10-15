@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Звіт про робочий час
+            {{#t}}print.timestat.zvit_pro_robochyi_chas{{/t}}
         </td>
     </tr>
     <tr>
 
         <td align="center">
-            <b> Період з {{from}} по {{to}}   </b>
+            <b> {{#t}}common.period_z_po{{/t}}   </b>
         </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-end">Всього:</td>
+        <td class="text-end">{{#t}}common.vsoho{{/t}}</td>
 
         <td class="text-end">{{total}}</td>
 

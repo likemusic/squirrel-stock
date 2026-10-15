@@ -17,7 +17,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg(__('common.nemaie_prava_dostupu_do_storinky'));
 
             App::RedirectError();
             return;
@@ -43,10 +43,10 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
       
         $pt=[];
-        $pt[1] = 'Оплата на стороні IM ';
-        $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата касовим  чеком, РФ або ВН';
-        $pt[4] = 'Тільки списати зі складу через ТТН';
+        $pt[1] = __('common.oplata_na_storoni_im');
+        $pt[2] = __('common.postoplata');
+        $pt[3] = __('common.oplata_kasovym_chekom_rf_abo');
+        $pt[4] = __('mod.ocstore.options.tilky_spysaty_zi_skladu_cherez');
       
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
 
@@ -74,29 +74,29 @@ class Options extends \App\Pages\Base
 
         if (strlen($pricetype) < 2) {
 
-            $this->setError('Не вказано тип ціни');
+            $this->setError(__('common.ne_vkazano_typ_tsiny'));
             return;
         }
 
         if ( $paytype==0) {
 
-            $this->setError('Не вказано тип оплати');
+            $this->setError(__('common.ne_vkazano_typ_oplaty'));
             return;
         }
         if ( $paytype==1 && $mf==0) {
 
-            $this->setError('Не вказано касу');
+            $this->setError(__('common.ne_vkazano_kasu'));
             return;
         }
         if ( $paytype==4 && $store==0) {
 
-            $this->setError('Не вказано склад');
+            $this->setError(__('mod.ocstore.options.ne_vkazano_sklad'));
             return;
         }
 
         if ( ($reserve==1 || $dostore==1 ) && $store==0 ) {
 
-            $this->setError('Не вказано склад');
+            $this->setError(__('mod.ocstore.options.ne_vkazano_sklad'));
             return;
         }
 
@@ -125,7 +125,7 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
         \App\Modules\OCStore\Helper::connect();
 

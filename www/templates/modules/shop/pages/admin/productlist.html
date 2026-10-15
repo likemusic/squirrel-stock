@@ -8,8 +8,8 @@
         </style>
         <div class="row">
             <div class="col-12">
-                <h3>Значення  атрибутів товарів  </h3>
-                <small>Показуються  категорії, які мають товари</small>
+                <h3>{{#t}}mod.shop.productlist.znachennia_atrybutiv_tovariv{{/t}}  </h3>
+                <small>{{#t}}mod.shop.productlist.pokazuiutsia_katehorii_iaki_maiut_tovary{{/t}}</small>
 
             </div>
 
@@ -28,16 +28,16 @@
                             <form zippy="searchform"  >
                              <div class="row  ">
                                  <div class="col-auto  ">
-                                <input style="width:150px;" zippy="skeyword" placeholder="Пошук за  кодом" type="text" class="form-control ms-sm-2">
+                                <input style="width:150px;" zippy="skeyword" placeholder="{{#t}}mod.shop.productlist.poshuk_za_kodom{{/t}}" type="text" class="form-control ms-sm-2">
                                  </div>
 
-                                <label class="col-form-label col-auto"> Бренд</label>
+                                <label class="col-form-label col-auto"> {{#t}}common.brend{{/t}}</label>
                                  <div class="col-auto  ">
                                 <input zippy="smanuf" class="form-control ms-sm-2    ">
                                  </div>
                                  <div class="col-auto  ">
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                                &nbsp;<a title="Очистити  форму  пошуку" zippy="sclear"><i class="fa fa-eraser"></i></a>
+                                &nbsp;<a title="{{#t}}mod.shop.productlist.ochystyty_formu_poshuku{{/t}}" zippy="sclear"><i class="fa fa-eraser"></i></a>
                                </div></div>
                             </form>
                         </div>
@@ -48,11 +48,11 @@
                                {{#useimages}}
                                 <th style="width:75px;"></th>
                                    {{/useimages}}
-                                <th>Назва</th>
-                                <th  >Код</th>
+                                <th>{{#t}}common.nazva{{/t}}</th>
+                                <th  >{{#t}}common.kod{{/t}}</th>
 
-                                <th class="text-end">Ціна</th>
-                                <th class="text-end">Кіл.</th>
+                                <th class="text-end">{{#t}}common.tsina{{/t}}</th>
+                                <th class="text-end">{{#t}}common.kil{{/t}}</th>
 
 
 
@@ -62,7 +62,7 @@
                                 <td><img style="width:75px;" zippy="lphoto">
                                    {{/useimages}}
                                 </td>
-                                <td><a zippy="lname" title="Редагувати"></a>
+                                <td><a zippy="lname" title="{{#t}}common.redahuvaty{{/t}}"></a>
 
 
                                 </td>
@@ -73,7 +73,7 @@
                                 <td class="text-end"><span zippy="lprice"></span></td>
                                 <td class="text-end"><span zippy="lcnt"></span></td>
                                    {{#useimages}}
-                                <td>&nbsp;<a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a></td>
+                                <td>&nbsp;<a zippy="imedit" title="{{#t}}mod.shop.productlist.redahuvaty_foto{{/t}}"><i class="fa fa-images"></i></a></td>
                                    {{/useimages}}
 
                             </tr>
@@ -84,29 +84,29 @@
 
 
                         <form zippy="editform">
-                            <h4>Редагування</h4>
+                            <h4>{{#t}}common.redahuvannia{{/t}}</h4>
 
                             <div class="mb-2">
-                                <label   for="esef">ЧПУ посилання</label>
+                                <label   for="esef">{{#t}}mod.shop.productlist.chpu_posylannia{{/t}}</label>
 
                                 <input pattern="[0-9a-z_]+" zippy="esef" type="text" class="form-control">
-                                <small>Наприклад, telefon_nokia_304</small>
+                                <small>{{#t}}mod.shop.productlist.napryklad_telefon_nokia_304{{/t}}</small>
 
                             </div>
                       
 
                             <div class="mb-2">
-                                <label   for="edescdet">Опис  </label>
+                                <label   for="edescdet">{{#t}}common.opys{{/t}}  </label>
 
                                 <textarea style="height:200px" zippy="edescdet" class="form-control"></textarea>
-                                <small>За замовчуванням використовується  опис із довідника</small>
+                                <small>{{#t}}mod.shop.productlist.za_zamovchuvanniam_vykorystovuietsia_opy{{/t}}</small>
 
                             </div>
 
 
 
                             <div class="mb-2">
-                                <a zippy="updatecust" >Оновити кастомні поля</a> 
+                                <a zippy="updatecust" >{{#t}}mod.shop.productlist.onovyty_kastomni_polia{{/t}}</a> 
                                 <table class="table table-sm">
                                     <tr zippy="attrlist">
                                       
@@ -119,16 +119,16 @@
 
                             <div class="mb-2">
 
-                                <a zippy="bcancel" class="btn btn-secondary   ">Скасувати</a>
-                                &nbsp;<input type="submit" class="btn btn-success   " value="Зберегти">
+                                <a zippy="bcancel" class="btn btn-secondary   ">{{#t}}common.skasuvaty{{/t}}</a>
+                                &nbsp;<input type="submit" class="btn btn-success   " value="{{#t}}common.zberehty{{/t}}">
 
                             </div>
                         </form>
                     </div>
 
                     <div zippy="editimagepanel" class="col-12     col-xl-10 ">
-                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> До переліку товарів</a>
-                        <h4>Перелік додаткових зображень</h4>
+                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> {{#t}}mod.shop.productlist.do_pereliku_tovariv{{/t}}</a>
+                        <h4>{{#t}}mod.shop.productlist.perelik_dodatkovykh_zobrazhen{{/t}}</h4>
 
                         <form   zippy="addimageform" enctype="multipart/form-data">
                            <div class="row  ">
@@ -136,16 +136,16 @@
                             <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control me-2">
                              </div>
                                <div class="col-auto  ">
-                            <input type="submit" class="btn btn-success   " value="Додати">
+                            <input type="submit" class="btn btn-success   " value="{{#t}}common.dodaty{{/t}}">
                              </div>
-                            <small>Зображення має  бути  приблизно  квадратним та з розміром  файлу  не більше 1M</small>
+                            <small>{{#t}}mod.shop.productlist.zobrazhennia_maie_buty_pryblyzno_kvadrat{{/t}}</small>
                         </form>
 
                         <div class="w-100">
 
                             <div zippy="imagelist" style="float:left;">
                                 <img zippy="imgitem" style="height: 128px;"/>
-                                <br><a zippy="idel">Видалити</a>
+                                <br><a zippy="idel">{{#t}}common.vydalyty{{/t}}</a>
 
 
 

@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title> Договори</title>
+      <title> {{#t}}reference.contractlist.dohovory{{/t}}</title>
     </head>
          
  
@@ -8,50 +8,50 @@
         <div class="row">
             <div class="col-12  col-md-10 col-xl-8">
                 <div zippy="contracttable">
-                    <h3>Договори </h3>
-                    <small><i class="fa fa-info-circle"></i> В  документах вибираються  договори зі статусом В роботі  </small>
+                    <h3>{{#t}}reference.contractlist.dohovory{{/t}} </h3>
+                    <small><i class="fa fa-info-circle"></i> {{#t}}reference.contractlist.v_dokumentakh_vybyraiutsia_dohovory_zi{{/t}}  </small>
                     <div class="navbar">
 
                       <form zippy="filter"  >
                        <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
-                       <label    for="searchkey" >Пошук</label>
+                       <label    for="searchkey" >{{#t}}common.poshuk{{/t}}</label>
                              
                                <input class="form-control ms-sm-2" type="text" zippy="searchkey">
                             </div>
                             </div>
                           <div class="col-12">
                            <div class="input-group">
-                           <label    for="searchcust">Контрагент</label>
+                           <label    for="searchcust">{{#t}}common.kontrahent{{/t}}</label>
                             
-                               <input placeholder="Почніть вводити..." class="form-control ms-sm-2" zippy="searchcust"/>
+                               <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control ms-sm-2" zippy="searchcust"/>
                             </div>
                             </div>
 
                           
                              <div class="col-12 ">
                                 <div class="form-check">
-                                   <input title="Показати також не актуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                                    <label class="form-check-label me-sm-3" for="showdis">Всі</label>
+                                   <input title="{{#t}}reference.contractlist.pokazaty_takozh_ne_aktualni{{/t}}" class="form-check-input" type="checkbox" zippy="showdis">
+                                    <label class="form-check-label me-sm-3" for="showdis">{{#t}}common.vsi{{/t}}</label>
                                 </div>
                             </div>
                              <div class="col-12  ">
-                              <input class="btn btn-success  " type="submit" value="ОК">
+                              <input class="btn btn-success  " type="submit" value="{{#t}}common.ok{{/t}}">
                            </div>
                           </div>
                         </form>
                     </div>
-                    <a zippy="addnew" class="btn btn-primary  ">Додати</a>
+                    <a zippy="addnew" class="btn btn-primary  ">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table table-bordered   table-sm">
                         <tr>
-                            <th>Номер</th>
-                            <th>Термін</th>
-                            <th>Контрагент</th>
+                            <th>{{#t}}common.nomer{{/t}}</th>
+                            <th>{{#t}}reference.contractlist.termin{{/t}}</th>
+                            <th>{{#t}}common.kontrahent{{/t}}</th>
 
                             
-                            <th>Статус</th>
-                           <th class="text-end"  >Сума</th>
+                            <th>{{#t}}common.status{{/t}}</th>
+                           <th class="text-end"  >{{#t}}common.suma{{/t}}</th>
                          
                      
                            
@@ -77,10 +77,10 @@
 
                             <td ><small zippy="shortdesc"></small></td>
                            
-                            <td><a zippy="show" title="Документи"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
+                            <td><a zippy="show" title="{{#t}}common.dokumenty{{/t}}"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
 
-                            <td><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                <a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                            <td><a zippy="edit" title="{{#t}}common.redahuvaty{{/t}}"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                <a zippy="delete" title="{{#t}}common.vydalyty{{/t}}"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                     <div zippy="pag"></div>
@@ -95,41 +95,41 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="editcontract_number">Номер</label>
+                        <label class="col-5 col-form-label" for="editcontract_number">{{#t}}common.nomer{{/t}}</label>
                         <div class="col-7  ">
                             <input autofocus="on"    required="on"  class="form-control" zippy="editcontract_number"/>
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="editcreatedon">Дата початку</label>
+                        <label class="col-5 col-form-label" for="editcreatedon">{{#t}}doc.task.data_pochatku{{/t}}</label>
                       <div class="col-7  ">
                          <input style="width: 120px;"  required="on"  class="form-control" zippy="editcreatedon"/>
                      </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="editenddate">Дата закінчення</label>
+                        <label class="col-5 col-form-label" for="editenddate">{{#t}}reference.contractlist.data_zakinchennia{{/t}}</label>
                        <div class="col-7  ">
                         <input style="width: 120px;"  required="on"  class="form-control" zippy="editenddate"/>
                      </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-5 col-form-label" for="editamount">Сума</label>
+                        <label class="col-5 col-form-label" for="editamount">{{#t}}common.suma{{/t}}</label>
                        <div class="col-7  ">
                         <input style="width: 120px;"     class="form-control" zippy="editamount"/>
                      </div>
                     </div>
                      <div class="mb-2">
-                        <label for="editcust">Контрагент</label>
-                        <input placeholder="Почніть вводити..." class="form-control" zippy="editcust"/>
+                        <label for="editcust">{{#t}}common.kontrahent{{/t}}</label>
+                        <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control" zippy="editcust"/>
                     </div>
 
                    
                   
 
                     <div class="mb-2">
-                        <label for="editemp">Відповідальний</label>
+                        <label for="editemp">{{#t}}common.vidpovidalnyi{{/t}}</label>
                         <select zippy="editemp" class="form-control  ">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
                     </div>   
 
@@ -139,11 +139,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                    
                       <div class="mb-2">
-                        <label  required="on"  for="editshortdesc">Скорочений опис, призначення</label>
+                        <label  required="on"  for="editshortdesc">{{#t}}reference.contractlist.skorochenyi_opys_pryznachennia{{/t}}</label>
                         <input class="form-control" zippy="editshortdesc"/>
                     </div>
                     <div class="mb-2">
-                        <label for="editdesc">Детальний опис</label>
+                        <label for="editdesc">{{#t}}reference.contractlist.detalnyi_opys{{/t}}</label>
                         <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
                     </div>
                    
@@ -152,8 +152,8 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
-                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">
+                    <input zippy="save" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                     
                 </div>
             </div>
@@ -163,31 +163,31 @@
 
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
-                <a zippy="back">До переліку</a>
+                <a zippy="back">{{#t}}common.do_pereliku{{/t}}</a>
                 <div class="navbar">
  
               
                     <form zippy="statusform"  >
                        <div class="row">
                       
-                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
+                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> {{#t}}common.status{{/t}} </label>
                          <div class="col-auto  ">
                          <select zippy="mstates" class="form-control me-2">
                         
                          </select>
                            </div>
                           <div class="col-auto  ">
-                         <button zippy="bstatus" class="btn btn-success  me-2"> Застосувати</button>
+                         <button zippy="bstatus" class="btn btn-success  me-2"> {{#t}}common.zastosuvaty{{/t}}</button>
                            </div>
-                         <label class="col-form-label col-auto" data-label="musers" for="mstates"> Відповідальний </label>
+                         <label class="col-form-label col-auto" data-label="musers" for="mstates"> {{#t}}common.vidpovidalnyi{{/t}} </label>
                             
                             <div class="col-auto  ">
                          <select zippy="musers" class="form-control me-2">
-                           <option value="0">Не обрано</option>
+                           <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                          </select>
                              </div>
                             <div class="col-auto  ">
-                         <button zippy="buser" class="btn btn-success  me-2"> Перевести</button>
+                         <button zippy="buser" class="btn btn-success  me-2"> {{#t}}common.perevesty{{/t}}</button>
                         </div>
                        </div>
                     </form>
@@ -195,7 +195,7 @@
               </div>
             </div>
             <div class="col-12 col-md-8 col-xl-3  "> 
-                       <h5> Коментарі </h5>
+                       <h5> {{#t}}common.komentari{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
                                 <td>
@@ -209,15 +209,15 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="mb-2">
-                                <label for="addmsg">Коментар</label>
+                                <label for="addmsg">{{#t}}common.komentar{{/t}}</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
                         </form>  
             </div>
             <div class="col-12 col-md-8 col-xl-3  "> 
-                      <h5> Прикріплені файли </h5>
+                      <h5> {{#t}}common.prykripleni_faily{{/t}} </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_files">
                                 <td><a zippy="filename" target="_blank"></a></td>
@@ -227,18 +227,18 @@
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
                             <div class="mb-2">
-                                <label for="addfile">Вибрати файл</label>
+                                <label for="addfile">{{#t}}common.vybraty_fail_2{{/t}}</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
                             <div class="mb-2">
-                                <label for="adddescfile">Опис </label>
+                                <label for="adddescfile">{{#t}}common.opys{{/t}} </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
 
 
-                            <input class="btn btn-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="{{#t}}common.dodaty{{/t}}">
 
                         </form>   
             </div>
@@ -247,7 +247,7 @@
                  <pre zippy="showdesc"></pre> 
             
                 <details>
-                        <summary  >Документи</summary>
+                        <summary  >{{#t}}common.dokumenty{{/t}}</summary>
                              
                 <table class="table table-sm">
                     
@@ -264,7 +264,7 @@
               
                 </details>
                   <details>
-                        <summary  >Платежі</summary>
+                        <summary  >{{#t}}reference.contractlist.platezhi{{/t}}</summary>
                
                  
                 <table class="table table-sm">

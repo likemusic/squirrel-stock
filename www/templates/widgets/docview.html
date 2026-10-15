@@ -9,26 +9,26 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">                             
-    <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tprint"><i class="fa fa-print"></i> Форма A4</a>
+    <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tprint"><i class="fa fa-print"></i> {|#t|}widgets.docview.forma_a4{|/t|}</a>
   </li>
   <li class="nav-item" v-show="docdata.exports.pos">
-    <a class="nav-link  " data-bs-toggle="tab" data-bs-target="#tprintpos"><i class="fa fa-print"></i> Чекова форма</a>
+    <a class="nav-link  " data-bs-toggle="tab" data-bs-target="#tprintpos"><i class="fa fa-print"></i> {|#t|}widgets.docview.chekova_forma{|/t|}</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язані документи <span   class="badge  rounded-pill text-bg-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tdocs"><i class="fa fa-project-diagram"></i> {|#t|}widgets.docview.poviazani_dokumenty{|/t|} <span   class="badge  rounded-pill text-bg-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tcomm"><i class="fa fa-comments"></i> Коментарі  <span   class="badge  rounded-pill text-bg-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tcomm"><i class="fa fa-comments"></i> {|#t|}common.komentari{|/t|}  <span   class="badge  rounded-pill text-bg-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tfiles"><i class="fa fa-paperclip"></i> Прикріплені файли <span   class="badge rounded-pill text-bg-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tfiles"><i class="fa fa-paperclip"></i> {|#t|}common.prykripleni_faily{|/t|} <span   class="badge rounded-pill text-bg-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#thist"><i class="fa fa-calendar-alt"></i> Історія змін</a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#thist"><i class="fa fa-calendar-alt"></i> {|#t|}widgets.docview.istoriia_zmin{|/t|}</a>
   </li>
 <li class="nav-item" v-show="docdata.isscan">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tscan"><i class="fa fa-image"></i> Скан оригіналу</a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tscan"><i class="fa fa-image"></i> {|#t|}widgets.docview.skan_oryhinalu{|/t|}</a>
   </li>
  
 </ul>  
@@ -36,16 +36,16 @@
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print me-2"></i> </a>
-       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print me-2"></i></a>   
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="{|#t|}common.druk{|/t|}"><i class="fa fa-print me-2"></i> </a>
+       <a v-else  href="javascript:void(0)"   onclick="printform()" title="{|#t|}common.druk{|/t|}"><i class="fa fa-print me-2"></i></a>   
     
         
-        <a class="fw-bold me-2" v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word    "></i>   </a>
-        <a class="fw-bold me-2" v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel  "></i>  </a>
-        <a class="fw-bold me-2" v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт в PDF"> <i class="fa fa-file-pdf  "></i>  </a>
-        <a class="fw-bold me-2" v-show="docdata.exports.xml"   :href="xml"  target="_blank" title="Експорт в XML"> <b class="  me-2">XML</b>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.word" :href="word"  target="_blank" title="{|#t|}widgets.docview.eksport_v_word{|/t|}"><i class="fa fa-file-word    "></i>   </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="{|#t|}common.eksport_v_excel{|/t|}"><i class="fa fa-file-excel  "></i>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="{|#t|}common.eksport_v_pdf{|/t|}"> <i class="fa fa-file-pdf  "></i>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.xml"   :href="xml"  target="_blank" title="{|#t|}widgets.docview.eksport_v_xml{|/t|}"> <b class="  me-2">XML</b>  </a>
         
-        <a class="fw-bold ms-2 me-2 " v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode   "></i>  </a>
+        <a class="fw-bold ms-2 me-2 " v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="{|#t|}common.qr_kod_dlia_oplaty{|/t|} "> <i class="fa fa-qrcode   "></i>  </a>
     
       
        
@@ -55,8 +55,8 @@
      
   </div>
    <div  class="tab-pane      " id="tprintpos"> 
-        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтері"> <i class="fas fa-cash-register me-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтері"><i class="fas fa-print me-1"></i> </a>
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="{|#t|}widgets.docview.druk_na_chekovomu_prynteri{|/t|}"> <i class="fas fa-cash-register me-1"></i></a>
+       <a v-else   onclick=" printpos()" title="{|#t|}widgets.docview.druk_na_chekovomu_prynteri{|/t|}"><i class="fas fa-print me-1"></i> </a>
             
        <div  class="preview mt-2"  id="previewpos"   v-html="docdata.htmlpos" >
         </div>  
@@ -68,7 +68,7 @@
               <table class="table table-sm"   >
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
-                       <b>Батьківський документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
+                       <b>{|#t|}widgets.docview.batkivskyi_dokument{|/t|}</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
                     </td>
                 </tr>
                 <tr v-for="item   in  reldocs" >
@@ -80,14 +80,14 @@
             <hr>
             <form onsubmit="return  false"     >
 
-                <label for="addrel">Додати дочірній документ:</label>
+                <label for="addrel">{|#t|}widgets.docview.dodaty_dochirnii_dokument{|/t|}</label>
                 <div style="width:200px" class="mb-2">
-                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почніть вводити номер..."></typeahead>   
+                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="{|#t|}widgets.docview.pochnit_vvodyty_nomer{|/t|}"></typeahead>   
 
                 </div>
 
                
-                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Додати">
+                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="{|#t|}common.dodaty{|/t|}">
             </form>
       </div>
       </div>
@@ -111,11 +111,11 @@
                      <form id="msgform"  onsubmit="return  false"  >
        
                         <div class="mb-2">
-                            <label for="addmsg"> Коментар: </label>
+                            <label for="addmsg"> {|#t|}common.komentar_2{|/t|} </label>
                             <textarea  name="msgtext"  class="form-control" required="required"  
                                       style=" height:120px;"></textarea>
                         </div>
-                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Додати">
+                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="{|#t|}common.dodaty{|/t|}">
                     </form>   
   </div>
   </div>
@@ -139,15 +139,15 @@
                      <form id="fileaddform" onsubmit="return  false"  enctype="multipart/form-data">
 
                         <div class="mb-2">
-                            <label for="addfile"> Вибрати файл: </label>
+                            <label for="addfile"> {|#t|}common.vybraty_fail{|/t|} </label>
                             <input name="addfile" class="form-control" type="file" required="required"  >
                         </div>
 
                         <div class="mb-2">
-                            <label for="adddescfile"> Коментар </label>
+                            <label for="adddescfile"> {|#t|}common.komentar{|/t|} </label>
                             <input name="adddescfile" class="form-control" type="text"    >
                         </div>
-                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Додати">
+                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="{|#t|}common.dodaty{|/t|}">
 
 
                     </form>   
@@ -158,13 +158,13 @@
              <div class="row" style="font-size:smaller">
 
                         <div class="col-auto  ">
-                            <h5>Історія статусів</h5>
+                            <h5>{|#t|}widgets.docview.istoriia_statusiv{|/t|}</h5>
                             <table class="table table-sm">
                              
                                 <tr>
-                                    <th>Статус</th>
-                                    <th>Дата</th>
-                                    <th>Змінив</th>
+                                    <th>{|#t|}common.status{|/t|}</th>
+                                    <th>{|#t|}common.data{|/t|}</th>
+                                    <th>{|#t|}widgets.docview.zminyv{|/t|}</th>
 
 
                                 </tr> 
@@ -179,11 +179,11 @@
                             </table>
                         </div>
                         <div class="col-auto  " v-show="docdata.paylist.length >0">
-                            <h5>Оплати</h5>
+                            <h5>{|#t|}print.compareact.oplaty{|/t|}</h5>
                             <table class="table table-sm">
                                 <tr>
-                                    <th>Дата</th>
-                                    <th>Рахунок</th>
+                                    <th>{|#t|}common.data{|/t|}</th>
+                                    <th>{|#t|}common.rakhunok{|/t|}</th>
                                     <th class="text-center">+</th>
                                     <th class="text-center">-</th>
                                   
@@ -201,17 +201,17 @@
                             </table>
                         </div>
                         <div class="col-auto  " v-show="docdata.entrylist.length >0">
-                            <h5>Проводки по складу</h5>
+                            <h5>{|#t|}widgets.docview.provodky_po_skladu{|/t|}</h5>
                             <table class="table table-sm">
                                 <tr>
-                                    <th>ТМЦ</th>
-                                    <th>Код</th>
-                                    <th class="text-end">Кіл.</th>
+                                    <th>{|#t|}common.tmts{|/t|}</th>
+                                    <th>{|#t|}common.kod{|/t|}</th>
+                                    <th class="text-end">{|#t|}common.kil{|/t|}</th>
                                     
-                                    <th v-show="docdata.showpartion" class="text-end">Обл. ціна</th>
+                                    <th v-show="docdata.showpartion" class="text-end">{|#t|}common.obl_tsina{|/t|}</th>
                                   
-                                    <th class="text-end">Ціна</th>
-                                    <th class="text-end">Сума</th>
+                                    <th class="text-end">{|#t|}common.tsina{|/t|}</th>
+                                    <th class="text-end">{|#t|}common.suma{|/t|}</th>
 
                                 </tr>
                                 <tr v-for="item   in docdata.entrylist" >
@@ -229,13 +229,13 @@
                             </table>
                         </div>
                     <div class="col-auto   " v-show="docdata.acclist.length >0">
-                            <h5>Бух. проводки</h5>
+                            <h5>{|#t|}widgets.docview.bukh_provodky{|/t|}</h5>
                             <table class="table table-sm">
                                  <tr>
-                                    <th>Дт</th>
-                                    <th>Кт</th>
+                                    <th>{|#t|}widgets.docview.dt{|/t|}</th>
+                                    <th>{|#t|}widgets.docview.kt{|/t|}</th>
                         
-                                    <th class="text-end">Сума</th>
+                                    <th class="text-end">{|#t|}common.suma{|/t|}</th>
 
                                 </tr>
                                 <tr v-for="acc   in docdata.acclist" >
@@ -271,15 +271,15 @@
                         <div class="modal-body  ">
                           <table class="table table-sm">
                           <tr><td align="center">
-                            <h5 >QR код для  оплати</h5>
+                            <h5 >{|#t|}common.qr_kod_dlia_oplaty{|/t|}</h5>
                            </td></tr>
                           <tr><td align="center">
                           <div class="mb-2"   v-html="docdata.qr.img" > </div>
                           </td></tr>
                           <tr><td align="center">
-                          <a  class="btn btn-info  "  :href="docdata.qr.url" >  Відкрити посилання        </a>
+                          <a  class="btn btn-info  "  :href="docdata.qr.url" >  {|#t|}common.vidkryty_posylannia{|/t|}        </a>
 
-                           <a class="btn btn-success   " v-on:click.prevent="copycb" title="Скопіювати в кліпборд" >Скопіювати </a>
+                           <a class="btn btn-success   " v-on:click.prevent="copycb" title="{|#t|}common.skopiiuvaty_v_klipbord{|/t|}" >{|#t|}common.skopiiuvaty{|/t|} </a>
                           </td></tr> </table>
                         </div>
 

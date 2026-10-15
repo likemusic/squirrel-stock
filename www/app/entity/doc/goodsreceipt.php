@@ -212,7 +212,7 @@ class GoodsReceipt extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПН-000000';
+        return __('doc.goodsreceipt.pn_000000');
     }
 
     public function getRelationBased() {

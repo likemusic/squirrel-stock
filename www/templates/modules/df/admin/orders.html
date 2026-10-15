@@ -1,13 +1,13 @@
 <html>
   <head>
-     <title>Замовлення партнерів  </title>
+     <title>{{#t}}mod.df.orders.zamovlennia_partneriv{{/t}}  </title>
  
 </head>
 <body>
 
         <div class="row  ">
             <div class="col-12    col-md-10    col-xl-8  ">
-                <h4>Замовлення  партнерів  </h4>
+                <h4>{{#t}}mod.df.orders.zamovlennia_partneriv{{/t}}  </h4>
               <div class="navbar">
                     <form zippy="filter"  >
                      <div class="row  ">
@@ -16,29 +16,29 @@
                           <div class="col-auto  ">
                         <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                       </div>
-                        <label class="col-form-label col-auto"   for="from">З </label>
+                        <label class="col-form-label col-auto"   for="from">{{#t}}common.z{{/t}} </label>
                          <div class="col-auto  ">
                          <input type="text" class="form-control   me-2  " zippy="from" style="width:110px">
                       </div>
-                        <label  class="col-form-label col-auto"  for="to">по </label>
+                        <label  class="col-form-label col-auto"  for="to">{{#t}}common.po{{/t}} </label>
                          <div class="col-auto  ">
                          <input type="text" class="form-control   me-2  " zippy="to" style="width:110px">
                         </div>
                    
-                        <label class="col-form-label col-auto" for="status">Статус</label>
+                        <label class="col-form-label col-auto" for="status">{{#t}}common.status{{/t}}</label>
                           <div class="col-auto  ">
                         <select class="form-control me-2" zippy="status">
                         </select>
                          </div>
-                        <label  class="col-form-label col-auto"for="fpartner">Партнер</label>
+                        <label  class="col-form-label col-auto"for="fpartner">{{#t}}reference.customerlist.partner{{/t}}</label>
                         
                          <div class="col-auto  ">
                          <select class="form-control me-2" zippy="fpartner">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                           </div>
                           <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="ОК">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                         </div></div>
 
                     </form>
@@ -46,11 +46,11 @@
              <table class="table   table-sm      ">
                   <thead> 
                    <tr>
-                      <th  >Номер</th>
-                        <th  >Дата</th>
-                        <th  >Партнер</th>
-                        <th  >Статус</th>
-                        <th  class="text-end">Сума</th>
+                      <th  >{{#t}}common.nomer{{/t}}</th>
+                        <th  >{{#t}}common.data{{/t}}</th>
+                        <th  >{{#t}}reference.customerlist.partner{{/t}}</th>
+                        <th  >{{#t}}common.status{{/t}}</th>
+                        <th  class="text-end">{{#t}}common.suma{{/t}}</th>
              
                   </tr> 
                      </thead>
@@ -69,14 +69,14 @@
                   <div class="col-12" zippy="docpan">
                   <form zippy="sform"    >
                       <div class="row  ">
-                         <label class="col-form-label col-auto" data-label="emps" for="mstates"> Виконавець </label>
+                         <label class="col-form-label col-auto" data-label="emps" for="mstates"> {{#t}}common.vykonavets{{/t}} </label>
                          <div class="col-auto  ">
                          <select zippy="emps" class="form-control me-2">
-                         <option value="0">Не обрано</option>
+                         <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                          </select>
                          </div> 
                          <div class="col-auto  ">
-                         <button zippy="bsaves" class="btn btn-success  me-2"> В обробку</button>
+                         <button zippy="bsaves" class="btn btn-success  me-2"> {{#t}}mod.df.order.v_obrobku{{/t}}</button>
                       </div>  
                       </div>  
                            

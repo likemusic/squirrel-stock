@@ -46,7 +46,7 @@ class SerList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => "Відкриті", 1 => "Нові", 2 => "Виконуються", 3 => "Всі"), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.serlist.vykonuiutsia'), 3 => __('common.vsi')), 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
@@ -136,10 +136,10 @@ class SerList extends \App\Pages\Base
  
         if($doc->getHD('waitpay')==1){
             $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
-            $row->ispay->setAttribute('title','До сплати');            
+            $row->ispay->setAttribute('title',__('common.do_splaty'));            
         }   else {
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
-            $row->ispay->setAttribute('title','Оплачено');            
+            $row->ispay->setAttribute('title',__('register.orderlist.oplacheno'));            
         }
     }
 
@@ -157,14 +157,14 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "btask") {
             if ($task) {
 
-                $this->setWarn('Вже існує документ Наряд');
+                $this->setWarn(__('register.orderlist.vzhe_isnuie_dokument_nariad'));
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "bpos") {
             if (count($this->_doc->getChildren('POSCheck')) > 0) {
-                $this->setWarn('Вже існує документ Чек');
+                $this->setWarn(__('register.orderlist.vzhe_isnuie_dokument_chek'));
             }
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
             return;
@@ -172,7 +172,7 @@ class SerList extends \App\Pages\Base
         }
         if ($sender->id == "binvoice") {
             if (count($this->_doc->getChildren('Invoice')) > 0) {
-                $this->setWarn('Вже існує документ Рахунок');
+                $this->setWarn(__('register.serlist.vzhe_isnuie_dokument_rakhunok'));
             }
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
@@ -186,7 +186,7 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "bref") {
             if ($gi || $task) {
 
-                $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
+                $this->setWarn(__('register.serlist.buly_stvoreni_dokumenty_nariad_ta'));
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
         }
@@ -371,7 +371,7 @@ class SerList extends \App\Pages\Base
     public function ilistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('riname', $item->itemname));
-        $row->add(new Label('ricode', $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'')  ));
+        $row->add(new Label('ricode', $item->item_code . ( strlen($item->snumber) >0 ? __('doc.serviceact.s_n'). $item->snumber :'')  ));
         $row->add(new Label('riquantity', H::fqty($item->quantity)));
         $row->add(new Label('riprice', H::fa($item->price)));
         $row->add(new Label('riamount', H::fa($item->price * $item->quantity)));
@@ -466,7 +466,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->sform->sqty->getText());
         $price  = floatval($this->editpan->sform->sprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невірні дані')  ;
+            $this->setError(__('register.serlist.nevirni_dani'))  ;
             return;
         }
         $ser = Service::load($id) ;
@@ -495,7 +495,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->iform->iqty->getText());
         $price  = floatval($this->editpan->iform->iprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невірні дані')  ;
+            $this->setError(__('register.serlist.nevirni_dani'))  ;
             return;
         }
  
@@ -515,7 +515,7 @@ class SerList extends \App\Pages\Base
             
             if (strlen($item->snumber) == 0  ) {
 
-                $this->setError("Потрібен серійний номер");
+                $this->setError(__('common.potriben_seriinyi_nomer'));
                 return;
             }
             
@@ -525,7 +525,7 @@ class SerList extends \App\Pages\Base
             
             if (in_array($snumber, $slist) == false) {
 
-                $this->setError('Невірний серійний номер  ');
+                $this->setError(__('common.nevirnyi_seriinyi_nomer'));
                 return;
             }  
       

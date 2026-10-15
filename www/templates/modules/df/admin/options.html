@@ -4,43 +4,43 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-4    col-xl-3  ">
-                <h4>Налаштування  </h4>
+                <h4>{{#t}}common.nalashtuvannia{{/t}}  </h4>
                 <form zippy="cform">
                       <div class="mb-2">
-                        <label for="defpricetype">Тип ціни   </label>
+                        <label for="defpricetype">{{#t}}common.typ_tsiny{{/t}}   </label>
 
                         <select class="form-control" zippy="defpricetype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
 
                         </select>
-                         <small>Ціна постачальника для дропшиппера</small>
+                         <small>{{#t}}mod.df.options.tsina_postachalnyka_dlia_dropshyppera{{/t}}</small>
                   
                     </div>
                     <div class="mb-2">
-                        <label for="discprice">Знижка, %</label>
+                        <label for="discprice">{{#t}}service.discounts.znyzhka{{/t}}</label>
                         <input style="width:100px" type="text" zippy="discprice" class="form-control" pattern="[0-9\.]+"  />
-                         <small>Ціна постачальника для дропшиппера як знижка для вказаної</small>
+                         <small>{{#t}}mod.df.options.tsina_postachalnyka_dlia_dropshyppera_ia{{/t}}</small>
                     </div>               
                  
                     <div class="mb-2">
-                        <label for="defstore">Склад для фулфілменту </label>
+                        <label for="defstore">{{#t}}mod.df.options.sklad_dlia_fulfilmentu{{/t}} </label>
 
                         <select class="form-control" zippy="defstore">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
 
                         </select>
-                         <small>Бажано  створити  окремий склад</small>
+                         <small>{{#t}}mod.df.options.bazhano_stvoryty_okremyi_sklad{{/t}}</small>
                   
                     </div>      
                     {{#hideblock}}
                     <div class="mb-2">
-                        <label for="hprice">Вартість обробки замовлення</label>
+                        <label for="hprice">{{#t}}mod.df.options.vartist_obrobky_zamovlennia{{/t}}</label>
                         <input type="text" zippy="hprice" class="form-control" pattern="[0-9\.]+"  />
-                         <small> Оплата  партнером обробки замовлення.     </small>
+                         <small> {{#t}}mod.df.options.oplata_partnerom_obrobky_zamovlennia{{/t}}     </small>
                     </div> 
                        {{/hideblock}}                                  
                     <div class="  d-flex justify-content-end">
-                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary me-2"/>
+                        <input type="submit" value="{{#t}}common.zberehty{{/t}}" zippy="save" class="btn   btn-primary me-2"/>
                         
 
 

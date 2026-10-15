@@ -32,7 +32,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратори');
+            System::setErrorMsg(__('app.options.do_storinky_maie_dostup_tilky'));
             App::RedirectError();
             return  ;
         }
@@ -84,16 +84,16 @@ class Options extends \App\Pages\Base
         $this->add(new Form('business'))->onSubmit($this, 'saveBusinessOnClick');
 
         $pt = array(
-            "0" => "По факту",
-            "1" => "Передплата",
-            "2" => "Післяплата"
+            "0" => __('app.options.po_faktu'),
+            "1" => __('common.peredplata'),
+            "2" => __('app.options.pisliaplata')
         );
         $this->business->add(new DropDownChoice('paytypein', $pt, "1"));
         $this->business->add(new DropDownChoice('paytypeout', $pt, "1"));
         $st = array(
-            "1" => "За серіями (партіями) виробника",
-            "2" => "За серіями та датою придатності",
-            "3" => "За серійними номерами  виробів"
+            "1" => __('app.options.za_seriiamy_partiiamy_vyrobnyka'),
+            "2" => __('app.options.za_seriiamy_ta_datoiu_prydatnosti'),
+            "3" => __('app.options.za_seriinymy_nomeramy_vyrobiv')
         );
         
         $this->business->add(new DropDownChoice('usesnumber',$st));
@@ -219,7 +219,7 @@ class Options extends \App\Pages\Base
 
   
         $this->api->add(new TextInput('aexp'));
-        $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
+        $this->api->add(new DropDownChoice('atype', array('1' => __('app.options.avtoryzatsiia_z_jwt_bearer'), '2' => __('app.options.basic_avtoryzatsiia'), '3' => __('app.options.avtomatychna_avtoryzatsiia')), 1))->onChange($this, 'onApiType');
         $api = System::getOptions("api",true);
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
@@ -252,7 +252,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextArea('smscustscript'));
         $this->sms->add(new DropDownChoice('smscustlang', array('js' => "JavaScript",  'php' => "PHP"), 'js')) ;
 
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",   '3' => 'SMS-Fly', '4' => 'Кастомний скрипт'), 0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",   '3' => 'SMS-Fly', '4' => __('app.options.kastomnyi_skrypt')), 0))->onChange($this, 'onSMSType');
        
         $sms = System::getOptions("sms",true);
 
@@ -323,7 +323,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
         App::Redirect("\\App\\Pages\\Options");
 
@@ -370,7 +370,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
         $this->_tvars["useval"] = $common['useval'] == 1;
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
         App::Redirect("\\App\\Pages\\Options");
 
@@ -388,7 +388,7 @@ class Options extends \App\Pages\Base
         $common['tbtoken'] = $sender->tbtoken->getText()  ;
       //  $common['tbname'] = $sender->tbname->getText()  ;
         if( strlen($common['tbtoken'] )==0 ) {
-            $this->setWarn("Не задано токен") ;
+            $this->setWarn(__('app.options.ne_zadano_token')) ;
             System::setOptions("common", $common);            
             return;
         }
@@ -400,7 +400,7 @@ class Options extends \App\Pages\Base
         $res = $bot->doGet('deleteWebhook') ;
         $res = $bot->doGet('setWebhook', array('url'=>$url)) ;
         if($res['error_code'] == 404) {
-            $this->setError("Невірний токен") ;
+            $this->setError(__('app.options.nevirnyi_token')) ;
             return;
         }
         if($res['ok'] != true) {
@@ -411,7 +411,7 @@ class Options extends \App\Pages\Base
         H::log("set hook ".$url);
 
         System::setOptions("common", $common);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
 
     }
 
@@ -429,7 +429,7 @@ class Options extends \App\Pages\Base
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         System::setOptions("printer", $printer);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
     public function onApiType($sender) {
@@ -447,7 +447,7 @@ class Options extends \App\Pages\Base
         $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
     public function onSMSType($sender) {
@@ -494,7 +494,7 @@ class Options extends \App\Pages\Base
         $sms['smscustscript'] = base64_encode($this->sms->smscustscript->getText() );
 
         System::setOptions("sms", $sms);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
     public function testSMSOnClick($sender) {
@@ -541,7 +541,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
     public function onValRow($row) {
@@ -605,7 +605,7 @@ class Options extends \App\Pages\Base
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
     }
 
  

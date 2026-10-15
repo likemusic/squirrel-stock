@@ -44,9 +44,9 @@ class Compare extends Base
 
         $options = \App\System::getOptions('shop');
         $attrvalues=[];
-        $nodata = "Н/Д";
-        $yes = "Є";
-        $no = "Немає";
+        $nodata = __('mod.shop.compare.n_d');
+        $yes = __('common.ie');
+        $no = __('common.nemaie');
         $cat_id = \App\Filter::getFilter("ProductCatalog")->cat_id;
         $attributes = Helper::getProductAttributeListByGroup($cat_id);
         foreach ($attributes as $attr) {
@@ -75,7 +75,7 @@ class Compare extends Base
                     }
                 }
                 if(strlen($value)==0) {
-                    $value='Н/Д';
+                    $value=__('mod.shop.compare.n_d');
                 }
                 $values[]  = array('value'=>$value) ;
                 $diff["-".$value]= "-".$value;

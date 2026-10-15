@@ -1,11 +1,11 @@
 <html>
    <head>
-        <title>  Налаштування меню  </title>
+        <title>  {{#t}}common.nalashtuvannia_meniu{{/t}}  </title>
 
     </head>
   <body>
-        <h2>Налаштування меню</h2>
-        <small>Для оновлення стану меню потрібно перейти на будь яку іншу сторінку</small>
+        <h2>{{#t}}common.nalashtuvannia_meniu{{/t}}</h2>
+        <small>{{#t}}app.menulist.dlia_onovlennia_stanu_meniu_potribno{{/t}}</small>
         <div class="row">
 
             <div class="col-12 col-lg-10 col-xl-8  ">
@@ -20,56 +20,56 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fdoc">
-                            <label class="form-check-label me-2" for="fdoc">Документи</label>
+                            <label class="form-check-label me-2" for="fdoc">{{#t}}common.dokumenty{{/t}}</label>
                         </div>
                          </div>
                          <div class="col-auto pt-2 ">
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fref">
-                            <label class="form-check-label me-2" for="fref">Довідники</label>
+                            <label class="form-check-label me-2" for="fref">{{#t}}app.base.dovidnyky{{/t}}</label>
                         </div>
                          </div>
                          <div class="col-auto pt-2 ">
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="frep">
-                            <label class="form-check-label me-2" for="frep">Звіти</label>
+                            <label class="form-check-label me-2" for="frep">{{#t}}app.base.zvity{{/t}}</label>
                         </div>
                          </div>
                          <div class="col-auto pt-2 ">
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="freg">
-                            <label class="form-check-label  me-2" for="freg">Журнали</label>
+                            <label class="form-check-label  me-2" for="freg">{{#t}}app.base.zhurnaly{{/t}}</label>
                         </div>
                          </div>
                          <div class="col-auto pt-2 ">
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fser">
-                            <label class="form-check-label   me-2" for="fser">Сервіс</label>
+                            <label class="form-check-label   me-2" for="fser">{{#t}}app.menulist.servis{{/t}}</label>
                         </div>
                             </div>
                          
-                            <label  class="col-form-label col-auto" for="fgr">Група</label>
+                            <label  class="col-form-label col-auto" for="fgr">{{#t}}app.menulist.hrupa{{/t}}</label>
                             <div class="col-auto  ">
                             <select class="form-control  me-2"   zippy="fgr">
-                               <option value="all"> Всі </option>
+                               <option value="all"> {{#t}}common.vsi{{/t}} </option>
                             </select>
                            </div>
                           <div class="col-auto  ">
-                             <button type="submit" class="btn btn-success   ">Оновити</button>
+                             <button type="submit" class="btn btn-success   ">{{#t}}common.onovyty{{/t}}</button>
                          </div>
                        </div>
                     </form>
-                    <a class="btn btn-success   " zippy="addnew">Додати</a>
+                    <a class="btn btn-success   " zippy="addnew">{{#t}}common.dodaty{{/t}}</a>
                     <table class="table table-sm table-striped  ">
                         <tr>
-                            <th>Назва</th>
-                            <th>Ім'я PHP класу</th>
-                            <th>Тип</th>
-                            <th>Група</th>
+                            <th>{{#t}}common.nazva{{/t}}</th>
+                            <th>{{#t}}app.menulist.imia_php_klasu{{/t}}</th>
+                            <th>{{#t}}common.typ{{/t}}</th>
+                            <th>{{#t}}app.menulist.hrupa{{/t}}</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -78,8 +78,8 @@
                             <td><span zippy="meta_name"></span></td>
                             <td><span zippy="type"></span></td>
                             <td><span zippy="menugroup"></span></td>
-                            <td><a title="Деактивувати пункт меню" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
-                                <a title="Активувати пункт меню" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
+                            <td><a title="{{#t}}app.menulist.deaktyvuvaty_punkt_meniu{{/t}}" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
+                                <a title="{{#t}}app.menulist.aktyvuvaty_punkt_meniu{{/t}}" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
                             <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></i></a>
                                 &nbsp;&nbsp;<a class="text-danger" zippy="rowdelete"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -91,24 +91,24 @@
 
             <div class="col-12  col-md-4 col-xl-3">
                 <div zippy="editpan">
-                    <h5> Редагування пункту меню</h5>
+                    <h5> {{#t}}app.menulist.redahuvannia_punktu_meniu{{/t}}</h5>
                     <form zippy="editform" role="form">
                         <input type="hidden" zippy="meta_id" value="0">
 
                         <div class="mb-2">
-                            <label for="edit_description">Найменування</label>
+                            <label for="edit_description">{{#t}}common.naimenuvannia{{/t}}</label>
                             <input class="form-control" zippy="edit_description"  required="on" >
                         </div>
                         <div class="mb-2">
-                            <label for="edit_meta_name">Назва PHP класу</label>
+                            <label for="edit_meta_name">{{#t}}app.menulist.nazva_php_klasu{{/t}}</label>
                             <input class="form-control" zippy="edit_meta_name"  required="on" >
                         </div>
                         <div class="mb-2">
-                            <label for="edit_menugroup">Група підменю</label>
+                            <label for="edit_menugroup">{{#t}}app.menulist.hrupa_pidmeniu{{/t}}</label>
                             <input class="form-control" zippy="edit_menugroup">
                         </div>
                         <div class="mb-2">
-                            <label for="edit_menugroup">Тип</label>
+                            <label for="edit_menugroup">{{#t}}common.typ{{/t}}</label>
                             <select class="form-control" zippy="edit_meta_type">
 
                             </select>
@@ -117,14 +117,13 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edit_disabled">
-                            <label class="form-check-label ms-sm-2" for="edit_disabled">Не показувати в
-                                меню</label>
+                            <label class="form-check-label ms-sm-2" for="edit_disabled">{{#t}}app.menulist.ne_pokazuvaty_v_meniu{{/t}}</label>
                         </div>
 
 
                         <div class="mb-2">
-                            <a zippy="mcancel" class="btn btn-secondary  me-2 ">Скасувати</a>
-                            <button type="submit" class="btn btn-primary  ">Зберегти</button>
+                            <a zippy="mcancel" class="btn btn-secondary  me-2 ">{{#t}}common.skasuvaty{{/t}}</a>
+                            <button type="submit" class="btn btn-primary  ">{{#t}}common.zberehty{{/t}}</button>
                      
                         </div>
 

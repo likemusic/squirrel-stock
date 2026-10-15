@@ -313,7 +313,7 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             } else {
                 if(intval($common['paytypein']) == 1) {
-                    $this->setWarn('При передоплаті накладну слід створювати на  підставі вхідного рахунку') ;
+                    $this->setWarn(__('doc.goodsreceipt.pry_peredoplati_nakladnu_slid_stvoriuvat')) ;
                 }
             }
         }
@@ -420,7 +420,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn('Товар не знайдено');
+            $this->setWarn(__('common.tovar_ne_znaideno'));
             $this->addnewitemOnClick(null);
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
@@ -488,13 +488,13 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         $price = doubleVal($this->editsnitem->editsnprice->getText());
         if ($price == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError(__('common.ne_vkazana_tsina'));
             return;
         }
         $sns =  $this->editsnitem->editsn->getText();
@@ -508,7 +508,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказані серійні номери");
+            $this->setError(__('common.ne_vkazani_seriini_nomery'));
             return;
         }
         
@@ -517,7 +517,7 @@ class GoodsReceipt extends \App\Pages\Base
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
-                $this->setError("Серійний номер має бути унікальним для виробу");    
+                $this->setError(__('common.seriinyi_nomer_maie_buty_unikalnym'));    
                 return;
             }           
             
@@ -557,7 +557,7 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -586,7 +586,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item->price == 0) {
 
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn(__('common.ne_vkazana_tsina'));
         }
 
         $item->pricends= $item->price + $item->price * $item->nds();
@@ -597,14 +597,14 @@ class GoodsReceipt extends \App\Pages\Base
         if($common['usesnumber'] > 0) {
             if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
                 if($common['usesnumber'] != 3){
-                   $this->setError("Потрібна партія виробника");
+                   $this->setError(__('common.potribna_partiia_vyrobnyka'));
                    return;
                 }
                 if($common['usesnumber'] == 3 && $item->quantity <> 1){
-                   $this->setError("Серійний номер має бути унікальним для виробу");    
+                   $this->setError(__('common.seriinyi_nomer_maie_buty_unikalnym'));    
                    return;
                 }  
-                $this->setError("Не введено серійний номер");    
+                $this->setError(__('doc.goodsreceipt.ne_vvedeno_seriinyi_nomer'));    
                 return;
                 
                 
@@ -615,7 +615,7 @@ class GoodsReceipt extends \App\Pages\Base
                 $item->sdate = '';
             }
             if (strlen($item->sdate) == 0 && $item->useserial == 1  ) {
-                $this->setError("Потрібна дата придатності");
+                $this->setError(__('doc.goodsreceipt.potribna_data_prydatnosti'));
                 return;
             }
            
@@ -625,7 +625,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             foreach(  $this->_itemlist as $i){
                 if( $this->_rowid == -1 && strlen($item->snumber) > 0 && $item->snumber==$i->snumber )  {
-                    $this->setError('Вже є ТМЦ  з таким серійним номером');
+                    $this->setError(__('common.vzhe_ie_tmts_z_takym'));
                     return;
                     
                 }
@@ -641,7 +641,7 @@ class GoodsReceipt extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo(__('common.pozytsiia_dodana')) ;
         } else {
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
@@ -770,7 +770,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $id = H::addFile($file, $this->_doc->document_id, __('common.skan'), \App\Entity\Message::TYPE_DOC);
        
                 $this->_doc->headerdata["scan"] = $id;
                 $this->_doc->save();
@@ -916,48 +916,48 @@ class GoodsReceipt extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не обрано постачальника");
+            $this->setError(__('common.ne_obrano_postachalnyka'));
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed) {
-                $this->setError("Якщо валюта має бути вказана оплата");
+                $this->setError(__('doc.goodsreceipt.iakshcho_valiuta_maie_buty_vkazana'));
                 return;
             }
             if ($this->_doc->headerdata['comission']==1  ) {
-                $this->setError("Не можна валюту і комісію ");
+                $this->setError(__('doc.goodsreceipt.ne_mozhna_valiutu_i_komisiiu'));
             }
             if ($this->_doc->getHD('nds',0) >0  ) {
-                $this->setError("Не можна валюту і ПДВ ");
+                $this->setError(__('doc.goodsreceipt.ne_mozhna_valiutu_i_pdv'));
             }
             if ($this->_doc->getHD('delivery',0) >0  ) {
-                $this->setError("Не можна валюту і доставку ");
+                $this->setError(__('doc.goodsreceipt.ne_mozhna_valiutu_i_dostavku'));
             }
         } 
         
      
         if ($this->_doc->headerdata['comission']==1 && ($this->_doc->payed - doubleval($this->_doc->headerdata['delivery']) ) > 0) {
-            $this->setError("Оплата не  вноситься якщо Комісія ");
+            $this->setError(__('doc.goodsreceipt.oplata_ne_vnosytsia_iakshcho_komisiia'));
         }
         
         return !$this->isError();
@@ -1018,7 +1018,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $item = new Item();
@@ -1028,7 +1028,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError(__('common.takyi_artykul_vzhe_isnuie'));
               return;
         }  
 
@@ -1039,7 +1039,7 @@ class GoodsReceipt extends \App\Pages\Base
             $code = Item::qstr($item->bar_code);
             $cnt = Item::findCnt("  bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('Такий штрих код вже існує"');
+                $this->setError(__('doc.goodsreceipt.takyi_shtrykh_kod_vzhe_isnuie'));
                 return;
             }
 
@@ -1078,7 +1078,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -1089,7 +1089,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
@@ -1097,7 +1097,7 @@ class GoodsReceipt extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }
@@ -1187,7 +1187,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function onOpenLast($sender) {
         $cid = $this->docform->customer->getKey();
         if($cid == 0) {
-            $this->setError("Не обрано постачальника");
+            $this->setError(__('common.ne_obrano_postachalnyka'));
             return;
         }
         $ptype=0;

@@ -103,7 +103,7 @@ class Order extends \App\Entity\Doc\Document
     }
 
     protected function getNumberTemplate() {
-        return 'З-000000';
+        return __('doc.order.z_000000');
     }
 
     public function getRelationBased() {
@@ -210,7 +210,7 @@ class Order extends \App\Entity\Doc\Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -226,7 +226,7 @@ class Order extends \App\Entity\Doc\Document
         
             
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".H::fqty($onstore) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').H::fqty($onstore) .__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
             }
             
             
@@ -351,7 +351,7 @@ class Order extends \App\Entity\Doc\Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception(__('common.ne_rozrakhovano_sobivartist_hotovoi_prod'). $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -363,7 +363,7 @@ class Order extends \App\Entity\Doc\Document
             }
 
             if (false == $item->checkMinus($item->quantity, $store_id)) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception(__('common.na_skladi_vsoho').H::fqty($item->getQuantity($store_id)).__('common.tmts_spysannia_u_minus_zaboroneno', ['itemname' => $item->itemname]));
 
             }
 

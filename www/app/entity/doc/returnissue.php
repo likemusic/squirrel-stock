@@ -116,7 +116,7 @@ class ReturnIssue extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = 0-$b;
-                    $ua->notes = "Штраф " ;
+                    $ua->notes = __('doc.officedoc.shtraf') ;
                     $ua->save();
 
                                   

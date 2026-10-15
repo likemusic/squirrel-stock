@@ -281,8 +281,8 @@ class Printer
         //  throw new \Exception("Input must be UTF-8");
         }
         //украинское і на  ангглийсккое  хз  почему
-        $text = str_replace("і", "i", $text);
-        $text = str_replace("І", "I", $text);
+        $text = str_replace(__('app.printer.i'), "i", $text);
+        $text = str_replace(__('app.printer.i_2'), "I", $text);
    //     $text = mb_convert_encoding($text, "cp866", "utf-8");
    
         if($this->cp==1251) {
@@ -962,8 +962,8 @@ $b = json_encode( $this->buffer) ;
         foreach($arr as $row)  {
             
     //украинское і на  ангглийсккое  хз  почему
-        $row = str_replace("і", "i", $row);
-        $row = str_replace("І", "I", $row);
+        $row = str_replace(__('app.printer.i'), "i", $row);
+        $row = str_replace(__('app.printer.i_2'), "I", $row);
               
             
             $pr->labelrow($row);

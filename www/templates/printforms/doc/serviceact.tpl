@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="6">
-            Замовник: {{customer_name}}
+            {{#t}}print.serviceact.zamovnyk{{/t}}
         </td>
 
 
@@ -9,7 +9,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="7">
-            Виконавець: {{firm_name}}
+            {{#t}}print.serviceact.vykonavets{{/t}}
         </td>
 
     </tr>
@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="7">
-            Договір: {{contract}} від {{createdon}}
+            {{#t}}print.incomeservice.dohovir_vid{{/t}}
         </td>
 
     </tr>
@@ -26,7 +26,7 @@
     {{#isdevice}}
     <tr>
         <td colspan="7">
-           Прийнято від замовника: {{device}} с/н: {{devsn}}
+           {{#t}}print.serviceact.pryiniato_vid_zamovnyka_s_n{{/t}}
         </td>
 
     </tr>
@@ -34,9 +34,9 @@
     <tr style="font-weight: bolder;">
         <td colspan="7" align="center">
            
-          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
-          {{^isfinished}}  Квитанція до {{/isfinished}} 
-           № {{document_number}} від {{date}}
+          {{#isfinished}}  {{#t}}common.akt_vykonanykh_robit{{/t}} {{/isfinished}} 
+          {{^isfinished}}  {{#t}}common.kvytantsiia_do{{/t}} {{/isfinished}} 
+           {{#t}}print.serviceact.vid{{/t}}
         </td>
     </tr>
 
@@ -45,12 +45,12 @@
 <table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
         <th   style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
+        <th style="border: 1px solid black;">{{#t}}common.naimenuvannia{{/t}}</th>
         <th style="border: 1px solid black;"> </th>
-        <th style="border: 1px solid black;"  >Од.</th>
-        <th style="border: 1px solid black;" align="right">Кіл.</th>
-        <th style="border: 1px solid black;" align="right">Ціна  {{#nds}} (без ПДВ)  {{/nds}}</th>
-        <th style="border: 1px solid black;" align="right">Сума</th>
+        <th style="border: 1px solid black;"  >{{#t}}common.od{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.kil{{/t}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.tsina{{/t}}  {{#nds}} {{#t}}common.bez_pdv{{/t}}  {{/nds}}</th>
+        <th style="border: 1px solid black;" align="right">{{#t}}common.suma{{/t}}</th>
 
     </tr>
     {{#_detail}}
@@ -68,18 +68,18 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" style="border-top: 1px solid black;" align="right">Всього:</td>
+        <td colspan="6" style="border-top: 1px solid black;" align="right">{{#t}}common.vsoho{{/t}}</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Знижка:</td>
+        <td colspan="6" align="right">{{#t}}common.znyzhka_2{{/t}}</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}  
   {{#nds}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">В т.ч. ПДВ:</td>
+        <td colspan="6" align="right">{{#t}}common.v_t_ch_pdv{{/t}}</td>
         <td align="right">{{nds}}</td>
     </tr>
     {{/nds}}  
@@ -87,25 +87,25 @@
       
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Списані бонуси:</td>
+        <td colspan="6" align="right">{{#t}}print.serviceact.spysani_bonusy{{/t}}</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}    
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">До сплати:</td>
+        <td colspan="6" align="right">{{#t}}common.do_splaty_2{{/t}}</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
    {{#payed}}  
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Оплата:</td>
+        <td colspan="6" align="right">{{#t}}common.oplata_2{{/t}}</td>
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
     <tr>
         <td colspan="7"><br>
-            Гарантія: {{gar}}
+            {{#t}}print.serviceact.harantiia{{/t}}
         </td>
     </tr>
     <tr>
@@ -118,17 +118,17 @@
    
    {{#totalstr}}
     <tr>
-        <td colspan="7">До сплати <b>{{totalstr}}</b></td>
+        <td colspan="7">{{#t}}common.do_splaty{{/t}} <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 
               {{/payamount}} 
                     <tr>
                         <td colspan="3" > 
-                            Виконавець ___________
+                            {{#t}}print.serviceact.vykonavets_2{{/t}}
                         </td>
                         <td colspan="2"> 
-                            Замовник ___________
+                            {{#t}}print.serviceact.zamovnyk_2{{/t}}
                         </td>
 
                     </tr>
@@ -142,7 +142,7 @@
                             {{^isstamp}}
                         
                             <br><br>
-                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
+                            {{#t}}print.goodsissue.nbsp_nbsp_nbsp_nbsp_nbsp{{/t}}
                             <br><br>
                             {{/isstamp}}
                         </td>

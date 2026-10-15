@@ -104,10 +104,10 @@ class SubstItems extends \App\Pages\Base
         if($it != null) {
             $qty = $it->getQuantity() ;
             $t="<small>";
-            $t = $t . $it->itemname.". Кіл. ".H::fqty($qty);
+            $t = $t . $it->itemname.__('register.substitems.kil').H::fqty($qty);
             if($qty>0) {
                $price = $it->getPrice() ;
-               $t .= ". Ціна. ".H::fa($price)  ;
+               $t .= __('register.substitems.tsina').H::fa($price)  ;
             }
             $t.="</small>";
             $row->initems->setText($t,true);
@@ -120,9 +120,9 @@ class SubstItems extends \App\Pages\Base
             $t="";
             foreach($ci as $c) {
                 $t.="<small style=\"display:block\">";  
-                $t=$t . $c->cust_name.". Кіл. ".H::fqty($c->quantity);
+                $t=$t . $c->cust_name.__('register.substitems.kil').H::fqty($c->quantity);
                 if($c->quantity <0) {
-                   $t .= ". Ціна. ".H::fa($c->price)  ;  
+                   $t .= __('register.substitems.tsina').H::fa($c->price)  ;  
                 }  
                 $t.="</small>";
             }
@@ -238,7 +238,7 @@ class SubstItems extends \App\Pages\Base
              || $colsubstcode === '0'
              || $colsubstbrand === '0'
          ) {
-            $this->setError('Не вказані колонки ');
+            $this->setError(__('register.substitems.ne_vkazani_kolonky'));
             return;
         }
          
@@ -246,7 +246,7 @@ class SubstItems extends \App\Pages\Base
         $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не обрано файл');
+            $this->setError(__('common.ne_obrano_fail'));
             return;
         }
         
@@ -333,7 +333,7 @@ class SubstItems extends \App\Pages\Base
         
        
         
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt]));
         $this->itemtable->listform->itemlist->Reload();
 
         $this->itemtable->setVisible(true);
@@ -353,7 +353,7 @@ class SubstItems extends \App\Pages\Base
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Найменування;Код оригінала;Бренд оригінала;Код заміни;Бренд заміни;  ";
+       $line =__('register.substitems.naimenuvannia_kod_oryhinala_brend_oryhin');
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        

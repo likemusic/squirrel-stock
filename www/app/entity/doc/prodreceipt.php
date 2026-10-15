@@ -96,7 +96,7 @@ class ProdReceipt extends Document
             if($user != null){
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id; 
-                $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                $n->message = __('doc.prodmove.narakhovano_do_splaty_2', ['cost' => $cost, 'document_number' => $this->document_number])    ;
                 $n->sender_id =  \App\Entity\Notify::SYSTEM;
                 $n->save();   
             }                   
@@ -114,7 +114,7 @@ class ProdReceipt extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОВ-000000';
+        return __('doc.prodreceipt.ov_000000');
     }
 
     public function getRelationBased() {

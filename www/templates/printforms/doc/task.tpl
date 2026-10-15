@@ -1,13 +1,13 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="7" align="center">
-            Наряд № {{document_number}} від {{document_date}}
+            {{#t}}print.task.nariad_vid{{/t}}
         </td>
     </tr>
     {{#pareaname}}
     <tr>
         <td colspan="7">
-            Вироб. ділянка: {{pareaname}}
+            {{#t}}print.task.vyrob_dilianka{{/t}}
         </td>
 
     </tr>
@@ -16,7 +16,7 @@
     {{#baseddoc}}
     <tr>
         <td colspan="7">
-            Замовлення: {{baseddoc}}
+            {{#t}}print.task.zamovlennia{{/t}}
         </td>
 
     </tr>
@@ -25,7 +25,7 @@
     {{#cust}}
     <tr>
         <td colspan="7">
-            Замовник: {{cust}}
+            {{#t}}print.task.zamovnyk{{/t}}
         </td>
 
     </tr>
@@ -33,16 +33,16 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="7" style="text-align: left;">Роботи</th>
+        <th colspan="7" style="text-align: left;">{{#t}}common.roboty{{/t}}</th>
 
     </tr>
     <tr style="font-weight: bolder;">
         <th   style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Категорія</th>
-        <th style="border: 1px solid black;"   align="right">Кіл</th>
-        <th style="border: 1px solid black;"   align="right">Сума</th>
-        <th style="border: 1px solid black;"   align="right">Годин</th>
+        <th style="border: 1px solid black;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: 1px solid black;">{{#t}}common.katehoriia{{/t}}</th>
+        <th style="border: 1px solid black;"   align="right">{{#t}}print.task.kil{{/t}}</th>
+        <th style="border: 1px solid black;"   align="right">{{#t}}common.suma{{/t}}</th>
+        <th style="border: 1px solid black;"   align="right">{{#t}}print.task.hodyn{{/t}}</th>
         <th style="border: 1px solid black;"   > </th>
 
 
@@ -63,14 +63,14 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="7" style="text-align: left;">Готова продукція</th>
+        <th colspan="7" style="text-align: left;">{{#t}}common.hotova_produktsiia{{/t}}</th>
 
     </tr>
     <tr style="font-weight: bolder;">
         <th   style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Код</th>
-        <th style="border: 1px solid black;"   align="right">Кіл.</th>
+        <th style="border: 1px solid black;">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: 1px solid black;">{{#t}}common.kod{{/t}}</th>
+        <th style="border: 1px solid black;"   align="right">{{#t}}common.kil{{/t}}</th>
         <th style="border: 1px solid black;"   align="right"> </th>
         <th style="border: 1px solid black;"   align="right"> </th>
         <th style="border: 1px solid black;"    > </th>
@@ -93,7 +93,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="7" style="text-align: left;">Виконавці</th>
+        <th colspan="7" style="text-align: left;">{{#t}}common.vykonavtsi{{/t}}</th>
 
     </tr>
     {{#_detail3}}
@@ -111,7 +111,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="7" style="text-align: left;">Устаткування</th>
+        <th colspan="7" style="text-align: left;">{{#t}}doc.task.ustatkuvannia{{/t}}</th>
 
     </tr>
     {{#_detail2}}

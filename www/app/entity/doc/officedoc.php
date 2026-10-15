@@ -28,7 +28,7 @@ class OfficeDoc extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $emp_id;
             $ua->amount = $bonus;
-            $ua->notes = "Бонус ";
+            $ua->notes = __('common.bonus');
             $ua->save();
             
                    
@@ -40,7 +40,7 @@ class OfficeDoc extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $emp_id;
             $ua->amount = 0 - $fine;
-            $ua->notes = "Штраф " ;
+            $ua->notes = __('doc.officedoc.shtraf') ;
             $ua->save();
                      
         }
@@ -62,7 +62,7 @@ class OfficeDoc extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОФ-000000';
+        return __('doc.officedoc.of_000000');
     }
 
     public function supportedExport() {
@@ -98,7 +98,7 @@ class OfficeDoc extends Document
                 }
             }
             if ($showerror) {
-                \App\System::setErrorMsg("Немає права перегляду");
+                \App\System::setErrorMsg(__('doc.officedoc.nemaie_prava_perehliadu'));
             }
             return false; //если  список  непустой  и  не  найден в  списке
 
@@ -125,7 +125,7 @@ class OfficeDoc extends Document
                 }
             }
             if ($showerror) {
-                \App\System::setErrorMsg("Немає права редагування");
+                \App\System::setErrorMsg(__('doc.officedoc.nemaie_prava_redahuvannia'));
             }
 
             return false; //если  список  непустой  и  не  найден в  списке

@@ -8,8 +8,8 @@
         </style>
         <div class="row">
             <div class="col-12">
-                <h3>Варіації товарів</h3>
-                <small>Показуються лише категорії, у яких є товари</small>
+                <h3>{{#t}}app.base.variatsii_tovariv{{/t}}</h3>
+                <small>{{#t}}mod.shop.reclist.pokazuiutsia_lyshe_katehorii_u_iakykh{{/t}}</small>
             </div>
             <div class="col-12 col-md-6  ">
                 <table class="table table-sm">
@@ -26,19 +26,19 @@
 
                 <div zippy="varpanel" class="row">
                     <div  zippy="varlistpanel" class="col-12    col-xl-10 ">
-                        <h4>Список варіацій</h4>
-                        <a zippy="addvar" class="btn btn-sm  btn-primary">Нова   варіація</a><br>
+                        <h4>{{#t}}mod.shop.varlist.spysok_variatsii{{/t}}</h4>
+                        <a zippy="addvar" class="btn btn-sm  btn-primary">{{#t}}mod.shop.varlist.nova_variatsiia{{/t}}</a><br>
                         <table class="   table    table-sm ">
                             <tr>
-                                <th>Найменування</th>
-                                <th>Атрибут</th>
+                                <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                                <th>{{#t}}mod.shop.varlist.atrybut{{/t}}</th>
                                 <th >&nbsp;</th>
                             </tr>
                             <tr zippy="varlist">
                                 <td zippy="varname"></td>
                                 <td zippy="attrname"></td>
                                 
-                                <td>  <a zippy="varitems">Товари <label style="cursor:pointer" class="badge text-bg-info   rounded-pill " zippy="cnt"></label></a> 
+                                <td>  <a zippy="varitems">{{#t}}common.tovary{{/t}} <label style="cursor:pointer" class="badge text-bg-info   rounded-pill " zippy="cnt"></label></a> 
                                  &nbsp;&nbsp;&nbsp;<a zippy="varedit"><i class="fa fa-edit"></i></a> 
                                 &nbsp;&nbsp;&nbsp;<a zippy="vardel"><i  class="fa fa-trash"></i></a></td>
                             </tr>
@@ -48,49 +48,49 @@
                     <form zippy="vareditform" class="col-12 col-md-6 ">
                        
                         <div class="mb-2">
-                            <label for="editvarname">Групове  найменування </label>
+                            <label for="editvarname">{{#t}}mod.shop.varlist.hrupove_naimenuvannia{{/t}} </label>
                             <input required="required" zippy="editvarname" class="form-control">
                             
                             
                             
                         </div>
                         <div class="mb-2">
-                            <label for="editattrtype">Атрибут типу  перелік</label>
+                            <label for="editattrtype">{{#t}}mod.shop.varlist.atrybut_typu_perelik{{/t}}</label>
                             <select zippy="editattrtype" class="form-control"></select>
-                            <small>Атрибут  по якому  групуються товари. Зміна атрибуту очистить перелік товарів у варіації</small>
+                            <small>{{#t}}mod.shop.varlist.atrybut_po_iakomu_hrupuiutsia_tovary{{/t}}</small>
                   
                         </div>
            
                         <div class="mb-2">
-                            <input zippy="cancelvar" type="button" class="btn btn-secondary me-2" value="Скасувати"/>
-                            <input type="submit" class="btn   btn-success" value="Зберегти"/>
+                            <input zippy="cancelvar" type="button" class="btn btn-secondary me-2" value="{{#t}}common.skasuvaty{{/t}}"/>
+                            <input type="submit" class="btn   btn-success" value="{{#t}}common.zberehty{{/t}}"/>
                             
                         </div>
                         
                     </form>
                     
                     <div zippy="itemspanel">
-                        <h4>Перелік товарів   </h4>
-                        <a zippy="backvar" ><i class="fa fa-arrow-circle-left">до  переліку</i> </a>
+                        <h4>{{#t}}common.perelik_tovariv{{/t}}   </h4>
+                        <a zippy="backvar" ><i class="fa fa-arrow-circle-left">{{#t}}common.do_pereliku_2{{/t}}</i> </a>
                         <h5 zippy="vartitle"> </h5>
                         <div class="navbar">
 
                             <form zippy="itemform"  >
                             <div class="row  ">
-                           <label class="col-form-label col-auto" for="itemsel">Товар</label>
+                           <label class="col-form-label col-auto" for="itemsel">{{#t}}common.tovar{{/t}}</label>
                             <div class="col-auto  ">
                              <select zippy="itemsel" class="form-control select2 ">
-                                <option value="0">Не обрано</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                             </select>
                             </div>
                             <div class="col-auto  ">
-                            <input class="btn btn-success ms-2  " type="submit" value="Додати">
+                            <input class="btn btn-success ms-2  " type="submit" value="{{#t}}common.dodaty{{/t}}">
 
                            </div></div>
                             </form>
                             
                         </div>
-                        <small>Вибираються товари із непустим значенням атрибуту варіації </small>
+                        <small>{{#t}}mod.shop.varlist.vybyraiutsia_tovary_iz_nepustym_znachenn{{/t}} </small>
                    
                     <table class="table table-sm"  >
                      <tr zippy="varitemslist">

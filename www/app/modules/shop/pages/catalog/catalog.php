@@ -236,7 +236,7 @@ class Catalog extends Base
         }
 
         $row->add(new TextInput('srated'))->setText($item->getRating());
-        $row->add(new Label('scomments'))->setText("Відгуків (".$item->comments.")");
+        $row->add(new Label('scomments'))->setText(__('mod.shop.catalog.vidhukiv').$item->comments.")");
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
 
         /*        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
@@ -279,7 +279,7 @@ class Catalog extends Base
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
 
-        $this->setSuccess("Товар доданий до кошика");
+        $this->setSuccess(__('common.tovar_dodanyi_do_koshyka'));
 
         $this->resetURL();
     }
@@ -342,13 +342,13 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             if (in_array("1", $this->value)) {
                 $checked = ' checked="on"';
             }
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"1\" {$checked} /> Є<br>";
+            $ret .= __('mod.shop.catalog.ie', ['id' => $this->id, 'checked' => $checked]);
             $checked = "";
             if (in_array("0", $this->value)) {
                 $checked = ' checked="on"';
             }
 
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"0\"  {$checked} /> Нема ";
+            $ret .= __('mod.shop.catalog.nema', ['id' => $this->id, 'checked' => $checked]);
             $ret .= "</div>";
         }
         //'Число'

@@ -167,12 +167,12 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
-            $this->setError("Не введено номер");
+            $this->setError(__('reference.contractlist.ne_vvedeno_nomer'));
             return;
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();
         if ($this->_contract->customer_id == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError(__('common.ne_zadano_kontrahenta'));
             return;
         }
       
@@ -219,7 +219,7 @@ class ContractList extends \App\Pages\Base
             
             
             $msg = new \App\Entity\Message();
-            $msg->message = " Зміна  статусу  на  ". $this->_states[$this->_contract->state];
+            $msg->message = __('reference.contractlist.zmina_statusu_na'). $this->_states[$this->_contract->state];
             $msg->created = time();
             $msg->user_id = 0;
             $msg->item_id = $this->_contract->contract_id;
@@ -296,7 +296,7 @@ class ContractList extends \App\Pages\Base
 
         $file = $this->docpan->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError(__('common.fail_bilshe_10_mb'));
             return;
         }
 

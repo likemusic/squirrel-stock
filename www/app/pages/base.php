@@ -660,7 +660,7 @@ class Base extends \Zippy\Html\WebPage
            
            
             if($customer_id == 0) {
-                return "По  даному  ТМЦ  не знайдено  закупок або  прайсу  постачальника  ";
+                return __('app.base.po_danomu_tmts_ne_znaideno');
             }
            
            
@@ -932,7 +932,7 @@ class Base extends \Zippy\Html\WebPage
 
             if(intval($user->prtypelabel) == 1) {
                 if(strlen($ret)==0) {
-                   $this->addJavaScript(" toastr.warning( 'Немає даних для  друку ' )   ");
+                   $this->addJavaScript(__('app.base.toastr_warning_nemaie_danykh_dlia'));
                    return; 
                 }
                 $buf = \App\Printer::xml2comm($ret);
@@ -940,7 +940,7 @@ class Base extends \Zippy\Html\WebPage
             }            
             if(intval($user->prtypelabel) == 2) {
                 if(count($ret)==0) {
-                   $this->addJavaScript(" toastr.warning( 'Немає даних для  друку ' )   ");
+                   $this->addJavaScript(__('app.base.toastr_warning_nemaie_danykh_dlia'));
                    return; 
                 }
                 $buf = \App\Printer::arr2comm($ret);
@@ -1109,7 +1109,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         if ($item->checkUniqueArticle()==false) {
-           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
+           return json_encode(array('error'=>__('common.takyi_artykul_vzhe_isnuie')), JSON_UNESCAPED_UNICODE);
         }
 
         if (strlen($item->item_code) == 0 ){
@@ -1121,7 +1121,7 @@ class Base extends \Zippy\Html\WebPage
         $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
 
-            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>__('app.base.tmts_z_takoiu_nazvoiu_i')), JSON_UNESCAPED_UNICODE);
 
         }
 
@@ -1188,11 +1188,11 @@ class Base extends \Zippy\Html\WebPage
             $info['discount']  = $c->getDiscount()  ;
             $info['bonus']  = $c->getBonus()  ;
             if (doubleval($info['discount']) > 0) {
-                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+                $info['disctext'] =  __('app.base.postiina_znyzhka', ['discount' => $info['discount']]);
                 $info['bonus'] =0;
             } else {
                 if ($info['bonus'] > 0) {
-                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
+                    $info['disctext'] = __('app.base.narakhovano_bonusiv') . $info['bonus'];
                 }
             }
 

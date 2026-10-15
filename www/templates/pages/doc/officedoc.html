@@ -1,6 +1,6 @@
 <html>
     <head>
-          <title> Офісний документ</title>
+          <title> {{#t}}doc.officedoc.ofisnyi_dokument{{/t}}</title>
     </head>
     <body>
 
@@ -13,14 +13,14 @@
  
                 <div class="col-12 col-md-4 col-xl-3">
                   <div class="mb-2">
-                        <label for="edittitle"> Назва (тип) документу</label>
+                        <label for="edittitle"> {{#t}}doc.officedoc.nazva_typ_dokumentu{{/t}}</label>
                         <input class="form-control" type="text" zippy="edittitle"  >
-                        <small>Наприклад: Заява, Звіт, Угода...</small>
+                        <small>{{#t}}doc.officedoc.napryklad_zaiava_zvit_uhoda{{/t}}</small>
                         
                  </div>                 
                     <div class="mb-2 row">
                         <div class="col-5">
-                            <label for="document_number">Номер </label>
+                            <label for="document_number">{{#t}}common.nomer{{/t}} </label>
                         </div>
                          <div class="col-7">
                             <input style="width:150px" class="form-control" type="text" zippy="document_number"  required="on" >
@@ -28,51 +28,51 @@
                     </div>
                     <div class="mb-2 row">
                         <div class="col-5">
-                           <label for="document_date"> Дата</label>
+                           <label for="document_date"> {{#t}}common.data{{/t}}</label>
                         </div>
                          <div class="col-7">
                            <input class="form-control" type="text" zippy="document_date"  required="on" >
                         </div>                        
                     </div>
                     <div class="mb-2">
-                      <label for="document_date"> Контрагент</label>
+                      <label for="document_date"> {{#t}}common.kontrahent{{/t}}</label>
                       <div class="input-group  ">
-                         <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
+                         <input class="form-control"  placeholder="{{#t}}common.pochnit_vvodyty{{/t}}"   zippy="customer"/>
                      
-                           <a class="btn btn-primary btn-sm me-2" title="Додати нового" zippy="addcust">+</a>
+                           <a class="btn btn-primary btn-sm me-2" title="{{#t}}common.dodaty_novoho{{/t}}" zippy="addcust">+</a>
                     
                             <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
                                                                             
                     </div> 
-                    <small>Якщо документ зв'язаний з контрагентом</small>         
+                    <small>{{#t}}doc.officedoc.iakshcho_dokument_zviazanyi_z_kontrahent{{/t}}</small>         
                                     
                   </div>          
                     <div class="mb-2">
-                        <label for="emp">Співробітник</label>
+                        <label for="emp">{{#t}}common.spivrobitnyk{{/t}}</label>
                         <select class="form-control"  zippy="emp" >  
-                           <option value="0">Не вказаний</option>
+                           <option value="0">{{#t}}common.ne_vkazanyi{{/t}}</option>
                         </select>
-                        <small>Якщо документ зв'язаний зі співробітником</small>         
+                        <small>{{#t}}doc.officedoc.iakshcho_dokument_zviazanyi_zi_spivrobit{{/t}}</small>         
                     </div>               
                    <div class="mb-2 row">
-                         <div class="col-auto"><label for="bonus">Премія:</label></div>
+                         <div class="col-auto"><label for="bonus">{{#t}}doc.officedoc.premiia{{/t}}</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="bonus" ></div>
-                         <div class="col-auto"><label for="fine">&nbsp;&nbsp;Штраф:</label></div>
+                         <div class="col-auto"><label for="fine">{{#t}}doc.officedoc.nbsp_nbsp_shtraf{{/t}}</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="fine" ></div>
                          <div class="w-100"></div>
-                         <small data-label="bonus"> Додаються  на  особовий  рахунок</small>                       
+                         <small data-label="bonus"> {{#t}}doc.officedoc.dodaiutsia_na_osobovyi_rakhunok{{/t}}</small>                       
                          
                     </div> 
                                  
                     
                    <div class="mb-2">
-                        <label for="user">Відповідальний</label>
+                        <label for="user">{{#t}}common.vidpovidalnyi{{/t}}</label>
                         <select class="form-control"  zippy="user" >  
 
                         </select>
                     </div>               
                    <div class="mb-2">
-                        <label for="editcomment">Коментар, примітка</label>
+                        <label for="editcomment">{{#t}}doc.officedoc.komentar_prymitka{{/t}}</label>
                         <textarea class="form-control"  zippy="editcomment" >  
                         </textarea>
 
@@ -85,16 +85,16 @@
                 
                 <div class="col-12 col-md-8 col-xl-6">
                     <div class="mb-2">
-                        <label for="doccontent">Зміст</label>
+                        <label for="doccontent">{{#t}}common.zmist{{/t}}</label>
                         <textarea    class="form-control" zippy="doccontent"></textarea>
                     </div>
                      <div class="mb-2">
-                        <label for="doctags">Теги</label>
+                        <label for="doctags">{{#t}}common.tehy{{/t}}</label>
                         <div    zippy="doctags" >  </div>
-                        <small>Вводяться по  Enter</small>
+                        <small>{{#t}}common.vvodiatsia_po_enter{{/t}}</small>
                     </div>   
                      <div class="mb-2">
-                        <label for="editfile"> Оригінал (файл, скан) документу</label>
+                        <label for="editfile"> {{#t}}doc.officedoc.oryhinal_fail_skan_dokumentu{{/t}}</label>
                         <input class="form-control" type="file" zippy="editfile"  >
                     
                         
@@ -104,13 +104,13 @@
 
             <div class="row">
                 <div class="col-12 col-md-6  d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
-                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ms-2 ">
-                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-success  ms-2 me-2">
+                    <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn   btn-primary  ms-2">
+                    <input zippy="inprocdoc" type="submit" value="{{#t}}common.na_vykonannia{{/t}}" class="btn btn-primary  ms-2 ">
+                    <input zippy="execdoc" type="submit" value="{{#t}}common.vykonano{{/t}}" class="btn btn-success  ms-2 me-2">
                      &nbsp;
                     <input zippy="editaccess" type="checkbox" >
-                    <label class="form-check-label" for="editaccess"> Задати права  доступу</label>
+                    <label class="form-check-label" for="editaccess"> {{#t}}doc.officedoc.zadaty_prava_dostupu{{/t}}</label>
                 </div>
             </div>
            
@@ -118,16 +118,16 @@
         </form>     
       
          <form zippy="editcust">
-            <h3>&nbsp;Новий контрагент </h3>
+            <h3>{{#t}}common.nbsp_novyi_kontrahent{{/t}} </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="mb-2">
-                        <label for="editcustname">Назва </label>
+                        <label for="editcustname">{{#t}}common.nazva{{/t}} </label>
                         <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="mb-2">
-                        <label for="editphone">Телефон</label>
+                        <label for="editphone">{{#t}}common.telefon{{/t}}</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
                     <div class="mb-2">
@@ -136,19 +136,19 @@
                     </div>
 
                     <div class="mb-2">
-                        <label for="editemail">Тип</label>
+                        <label for="editemail">{{#t}}common.typ{{/t}}</label>
                         <select class="form-control" type="email" zippy="edittype">
-                           <option value="0">Не вказано</option>
-                           <option value="1">Покупець</option>
-                           <option value="2">Постачальник</option>
-                           <option value="3">Лід</option>
+                           <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
+                           <option value="1">{{#t}}common.pokupets{{/t}}</option>
+                           <option value="2">{{#t}}common.postachalnyk{{/t}}</option>
+                           <option value="3">{{#t}}doc.officedoc.lid{{/t}}</option>
                         </select>                        
                     </div>
 
 
                     <div class="mb-2">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  me-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
+                        <input type="button" zippy="cancelcust" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary  me-2">
+                        <input zippy="savecust" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                         
                     </div>
                 </div>
@@ -156,12 +156,12 @@
         </form>
 
           <form zippy="accessform">
-            <h3>&nbsp;Права доступу </h3>
-            <small>Якщо не  задано використовуються  права задані в ролях</small><br>
+            <h3>{{#t}}doc.officedoc.nbsp_prava_dostupu{{/t}} </h3>
+            <small>{{#t}}doc.officedoc.iakshcho_ne_zadano_vykorystovuiutsia_pra{{/t}}</small><br>
             <span zippy="accdocname">  </span>
             <div class="row">
               <div class="col-12 col-md-6 col-xl-4">
-                <h5>&nbsp;Право перегляду </h5>
+                <h5>{{#t}}doc.officedoc.nbsp_pravo_perehliadu{{/t}} </h5>
             
             
                 <div class="mb-2 row">
@@ -171,7 +171,7 @@
                        </select>
                     </div>
                      <div class="col-auto">
-                        <input zippy="addaccshow" type="submit" value="Додати" class="btn btn-primary">
+                        <input zippy="addaccshow" type="submit" value="{{#t}}common.dodaty{{/t}}" class="btn btn-primary">
                     </div>
                            
                </div> 
@@ -184,7 +184,7 @@
                   </table>
                </div>           
              
-            <h5>&nbsp;Право редагування </h5>
+            <h5>{{#t}}doc.officedoc.nbsp_pravo_redahuvannia{{/t}} </h5>
                 <div class="mb-2 row">
                      <div class="col-auto">
                        <select class="form-control" zippy="acceditusers">
@@ -192,7 +192,7 @@
                        </select>
                     </div>
                      <div class="col-auto">
-                        <input zippy="addaccedit" type="submit" value="Додати" class="btn btn-primary">
+                        <input zippy="addaccedit" type="submit" value="{{#t}}common.dodaty{{/t}}" class="btn btn-primary">
                     </div>
                            
                </div> 
@@ -201,8 +201,8 @@
                      <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-end" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
                </div>                   
-            <h5>&nbsp;Мають підписати (затвердити) </h5>
-            <small>Документ буде затверджено пісдя підпису всіх з переліку   </small>
+            <h5>{{#t}}doc.officedoc.nbsp_maiut_pidpysaty_zatverdyty{{/t}} </h5>
+            <small>{{#t}}doc.officedoc.dokument_bude_zatverdzheno_pisdia_pidpys{{/t}}   </small>
                 <div class="mb-2 row">
                      <div class="col-auto">
                        <select class="form-control" zippy="accapprusers">
@@ -210,7 +210,7 @@
                        </select>
                     </div>
                      <div class="col-auto">
-                        <input zippy="addaccappr" type="submit" value="Додати" class="btn btn-primary">
+                        <input zippy="addaccappr" type="submit" value="{{#t}}common.dodaty{{/t}}" class="btn btn-primary">
                     </div>
                            
                </div> 
@@ -223,8 +223,8 @@
             <div class="row">
                 <div class="col-12">
                      <div class="mb-2">
-                        <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-secondary  me-2">
-                        <input zippy="saveaccess" type="submit" value="Зберегти" class="btn btn-primary">
+                        <input type="button" zippy="cancelaccess" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary  me-2">
+                        <input zippy="saveaccess" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                     </div>           
                 </div>
             </div>

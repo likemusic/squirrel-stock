@@ -87,14 +87,14 @@ class Project extends \ZCL\DB\Entity
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = "Новий";
+        $list[self::STATUS_NEW] = __('common.novyi');
 
-        $list[self::STATUS_INPROCESS] = "В роботі";
-        $list[self::STATUS_WA] = "На затвердженні";
-        $list[self::STATUS_SHIFTED] = "Відкладений";
-        $list[self::STATUS_WAITPAIMENT] = "Очікує оплату";
-        $list[self::STATUS_REOPENED] = "Перевідкритий";
-        $list[self::STATUS_CLOSED] = "Закритий";
+        $list[self::STATUS_INPROCESS] = __('common.v_roboti');
+        $list[self::STATUS_WA] = __('mod.issue.issue.na_zatverdzhenni');
+        $list[self::STATUS_SHIFTED] = __('common.vidkladenyi');
+        $list[self::STATUS_WAITPAIMENT] = __('common.ochikuie_oplatu');
+        $list[self::STATUS_REOPENED] = __('mod.issue.project.perevidkrytyi');
+        $list[self::STATUS_CLOSED] = __('common.zakrytyi');
         return $list;
     }
 

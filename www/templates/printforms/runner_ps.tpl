@@ -1,7 +1,7 @@
-<text>Замовлення {{document_number}}</text>
+<text>{{#t}}common.zamovlennia_2{{/t}}</text>
  <row>
-  <col   length="12" >Час {{time}}</col>
-  <col   length="10" >Стіл {{table}}</col>
+  <col   length="12" >{{#t}}print.runner_ps.chas{{/t}}</col>
+  <col   length="10" >{{#t}}print.runner_ps.stil{{/t}}</col>
 </row>
 
 {{#detail}}

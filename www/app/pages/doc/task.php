@@ -124,11 +124,11 @@ class Task extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.prodreceipt.zamovlennia'). $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
+                        $this->docform->notes->setText(__('doc.prodreceipt.zamovlennia'). $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
@@ -184,7 +184,7 @@ class Task extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано роботу");
+            $this->setError(__('doc.task.ne_obrano_robotu'));
             return;
         }
         $service = Service::load($id);
@@ -248,7 +248,7 @@ class Task extends \App\Pages\Base
     public function saverowprodOnClick($sender) {
         $id = $this->editdetailprod->editprod->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано продукцію");
+            $this->setError(__('doc.task.ne_obrano_produktsiiu'));
             return;
         }
         $item = Item::load($id);
@@ -259,7 +259,7 @@ class Task extends \App\Pages\Base
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
         if ( doubleval($item->quantity) == 0) {
-            $this->setError("Не вказано кількість");
+            $this->setError(__('doc.task.ne_vkazano_kilkist'));
             return;
         }
 
@@ -281,7 +281,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
 
-            $this->setError("Не обрано виконавця");
+            $this->setError(__('doc.task.ne_obrano_vykonavtsia'));
             return;
         }
         $emp = Employee::load($id);
@@ -311,7 +311,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
 
-            $this->setError("Не обрано обладнання");
+            $this->setError(__('doc.task.ne_obrano_obladnannia'));
             return;
         }
         $eq = Equipment::load($id);
@@ -419,22 +419,22 @@ class Task extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (strlen($this->_doc->document_date) == 0) {
 
-            $this->setError('Введіть дату документа');
+            $this->setError(__('doc.task.vvedit_datu_dokumenta'));
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("Мають бути введені роботи та/або продукція");
+            $this->setError(__('doc.task.maiut_buty_vvedeni_roboty_ta'));
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;
@@ -442,7 +442,7 @@ class Task extends \App\Pages\Base
                 $ktu += doubleval($emp->ktu);
             }
             if ($ktu != 1) {
-                $this->setError("Сумарний КТУ повинен бути 1");
+                $this->setError(__('doc.task.sumarnyi_ktu_povynen_buty_1'));
             }
 
         }

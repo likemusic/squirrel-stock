@@ -193,7 +193,7 @@ class ProdMove extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
         
@@ -206,7 +206,7 @@ class ProdMove extends \App\Pages\Base
                $ids= array_keys($st->itemlist) ; 
                
                if(!in_array($id,$ids)) {
-                    $this->setError( "ТМЦ не в переліку  на  етапі");
+                    $this->setError( __('doc.prodmove.tmts_ne_v_pereliku_na'));
                     return;
                }
             }
@@ -219,7 +219,7 @@ class ProdMove extends \App\Pages\Base
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError(__('common.potribna_partiia_vyrobnyka'));
             return;
         }
 
@@ -227,7 +227,7 @@ class ProdMove extends \App\Pages\Base
             $slist = $item->getSerials( );
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError(__('common.nevirnyi_nomer_serii'));
                 return;
             }
         }
@@ -294,7 +294,7 @@ class ProdMove extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn('Товар не знайдено');
+            $this->setWarn(__('common.tovar_ne_znaideno'));
             $this->addnewitemOnClick(null);
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
@@ -387,30 +387,30 @@ class ProdMove extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено ТМЦ");
+            $this->setError(__('doc.inventory.ne_vvedeno_tmts'));
         }
         if (($this->_doc->headerdata['pp'] > 0) == false) {
-            $this->setError("Не обрано процесс");
+            $this->setError(__('doc.prodmove.ne_obrano_protsess'));
         }
         if (($this->_doc->headerdata['psfrom'] > 0) == false) {
-            $this->setError("Не обрано етапи");
+            $this->setError(__('doc.prodmove.ne_obrano_etapy'));
         }
         if (($this->_doc->headerdata['psto'] > 0) == false) {
-            $this->setError("Не обрано етапи");
+            $this->setError(__('doc.prodmove.ne_obrano_etapy'));
         }
         if ($this->_doc->headerdata['psto'] > 0  &&  $this->_doc->headerdata['psto']==$this->_doc->headerdata['psfrom'] ) {
-            $this->setError("Етапи мають бути різні");
+            $this->setError(__('doc.prodmove.etapy_maiut_buty_rizni'));
         }
 
         return !$this->isError();

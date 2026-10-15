@@ -115,7 +115,7 @@ class RetCustIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПП-000000';
+        return __('doc.retcustissue.pp_000000');
     }
     /**
     * @override

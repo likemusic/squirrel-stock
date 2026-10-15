@@ -4,76 +4,76 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Налаштування з'єднання</h4>
+                <h4>{{#t}}common.nalashtuvannia_ziednannia{{/t}}</h4>
                 <form zippy="cform">
                 
                     <div class="mb-2">
-                        <label for="apitoken">Ключ</label>
+                        <label for="apitoken">{{#t}}common.kliuch{{/t}}</label>
                         <input  zippy="apitoken" class="form-control" required="required"/>
                     </div>
 
           
                  <div class="mb-2">
-                        <label for="salesource">Джерело продаж</label>
+                        <label for="salesource">{{#t}}common.dzherelo_prodazh{{/t}}</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>                    
                      
                     <div class="mb-2">
-                        <label for="defpricetype">Тип ціни </label>
+                        <label for="defpricetype">{{#t}}common.typ_tsiny{{/t}} </label>
 
                         <select class="form-control" zippy="defpricetype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
 
                         </select>
 
                     </div>
        <div class="mb-2">
-                        <label for="defpaytype">Тип оплати </label>
+                        <label for="defpaytype">{{#t}}common.typ_oplaty{{/t}} </label>
 
                         <select class="form-control" zippy="defpaytype">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
 
                         </select>
                         
 
                     </div>                    
                      <div class="mb-2">
-                        <label for="defmf">Каса  </label>
+                        <label for="defmf">{{#t}}common.kasa{{/t}}  </label>
 
                         <select class="form-control" zippy="defmf">
-                            <option value="0">Не вказана</option>
+                            <option value="0">{{#t}}common.ne_vkazana{{/t}}</option>
 
                         </select>
-                         <small class="form-text text-muted">Обов'язкова  якщо тип оплати  - передплата </small>
+                         <small class="form-text text-muted">{{#t}}common.oboviazkova_iakshcho_typ_oplaty_peredpla{{/t}} </small>
   
                     </div>
                       <div class="mb-2">
-                        <label for="defstore">Склад</label>
+                        <label for="defstore">{{#t}}common.sklad{{/t}}</label>
 
                         <select class="form-control" zippy="defstore">
-                            <option value="0">Не вказаний</option>
+                            <option value="0">{{#t}}common.ne_vkazanyi{{/t}}</option>
 
                         </select>
-                        <small class="form-text text-muted">Для  автоматичного резервування товару  </small>
+                        <small class="form-text text-muted">{{#t}}mod.pu.options.dlia_avtomatychnoho_rezervuvannia_tovaru{{/t}}  </small>
 
                     </div>
                     
                  
                      <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="insertcust">Імпортувати контрагентів  </label>
-                        <small class="form-text text-muted">Імпортувати клієнтів з ІМ в довідник контрагентів .</small>
+                        <label class="form-check-label" for="insertcust">{{#t}}common.importuvaty_kontrahentiv{{/t}}  </label>
+                        <small class="form-text text-muted">{{#t}}mod.pu.options.importuvaty_kliientiv_z_im_v{{/t}}</small>
                         <br>
                     </div>
                     <div class="form-check">
                         <input zippy="ssl" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="ssl">Перевірка SSL сертифіката </label>
+                        <label class="form-check-label" for="ssl">{{#t}}common.perevirka_ssl_sertyfikata{{/t}} </label>
 
                     </div>                                  
                     <div class="mb-2">
-                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary me-2"/>
+                        <input type="submit" value="{{#t}}common.zberehty{{/t}}" zippy="save" class="btn   btn-primary me-2"/>
                         
 
 

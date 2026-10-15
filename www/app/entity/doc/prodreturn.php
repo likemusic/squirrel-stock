@@ -87,7 +87,7 @@ class ProdReturn extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПВ-000000';
+        return __('doc.prodreturn.pv_000000');
     }
 
     public function getRelationBased() {

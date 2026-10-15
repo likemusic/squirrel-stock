@@ -1,25 +1,25 @@
 <html>
    <head>
-          <title> Фінансові результати</title>
+          <title> {{#t}}app.account.finansovi_rezultaty{{/t}}</title>
     </head>
     <body>
 
-        <h3> Фінансові результати</h3>
-        <small>Закриття періоду на  рахунок 79</small>
+        <h3> {{#t}}app.account.finansovi_rezultaty{{/t}}</h3>
+        <small>{{#t}}doc.finresult.zakryttia_periodu_na_rakhunok_79{{/t}}</small>
         <form zippy="docform">
             <div class="row">
                 <div class="col-12 col-md-4">
                     <div class="mb-2">
-                        <label for="document_number" >Номер документу</label>
+                        <label for="document_number" >{{#t}}common.nomer_dokumentu{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="mb-2">
-                        <label for="document_date">Дата кінця періоду</label>
+                        <label for="document_date">{{#t}}doc.finresult.data_kintsia_periodu{{/t}}</label>
                         <input class="form-control" type="text" zippy="document_date" required="required"></input>
                     </div>
                     <div class="mb-2">
-                        <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ms-2 ">
-                        &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
+                        <input type="button" value="{{#t}}common.skasuvaty{{/t}}" zippy="backtolist" class="btn btn-secondary  ms-2 ">
+                        &nbsp;<input zippy="execdoc" type="submit" value="{{#t}}common.provesty{{/t}}" class="btn btn-success  ms-2 ">
                     </div>
 
 

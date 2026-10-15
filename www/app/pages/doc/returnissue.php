@@ -39,7 +39,7 @@ class ReturnIssue extends \App\Pages\Base
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('Повернення слід створювати на основі видаткової накладної або чека');
+            $this->setWarn(__('doc.returnissue.povernennia_slid_stvoriuvaty_na_osnovi'));
         }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -118,7 +118,7 @@ class ReturnIssue extends \App\Pages\Base
 
                     if (count($d) > 0) {
 
-                        $this->setError('Вже існує документ Повернення');
+                        $this->setError(__('doc.returnissue.vzhe_isnuie_dokument_povernennia'));
                         App::Redirect("\\App\\Pages\\Register\\DocList");
                         return;
                     }
@@ -166,7 +166,7 @@ class ReturnIssue extends \App\Pages\Base
                     }
                              
                 
-                    $this->docform->notes->setText("Підстава ".$basedoc->document_number);
+                    $this->docform->notes->setText(__('common.pidstava').$basedoc->document_number);
                 }
 
               
@@ -237,7 +237,7 @@ class ReturnIssue extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError(__('common.ne_obrano_tovar'));
             return;
         }
 
@@ -398,7 +398,7 @@ class ReturnIssue extends \App\Pages\Base
 
                         if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
 
-                            throw new \Exception("Для фіскалізації створіть повернення на основі фіскального чека");
+                            throw new \Exception(__('doc.returnissue.dlia_fiskalizatsii_stvorit_povernennia_n'));
                         }
 
                         $this->_doc->headerdata["pos"] = $pos->pos_id;
@@ -424,7 +424,7 @@ class ReturnIssue extends \App\Pages\Base
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                             } else {
 
-                                throw new \Exception("Не повернено фіскальний номер");
+                                throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
                             }
                         }
                     }
@@ -521,7 +521,7 @@ class ReturnIssue extends \App\Pages\Base
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('Внесена сума більше необхідної');
+            $this->setWarn(__('common.vnesena_suma_bilshe_neobkhidnoi'));
         } else {
             $this->goAnkor("tankor");
         }
@@ -533,33 +533,33 @@ class ReturnIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError(__('common.vvedit_nomer_dokumenta'));
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальний номер документа');
+                $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError(__('common.ne_vvedeno_tovar'));
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError(__('common.ne_obrano_sklad'));
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
         $c = $this->docform->customer->getKey();
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError(__('common.iakshcho_u_borh_abo_peredoplata'));
         }
 
 
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError(__('common.iakshcho_vnesena_suma_bilshe_nulia'));
         }
 
 
@@ -580,7 +580,7 @@ class ReturnIssue extends \App\Pages\Base
                         }
                     }
                     if ($ok == false) {
-                        $this->setError("Повернення має відповідати проданим товарам за тією самою ціною");
+                        $this->setError(__('doc.returnissue.povernennia_maie_vidpovidaty_prodanym_to'));
                         break;
                     }
 

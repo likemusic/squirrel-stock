@@ -91,7 +91,7 @@ class TransItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПФ-000000';
+        return __('doc.transitem.pf_000000');
     }
    
     public   function DoAcc() {

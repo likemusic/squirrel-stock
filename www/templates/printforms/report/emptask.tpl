@@ -4,12 +4,12 @@
     <tr>
 
         <td align="center" colspan="3">
-          <b>     Період з {{datefrom}} по {{dateto}}  </b> 
+          <b>     {{#t}}common.period_z_po_2{{/t}}  </b> 
         </td>
       </tr>
       <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Оплата по виробництву
+            {{#t}}print.emptask.oplata_po_vyrobnytstvu{{/t}}
         </td>
     </tr>
         {{#isemp}}  
@@ -49,7 +49,7 @@
   
      <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Виконані роботи
+            {{#t}}print.emptask.vykonani_roboty{{/t}}
         </td>
     </tr> 
      

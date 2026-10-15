@@ -1,6 +1,6 @@
 <html >
   <head>
-      <title> Документи на відправку   </title>
+      <title> {{#t}}mod.vdoc.doclist.dokumenty_na_vidpravku{{/t}}   </title>
 
     </head>
     <body>
@@ -8,12 +8,12 @@
         <div class="row"  id="vapp">
             <div class="col-12   col-xl-10"  >
 
-                <h3>Документи на відправку </h3>
+                <h3>{|#t|}mod.vdoc.doclist.dokumenty_na_vidpravku{|/t|} </h3>
                      
                      <div class="navbar">
                                 <form   >
                                   <div class="row  ">
-                                    <label class="col-form-label col-auto" for="firm"> POS термінал </label>
+                                    <label class="col-form-label col-auto" for="firm"> {|#t|}common.pos_terminal{|/t|} </label>
                                      <div class="col-auto  ">
                                      <select class="form-control  me-2" v-model="posid" id="pos" name="pos" >
                                        <option v-for="p in poses" :value="p.key">
@@ -21,10 +21,10 @@
                                       </option>
                                     </select>
                                     </div>
-                                    <label class="col-form-label col-auto" for="customer"> Контрагент </label>
+                                    <label class="col-form-label col-auto" for="customer"> {|#t|}common.kontrahent{|/t|} </label>
                                      <div class="col-auto  ">
                                      <select v-model="custid" class="form-control  me-2" id="customer" name="customer" >
-                                       <option value="0">Не вказано </option>
+                                       <option value="0">{|#t|}common.ne_vkazano{|/t|} </option>
                                        
                                       <option v-for="c in clist" :value="c.key">
                                           {{ c.value }}
@@ -32,24 +32,24 @@
                                     </select>                                   
                                      </div>
                         
-                                    <label class="col-form-label col-auto" for="doctype"> Тип  документа </label>
+                                    <label class="col-form-label col-auto" for="doctype"> {|#t|}common.typ_dokumenta{|/t|} </label>
                                      <div class="col-auto  ">
                                      <select v-model="doctype" class="form-control me-2" id="doctype"  name="doctype" >
-                                       <option value="GoodsIssue"    >Видаткова  накладна </option>
-                                       <option value="Invoice">Рахунок-фактура </option>
-                                       <option value="ServiceAct">Акт виконаних робіт </option>
+                                       <option value="GoodsIssue"    >{|#t|}doc.goodsissue.vydatkova_nakladna{|/t|} </option>
+                                       <option value="Invoice">{|#t|}doc.invoice.rakhunok_faktura{|/t|} </option>
+                                       <option value="ServiceAct">{|#t|}common.akt_vykonanykh_robit{|/t|} </option>
 
                                     </select>
                                     </div>
                                      <div class="col-auto  ">
-                                    <button v-on:click.prevent="onFilter" class="  btn btn-success " >Вибрати</button>
+                                    <button v-on:click.prevent="onFilter" class="  btn btn-success " >{|#t|}common.vybraty{|/t|}</button>
                                     </div>
                                     </div>
 
                                 </form>
                             
                           </div>
-                              <small>Вибираються тільки документи з контрагентами  у  яких задано ЄДРПОУ</small>
+                              <small>{|#t|}mod.vdoc.doclist.vybyraiutsia_tilky_dokumenty_z_kontrahen{|/t|}</small>
                   
             </div>
             <div class="col-12   col-md-10 col-xl-8"  >
@@ -58,10 +58,10 @@
                 <table class="table  table-sm">
                     <tr>
                         <th style="width:30px"> <input v-model="selall" v-on:change="onSelAll"  name="chlist"  class="seldel" type="checkbox"></th>
-                        <th>Номер</th>
-                        <th>Дата</th>
-                        <th class="text-end">Сума</th>
-                        <th>Контрагент</th>
+                        <th>{|#t|}common.nomer{|/t|}</th>
+                        <th>{|#t|}common.data{|/t|}</th>
+                        <th class="text-end">{|#t|}common.suma{|/t|}</th>
+                        <th>{|#t|}common.kontrahent{|/t|}</th>
 
                     </tr>
                     <tr  v-for="d in docs">
@@ -73,14 +73,14 @@
                     </tr>
                 </table>
                 
-                <a class="btn btn-sm btn-success" v-on:click.prevent="onMark">Позначити  як відправлені</a>
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onMark">{|#t|}mod.vdoc.doclist.poznachyty_iak_vidpravleni{|/t|}</a>
                 <div v-show="showsp1" class="spinner-border spinner-border-sm"></div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Відправити   в Вчасно  </a>
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">{|#t|}mod.vdoc.doclist.vidpravyty_v_vchasno{|/t|}  </a>
                 
 
                                     <input  v-model="kep"   name="kep" class="ms-3" type="checkbox"  >
-                                    <label class="form-check-label ms-sm-2" for="fref">Накласти КЕП</label>
+                                    <label class="form-check-label ms-sm-2" for="fref">{|#t|}mod.vdoc.doclist.naklasty_kep{|/t|}</label>
                                       
                 <div v-show="showsp2" class="spinner-border spinner-border-sm"></div>
                 <div v-html="log" class="mb-4"> </div>

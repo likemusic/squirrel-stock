@@ -243,7 +243,7 @@ class System
                 if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id;
-                    $n->message = "Змініть у профілі пароль за замовчуванням " ;
+                    $n->message = __('app.system.zminit_u_profili_parol_za') ;
                     $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                     $n->save();                 
@@ -252,7 +252,7 @@ class System
                 if(System::useCron() == false){
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id;
-                    $n->message = "Планувальник вимкнено. Деякі  фонові завдання  не  будуть виконуватись " ;
+                    $n->message = __('app.system.planuvalnyk_vymkneno_deiaki_fonovi_zavda') ;
                     $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                     $n->save();                    
@@ -264,7 +264,7 @@ class System
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id;
-                $n->message = "Є непрочитані системні повідомлення " ;
+                $n->message = __('app.system.ie_neprochytani_systemni_povidomlennia') ;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                 $n->save();                 
@@ -284,7 +284,7 @@ class System
             if( $b==1 ){
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id;
-                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальніше</a>" ;
+                $n->message = __('app.system.dostupna_nova_versiia_detalnishe', ['version' => $data['version']]) ;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                 $n->save();              
@@ -310,7 +310,7 @@ class System
         
         $data = @json_decode($response, true);
         if(!is_array($data)) {
-           \App\Helper::logerror("Невірний формат  файлу '{$url}'") ;
+           \App\Helper::logerror(__('app.system.nevirnyi_format_failu', ['url' => $url])) ;
            \App\Helper::logerror($response) ;
            return false;
         }

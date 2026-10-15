@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="9">
-           Форма ведення обліку товарних запасів
+           {{#t}}print.formitemsreport.forma_vedennia_obliku_tovarnykh_zapasiv{{/t}}
         </td>
     </tr>
     <tr style="font-size:larger;  ">
@@ -17,19 +17,19 @@
 
         <th rowspan="2" style="border: solid black 1px">№</th>
 
-        <th rowspan="2" style="border: solid black 1px">Дата внесення запису</th>
-        <th colspan="6" style="border: solid black 1px">Реквізити первинного документа, що підтверджує надходження або вибуття товару </th>
+        <th rowspan="2" style="border: solid black 1px">{{#t}}print.formitemsreport.data_vnesennia_zapysu{{/t}}</th>
+        <th colspan="6" style="border: solid black 1px">{{#t}}print.formitemsreport.rekvizyty_pervynnoho_dokumenta_shcho_pid{{/t}} </th>
 
-        <th rowspan="2"   style="border: solid black 1px">Примітки  </th>
+        <th rowspan="2"   style="border: solid black 1px">{{#t}}print.formitemsreport.prymitky{{/t}}  </th>
         
     </tr>
     <tr> 
-    <th   style="border: solid black 1px">Вид</th>
-    <th   style="border: solid black 1px">Дата</th>
+    <th   style="border: solid black 1px">{{#t}}print.formitemsreport.vyd{{/t}}</th>
+    <th   style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
     <th   style="border: solid black 1px">№</th>
-    <th   style="border: solid black 1px">Постачальник (продавець, виробник) або отримувач товару</th>
-    <th   style="border: solid black 1px">Надходження товару (придбання, повернення товару від покупця, або внутрішнє переміщення)</th>
-    <th   style="border: solid black 1px">Вибуття товару (продаж товарів в безготівковій формі, внутрішнє переміщення, знищення або втрата, повернення товару постачальнику, використання на власні потреби)
+    <th   style="border: solid black 1px">{{#t}}print.formitemsreport.postachalnyk_prodavets_vyrobnyk_abo_otry{{/t}}</th>
+    <th   style="border: solid black 1px">{{#t}}print.formitemsreport.nadkhodzhennia_tovaru_prydbannia_poverne{{/t}}</th>
+    <th   style="border: solid black 1px">{{#t}}print.formitemsreport.vybuttia_tovaru_prodazh_tovariv_v{{/t}}
  
 </th>
     

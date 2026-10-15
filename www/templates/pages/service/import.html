@@ -1,13 +1,13 @@
 <html>
       <head>
-        <title> Імпорт    </title>
+        <title> {{#t}}common.import{{/t}}    </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12   card">
-                <h3>Імпорт номенклатури
+                <h3>{{#t}}service.import.import_nomenklatury{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom" data-bs-content="Імпорт ТМЦ з Excel файлу.
@@ -17,143 +17,142 @@
                        
                 </h3>
          <small><i class="fa fa-exclamation-triangle"></i> 
-         Якщо при імпорті великих файлів виникає помилка 500 або просто порожня сторінка, це означає недостатній об'єм пам'яті .
-          Потрібно або збільшити пам'ять або розбити файл імпорту на менші частини </small>
+         {{#t}}service.import.iakshcho_pry_importi_velykykh_failiv{{/t}} </small>
 
                 <br><br>
                 <form zippy="iform" class="row" enctype="multipart/form-data">
                     <div class="col-4  col-xl-3">
 
                         <div class="mb-2">
-                            <label for="itype">Тип імпорту</label>
+                            <label for="itype">{{#t}}service.import.typ_importu{{/t}}</label>
                             <select zippy="itype" class="form-control  ">
-                                <option value="0">Тільки довідник</option>
-                                <option value="1">З оприходуванням на склад</option>
+                                <option value="0">{{#t}}service.export.tilky_dovidnyk{{/t}}</option>
+                                <option value="1">{{#t}}service.import.z_oprykhoduvanniam_na_sklad{{/t}}</option>
                                 
                             </select>
                         </div>
                         <div class="mb-2">
-                            <label for="icompare">Співставлення при оновленні</label>
+                            <label for="icompare">{{#t}}service.import.spivstavlennia_pry_onovlenni{{/t}}</label>
                             <select zippy="icompare" class="form-control  ">
-                                <option value="0">За артикулем</option>
-                                <option value="1">За найменуванням</option>
-                                <option value="2">За найменуванням та брендом</option>
-                                <option value="3">За артикулем та брендом</option>
+                                <option value="0">{{#t}}service.import.za_artykulem{{/t}}</option>
+                                <option value="1">{{#t}}service.import.za_naimenuvanniam{{/t}}</option>
+                                <option value="2">{{#t}}service.import.za_naimenuvanniam_ta_brendom{{/t}}</option>
+                                <option value="3">{{#t}}service.import.za_artykulem_ta_brendom{{/t}}</option>
                                
                                 
                             </select>
                         </div>
 
                         <div class="mb-2">
-                            <label data-label="store" for="store">Склад</label>
+                            <label data-label="store" for="store">{{#t}}common.sklad{{/t}}</label>
                             <select zippy="store" class="form-control  ">
                             </select>
                         </div>
 
                         <div class="mb-2">
-                            <label for="docdate">Дата документа</label>
+                            <label for="docdate">{{#t}}common.data_dokumenta{{/t}}</label>
                             <input zippy="docdate" type="text" class="form-control  "/>
                         </div>
 
                         <div class="mb-2">
-                            <label for="filename">Файл імпорту</label>
+                            <label for="filename">{{#t}}common.fail_importu{{/t}}</label>
                             <input type="file" zippy="filename" class="form-control  "/>
                         </div>
                         <div class="   mb-2">
-                            <label for="item_type" data-label="item_type">Оприходувати як</label>
+                            <label for="item_type" data-label="item_type">{{#t}}service.import.oprykhoduvaty_iak{{/t}}</label>
                             <select zippy="item_type" class="form-control   ">
-                               <option value="0">Не вказано</option>
+                               <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                               
                             </select>
                         </div>
 
                         <div class="  form-check">
                             <input zippy="passfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="passfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                         </div>
                        
                         <div class="  form-check">
                             <input zippy="noshowprice" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowprice">Не показувати в прайсі</label>
+                            <label class="form-check-label" for="noshowprice">{{#t}}common.ne_pokazuvaty_v_praisi{{/t}}</label>
                         </div>
                         <div class="  form-check">
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowshop">Не показувати в онлайн каталозі </label>
+                            <label class="form-check-label" for="noshowshop">{{#t}}reference.categorylist.ne_pokazuvaty_v_onlain_katalozi{{/t}} </label>
                         </div>
                         
 
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="preview">Попередній перегляд</label>
+                            <label class="form-check-label" for="preview">{{#t}}reference.servicelist.poperednii_perehliad{{/t}}</label>
                         </div>
 
                         <div class="   my-2">
-                            <input class="btn btn-success" type="submit" value="Завантажити"/>
+                            <input class="btn btn-success" type="submit" value="{{#t}}common.zavantazhyty{{/t}}"/>
                         </div>
                     </div>
                     <div class="col-4  col-xl-3">
                         <div class="mb-2">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colname">Найменування</label>
+                            <label  class="col-8 col-form-label" for="colname">{{#t}}common.naimenuvannia{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colname" class="form-control  ">
                             </select>   </div> 
                         </div>
                        <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colshortname">Скорочене найменування</label>
+                            <label  class="col-8 col-form-label" for="colshortname">{{#t}}service.import.skorochene_naimenuvannia{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colshortname" class="form-control  ">
                             </select>   </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colcode">Код, артикул</label>
+                            <label  class="col-8 col-form-label" for="colcode">{{#t}}service.import.kod_artykul{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcode" class="form-control  ">
                             </select>   </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colbarcode">Штрих код</label>
+                            <label  class="col-8 col-form-label" for="colbarcode">{{#t}}common.shtrykh_kod_2{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colbarcode" class="form-control  ">
                             </select>   </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colcat">Категорія</label>
+                            <label  class="col-8 col-form-label" for="colcat">{{#t}}common.katehoriia{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcat" class="form-control  ">                            </select>  
                            </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colbrand">Бренд</label>
+                            <label  class="col-8 col-form-label" for="colbrand">{{#t}}common.brend{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colbrand" class="form-control  ">                                </select>  
                            </div> 
                         </div>
                          <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="colimage">Фото (URL)</label>
+                            <label  class="col-8 col-form-label" for="colimage">{{#t}}service.import.foto_url{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colimage" class="form-control  ">
                                 </select>  
                            </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  data-label="colminqty" for="colminqty">Мін. кіл.</label>
+                            <label class="col-8 col-form-label"  data-label="colminqty" for="colminqty">{{#t}}common.min_kil{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colminqty" class="form-control  ">
                             </select>  
                             </div> 
                         </div>          
                    <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" data-label="colqty" for="colqty">Кількість</label>
+                            <label  class="col-8 col-form-label" data-label="colqty" for="colqty">{{#t}}common.kilkist{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colqty" class="form-control  ">
                             </select>  </div> 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">Облікова ціна</label>
+                            <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">{{#t}}common.oblikova_tsina{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colinprice" class="form-control  ">
                             </select>  
@@ -171,39 +170,39 @@
 
                         </div>
   <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  for="colmsr">Од. виміру</label>
+                            <label class="col-8 col-form-label"  for="colmsr">{{#t}}common.od_vymiru{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colmsr" class="form-control  ">
                             </select>   </div> 
                         </div>
                                                
          <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="coldesc">Опис</label>
+                            <label class="col-8 col-form-label" for="coldesc">{{#t}}common.opys{{/t}}</label>
                             <div class="col-4">
                                 <select   zippy="coldesc" class="form-control  ">
                                 </select>
                             </div>  
                         </div>                        
                        <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  for="colcell">Комірка</label>
+                            <label class="col-8 col-form-label"  for="colcell">{{#t}}common.komirka{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcell" class="form-control  ">
                             </select>   </div> 
                         </div>
                        <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  for="coluktz">УКТЗЕД</label>
+                            <label class="col-8 col-form-label"  for="coluktz">{{#t}}reference.itemlist.uktzed{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="coluktz" class="form-control  ">
                             </select>   </div> 
                         </div>
                        <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  for="colwar">Гарантія</label>
+                            <label class="col-8 col-form-label"  for="colwar">{{#t}}doc.warranty.harantiia{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colwar" class="form-control  ">
                             </select>   </div> 
                         </div>
                       <div class="mb-2 row">
-                            <label class="col-8 col-form-label"  for="colnotes">Примітка</label>
+                            <label class="col-8 col-form-label"  for="colnotes">{{#t}}common.prymitka{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colnotes" class="form-control  ">
                             </select>   </div> 
@@ -246,21 +245,21 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
-                                <th>Код</th>
-                                <th>Категорія</th>
-                                <th>Бренд</th>
-                                <th>Од.</th>
+                                <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                                <th>{{#t}}common.kod{{/t}}</th>
+                                <th>{{#t}}common.katehoriia{{/t}}</th>
+                                <th>{{#t}}common.brend{{/t}}</th>
+                                <th>{{#t}}common.od{{/t}}</th>
                                 {{#isstore}}
-                                <th class="text-end">Кіл.</th>
-                                <th class="text-end">Обл. ціна</th>
+                                <th class="text-end">{{#t}}common.kil{{/t}}</th>
+                                <th class="text-end">{{#t}}common.obl_tsina{{/t}}</th>
                                  {{/isstore}}
-                                <th class="text-end">Мін. кіл.</th>
-                                <th class="text-end">Прод. ціна1</th>
-                                <th class="text-end">Прод. ціна2</th>
-                                <th class="text-end">Прод. ціна3</th>
-                                <th class="text-end">Прод. ціна4</th>
-                                <th class="text-end">Прод. ціна5</th>
+                                <th class="text-end">{{#t}}common.min_kil{{/t}}</th>
+                                <th class="text-end">{{#t}}service.import.prod_tsina1{{/t}}</th>
+                                <th class="text-end">{{#t}}service.import.prod_tsina2{{/t}}</th>
+                                <th class="text-end">{{#t}}service.import.prod_tsina3{{/t}}</th>
+                                <th class="text-end">{{#t}}service.import.prod_tsina4{{/t}}</th>
+                                <th class="text-end">{{#t}}service.import.prod_tsina5{{/t}}</th>
 
                             </tr>
                             {{#list}}
@@ -290,7 +289,7 @@
             </div>
 
             <div class="col-12 col-lg-6  card">
-                <h3>Імпорт прибуткової накладної
+                <h3>{{#t}}service.import.import_prybutkovoi_nakladnoi{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom"  data-bs-content="Імпорт накладної з Excel файлу.
@@ -304,66 +303,66 @@
                     <div class="col-6 col-xl-4">
 
                         <div class="mb-2">
-                            <label for="ncust">Контрагент</label>
-                            <input  placeholder="Почніть вводити..." zippy="ncust" class="form-control  "/>
+                            <label for="ncust">{{#t}}common.kontrahent{{/t}}</label>
+                            <input  placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="ncust" class="form-control  "/>
 
                         </div>
                         <div class="mb-2">
-                            <label data-label="nstore" for="store">Склад</label>
+                            <label data-label="nstore" for="store">{{#t}}common.sklad{{/t}}</label>
                             <select zippy="nstore" class="form-control  ">
                             </select>
                         </div>
 
                         <div class="  mb-2 ">
-                            <label for="nfilename">Файл імпорту</label>
+                            <label for="nfilename">{{#t}}common.fail_importu{{/t}}</label>
                             <input type="file" zippy="nfilename" class="form-control  "/>
                         </div>
                         <div class="  form-check">
                             <input zippy="npassfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="npassfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="npassfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                         </div>
                      
                         <div class="  form-check">
                             <input zippy="npreview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="npreview">Попередній перегляд</label>
+                            <label class="form-check-label" for="npreview">{{#t}}reference.servicelist.poperednii_perehliad{{/t}}</label>
                         </div>
 
                         <div class="mb-2">
-                            <input class="btn btn-success" type="submit" value="Завантажити"/>
+                            <input class="btn btn-success" type="submit" value="{{#t}}common.zavantazhyty{{/t}}"/>
                         </div>
                     </div>
                     <div class="col-6 col-xl-4">
                         <div class="mb-2">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="ncolname">Найменування</label>
+                            <label class="col-8 col-form-label" for="ncolname">{{#t}}common.naimenuvannia{{/t}}</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolname" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="ncolcode">Код, артикул</label>
+                            <label class="col-8 col-form-label" for="ncolcode">{{#t}}service.import.kod_artykul{{/t}}</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolcode" class="form-control  ">
                             </select>   </div>
                         </div>
                         <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="ncolbarcode">Штрих код</label>
+                            <label  class="col-8 col-form-label" for="ncolbarcode">{{#t}}common.shtrykh_kod_2{{/t}}</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolbarcode" class="form-control  ">
                             </select>  </div>
                         </div>
 
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="ncolmsr">Од. виміру</label>
+                            <label class="col-8 col-form-label" for="ncolmsr">{{#t}}common.od_vymiru{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
                             </select>  </div>
                         </div>
                        <div class="mb-2 row">
-                            <label  class="col-8 col-form-label" for="ncolbrand">Бренд</label>
+                            <label  class="col-8 col-form-label" for="ncolbrand">{{#t}}common.brend{{/t}}</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="ncolbrand" class="form-control  ">
                                 </select>  
@@ -371,20 +370,20 @@
                         </div>
   
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="ncoldesc">Опис </label>
+                            <label class="col-8 col-form-label" for="ncoldesc">{{#t}}common.opys{{/t}} </label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncoldesc" class="form-control  ">
                             </select>   </div>
                         </div>
 
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" data-label="ncolqty" for="ncolqty">Кількість</label>
+                            <label class="col-8 col-form-label" data-label="ncolqty" for="ncolqty">{{#t}}common.kilkist{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolqty" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="ncolprice">Вхідна ціна</label>
+                            <label class="col-8 col-form-label" for="ncolprice">{{#t}}service.import.vkhidna_tsina{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolprice" class="form-control  ">
                             </select>  </div>
@@ -400,14 +399,14 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
-                                <th>Код</th>
-                                <th>Штрих код</th>
-                                <th>Бренд</th>
-                                <th>Од.</th>
+                                <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                                <th>{{#t}}common.kod{{/t}}</th>
+                                <th>{{#t}}common.shtrykh_kod_2{{/t}}</th>
+                                <th>{{#t}}common.brend{{/t}}</th>
+                                <th>{{#t}}common.od{{/t}}</th>
                                
-                                <th class="text-end">Кіл.</th>
-                                <th class="text-end">Ціна</th>
+                                <th class="text-end">{{#t}}common.kil{{/t}}</th>
+                                <th class="text-end">{{#t}}common.tsina{{/t}}</th>
 
                             </tr>
                             {{#list}}
@@ -431,7 +430,7 @@
 
 
             <div class="col-12 col-lg-6  card">
-                <h3>Імпорт контрагентів
+                <h3>{{#t}}service.import.import_kontrahentiv{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom"  data-bs-content="Імпорт контрагентів з Excel файлу.
@@ -448,11 +447,11 @@
 
                         </div>
                         <div class="mb-2">
-                            <label for="ctype">Імпортувати як</label>
+                            <label for="ctype">{{#t}}service.import.importuvaty_iak{{/t}}</label>
                             <select zippy="ctype" class="form-control   ">
-                                <option value="0">Не обрано</option>
-                                <option value="1">Покупці</option>
-                                <option value="2">Постачальники</option>
+                                <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
+                                <option value="1">{{#t}}common.pokuptsi{{/t}}</option>
+                                <option value="2">{{#t}}common.postachalnyky{{/t}}</option>
                                 
 
                             </select>
@@ -460,38 +459,38 @@
 
 
                         <div class="mb-2">
-                            <label for="cfilename">Файл імпорту</label>
+                            <label for="cfilename">{{#t}}common.fail_importu{{/t}}</label>
                             <input type="file" zippy="cfilename" class="form-control  "/>
 
                         </div>
                         <div class="  form-check">
                             <input zippy="cpassfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="cpassfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="cpassfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                         </div>
 
                         <div class="  form-check">
                             <input zippy="cpreview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="cpreview">Попередній перегляд</label>
+                            <label class="form-check-label" for="cpreview">{{#t}}reference.servicelist.poperednii_perehliad{{/t}}</label>
                         </div>
 
                         <div class="mb-2">
-                            <input class="btn btn-success" type="submit" value="Завантажити"/>
+                            <input class="btn btn-success" type="submit" value="{{#t}}common.zavantazhyty{{/t}}"/>
                         </div>
 
                     </div>
                     <div class="col-6  col-xl-4">
                         <div class="mb-2">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="colcname">Найменування</label>
+                            <label class="col-8 col-form-label" for="colcname">{{#t}}common.naimenuvannia{{/t}}</label>
                             <div class="col-4">
                               <select style="width:100px;" zippy="colcname" class="form-control  ">
                             </select> </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="colphone">Телефон</label>
+                            <label class="col-8 col-form-label" for="colphone">{{#t}}common.telefon{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colphone" class="form-control  ">
                             </select>  </div>
@@ -503,19 +502,19 @@
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="coledrpou">ЄДРПОУ</label>
+                            <label class="col-8 col-form-label" for="coledrpou">{{#t}}common.iedrpou{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="coledrpou" class="form-control  ">
                             </select>  </div>
                         </div>
                          <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="colcity">Місто</label>
+                            <label class="col-8 col-form-label" for="colcity">{{#t}}common.misto{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colcity" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="coladdress">Адреса</label>
+                            <label class="col-8 col-form-label" for="coladdress">{{#t}}common.adresa_2{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="coladdress" class="form-control  ">
                             </select>  </div>
@@ -531,12 +530,12 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
-                                <th>ЄДРПОУ</th>
-                                <th>Тел.</th>
+                                <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                                <th>{{#t}}common.iedrpou{{/t}}</th>
+                                <th>{{#t}}common.tel_2{{/t}}</th>
                                 <th>E-mail</th>
-                                <th>Місто</th>
-                                <th>Адреса</th>
+                                <th>{{#t}}common.misto{{/t}}</th>
+                                <th>{{#t}}common.adresa_2{{/t}}</th>
 
                             </tr>
                             {{#list2}}
@@ -556,7 +555,7 @@
             </div>
             
            <div class="col-12 col-lg-6  card">
-                <h3>Імпорт замовлення
+                <h3>{{#t}}service.import.import_zamovlennia{{/t}}
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
                        data-bs-placement="bottom"  data-bs-content="Імпорт накладної з Excel файлу.
@@ -570,42 +569,42 @@
                     <div class="col-6">
 
                         <div class="mb-2">
-                            <label for="zcust">Контрагент</label>
-                            <input placeholder="Почніть вводити..." zippy="zcust" class="form-control  "/>
+                            <label for="zcust">{{#t}}common.kontrahent{{/t}}</label>
+                            <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" zippy="zcust" class="form-control  "/>
 
                         </div>
 
                         <div class="mb-2">
-                            <label for="zfilename">Файл імпорту</label>
+                            <label for="zfilename">{{#t}}common.fail_importu{{/t}}</label>
                             <input type="file" zippy="zfilename" class="form-control  "/>
                         </div>
                         <div class="  form-check">
                             <input zippy="zpassfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="zpassfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="zpassfirst">{{#t}}common.propustyty_pershu_stroku{{/t}}</label>
                         </div>
                      
                         <div class="  form-check">
                             <input zippy="zpreview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="zpreview">Попередній перегляд</label>
+                            <label class="form-check-label" for="zpreview">{{#t}}reference.servicelist.poperednii_perehliad{{/t}}</label>
                         </div>
 
                         <div class="mb-2">
-                            <input class="btn btn-success" type="submit" value="Завантажити"/>
+                            <input class="btn btn-success" type="submit" value="{{#t}}common.zavantazhyty{{/t}}"/>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-2">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>{{#t}}common.nomery_kolonok_excel_failu{{/t}}</b> </label>
 
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="zcolname">Найменування</label>
+                            <label class="col-8 col-form-label" for="zcolname">{{#t}}common.naimenuvannia{{/t}}</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="zcolname" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="zcolcode">Код, артикул, штрих-код</label>
+                            <label class="col-8 col-form-label" for="zcolcode">{{#t}}service.import.kod_artykul_shtrykh_kod{{/t}}</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="zcolcode" class="form-control  ">
                             </select>   </div>
@@ -615,13 +614,13 @@
 
 
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" data-label="zcolqty" for="zcolqty">Кількість</label>
+                            <label class="col-8 col-form-label" data-label="zcolqty" for="zcolqty">{{#t}}common.kilkist{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="zcolqty" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="mb-2 row">
-                            <label class="col-8 col-form-label" for="zcolprice">Ціна</label>
+                            <label class="col-8 col-form-label" for="zcolprice">{{#t}}common.tsina{{/t}}</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="zcolprice" class="form-control  ">
                             </select>  </div>
@@ -637,11 +636,11 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
-                                <th>Код</th>
+                                <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                                <th>{{#t}}common.kod{{/t}}</th>
                                
-                                <th class="text-end">Кіл.</th>
-                                <th class="text-end">Ціна</th>
+                                <th class="text-end">{{#t}}common.kil{{/t}}</th>
+                                <th class="text-end">{{#t}}common.tsina{{/t}}</th>
 
                             </tr>
                             {{#list}}

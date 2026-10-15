@@ -60,7 +60,7 @@ class UserProfile extends Base
 
             $this->_customer->save();
               
-            $this->setSuccess('Збережено');
+            $this->setSuccess(__('common.zberezheno'));
 
         }
     }
@@ -72,14 +72,14 @@ class UserProfile extends Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введіть пароль');
+            $this->setError(__('common.vvedit_parol'));
         } else {
             if ($confirm == '') {
-                $this->setError('Підтвердіть пароль');
+                $this->setError(__('common.pidtverdit_parol'));
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('Невірне підтвердження');
+                    $this->setError(__('common.nevirne_pidtverdzhennia'));
                 }
             }
         }

@@ -23,7 +23,7 @@ class MenuList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
             App::RedirectError();
             return  ;
         }
@@ -115,19 +115,19 @@ class MenuList extends \App\Pages\Base
         $title = '';
         switch($item->meta_type) {
             case 1:
-                $title = 'Документ';
+                $title = __('common.dokument');
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = __('common.zvit');
                 break;
             case 3:
-                $title = 'Журнал';
+                $title = __('common.zhurnal');
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = __('common.dovidnyk');
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = __('common.servisna_storinka');
                 break;
         }
 

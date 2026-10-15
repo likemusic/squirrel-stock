@@ -125,16 +125,16 @@ class Document extends \ZCL\DB\Entity
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$this->document_date) {
-            throw new \Exception("Не можна змінювати документ старший " .date('Y-m-d', $da));
+            throw new \Exception(__('doc.document.ne_mozhna_zminiuvaty_dokument_starshyi') .date('Y-m-d', $da));
         }
 
         $fn = intval(mb_substr($this->document_number,0,1) );
         if($fn >0) {
-            throw new \Exception("Номер документу має починатись з букви ");
+            throw new \Exception(__('doc.document.nomer_dokumentu_maie_pochynatys_z'));
         }
 
         if (false == $this->checkUniqueNumber()) {
-            System::setWarnMsg('Не унікальний номер документа');
+            System::setWarnMsg(__('doc.document.ne_unikalnyi_nomer_dokumenta'));
         }
 
         // этот документ уже записан: страница из сессии после «назад» в браузере или повторной отправки формы.
@@ -143,7 +143,7 @@ class Document extends \ZCL\DB\Entity
             $conn = \ZDB\DB::getConnect();
             $number = $conn->GetOne("select document_number from documents where content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
             if (strlen($number ?? '') > 0) {
-                throw new \Exception("Документ вже створено, номер {$number}. Відкрийте його з журналу документів");
+                throw new \Exception(__('doc.document.dokument_vzhe_stvoreno_nomer_vidkryite', ['number' => $number]));
             }
         }
 
@@ -208,7 +208,7 @@ class Document extends \ZCL\DB\Entity
         
         $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
-            \App\Helper::log("Документ " . $this->document_number . " Невірний  контент") ;
+            \App\Helper::log(__('doc.document.dokument') . $this->document_number . __('doc.document.nevirnyi_kontent')) ;
             return;
         }
 
@@ -430,7 +430,7 @@ class Document extends \ZCL\DB\Entity
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$this->document_date) {
-            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
+            return  __('doc.document.ne_mozhna_vidminiaty_dokument_starshyi') .date('Y-m-d', $da);
         }
 
         return "";
@@ -520,7 +520,7 @@ class Document extends \ZCL\DB\Entity
   
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
-            \App\System::setInfoMsg('Очікує затвердження') ;
+            \App\System::setInfoMsg(__('doc.document.ochikuie_zatverdzhennia')) ;
           
             
         } else {
@@ -535,7 +535,7 @@ class Document extends \ZCL\DB\Entity
                     if($onlystate == false) {
                         // повторное проведение удваивает движения (открыли проведённый документ, «назад» в браузере, вторая вкладка)
                         if ($this->isExecuted()) {
-                            throw new \Exception("Документ {$this->document_number} вже проведений. Щоб провести його знову, спочатку скасуйте проведення");
+                            throw new \Exception(__('doc.document.dokument_vzhe_provedenyi_shchob_provesty', ['document_number' => $this->document_number]));
                         }
                         $this->Execute();
                     }
@@ -681,70 +681,70 @@ class Document extends \ZCL\DB\Entity
 
         switch($state) {
             case Document::STATE_NEW:
-                return "Новий";
+                return __('common.novyi');
             case Document::STATE_EDITED:
-                return "Відредагований";
+                return __('doc.document.vidredahovanyi');
             case Document::STATE_CANCELED:
-                return "Скасований";
+                return __('doc.document.skasovanyi');
             case Document::STATE_EXECUTED:
-                return "Проведений";
+                return __('doc.document.provedenyi');
             case Document::STATE_CLOSED:
-                return "Закритий";
+                return __('common.zakrytyi');
             case Document::STATE_APPROVED:
-                return "Затверджений";
+                return __('doc.document.zatverdzhenyi');
             case Document::STATE_DELETED:
-                return "Видалений";
+                return __('doc.document.vydalenyi');
 
             case Document::STATE_WA:
-                return "Очікує затвердження";
+                return __('doc.document.ochikuie_zatverdzhennia');
             case Document::STATE_INSHIPMENT:
-                return "В доставці";
+                return __('doc.document.v_dostavtsi');
             case Document::STATE_FINISHED:
-                return "Виконаний";
+                return __('common.vykonanyi');
             case Document::STATE_DELIVERED:
-                return "Доставлений";
+                return __('common.dostavlenyi');
             case Document::STATE_REFUSED:
-                return "Відхилений";
+                return __('doc.document.vidkhylenyi');
             case Document::STATE_SHIFTED:
-                return "Відкладений";
+                return __('common.vidkladenyi');
             case Document::STATE_FAIL:
-                return "Анульований";
+                return __('doc.document.anulovanyi');
             case Document::STATE_INPROCESS:
-                return "Виконується";
+                return __('common.vykonuietsia');
             case Document::STATE_READYTOSHIP:
-                return "Готовий до відправки";
+                return __('doc.document.hotovyi_do_vidpravky');
             case Document::STATE_WP:
-                return "Очікує оплату";
+                return __('common.ochikuie_oplatu');
             case Document::STATE_PAYED:
-                return "Оплачений";
+                return __('common.oplachenyi');
             case Document::STATE_WAIT:
-                return "Очікує обробки";
+                return __('doc.document.ochikuie_obrobky');
 
             default:
-                return "Невідомий статус";
+                return __('common.nevidomyi_status');
         }
     }
 
     public static function getStateList() {
         $list = array();
-        $list[Document::STATE_NEW] = "Новий";
-        $list[Document::STATE_EDITED] = "Відредагований";
-        $list[Document::STATE_CANCELED] = "Скасований";
-        $list[Document::STATE_EXECUTED] = "Проведений";
-        $list[Document::STATE_CLOSED] = "Закритий";
-        $list[Document::STATE_APPROVED] = "Готовий до виконання";
-        $list[Document::STATE_WA] =       "Очікує затвердження";
-        $list[Document::STATE_INSHIPMENT] = "На доставці";
-        $list[Document::STATE_FINISHED] = "Виконаний";
-        $list[Document::STATE_DELIVERED] = "Доставлений";
-        $list[Document::STATE_REFUSED] = "Відхилений";
-        $list[Document::STATE_SHIFTED] = "Відкладений";
-        $list[Document::STATE_FAIL] = "Анульований";
-        $list[Document::STATE_INPROCESS] = "Виконується";
-        $list[Document::STATE_READYTOSHIP] = "Готовий до відправки";
-        $list[Document::STATE_WP] = "Очікує оплату";
-        $list[Document::STATE_PAYED] = "Оплачений";
-        $list[Document::STATE_WAIT] = "Очікує обробки";
+        $list[Document::STATE_NEW] = __('common.novyi');
+        $list[Document::STATE_EDITED] = __('doc.document.vidredahovanyi');
+        $list[Document::STATE_CANCELED] = __('doc.document.skasovanyi');
+        $list[Document::STATE_EXECUTED] = __('doc.document.provedenyi');
+        $list[Document::STATE_CLOSED] = __('common.zakrytyi');
+        $list[Document::STATE_APPROVED] = __('doc.document.hotovyi_do_vykonannia');
+        $list[Document::STATE_WA] =       __('doc.document.ochikuie_zatverdzhennia');
+        $list[Document::STATE_INSHIPMENT] = __('doc.document.na_dostavtsi');
+        $list[Document::STATE_FINISHED] = __('common.vykonanyi');
+        $list[Document::STATE_DELIVERED] = __('common.dostavlenyi');
+        $list[Document::STATE_REFUSED] = __('doc.document.vidkhylenyi');
+        $list[Document::STATE_SHIFTED] = __('common.vidkladenyi');
+        $list[Document::STATE_FAIL] = __('doc.document.anulovanyi');
+        $list[Document::STATE_INPROCESS] = __('common.vykonuietsia');
+        $list[Document::STATE_READYTOSHIP] = __('doc.document.hotovyi_do_vidpravky');
+        $list[Document::STATE_WP] = __('common.ochikuie_oplatu');
+        $list[Document::STATE_PAYED] = __('common.oplachenyi');
+        $list[Document::STATE_WAIT] = __('doc.document.ochikuie_obrobky');
 
         return $list;
     }
@@ -755,18 +755,18 @@ class Document extends \ZCL\DB\Entity
     */
     public static function getStateListMan() {
         $list = array();
-        $list[Document::STATE_CLOSED] = "Закритий";
-        $list[Document::STATE_INSHIPMENT] = "На доставці";
-        $list[Document::STATE_FINISHED] = "Виконаний";
-        $list[Document::STATE_DELIVERED] = "Доставлений";
-        $list[Document::STATE_EXECUTED] = "Проведений";
+        $list[Document::STATE_CLOSED] = __('common.zakrytyi');
+        $list[Document::STATE_INSHIPMENT] = __('doc.document.na_dostavtsi');
+        $list[Document::STATE_FINISHED] = __('common.vykonanyi');
+        $list[Document::STATE_DELIVERED] = __('common.dostavlenyi');
+        $list[Document::STATE_EXECUTED] = __('doc.document.provedenyi');
 
-        $list[Document::STATE_SHIFTED] = "Відкладений";
-        $list[Document::STATE_FAIL] = "Анульований";
-        $list[Document::STATE_INPROCESS] = "Виконується";
-        $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
-        $list[Document::STATE_WP] = "Очікує оплату";
-        $list[Document::STATE_WAIT] = "Очікує обробки";
+        $list[Document::STATE_SHIFTED] = __('common.vidkladenyi');
+        $list[Document::STATE_FAIL] = __('doc.document.anulovanyi');
+        $list[Document::STATE_INPROCESS] = __('common.vykonuietsia');
+        $list[Document::STATE_READYTOSHIP] = __('doc.document.hotovyi_do_vidpravlennia');
+        $list[Document::STATE_WP] = __('common.ochikuie_oplatu');
+        $list[Document::STATE_WAIT] = __('doc.document.ochikuie_obrobky');
 
         return $list;
     }
@@ -902,7 +902,7 @@ class Document extends \ZCL\DB\Entity
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
 
-            $n->message = "Користувач ".System::getUser()->username." видалив раніше проведений документ " .$this->document_number  ;
+            $n->message = __('doc.document.korystuvach').System::getUser()->username.__('doc.document.vydalyv_ranishe_provedenyi_dokument') .$this->document_number  ;
             $n->save();
         }
     }
@@ -930,7 +930,7 @@ class Document extends \ZCL\DB\Entity
                 $n->user_id = $user_id;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
                 $n->dateshow = time();
-                $n->message = "Ви призначені виконавцем документу {$this->document_number} " ;
+                $n->message = __('doc.document.vy_pryznacheni_vykonavtsem_dokumentu', ['document_number' => $this->document_number]) ;
          
                 $n->save();            
         }
@@ -1092,16 +1092,16 @@ class Document extends \ZCL\DB\Entity
      */
     public static function getDeliveryTypes($np = false) {
         $list = array();
-        $list[self::DEL_SELF] = 'Самовивіз';
-        $list[self::DEL_BOY] = 'Кур`єр';
+        $list[self::DEL_SELF] = __('doc.document.samovyviz');
+        $list[self::DEL_BOY] = __('doc.document.kurier');
         if ($np == true) {
-            $list[self::DEL_NP] = 'Нова пошта';
+            $list[self::DEL_NP] = __('doc.document.nova_poshta');
         }
 
-        $list[self::DEL_UP] = 'Укр. пошта';
+        $list[self::DEL_UP] = __('doc.document.ukr_poshta');
         $list[self::DEL_MEEST] = 'Meest';
         $list[self::DEL_ROZ] = 'Rozetka';
-        $list[self::DEL_SERVICE] = 'Інша служба доставки';
+        $list[self::DEL_SERVICE] = __('doc.document.insha_sluzhba_dostavky');
 
         return $list;
     }
@@ -1156,7 +1156,7 @@ class Document extends \ZCL\DB\Entity
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-                System::setSuccessMsg('E-mail відправлено');
+                System::setSuccessMsg(__('doc.document.e_mail_vidpravleno'));
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
@@ -1319,7 +1319,7 @@ class Document extends \ZCL\DB\Entity
         $url = $url .  $iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
         $url = $url .  $tin."\n\n\n";
-        $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
+        $url = $url .  $this->meta_desc ." ".$number.__('doc.document.vid').  \App\Helper::fd($this->document_date) ."\n\n";
 
         $url = base64_encode($url);
         $url = str_replace("+", "-", $url) ;
@@ -1465,7 +1465,7 @@ class Document extends \ZCL\DB\Entity
         $user_id= intval($conn->GetOne("select vald from stats where  category ={$cat} and keyd = {$document_id} limit 0,1  ") );
         if($user_id > 0) {
             $user= \App\Entity\User::load($user_id) ;
-            \App\System::setWarnMsg("Документ  редагується  користувачем  ".$user->username)  ;
+            \App\System::setWarnMsg(__('doc.document.dokument_redahuietsia_korystuvachem').$user->username)  ;
             return;
         }
        

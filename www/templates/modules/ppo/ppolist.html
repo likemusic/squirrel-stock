@@ -1,6 +1,6 @@
 <html>
   <head>
-      <title> Перегляд об'єктів   </title>
+      <title> {{#t}}mod.ppo.ppolist.perehliad_obiektiv{{/t}}   </title>
 
     </head>
 
@@ -8,35 +8,35 @@
         <div class="row">
             <div class="col-12   col-xl-11" zippy="opan">
 
-                <h3>Перегляд об'єктів</h3>
+                <h3>{{#t}}mod.ppo.ppolist.perehliad_obiektiv{{/t}}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                          <div class="row  ">
-                        <label for="searchcomp">Компанія</label>
+                        <label for="searchcomp">{{#t}}mod.ppo.ppolist.kompaniia{{/t}}</label>
                         <div class="col-auto  ">
                         <select zippy="searchcomp" class="form-control ms-sm-2">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>
                         <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="Оновити">
+                        <input type="submit" class="  btn btn-success  " value="{{#t}}common.onovyty{{/t}}">
                       </div> </div>
                     </form>
 
                 </div>
-                <b>Зареєстровані РРО</b>
+                <b>{{#t}}app.base.zareiestrovani_rro{{/t}}</b>
                 <table class="table table-sm">
                     <tr>
-                        <th>Найменування</th>
+                        <th>{{#t}}common.naimenuvannia{{/t}}</th>
 
-                        <th>Організація</th>
-                        <th>Адреса</th>
-                        <th>ЄДРПОУ</th>
-                        <th>ІПН</th>
-                        <th>Фіск. №</th>
-                        <th>Лок. №</th>
+                        <th>{{#t}}mod.ppo.ppolist.orhanizatsiia{{/t}}</th>
+                        <th>{{#t}}common.adresa_2{{/t}}</th>
+                        <th>{{#t}}common.iedrpou{{/t}}</th>
+                        <th>{{#t}}common.ipn{{/t}}</th>
+                        <th>{{#t}}mod.ppo.ppolist.fisk{{/t}}</th>
+                        <th>{{#t}}mod.ppo.ppolist.lok{{/t}}</th>
 
-                        <th>Ім'я</th>
+                        <th>{{#t}}common.imia{{/t}}</th>
                         <th></th>
 
 
@@ -52,7 +52,7 @@
                         <td zippy="ln"></td>
 
                         <td zippy="rn"></td>
-                        <td><a title="Список  змін" zippy="objdet"><i class="fa fa-eye"></i></a></td>
+                        <td><a title="{{#t}}mod.ppo.ppolist.spysok_zmin{{/t}}" zippy="objdet"><i class="fa fa-eye"></i></a></td>
 
 
                     </tr>
@@ -62,15 +62,15 @@
 
 
             <div class="col-12 col-md-10 col-xl-10" zippy="shpan">
-                <h4>Зміни</h4>
-                <a zippy="backo"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+                <h4>{{#t}}mod.ppo.ppolist.zminy{{/t}}</h4>
+                <a zippy="backo"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.nazad{{/t}}</a>
 
                 <table class="table table-sm">
                     <tr>
-                        <th>Відкрив</th>
-                        <th>Дата</th>
-                        <th>Закрив</th>
-                        <th>Дата</th>
+                        <th>{{#t}}mod.ppo.ppolist.vidkryv{{/t}}</th>
+                        <th>{{#t}}common.data{{/t}}</th>
+                        <th>{{#t}}mod.ppo.ppolist.zakryv{{/t}}</th>
+                        <th>{{#t}}common.data{{/t}}</th>
                         <td></td>
 
                     </tr>
@@ -79,19 +79,19 @@
                         <td zippy="opened"></td>
                         <td zippy="closename"></td>
                         <td zippy="closed"></td>
-                        <td><a title="Перелік документів" zippy="shdet"><i class="fa fa-eye"></i></a></td>
+                        <td><a title="{{#t}}mod.ppo.ppolist.perelik_dokumentiv{{/t}}" zippy="shdet"><i class="fa fa-eye"></i></a></td>
                     </tr>
                 </table>
             </div>
             <div class="col-12 col-md-10 col-xl-10" zippy="docpan">
-                <h4>Документи</h4>
-                <a zippy="backsh"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+                <h4>{{#t}}common.dokumenty{{/t}}</h4>
+                <a zippy="backsh"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.nazad{{/t}}</a>
                 <table class="table table-sm">
                     <tr>
-                        <th>Фіск. №</th>
-                        <th>Локал. №</th>
-                        <th>Документ</th>
-                        <th>Тип</th>
+                        <th>{{#t}}mod.ppo.ppolist.fisk{{/t}}</th>
+                        <th>{{#t}}mod.ppo.ppolist.lokal{{/t}}</th>
+                        <th>{{#t}}common.dokument{{/t}}</th>
+                        <th>{{#t}}common.typ{{/t}}</th>
                         <td></td>
 
                     </tr>
@@ -100,7 +100,7 @@
                         <td zippy="NumLocal"></td>
                         <td zippy="DocClass"></td>
                         <td zippy="CheckDocType"></td>
-                        <td><a title="Перегляд  документу" zippy="docdet"><i class="fa fa-eye"></i></a></td>
+                        <td><a title="{{#t}}mod.ppo.ppolist.perehliad_dokumentu{{/t}}" zippy="docdet"><i class="fa fa-eye"></i></a></td>
                     </tr>
                 </table>
                   <div  zippy="docshow"></div>

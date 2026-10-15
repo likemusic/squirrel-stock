@@ -170,10 +170,10 @@ class SystemLog extends \App\Pages\Base
                $statename =  Document::getStateName($row['docstate']) ;
             }
             if($row['docstate'] == -1) {
-               $statename = 'Оплата'  ;
+               $statename = __('common.oplata')  ;
             }           
             if($row['docstate'] == -2) {
-               $statename = 'Склад'  ;
+               $statename = __('common.sklad')  ;
             }           
             $row['docstate'] = $statename ;
             $row['comm'] = 'Host: '. $row['hostname'] ;

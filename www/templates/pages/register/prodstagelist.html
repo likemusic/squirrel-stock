@@ -1,12 +1,12 @@
 <html>
      <head>
-        <title> Виробничі етапи  </title>
+        <title> {{#t}}register.prodproclist.vyrobnychi_etapy{{/t}}  </title>
   
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
-                <h3>Виробничі етапи</h3>
+                <h3>{{#t}}register.prodproclist.vyrobnychi_etapy{{/t}}</h3>
               </div>
         </div>    
         <div zippy="listpan">
@@ -20,25 +20,25 @@
                          <div class="col-12">
                            <div class="input-group">
 
-                            <label   for="fproc"> Процес </label>
+                            <label   for="fproc"> {{#t}}register.prodstagelist.protses{{/t}} </label>
                              
                                 <select class="form-select  " zippy="fproc">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                 </select>
                              </div>
                              </div>
                          <div class="col-12">
                            <div class="input-group">
-                              <label   for="fparea"> Дільниця </label>
+                              <label   for="fparea"> {{#t}}register.prodstagelist.dilnytsia{{/t}} </label>
                             
                                 <select class="form-select  " zippy="fparea">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                                 </select>
                              </div>
                              </div>
                               <div class="col-12  ">
 
-                               <input type="submit" class="  btn btn-success  " value="ОК">
+                               <input type="submit" class="  btn btn-success  " value="{{#t}}common.ok{{/t}}">
                            </div> 
                            </div>
                         </form>
@@ -53,11 +53,11 @@
                 
                         <tr>
 
-                            <th >Найменування</th>
-                            <th  >Статус</th>
+                            <th >{{#t}}common.naimenuvannia{{/t}}</th>
+                            <th  >{{#t}}common.status{{/t}}</th>
                      
 
-                            <th>Процес</th>
+                            <th>{{#t}}register.prodstagelist.protses{{/t}}</th>
                             
 
                             <th></th>
@@ -79,11 +79,11 @@
 
 
                             <td  >
-                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
                             </td>
                        
                             <td  >
-                                <a zippy="card" title="Тех. карта"><i class="fa fa-wrench"></i></a>
+                                <a zippy="card" title="{{#t}}reference.servicelist.tekh_karta{{/t}}"><i class="fa fa-wrench"></i></a>
                             </td>
 
                         </tr>
@@ -107,9 +107,9 @@
 
         <div zippy="cardpan"  class="row">
             <div   class="col-12 col-md-8 col-xl-6">
-                <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
+                <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.do_spysku{{/t}}</a> 
                 <h5 zippy="stagenamec"></h5>
-                <b>Технологічна карта</b>
+                <b>{{#t}}common.tekhnolohichna_karta{{/t}}</b>
                 <div zippy="carddata" ></div>
             </div>
         </div>
@@ -117,19 +117,19 @@
   
         <div zippy="statuspan"  class="row">
             <div   class="col-12 col-md-8 col-xl-6">
-                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
+                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}common.do_spysku{{/t}}</a> 
                 <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
                     
-                    <a title="Запустити етап" class="btn btn-primary me-2" zippy="btnstart">Запустити</a>
-                    <a title="Призупинити етап" class="btn btn-primary me-2" zippy="btnstop">Призупинити</a>
-                    <a title="Закрити етап" class="btn btn-success me-2" zippy="btnclose">Закрити</a>
+                    <a title="{{#t}}register.prodstagelist.zapustyty_etap{{/t}}" class="btn btn-primary me-2" zippy="btnstart">{{#t}}app.crontab.zapustyty{{/t}}</a>
+                    <a title="{{#t}}register.prodstagelist.pryzupynyty_etap{{/t}}" class="btn btn-primary me-2" zippy="btnstop">{{#t}}register.prodproclist.pryzupynyty{{/t}}</a>
+                    <a title="{{#t}}register.prodstagelist.zakryty_etap{{/t}}" class="btn btn-success me-2" zippy="btnclose">{{#t}}common.zakryty{{/t}}</a>
           
                      &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info me-2" zippy="btntoprod">Списати</a>
-                    <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info me-2" zippy="btnfromprod">Оприбуткувати</a>
-                    <a title="Переміщення між етапами " class="btn btn-info me-2" zippy="btnmove">Переміщення</a>
-                    <a title="Сторонні  послуги " class="btn btn-info me-2" zippy="btnservice">Отримані послуги</a>
+                    <a title="{{#t}}register.prodstagelist.spysaty_u_vyrobnytstvo_syrovynu_ta{{/t}}" class="btn btn-info me-2" zippy="btntoprod">{{#t}}register.prodstagelist.spysaty{{/t}}</a>
+                    <a title="{{#t}}register.prodstagelist.oprybutkuvaty_hotovu_produktsiiu_abo_nap{{/t}}" class="btn btn-info me-2" zippy="btnfromprod">{{#t}}register.prodstagelist.oprybutkuvaty{{/t}}</a>
+                    <a title="{{#t}}doc.prodmove.peremishchennia_mizh_etapamy{{/t}} " class="btn btn-info me-2" zippy="btnmove">{{#t}}doc.ordercust.peremishchennia{{/t}}</a>
+                    <a title="{{#t}}register.prodstagelist.storonni_posluhy{{/t}} " class="btn btn-info me-2" zippy="btnservice">{{#t}}common.otrymani_posluhy{{/t}}</a>
    
 
                 </div>             

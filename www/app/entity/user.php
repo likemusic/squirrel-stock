@@ -15,8 +15,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function init() {
-        $this->userlogin = "Гість";
-        $this->rolename = "Гість";
+        $this->userlogin = __('app.helper.hist');
+        $this->rolename = __('app.helper.hist');
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
@@ -203,7 +203,7 @@ class User extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Не можна  видаляти користувача з документами" : '';
+        return ($cnt > 0) ? __('app.user.ne_mozhna_vydaliaty_korystuvacha_z') : '';
     }
 
     /**

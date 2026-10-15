@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title>  Виробничі процеси </title>
+        <title>  {{#t}}register.prodproclist.vyrobnychi_protsesy{{/t}} </title>
  
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
    
-                <h3>Виробничі процеси</h3>
+                <h3>{{#t}}register.prodproclist.vyrobnychi_protsesy{{/t}}</h3>
               </div>
         </div>
 
@@ -15,12 +15,12 @@
             <div class="col-12 col-md-12 col-xl-10">
                   <div class="row  "  >
                     <div class="col-2  "  >
-                <a  zippy="addnewproc" class="btn btn-primary">Створити</a>    
+                <a  zippy="addnewproc" class="btn btn-primary">{{#t}}common.stvoryty{{/t}}</a>    
                  
                    </div> 
                       <div class="col-2  "  >
                  
-                   <a class="btn btn-success me-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
+                   <a class="btn btn-success me-2"   zippy="options"  ><i class="fa fa-cog"> {{#t}}common.nalashtuvannia{{/t}}</i> </a>
                 
                   </div>  
                 </div>  
@@ -29,12 +29,12 @@
                     <tr>
 
 
-                        <th>Найменування</th>
-                        <th>Замовлення, договір</th>
+                        <th>{{#t}}common.naimenuvannia{{/t}}</th>
+                        <th>{{#t}}register.prodproclist.zamovlennia_dohovir{{/t}}</th>
                       
-                        <th>Статус</th>
-                        <th>Початок</th>
-                        <th>Кінець</th>
+                        <th>{{#t}}common.status{{/t}}</th>
+                        <th>{{#t}}common.pochatok{{/t}}</th>
+                        <th>{{#t}}print.endday.kinets{{/t}}</th>
 
 
                         <th  > </th>
@@ -59,21 +59,21 @@
 
 
                         <td  >
-                          &nbsp;   <a zippy="view" title="Перегляд"><i class="fa fa-eye"></i></a>
+                          &nbsp;   <a zippy="view" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i></a>
                         </td> 
                         <td  >
-                       &nbsp;        <a zippy="prods" title="Готова продукція"><i class="fa fa-gift"></i></a>
+                       &nbsp;        <a zippy="prods" title="{{#t}}common.hotova_produktsiia{{/t}}"><i class="fa fa-gift"></i></a>
                         </td> 
                         <td  >
-                          &nbsp;   <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+                          &nbsp;   <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i></a>
                         </td> <td  >
-                          &nbsp;   <a zippy="stages" title="Виробничі етапи"><i class="fa fa-gavel"></i></a>
+                          &nbsp;   <a zippy="stages" title="{{#t}}register.prodproclist.vyrobnychi_etapy{{/t}}"><i class="fa fa-gavel"></i></a>
                         </td> 
                         <td  >
-                          &nbsp;   <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a>
+                          &nbsp;   <a zippy="copy" title="{{#t}}reference.itemlist.kopiiuvaty{{/t}}"><i class="fa fa-copy"></i></a>
                         </td>
                         <td  >
-                          &nbsp;   <a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a>
+                          &nbsp;   <a zippy="delete" title="{{#t}}common.vydalyty{{/t}}"><i class="fa fa-trash"></i></a>
                         </td>
 
 
@@ -89,21 +89,21 @@
                 <div   class="row">
                     <div   class="col-12  ">
                         <div class="navbar nav justify-content-start">
-                            <a class="btn btn-info" zippy="btnstinprocess">На виконання</a>
+                            <a class="btn btn-info" zippy="btnstinprocess">{{#t}}common.na_vykonannia{{/t}}</a>
                             
-                            <a class="btn btn-warning ms-2" zippy="btnstsuspend">Призупинити</a>
+                            <a class="btn btn-warning ms-2" zippy="btnstsuspend">{{#t}}register.prodproclist.pryzupynyty{{/t}}</a>
                            
-                            <a class="btn btn-danger ms-2" zippy="btnstcancel">Скасувати</a>
+                            <a class="btn btn-danger ms-2" zippy="btnstcancel">{{#t}}common.skasuvaty{{/t}}</a>
                            
-                            <a class="btn btn-success ms-2" zippy="btnstclose">Виконано</a>
+                            <a class="btn btn-success ms-2" zippy="btnstclose">{{#t}}common.vykonano{{/t}}</a>
 
 
                         </div>               
                     </div>
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Виробничі етапи</h5>
+                        <h5>{{#t}}register.prodproclist.vyrobnychi_etapy{{/t}}</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th  >Статус</th><th  >Виробнича дільниця</th></tr>
+                            <tr><th>{{#t}}common.naimenuvannia{{/t}}</th><th  >{{#t}}common.status{{/t}}</th><th  >{{#t}}register.prodproclist.vyrobnycha_dilnytsia{{/t}}</th></tr>
                             {{#stagelist}}
                             <tr   >
                                 <td   >{{stagename}} </td>
@@ -117,9 +117,9 @@
              
                     <div class="w-100"></div>         
                     <div   class="col-12 col-md-6 col-xl-4">
-                        <h5>Готова продукція</h5>
+                        <h5>{{#t}}common.hotova_produktsiia{{/t}}</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th  >Код</th>  <th>Серія, партія</th><th class="text-end">План</th><th class="text-end">Оприходувано</th></tr>
+                            <tr><th>{{#t}}common.naimenuvannia{{/t}}</th><th  >{{#t}}common.kod{{/t}}</th>  <th>{{#t}}register.prodproclist.seriia_partiia{{/t}}</th><th class="text-end">{{#t}}register.prodproclist.plan{{/t}}</th><th class="text-end">{{#t}}register.prodproclist.oprykhoduvano{{/t}}</th></tr>
                             {{#prodready}}
                             <tr><td >{{itemname}} </td><td >{{item_code}} </td><td >{{itemsnumber}} </td><td class="text-end">{{itemplan}} </td><td class="text-end">  {{itemfact}}</td></tr>
                             {{/prodready}}
@@ -127,9 +127,9 @@
                     </div>  
                     <div class="w-100"></div>           
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Матеріали та комплектуючі</h5>
+                        <h5>{{#t}}common.materialy_ta_komplektuiuchi{{/t}}</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th  >Код</th><th class="text-end">План</th><th class="text-end">Списано</th><th class="text-end">Наявність</th></tr>
+                            <tr><th>{{#t}}common.naimenuvannia{{/t}}</th><th  >{{#t}}common.kod{{/t}}</th><th class="text-end">{{#t}}register.prodproclist.plan{{/t}}</th><th class="text-end">{{#t}}register.prodproclist.spysano{{/t}}</th><th class="text-end">{{#t}}doc.prodissue.naiavnist{{/t}}</th></tr>
                             {{#prodstuff}}
                             <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-end">{{itemqtyplan}} </td><td class="text-end">  {{itemqtyfact}}</td><td class="text-end">  {{itemqtystore}}</td></tr>
                             {{/prodstuff}}                     
@@ -137,9 +137,9 @@
                     </div>            
                     <div class="w-100"></div>           
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Роботи</h5>
+                        <h5>{{#t}}common.roboty{{/t}}</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th  >Код</th><th class="text-end">План</th><th class="text-end">Виконано</th>  </tr>
+                            <tr><th>{{#t}}common.naimenuvannia{{/t}}</th><th  >{{#t}}common.kod{{/t}}</th><th class="text-end">{{#t}}register.prodproclist.plan{{/t}}</th><th class="text-end">{{#t}}common.vykonano{{/t}}</th>  </tr>
                             {{#prodservice}}
                             <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-end">{{itemqtyplan}} </td> <td class="text-end">  {{itemqtystore}}</td></tr>
                             {{/prodservice}}                     
@@ -153,24 +153,24 @@
         </div>
 
         <form zippy="editproc"  >
-            <h4>Редагування процесу</h4>
+            <h4>{{#t}}register.prodproclist.redahuvannia_protsesu{{/t}}</h4>
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="editname">Найменування <small class="text-danger">*</small></label>
+                        <label for="editname">{{#t}}common.naimenuvannia{{/t}} <small class="text-danger">*</small></label>
                         <input  required="on"  class="form-control" zippy="editname"/>
                     </div>
                     <div class="mb-2">
-                        <label for="editbasedoc">Замовлення, договір</label>
+                        <label for="editbasedoc">{{#t}}register.prodproclist.zamovlennia_dohovir{{/t}}</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
                 
                     <div class="mb-2">
-                        <label for="editstartdateplan">Початок (план)</label>
+                        <label for="editstartdateplan">{{#t}}register.prodproclist.pochatok_plan{{/t}}</label>
                         <input    class="form-control" zippy="editstartdateplan"/>
                     </div>
                     <div class="mb-2">
-                        <label for="editenddateplan">Кінець (план)</label>
+                        <label for="editenddateplan">{{#t}}register.prodproclist.kinets_plan{{/t}}</label>
                         <input    class="form-control" zippy="editenddateplan"/>
                     </div>        
                   
@@ -178,15 +178,15 @@
                  <div class="col-12 col-md-3 col-xl-2">
                 
                   <div class="mb-2">
-                        <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
+                        <label for="editstore">{{#t}}register.prodproclist.promizhnyi_vyrobnychyi_sklad{{/t}} <small class="text-danger">*</small></label>
                         <select class="form-select" zippy="editstore">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
-                         <small>Бажано створити окремий (можна віртуальний)    </small>
+                         <small>{{#t}}register.prodproclist.bazhano_stvoryty_okremyi_mozhna_virtualn{{/t}}    </small>
                                 
                      </div>   
                    <div class="mb-2">
-                        <label for="editnotes">Примітка</label>
+                        <label for="editnotes">{{#t}}common.prymitka{{/t}}</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
                   </div>                                     
                             
@@ -194,25 +194,25 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">  
-                    <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">
+                    <input zippy="cancel" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary me-2 ">  
+                    <input zippy="save"   type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  ">
                 </div>
             </div>
         </form>           
 
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
-                <h5>Запланована готова продукція</h5>
+                <h5>{{#t}}register.prodproclist.zaplanovana_hotova_produktsiia{{/t}}</h5>
                
                     <form zippy="addprodform"  >
                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
                          <div class="col-12">
                            <div class="input-group">
           
-                        <label   for="additem">Найменування</label>
+                        <label   for="additem">{{#t}}common.naimenuvannia{{/t}}</label>
                          
                         <select   class="form-select me-2" zippy="additem">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
 
                         </select>
                           </div>
@@ -220,7 +220,7 @@
                           <div class="col-12">
                            <div class="input-group">
                         
-                        <label   for="addqty">Кіл.</label>
+                        <label   for="addqty">{{#t}}common.kil{{/t}}</label>
                          
                         <input style="width:60px"  class="form-control qtyprice me-2" zippy="addqty" pattern="[0-9,\.]+"  />
                           </div>
@@ -229,7 +229,7 @@
                         <div class="col-12">
                            <div class="input-group">
                            
-                        <label   for="addsnumber">Серія, партія</label>
+                        <label   for="addsnumber">{{#t}}register.prodproclist.seriia_partiia{{/t}}</label>
                           
                         <input   class="form-control  me-2" zippy="addsnumber"/>
                           </div>
@@ -250,21 +250,21 @@
                         <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <a zippy="cancelprods" class="btn btn-secondary" >Скасувати</a>&nbsp;&nbsp;&nbsp;
-                <a zippy="saveprods"  class="btn  btn-success">Зберегти</a>
+                <a zippy="cancelprods" class="btn btn-secondary" >{{#t}}common.skasuvaty{{/t}}</a>&nbsp;&nbsp;&nbsp;
+                <a zippy="saveprods"  class="btn  btn-success">{{#t}}common.zberehty{{/t}}</a>
             </div>
         </div>
 
         <div class="row" zippy="stagespan" >
             <div class="col-12 col-md-8 col-xl-6">
-                <h5>Виробничі етапи </h5>
-                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
-                <a zippy="addstage"  class="btn  btn-success">Додати</a>
+                <h5>{{#t}}register.prodproclist.vyrobnychi_etapy{{/t}} </h5>
+                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> {{#t}}register.prodproclist.do_spysku_protsesiv{{/t}}</a>  <br>
+                <a zippy="addstage"  class="btn  btn-success">{{#t}}common.dodaty{{/t}}</a>
                 <table class="table table-sm">
                     <tr>
-                       <th>Назва</th>
-                       <th>Статус</th>
-                       <th>Вир. дільниця</th>
+                       <th>{{#t}}common.nazva{{/t}}</th>
+                       <th>{{#t}}common.status{{/t}}</th>
+                       <th>{{#t}}register.prodproclist.vyr_dilnytsia{{/t}}</th>
              
                        <th> </th>
                        <th> </th>
@@ -278,42 +278,42 @@
                         <td zippy="stageareaname"></td>
                  
 
-                        <td><a title="Редагувати" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
-                        <td><a title="ТМЦ і тех. карта " zippy="stageitems"><i class="fa fa-wrench"></i></a></td>
-                        <td><a title="Виконавці " zippy="stageemps"><i class="fa fa-users"></i></a></td>
+                        <td><a title="{{#t}}common.redahuvaty{{/t}}" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
+                        <td><a title="{{#t}}register.prodproclist.tmts_i_tekh_karta{{/t}} " zippy="stageitems"><i class="fa fa-wrench"></i></a></td>
+                        <td><a title="{{#t}}common.vykonavtsi{{/t}} " zippy="stageemps"><i class="fa fa-users"></i></a></td>
 
-                        <td><a title="Видалити" zippy="stagedel"><i class="fa fa-trash"></i></a></td>
+                        <td><a title="{{#t}}common.vydalyty{{/t}}" zippy="stagedel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>               
             </div>
         </div>
 
         <form zippy="editstage"  >
-                <h4>Редагування етапу</h4>
+                <h4>{{#t}}register.prodproclist.redahuvannia_etapu{{/t}}</h4>
  
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
-                        <label for="editstagename">Найменування</label>
+                        <label for="editstagename">{{#t}}common.naimenuvannia{{/t}}</label>
                         <input  required="on"  class="form-control" zippy="editstagename"/>
                     </div>
                     <div class="mb-2">
-                        <label for="editstagearea">Виробнича дільниця  </label>
+                        <label for="editstagearea">{{#t}}register.prodproclist.vyrobnycha_dilnytsia{{/t}}  </label>
                         <select  class="form-select" zippy="editstagearea">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
 
                  
                     <div class="mb-2">
-                        <label for="editstagenotes">Коментар</label>
+                        <label for="editstagenotes">{{#t}}common.komentar{{/t}}</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-secondary  me-2">   
-                    <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  "> 
+                    <input zippy="cancelstage" type="button" value="{{#t}}common.skasuvaty{{/t}}" class="btn btn-secondary  me-2">   
+                    <input zippy="savestage"   type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  "> 
                 </div>
             </div>
         </form> 
@@ -324,7 +324,7 @@
 
             <i zippy="stagename5"></i><br>    
                    
-            <h5>Виготовлювані ТМЦ</h5>
+            <h5>{{#t}}register.prodproclist.vyhotovliuvani_tmts{{/t}}</h5>
             
 
              <form zippy="edititemsform"  >
@@ -335,26 +335,26 @@
                        <div   class="row" >
                        <div   class="col-auto" >
                         <select zippy="edititem" class="form-control select2">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                         </div>  
                          <div   class="col-auto" >
                             <div   class="mb-2 row" >
-                            <label class="ms-2" for="editqty">Кіл.</label>
+                            <label class="ms-2" for="editqty">{{#t}}common.kil{{/t}}</label>
                             <input class="form-control me-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"  style="width: 50px;">
                        
                              </div>  
                          </div>  
                          <div   class="col-auto" >
                             <div   class="mb-2 row" >
-                            <label class="ms-2" for="editcost">Оплата.</label>
+                            <label class="ms-2" for="editcost">{{#t}}register.prodproclist.oplata{{/t}}</label>
                             <input class="form-control me-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="1"  style="width: 75px;">
                        
                              </div>  
                          </div>  
                          <div   class="col-auto" >
                             <div   class="mb-2 row" >
-                            <label class="ms-2" for="editprice">Собівартість</label>
+                            <label class="ms-2" for="editprice">{{#t}}doc.task.sobivartist{{/t}}</label>
                             <input class="form-control me-2" type="text" zippy="editprice" pattern="[0-9\.]+" value="1"  style="width: 75px;">
                        
                              </div>  
@@ -394,16 +394,16 @@
                    <div   class="col-12 col-md-6 " >
                       
                     <div class="mb-2">
-                        <label for="editcard">Технологічна карта</label>
+                        <label for="editcard">{{#t}}common.tekhnolohichna_karta{{/t}}</label>
                         <textarea     class="form-control" zippy="editcard"></textarea>
                     </div>   
                  </div>   
               
                    <div   class="col-12   " >
                        
-                       <a zippy="cancelitems" class="btn btn-secondary ms-4" >Скасувати</a> 
+                       <a zippy="cancelitems" class="btn btn-secondary ms-4" >{{#t}}common.skasuvaty{{/t}}</a> 
                   
-                       <input zippy="saveitems" type="submit" value="Зберегти" class="btn btn-primary">
+                       <input zippy="saveitems" type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary">
                               
                     </div>  
                    </div>  
@@ -415,17 +415,17 @@
                   <i zippy="stagename6"></i><br>    
    
 
-                    <h5><b>Виконавці</b></h5>
+                    <h5><b>{{#t}}common.vykonavtsi{{/t}}</b></h5>
                   
              <form zippy="editempsform"  >
                         
                         <div class="row  ">
                            <div class="col-auto  ">
                         <select zippy="editemp" class="form-control me-2  ">
-                            <option value="0">Не обрано</option>
+                            <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                            </div>
-                        <label  class="col-form-label col-auto"  for="editktu">КТУ</label>
+                        <label  class="col-form-label col-auto"  for="editktu">{{#t}}doc.task.ktu{{/t}}</label>
                           <div class="col-auto  ">
                         <input zippy="editktu" class="form-control qtyprice me-2 " pattern="[0-9,\.]+" style="width:50px" >
                           </div>
@@ -447,25 +447,25 @@
                             </td>
                         </tr>
                     </table>
-                   <a zippy="cancelemps" class="btn btn-secondary ms-4" >Скасувати</a> 
-                   <a zippy="saveemps" class="btn btn-primary ms-4" >Зберегти</a> 
+                   <a zippy="cancelemps" class="btn btn-secondary ms-4" >{{#t}}common.skasuvaty{{/t}}</a> 
+                   <a zippy="saveemps" class="btn btn-primary ms-4" >{{#t}}common.zberehty{{/t}}</a> 
                           
                </div>  
                      
    <div class="col-12  col-md-8 col-xl-6 ">
                 <form zippy="optionsform"  >
-                 <h4>Налаштування     </h4>
+                 <h4>{{#t}}common.nalashtuvannia{{/t}}     </h4>
                    <div class="mb-2">
-                        <label for="editrole">Роль для робітників</label>
+                        <label for="editrole">{{#t}}register.prodproclist.rol_dlia_robitnykiv{{/t}}</label>
                         <select class="form-control" zippy="editrole">
-                            <option value="0">Не вказано</option>
+                            <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                         </select>
-                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                         <small>  {{#t}}register.prodproclist.iakshcho_zadano_vykonavtsiv_na_etap{{/t}}   </small>
                                       
                   </div> 
                  <div class="col-12">
-                    <a zippy="cancelopt"    class="btn btn-secondary  me-2">Скасувати</a>   
-                    <input   type="submit" value="Зберегти" class="btn btn-primary  "> 
+                    <a zippy="cancelopt"    class="btn btn-secondary  me-2">{{#t}}common.skasuvaty{{/t}}</a>   
+                    <input   type="submit" value="{{#t}}common.zberehty{{/t}}" class="btn btn-primary  "> 
                 </div>               
            
                 </form>   

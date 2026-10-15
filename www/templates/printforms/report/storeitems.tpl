@@ -2,17 +2,17 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="{{colspan}}">
-            Стан складів  на  {{date}} 
+            {{#t}}print.storeitems.stan_skladiv_na{{/t}} 
         </td>
     </tr>
  
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Найменування</th>
-        <th style="border: solid black 1px">Артикул</th>
-        <th style="border: solid black 1px">Бренд</th>
-        <th style="border: solid black 1px">Мін. кіл.</th>
+        <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.artykul{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.brend{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.min_kil{{/t}}</th>
         {{#cfnames}}
         <th style="border: solid black 1px">{{value}} </th>
         {{/cfnames}}
@@ -20,7 +20,7 @@
         <th style="border: solid black 1px">{{value}} </th>
         {{/storescol}}
         {{#ver}}
-        <th style="border: solid black 1px" align="right"> Кіл. </th>
+        <th style="border: solid black 1px" align="right"> {{#t}}common.kil{{/t}} </th>
         {{/ver}}
         
     </tr>

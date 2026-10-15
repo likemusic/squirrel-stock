@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Налаштування  </title>
+        <title>  {{#t}}common.nalashtuvannia{{/t}}  </title>
 
     </head>
     <body>
@@ -11,21 +11,21 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h4>Загальні налаштування</h4>
-                        <small>Після зміни налаштувань слід перелогінитись</small>
+                        <h4>{{#t}}app.options.zahalni_nalashtuvannia{{/t}}</h4>
+                        <small>{{#t}}app.admin.pislia_zminy_nalashtuvan_slid_perelohiny{{/t}}</small>
                    
                          
                         <form zippy="common">
                             <div class="mb-2">
-                                <label class="form-label" for="shopname">Назва сайту </label>
+                                <label class="form-label" for="shopname">{{#t}}app.options.nazva_saitu{{/t}} </label>
                                 <input class="form-control" type="text" zippy="shopname">
-                                <small> Назва для логотипу та сторінки логіну. </small>
+                                <small> {{#t}}app.options.nazva_dlia_lohotypu_ta_storinky{{/t}} </small>
                             </div>
 
  
   
                             <div class="mb-2">
-                                <label class="form-label" for="qtydigits">Знаків після крапки в кількості</label>
+                                <label class="form-label" for="qtydigits">{{#t}}app.options.znakiv_pislia_krapky_v_kilkosti{{/t}}</label>
 
                                 <select style="width:175px;" class="form-select" zippy="qtydigits">
                                     <option value="0">0</option>
@@ -35,29 +35,29 @@
                                 </select>
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" for="amdigits">Округлення вартості</label>
+                                <label class="form-label" for="amdigits">{{#t}}app.options.okruhlennia_vartosti{{/t}}</label>
 
                                 <select style="width:175px;" class="form-select" zippy="amdigits">
-                                    <option value="0">Без копійок</option>
-                                    <option value="1">До 1 копійки</option>
+                                    <option value="0">{{#t}}app.options.bez_kopiiok{{/t}}</option>
+                                    <option value="1">{{#t}}app.options.do_1_kopiiky{{/t}}</option>
                                 </select>
                             </div>
                        
                             <div class="form-check">
                                 <input zippy="sell2" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="sell2">Продаж без копійок </label>
+                                <label class="form-check-label" for="sell2">{{#t}}app.options.prodazh_bez_kopiiok{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"    
-                                    title="Формувати продажу без копійок якщо в налаштуваннях  задані копійки "></i>
+                                    title="{{#t}}app.options.formuvaty_prodazhu_bez_kopiiok_iakshcho{{/t}} "></i>
                             </div>                            
                              <div class="form-check">
                                 <input zippy="sellcheck" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="sellcheck">Копійки в  чеку </label>
+                                <label class="form-check-label" for="sellcheck">{{#t}}app.options.kopiiky_v_cheku{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Друкувати дві цифри після  коми в чеках незалежно від налаштувань "></i>
+                                   title="{{#t}}app.options.drukuvaty_dvi_tsyfry_pislia_komy{{/t}} "></i>
                             </div>                            
                            
                             <div class="    mt-2">
-                                <label class="form-label" for="dateformat">Формат дати</label>
+                                <label class="form-label" for="dateformat">{{#t}}app.options.format_daty{{/t}}</label>
 
                                 <select style="width:175px;" class="form-select" zippy="dateformat">
                                     <option value="d.m.Y">dd.mm.yyyy</option>
@@ -71,14 +71,14 @@
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label" for="phonel">Довжина номера телефону</label>
+                                <label class="form-label" for="phonel">{{#t}}app.options.dovzhyna_nomera_telefonu{{/t}}</label>
                                 <select style="width:75px" class="form-select" zippy="phonel">
                                 </select>           
                             </div>
                                         
               
                             <div class="  mt-2 ">  
-                                <label class="form-label" for="ts_start">Початок робочого дня</label>
+                                <label class="form-label" for="ts_start">{{#t}}app.options.pochatok_robochoho_dnia{{/t}}</label>
 
                                 <input style="width:75px;" class="form-control" zippy="ts_start"
                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
@@ -88,7 +88,7 @@
 
                             
                             <div class="mb-2">
-                                <label class="form-label" for="ts_end">Кінець робочого дня</label>
+                                <label class="form-label" for="ts_end">{{#t}}app.options.kinets_robochoho_dnia{{/t}}</label>
 
                                 <input style="width:75px;" class="form-control" zippy="ts_end"
                                        pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
@@ -96,14 +96,14 @@
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" for="ts_break">Перерва, хв.</label>
+                                <label class="form-label" for="ts_break">{{#t}}app.options.pererva_khv{{/t}}</label>
                                 <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="ts_break">
                             </div>
 
 
                             <div class="mb-2">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
+                                <button class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                             </div>
 
                         </form>
@@ -114,9 +114,9 @@
                 
                 <div class="card">
                     <div class="card-body">
-                        <h4>Джерела продаж</h4>
+                        <h4>{{#t}}app.options.dzherela_prodazh{{/t}}</h4>
                         <form zippy="salesourcesform">
-                            <a  zippy="addnewsalesource">Додати</a>
+                            <a  zippy="addnewsalesource">{{#t}}common.dodaty{{/t}}</a>
 
                             <table class="table table-sm">
                                 <tr zippy="salesourceslist">
@@ -124,7 +124,7 @@
                                     <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
                                  </tr>   
                             </table>
-                            <input zippy="salesourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
+                            <input zippy="salesourcesave"  type="submit"  value="{{#t}}common.zberehty{{/t}}" class="btn  btn-success">
 
                         </form>         
                     </div>
@@ -132,27 +132,27 @@
                               
             <div class="card">
                     <div class="card-body">
-                        <h4>Налаштування API</h4>
-                        <small>Налаштування API для доступу до даних з інших систем</small>
-                        <br><small><a target="_blank" href="/api/help"> Опис функцій</a></small>
+                        <h4>{{#t}}app.options.nalashtuvannia_api{{/t}}</h4>
+                        <small>{{#t}}app.options.nalashtuvannia_api_dlia_dostupu_do{{/t}}</small>
+                        <br><small><a target="_blank" href="/api/help"> {{#t}}app.options.opys_funktsii{{/t}}</a></small>
                  
                         <form zippy="api">
 
                             <div class="mb-2">
-                                <label class="form-label" for="atype">Тип авторизації</label>
+                                <label class="form-label" for="atype">{{#t}}app.options.typ_avtoryzatsii{{/t}}</label>
                                 <select class="form-select" zippy="atype">
                                 </select>
                             </div>
                       
                             <div class="mb-2">
-                                <label class="form-label" data-label="aexp" for="aexp">Час життя токену в хв.</label>
+                                <label class="form-label" data-label="aexp" for="aexp">{{#t}}app.options.chas_zhyttia_tokenu_v_khv{{/t}}</label>
                                 <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
 
                             </div>
 
 
                             <div class="mb-2">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
+                                <button class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                             </div>
                         </form>
                     </div>
@@ -164,12 +164,12 @@
                 {{#useval}}
                 <div class="card">
                     <div class="card-body">
-                        <h4>Курси валют </h4>  
+                        <h4>{{#t}}app.options.kursy_valiut{{/t}} </h4>  
                         <form zippy="valform">
-                          <a zippy="valadd">Додати</a>
+                          <a zippy="valadd">{{#t}}common.dodaty{{/t}}</a>
               
                           <table class="table table-sm">
-                             <tr><th>Код</th><th>Назва</th><th>Курс</th><th></th>
+                             <tr><th>{{#t}}common.kod{{/t}}</th><th>{{#t}}common.nazva{{/t}}</th><th>{{#t}}app.options.kurs{{/t}}</th><th></th>
                              <tr zippy="vallist">
                              <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required="on" >  </td>
                              <td><input zippy="valname"   class="form-control"  required="on" >  </td>
@@ -180,16 +180,15 @@
                             </table>                           
                             <div class="form-check">
                                 <input zippy="valprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="valprice">Враховувати курсову різницю
-                                    при продажу </label>
+                                <label class="form-check-label" for="valprice">{{#t}}app.options.vrakhovuvaty_kursovu_riznytsiu_pry_proda{{/t}} </label>
 
                             </div>
 
                             <div class="mb-2">
-                               <a zippy="loadrate">Загрузити курс НБУ</a>
+                               <a zippy="loadrate">{{#t}}app.options.zahruzyty_kurs_nbu{{/t}}</a>
                             </div>
                           <div class="mb-2">
-                                <button zippy="saveval" class="btn btn-success" type="submit">Зберегти</button>
+                                <button zippy="saveval" class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                             </div>
                         </form>
                     </div>
@@ -197,129 +196,128 @@
                 {{/useval}}            
               <div class="card">
                 <div class="card-body">
-                   <h4>Налаштування бізнес-процесів</h4>
+                   <h4>{{#t}}app.options.nalashtuvannia_biznes_protsesiv{{/t}}</h4>
                      
                          <form zippy="business">
                 
                              <div class="mb-2">
-                                <label>Типи відпускних цін</label>
+                                <label>{{#t}}app.options.typy_vidpusknykh_tsin{{/t}}</label>
                                 <input class="form-control" type="text" zippy="price1"  required="on" >
                                 <input class="form-control" type="text" zippy="price2">
                                 <input class="form-control" type="text" zippy="price3">
                                 <input class="form-control" type="text" zippy="price4">
                                 <input class="form-control" type="text" zippy="price5">
-                                <small>Введіть найменування типів цін. Непотрібні поля залиште  порожніми</small>
+                                <small>{{#t}}app.options.vvedit_naimenuvannia_typiv_tsin_nepotrib{{/t}}</small>
 
                             </div>
                               <div class="mb-2">
-                                <label class="form-label" for="defprice">Націнка за замовчуванням, у відсотках</label>
+                                <label class="form-label" for="defprice">{{#t}}app.options.natsinka_za_zamovchuvanniam_u_vidsotkakh{{/t}}</label>
                                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="defprice">
-                                <small>Використовується, якщо не задана ціна в товарі або в категорії
-                                    товару</small>
+                                <small>{{#t}}app.options.vykorystovuietsia_iakshcho_ne_zadana_tsi{{/t}}</small>
                             </div>
                            <div class="mb-2">
-                                <label class="form-label" for="paytypein">Процес оплати по  ПН </label>
+                                <label class="form-label" for="paytypein">{{#t}}app.options.protses_oplaty_po_pn{{/t}} </label>
                                 <select class="form-select" zippy="paytypein"> </select>
-                                <small>Переважна  послідовність  оплати  при  закупівлі</small>
+                                <small>{{#t}}app.options.perevazhna_poslidovnist_oplaty_pry_zakup{{/t}}</small>
 
                             </div>
                            <div class="mb-2">
-                                <label class="form-label" for="paytypeout">Процес оплати по ВН </label>
+                                <label class="form-label" for="paytypeout">{{#t}}app.options.protses_oplaty_po_vn{{/t}} </label>
                                 <select class="form-select" zippy="paytypeout"> </select>
-                                <small>Переважна  послідовність  оплати  при  продажі</small>
+                                <small>{{#t}}app.options.perevazhna_poslidovnist_oplaty_pry_proda{{/t}}</small>
 
                             </div>
                           <div class="mb-2">
-                                <label class="form-label" for="actualdate">Початок актуального періоду</label>
+                                <label class="form-label" for="actualdate">{{#t}}app.options.pochatok_aktualnoho_periodu{{/t}}</label>
                                 <input   class="form-control"   zippy="actualdate">
-                                <small>Дата, раніше якої заборонено виконувати проводки</small>
+                                <small>{{#t}}app.options.data_ranishe_iakoi_zaboroneno_vykonuvaty{{/t}}</small>
 
                             </div> 
                             <div class="mb-2">
-                                <label class="form-label" for="storepart">Склад  комплектуючих і матеріалів  </label>
+                                <label class="form-label" for="storepart">{{#t}}app.options.sklad_komplektuiuchykh_i_materialiv{{/t}}  </label>
                                 <select class="form-select" zippy="storepart"> 
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                                 </select>
-                                <small class="compact">Для автосписання в комплектах. Якщо не вказано береться  склад  з документу.</small>
+                                <small class="compact">{{#t}}app.options.dlia_avtospysannia_v_komplektakh_iakshch{{/t}}</small>
 
                             </div>                    
                            <div class="mb-2">
-                                <label class="form-label" for="usesnumber">Облік ТМЦ за серіями  </label>
+                                <label class="form-label" for="usesnumber">{{#t}}app.options.oblik_tmts_za_seriiamy{{/t}}  </label>
                                 <select class="form-select" zippy="usesnumber"> 
-                                    <option value="0">Не використовується</option>
+                                    <option value="0">{{#t}}common.ne_vykorystovuietsia{{/t}}</option>
                                 </select>
-                                <small>Має бути  встановлено прапорець в  довіднику  ТМЦ </small>
+                                <small>{{#t}}app.options.maie_buty_vstanovleno_praporets_v{{/t}} </small>
 
                             </div>
                           
                         
                              <div class="mb-2">
-                                <label  class="form-label"  for="deliverytype">Доставка (в закупці) за замовчанням</label>
+                                <label  class="form-label"  for="deliverytype">{{#t}}app.options.dostavka_v_zakuptsi_za_zamovchanniam{{/t}}</label>
                                  <select class="form-select" zippy="deliverytype">
-                                    <option value="1">Віднести до загальних витрат</i> </option>
-                                    <option value="2">Розподілити на собівартість</i> </option>
-                                    <option value="3">Компенсувати постачальнику</option>
-                                    <option value="4">Оплата сторонній службі </option>
+                                    <option value="1">{{#t}}app.options.vidnesty_do_zahalnykh_vytrat{{/t}}</i> </option>
+                                    <option value="2">{{#t}}app.options.rozpodilyty_na_sobivartist{{/t}}</i> </option>
+                                    <option value="3">{{#t}}app.options.kompensuvaty_postachalnyku{{/t}}</option>
+                                    <option value="4">{{#t}}app.options.oplata_storonnii_sluzhbi{{/t}} </option>
                                 </select>
                             </div>  
                             <div class="form-check">    
                                 <input zippy="usescanner" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usescanner">Підтримка сканера штрих       кодів </label>
+                                <label class="form-check-label" for="usescanner">{{#t}}app.options.pidtrymka_skanera_shtrykh_kodiv{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Використання сканера штрих кодів для додавання ТМЦ в документах "></i>
+                                   title="{{#t}}app.options.vykorystannia_skanera_shtrykh_kodiv_dlia{{/t}} "></i>
                             </div>                                      
                             <div class="form-check">    
                                 <input zippy="usescannermob" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usescannermob">Підтримка камери телефону для сканування  </label>
+                                <label class="form-check-label" for="usescannermob">{{#t}}app.options.pidtrymka_kamery_telefonu_dlia_skanuvann{{/t}}  </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Якщо включена  опція вище "></i>
+                                   title="{{#t}}app.options.iakshcho_vkliuchena_optsiia_vyshche{{/t}} "></i>
                             </div>                                      
                              <div class="form-check">    
                                 <input zippy="usescale" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usescale">Підтримка   електронних ваг </label>
-                                <a target="_blank" href="https://zippy.com.ua/ext#id17"><i class="fa fa-info-circle  "  title="Опис"></i></a>
+                                <label class="form-check-label" for="usescale">{{#t}}app.options.pidtrymka_elektronnykh_vah{{/t}} </label>
+                                <a target="_blank" href="https://zippy.com.ua/ext#id17"><i class="fa fa-info-circle  "  title="{{#t}}common.opys{{/t}}"></i></a>
                             </div>                                      
                              <div class="form-check">
                                 <input zippy="storeemp" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="storeemp">Облік ТМЦ в  розрізі  співробітника</label>
+                                <label class="form-check-label" for="storeemp">{{#t}}app.options.oblik_tmts_v_rozrizi_spivrobitnyka{{/t}}</label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Облік ТМЦ в  розрізі  склад+співробітник (матеріально-відповідальна особа)"></i>
+                                   title="{{#t}}app.options.oblik_tmts_v_rozrizi_sklad{{/t}}"></i>
                             </div>
                       
                        
                             <div class="form-check">
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="allowminus">Дозволити списання ТМЦ в   мінус </label>
+                                <label class="form-check-label" for="allowminus">{{#t}}app.options.dozvolyty_spysannia_tmts_v_minus{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Дозвіл списувати  кількість більшу наявної.  Може привести до неточного  обліку ТМЦ.   "></i>
+                                   title=" {{#t}}app.options.dozvil_spysuvaty_kilkist_bilshu_naiavnoi{{/t}}   "></i>
                             </div>
                             <div class="form-check">
                                 <input zippy="allowminusmf" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="allowminusmf">Дозволити списання коштів в   мінус </label>
+                                <label class="form-check-label" for="allowminusmf">{{#t}}app.options.dozvolyty_spysannia_koshtiv_v_minus{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Дозвіл списувати суму  більшу ніж є на  рахунку.  "></i>
+                                   title=" {{#t}}app.options.dozvil_spysuvaty_sumu_bilshu_nizh{{/t}}  "></i>
                             </div>
                             <div class="form-check">
                                 <input zippy="noallowfiz" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="noallowfiz">Не дозволяти накладні без контрагента </label>
+                                <label class="form-check-label" for="noallowfiz">{{#t}}app.options.ne_dozvoliaty_nakladni_bez_kontrahenta{{/t}} </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Покупець обов'язково має бути зазначений та занесений у довідник "></i>
+                                   title=" {{#t}}app.options.pokupets_oboviazkovo_maie_buty_zaznachen{{/t}} "></i>
                             </div>
 
                             <div class="form-check">
                                 <input zippy="useval" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="useval">Валюта в закупівлі</label>
+                                <label class="form-check-label" for="useval">{{#t}}app.options.valiuta_v_zakupivli{{/t}}</label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Можливість вводити накладну в валюті та перерахунку курсової різниці при продажі.  "></i>
+                                   title=" {{#t}}app.options.mozhlyvist_vvodyty_nakladnu_v_valiuti{{/t}}  "></i>
                             </div>
                        
                               {{#fiscal}} 
                             <div class="form-check">
                                 <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди на фіскальних чеках</label>
+                                <label class="form-check-label" for="printoutqrcode">{{#t}}app.options.drukuvaty_qr_kody_na_fiskalnykh{{/t}}</label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Дозволяє за допомогою сканера QR кода знайти документ на сайті податкової "></i>
+                                   title="{{#t}}app.options.dozvoliaie_za_dopomohoiu_skanera_qr{{/t}} "></i>
                             </div>
                                {{/fiscal}} 
                             
@@ -328,15 +326,14 @@
                             
                                                                                         
                                <div class="mb-2">
-                                <label class="form-label" for="checkslogan">Фраза в кінці чеку</label>
+                                <label class="form-label" for="checkslogan">{{#t}}app.options.fraza_v_kintsi_cheku{{/t}}</label>
                                 <textarea   class="form-control"   zippy="checkslogan"></textarea>
-                                <small  class="compact">Наприклад, 'Дякуємо за довіру до нас!'. Кожен рядок - окрема фраза. 
-                                 Якщо більш ніж одна - буде вибиратись випадково.</small>
+                                <small  class="compact">{{#t}}app.options.napryklad_diakuiemo_za_doviru_do{{/t}}</small>
 
                             </div>                            
                                  
                            <div class="mb-2">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
+                                <button class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                            </div>
 
                         </form>           
@@ -352,37 +349,37 @@
        
                 <div class="card">
                     <div class="card-body">
-                        <h4>Параметри для етикеток і цінників</h4>
-                      <small>  <a href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-link"></i> Налаштування  принтера</a> </small>
+                        <h4>{{#t}}app.options.parametry_dlia_etyketok_i_tsinnykiv{{/t}}</h4>
+                      <small>  <a href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-link"></i> {{#t}}app.options.nalashtuvannia_pryntera{{/t}}</a> </small>
                        <details>
-                            <summary>Перелік тегів шаблону</summary>
-                            <small>Файл шаблону етикеток /templates/printforms/item_tag.tpl. (item_tag_ps.tpl для  принт сервера)
-                            <br>Детально  про  роботу  з  принтерами  <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a></small>
+                            <summary>{{#t}}app.options.perelik_tehiv_shablonu{{/t}}</summary>
+                            <small>{{#t}}app.options.fail_shablonu_etyketok_templates_printfo{{/t}}
+                            <br>{{#t}}app.options.detalno_pro_robotu_z_prynteramy{{/t}}  <a href="https://zippy.com.ua/ext#id10" target="_blank">{{#t}}common.tut{{/t}}</a></small>
                             <table class="ctable">
-                              <tr><td><b>name</b></td><td>Назва ТМЦ</td></tr>
-                              <tr><td><b>name2</b></td><td>Якщо перенос на  другу строку (для режиму label)</td></tr>
-                              <tr><td><b>price</b></td><td>Ціна</td></tr>
-                              <tr><td><b>country</b></td><td>Країна-виробник</td></tr>
-                              <tr><td><b>garterm</b></td><td>Гарантійний термін</td></tr>
-                              <tr><td><b>brand</b></td><td>Бренд</td></tr>
-                              <tr><td><b>notes</b></td><td>Примітка</td></tr>
-                              <tr><td><b>weight</b></td><td>Вага (для вагового ТМЦ)</td></tr>
-                              <tr><td><b>cf_"код поля"</b></td><td>Значення кастомних  полів </td></tr>
+                              <tr><td><b>name</b></td><td>{{#t}}app.options.nazva_tmts{{/t}}</td></tr>
+                              <tr><td><b>name2</b></td><td>{{#t}}app.options.iakshcho_perenos_na_druhu_stroku{{/t}}</td></tr>
+                              <tr><td><b>price</b></td><td>{{#t}}common.tsina{{/t}}</td></tr>
+                              <tr><td><b>country</b></td><td>{{#t}}app.options.kraina_vyrobnyk{{/t}}</td></tr>
+                              <tr><td><b>garterm</b></td><td>{{#t}}app.options.harantiinyi_termin{{/t}}</td></tr>
+                              <tr><td><b>brand</b></td><td>{{#t}}common.brend{{/t}}</td></tr>
+                              <tr><td><b>notes</b></td><td>{{#t}}common.prymitka{{/t}}</td></tr>
+                              <tr><td><b>weight</b></td><td>{{#t}}app.options.vaha_dlia_vahovoho_tmts{{/t}}</td></tr>
+                              <tr><td><b>{{#t}}app.options.cf_kod_polia{{/t}}</b></td><td>{{#t}}app.options.znachennia_kastomnykh_poliv{{/t}} </td></tr>
                               
-                              <tr><td colspan="2" align="center">Управляючі теги</td></tr>
-                              <tr><td><b>isprice</b></td><td>Друкувати ціну</td></tr>
-                              <tr><td><b>isarticle</b></td><td>Друкувати артикул</td></tr>
-                              <tr><td><b>isbarcode</b></td><td>Друкувати штрих-код</td></tr>
-                              <tr><td><b>isqrcode</b></td><td>Друкувати QR код</td></tr>
-                              <tr><td><b>isweight</b></td><td>Друкувати вагу</td></tr>
-                              <tr><td colspan="2" align="center">Для  системного  принтера</td></tr>
-                              <tr><td><b>qrcodeattr</b></td><td>Вставляється  в  тег img</td></tr>
-                              <tr><td><b>barcodeattr</b></td><td>Вставляється  в  тег img</td></tr>
-                              <tr><td><b>barcodewide</b></td><td>Напис під штрих-кодом </td></tr>
-                              <tr><td colspan="2" align="center">Для ESCPOS принтера (принт-сервера)</td></tr>
-                              <tr><td><b>qrcode</b></td><td>Текст для  QR коду</td></tr>                              
-                              <tr><td><b>barcode</b></td><td>Текст для штрих коду</td></tr>                              
-                              <tr><td><b>docnumber</b></td><td>Номер документу</td></tr>                              
+                              <tr><td colspan="2" align="center">{{#t}}app.options.upravliaiuchi_tehy{{/t}}</td></tr>
+                              <tr><td><b>isprice</b></td><td>{{#t}}app.options.drukuvaty_tsinu{{/t}}</td></tr>
+                              <tr><td><b>isarticle</b></td><td>{{#t}}app.options.drukuvaty_artykul{{/t}}</td></tr>
+                              <tr><td><b>isbarcode</b></td><td>{{#t}}app.options.drukuvaty_shtrykh_kod{{/t}}</td></tr>
+                              <tr><td><b>isqrcode</b></td><td>{{#t}}app.options.drukuvaty_qr_kod{{/t}}</td></tr>
+                              <tr><td><b>isweight</b></td><td>{{#t}}app.options.drukuvaty_vahu{{/t}}</td></tr>
+                              <tr><td colspan="2" align="center">{{#t}}app.options.dlia_systemnoho_pryntera{{/t}}</td></tr>
+                              <tr><td><b>qrcodeattr</b></td><td>{{#t}}app.options.vstavliaietsia_v_teh_img{{/t}}</td></tr>
+                              <tr><td><b>barcodeattr</b></td><td>{{#t}}app.options.vstavliaietsia_v_teh_img{{/t}}</td></tr>
+                              <tr><td><b>barcodewide</b></td><td>{{#t}}app.options.napys_pid_shtrykh_kodom{{/t}} </td></tr>
+                              <tr><td colspan="2" align="center">{{#t}}app.options.dlia_escpos_pryntera_prynt_servera{{/t}}</td></tr>
+                              <tr><td><b>qrcode</b></td><td>{{#t}}app.options.tekst_dlia_qr_kodu{{/t}}</td></tr>                              
+                              <tr><td><b>barcode</b></td><td>{{#t}}app.options.tekst_dlia_shtrykh_kodu{{/t}}</td></tr>                              
+                              <tr><td><b>docnumber</b></td><td>{{#t}}common.nomer_dokumentu{{/t}}</td></tr>                              
                             </table>
                           </details>
                                           
@@ -391,40 +388,40 @@
     
                          
                             <div class="mb-2">
-                                <label class="form-label" for="pmaxname">Максимальна довжина назви</label>
+                                <label class="form-label" for="pmaxname">{{#t}}app.options.maksymalna_dovzhyna_nazvy{{/t}}</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
-                                <small>Довжина короткої назви в довіднику ТМЦ</small>
+                                <small>{{#t}}app.options.dovzhyna_korotkoi_nazvy_v_dovidnyku{{/t}}</small>
                             </div>                            
                             <div class="mb-2">
-                                <label class="form-label" for="pricetype">Тип ціни</label>
+                                <label class="form-label" for="pricetype">{{#t}}common.typ_tsiny{{/t}}</label>
                                 <select class="form-select" zippy="pricetype">
                                 </select>
                             </div>
                              <div class="form-check">
                                 <input zippy="pcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="pcode">Друкувати артикул</label>
+                                <label class="form-check-label" for="pcode">{{#t}}app.options.drukuvaty_artykul{{/t}}</label>
                             </div>
                             <div class="form-check">
                                 <input zippy="pprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="pprice">Друкувати ціну</label>
+                                <label class="form-check-label" for="pprice">{{#t}}app.options.drukuvaty_tsinu{{/t}}</label>
                             </div>   
                              <div class="form-check">
                                 <input zippy="pqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="pqrcode">Друкувати QR код</label>
+                                <label class="form-check-label" for="pqrcode">{{#t}}app.options.drukuvaty_qr_kod{{/t}}</label>
                             </div>                                           
                             <div class="form-check">
                                 <input zippy="pbarcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
+                                <label class="form-check-label" for="pbarcode">{{#t}}app.options.drukuvaty_shtrykh_kod_2{{/t}}</label>
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" for="barcodetype">Тип коду</label>
+                                <label class="form-label" for="barcodetype">{{#t}}app.options.typ_kodu{{/t}}</label>
                                 <select class="form-select" zippy="barcodetype">
                                 </select>
                             </div>
                          
                    
                             <div class="mb-2">
-                                <input zippy="savep" class="btn btn-success" type="submit" value="Зберегти">
+                                <input zippy="savep" class="btn btn-success" type="submit" value="{{#t}}common.zberehty{{/t}}">
                             </div>
                         </form>
                     </div>
@@ -434,13 +431,13 @@
              
                 <div class="card">
                        <div class="card-body">
-                        <h4>Налаштування SMS сервісу    </h4>
+                        <h4>{{#t}}app.options.nalashtuvannia_sms_servisu{{/t}}    </h4>
                         <form zippy="sms">    
                            
                             <div class="mb-2">
-                                <label class="form-label" for="smstype">Сервіс</label>
+                                <label class="form-label" for="smstype">{{#t}}app.menulist.servis{{/t}}</label>
                                 <select class="form-select" zippy="smstype">
-                                    <option value="0">Не використовується</option>
+                                    <option value="0">{{#t}}common.ne_vykorystovuietsia{{/t}}</option>
                                 </select>
                                 <span data-label="smssemytoken" ><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
                                 <span data-label="smscluban" ><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
@@ -448,7 +445,7 @@
                             
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smssemytoken" for="smssemytoken">Токен</label>
+                                <label class="form-label" data-label="smssemytoken" for="smssemytoken">{{#t}}app.options.token{{/t}}</label>
                                 <input zippy="smssemytoken"   class="form-control">
 
                             </div>
@@ -458,96 +455,92 @@
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="flysmslogin" for="flysmslogin">Логін</label>
+                                <label class="form-label" data-label="flysmslogin" for="flysmslogin">{{#t}}common.lohin{{/t}}</label>
                                 <input zippy="flysmslogin"   class="form-control">
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="flysmspass" for="flysmspass">Пароль</label>
+                                <label class="form-label" data-label="flysmspass" for="flysmspass">{{#t}}common.parol{{/t}}</label>
                                 <input zippy="flysmspass"   class="form-control"  >
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="flysmsan" for="flysmsan">Альфа ім'я</label>
+                                <label class="form-label" data-label="flysmsan" for="flysmsan">{{#t}}app.options.alfa_imia{{/t}}</label>
                                 <input zippy="flysmsan"   class="form-control"  >
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smscluban" for="smscluban">Альфа ім'я (sms)</label>
+                                <label class="form-label" data-label="smscluban" for="smscluban">{{#t}}app.options.alfa_imia_sms{{/t}}</label>
                                 <input zippy="smscluban"   class="form-control">
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smsclubtoken" for="smsclubtoken">Токен (sms)</label>
+                                <label class="form-label" data-label="smsclubtoken" for="smsclubtoken">{{#t}}app.options.token_sms{{/t}}</label>
                                 <input zippy="smsclubtoken"   class="form-control">
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smsclublogin" for="smsclublogin">Логін (Viber)</label>
+                                <label class="form-label" data-label="smsclublogin" for="smsclublogin">{{#t}}app.options.lohin_viber{{/t}}</label>
                                 <input zippy="smsclublogin"   class="form-control">
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smsclubpass" for="smsclubpass">Пароль (Viber)</label>
+                                <label class="form-label" data-label="smsclubpass" for="smsclubpass">{{#t}}app.options.parol_viber{{/t}}</label>
                                 <input zippy="smsclubpass"   class="form-control">
 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label" data-label="smsclubvan" for="smsclubvan">Альфа ім'я (Viber)</label>
+                                <label class="form-label" data-label="smsclubvan" for="smsclubvan">{{#t}}app.options.alfa_imia_viber{{/t}}</label>
                                 <input zippy="smsclubvan"   class="form-control">
              
                             </div>
 
                              <div class="mb-2">
-                                <label class="form-label" for="smscustlang">Мова скрипту</label>
+                                <label class="form-label" for="smscustlang">{{#t}}app.options.mova_skryptu{{/t}}</label>
                                 <select class="form-select" zippy="smscustlang">
                           
                                 </select>
-                                  <small data-label="smscustlang">JS не підходить для відправки в  фоновому  режимі, наприклад з планувальника</small>
+                                  <small data-label="smscustlang">{{#t}}app.options.js_ne_pidkhodyt_dlia_vidpravky{{/t}}</small>
                             </div>
                               <div class="mb-2">
-                                <label class="form-label" for="smscustscript">Код скрипту</label>
+                                <label class="form-label" for="smscustscript">{{#t}}app.options.kod_skryptu{{/t}}</label>
                                 <textarea style="height:400px" class="form-control" zippy="smscustscript">
                           
                                 </textarea>
                                
                                  <small data-label="smscustscript" >
                                    <details >
-                        <summary  >Опис</summary>
+                        <summary  >{{#t}}common.opys{{/t}}</summary>
                                    <b>JS</b><br>
-                                   Скрипт, що виконує  запит  до  вибраного  SMS сервісу, має реалізувати 
-                                   тіло вбудованої функції яка буде викликатись системою з двома  строковими параметрами: phone i sms. 
-                                   Третій параметр - функція callback що приймає  строковий параметр. В  callback можна передати  строку помилки, якщо така  виникне.
-                                   Якщо помилок  нема  callback викликається  з  порожньою строкою.
+                                   {{#t}}app.options.skrypt_shcho_vykonuie_zapyt_do{{/t}}
                                    <br>  <b>PHP</b><br>
-                                   Для PHP скрипту на  вході автоматично  створяться  змінні $phone i $sms з даними. 
-                                   Скрипт  має повернути пусту  строку  або  текст  помилки, якщо така  виникла 
-                                   <br><br>Технічно під виглядом  SMS  відправки  може бути реалізований будь який  сервіс  повідомлень що має  відповідний API
+                                   {{#t}}app.options.dlia_php_skryptu_na_vkhodi{{/t}} 
+                                   <br><br>{{#t}}app.options.tekhnichno_pid_vyhliadom_sms_vidpravky{{/t}}
                                  </details>
                                  </small>     
                                  
                             </div>
                                
                             <div class="mb-2">
-                                <button zippy="smssubmit" class="btn btn-success" type="submit">Зберегти</button>
+                                <button zippy="smssubmit" class="btn btn-success" type="submit">{{#t}}common.zberehty{{/t}}</button>
                             </div>
                             <div class="mb-2">
-                                <span data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> Перед перевіркою збережіть налаштування    </span> 
+                                <span data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> {{#t}}app.options.pered_perevirkoiu_zberezhit_nalashtuvann{{/t}}    </span> 
                             </div>
                             <div class="mb-2">
-                                <label class="form-label"   for="smstestphone">Телефон</label>
+                                <label class="form-label"   for="smstestphone">{{#t}}common.telefon{{/t}}</label>
                                 <input zippy="smstestphone"   class="form-control"  >
 
                             </div> 
                             <div class="mb-2">
-                                <label class="form-label"   for="smstesttext">Повідомлення</label>
+                                <label class="form-label"   for="smstesttext">{{#t}}common.povidomlennia{{/t}}</label>
                                 <input zippy="smstesttext"   class="form-control"  >
 
                             </div>
 
 
                             <div class="mb-2">
-                                <button zippy="smstest" class="btn btn-success" type="submit">Відправити </button>
+                                <button zippy="smstest" class="btn btn-success" type="submit">{{#t}}common.vidpravyty{{/t}} </button>
                             </div>
                         </form>
                     </div>
@@ -557,15 +550,15 @@
                
                   <div class="card">
                     <div class="card-body">
-                        <h4>Телеграм бот</h4>
+                        <h4>{{#t}}app.options.telehram_bot{{/t}}</h4>
                         <form zippy="tbform">
                            
                              <div class="mb-2">
-                                <label class="form-label" for="tbtoken">Токен бота </label>
+                                <label class="form-label" for="tbtoken">{{#t}}app.options.token_bota{{/t}} </label>
                                 <input     class="form-control" type="text" zippy="tbtoken">
                             </div>
               
-                            <input    type="submit"  value="Зберегти" class="btn  btn-success">
+                            <input    type="submit"  value="{{#t}}common.zberehty{{/t}}" class="btn  btn-success">
 
                         </form>         
                     </div>

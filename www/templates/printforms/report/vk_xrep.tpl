@@ -1,24 +1,24 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
-        <td align="center" colspan="2"> <h4>Х-Звіт </h4></td>
+        <td align="center" colspan="2"> <h4>{{#t}}common.kh_zvit{{/t}} </h4></td>
     </tr>
     <tr>
 
-        <td  > Створено</td> <td  > {{created_at}}</td>
+        <td  > {{#t}}common.stvoreno{{/t}}</td> <td  > {{created_at}}</td>
          
     </tr>   
   <tr>
-         <td  >  Каса на  початок</td> <td align="right" > {{initial}}</td>
+         <td  >  {{#t}}print.cb_xrep.kasa_na_pochatok{{/t}}</td> <td align="right" > {{initial}}</td>
     </tr>    
  
   <tr>
-        <td  > <b>Реалізація</b></td>        <td  >  </td>
+        <td  > <b>{{#t}}common.realizatsiia{{/t}}</b></td>        <td  >  </td>
     </tr>    
     <tr>
-        <td  > Чеків  </td>        <td  align="right"> {{cnt}}</td>
+        <td  > {{#t}}common.chekiv{{/t}}  </td>        <td  align="right"> {{cnt}}</td>
     </tr>    
    <tr>
-        <td  > Оплати:</td>        <td  >  </td>
+        <td  > {{#t}}common.oplaty{{/t}}</td>        <td  >  </td>
     </tr>  
      {{#pays}} 
     <tr>
@@ -27,13 +27,13 @@
       {{/pays}}   
  
   <tr>
-        <td  > <b>Поверненняz</b></td>        <td  >  </td>
+        <td  > <b>{{#t}}print.vk_xrep.povernenniaz{{/t}}</b></td>        <td  >  </td>
     </tr>    
     <tr>
-        <td  > Чеків  </td>        <td align="right" > {{rcnt}}</td>
+        <td  > {{#t}}common.chekiv{{/t}}  </td>        <td align="right" > {{rcnt}}</td>
     </tr>    
    <tr>
-        <td  > Оплати:</td>        <td  >  </td>
+        <td  > {{#t}}common.oplaty{{/t}}</td>        <td  >  </td>
     </tr>  
      {{#rpays}} 
     <tr>
@@ -42,7 +42,7 @@
       {{/rpays}}   
  
     <tr>
-         <td  > Баланс</td> <td align="right" > {{balance}}</td>
+         <td  > {{#t}}common.balans{{/t}}</td> <td align="right" > {{balance}}</td>
     </tr>     
  
 

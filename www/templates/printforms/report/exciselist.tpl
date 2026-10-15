@@ -2,37 +2,37 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-           Акцизні марки   
+           {{#t}}common.aktsyzni_marky{{/t}}   
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="5">
-            Період з {{datefrom}} по {{dateto}}
+            {{#t}}common.period_z_po_2{{/t}}
         </td>
     </tr>
      {{#itemname}}
      <tr>
 
         <td   colspan="5">
-         Товар:  {{itemname}}
+         {{#t}}print.exciselist.tovar{{/t}}
         </td>
     </tr>
      {{/itemname}}
       <tr>
 
         <td   colspan="5">
-         Оборот: <b> {{totamount}}</b>  &nbsp; Акциз: <b> {{amount}}</b>
+         {{#t}}print.exciselist.oborot{{/t}} <b> {{totamount}}</b>  {{#t}}print.exciselist.nbsp_aktsyz{{/t}} <b> {{amount}}</b>
         </td>
     </tr>    
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Марка</th>
+        <th style="border: solid black 1px">{{#t}}print.exciselist.marka{{/t}}</th>
 
-        <th style="border: solid black 1px">Товар</th>
-        <th style="border: solid black 1px">Артикул</th>
-        <th style="border: solid black 1px">Документ</th>
-        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">{{#t}}common.tovar{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.artykul{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.dokument{{/t}}</th>
+        <th style="border: solid black 1px">{{#t}}common.data{{/t}}</th>
 
        
     </tr>

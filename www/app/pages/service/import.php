@@ -213,13 +213,13 @@ class Import extends \App\Pages\Base
 
 
         if ($t == 1 && $colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError(__('service.import.ne_vkazano_kolonku_z_kilkistiu'));
             return;
         }
         $file = $this->iform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -438,7 +438,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПТ-00001";
+                $doc->document_number = __('service.import.pt_00001');
             }
             $doc->document_date = $this->iform->docdate->getDate() ?: time();
 
@@ -453,7 +453,7 @@ class Import extends \App\Pages\Base
             $doc->payamount = 0;
           
             $doc->headerdata['payed'] = 0;
-            $doc->notes = 'Импорт с Excel';
+            $doc->notes = __('service.import.ymport_s_excel');
             $doc->headerdata['store'] = $store;
 
             $doc->headerdata['payed'] = 0;
@@ -463,7 +463,7 @@ class Import extends \App\Pages\Base
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
 
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt]));
     }
 
     public function onCImport($sender) {
@@ -481,13 +481,13 @@ class Import extends \App\Pages\Base
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError(__('common.ne_vkazano_kolonku_z_nazvoiu'));
             return;
         }
 
         $file = $this->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -575,7 +575,7 @@ class Import extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Імпортовано {$cnt} контрагентів ");
+        $this->setSuccess(__('service.import.importovano_kontrahentiv', ['cnt' => $cnt]));
     }
 
     public function onNImport($sender) {
@@ -597,23 +597,23 @@ class Import extends \App\Pages\Base
         $colbrand = $this->nform->ncolbrand->getValue();
 
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError(__('common.ne_vkazano_kolonku_z_nazvoiu'));
             return;
         }
         if ($colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError(__('service.import.ne_vkazano_kolonku_z_kilkistiu'));
             return;
         }
 
         if ($c == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError(__('common.ne_obrano_postachalnyka'));
             return;
         }
 
         $file = $this->nform->nfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -710,7 +710,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПН-00001";
+                $doc->document_number = __('service.import.pn_00001');
             }
             $doc->document_date = time();
 
@@ -728,7 +728,7 @@ class Import extends \App\Pages\Base
           
             $doc->headerdata['delivery'] = 0;
             $doc->headerdata['payed'] = 0;
-            $doc->notes = 'Імпорт з Excel';
+            $doc->notes = __('common.import_z_excel');
             $doc->headerdata['store'] = $store;
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->nform->ncust->getText();
@@ -756,23 +756,23 @@ class Import extends \App\Pages\Base
         $colprice = $this->zform->zcolprice->getValue();
 
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError(__('common.ne_vkazano_kolonku_z_nazvoiu'));
             return;
         }
         if ($colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError(__('service.import.ne_vkazano_kolonku_z_kilkistiu'));
             return;
         }
 
         if ($c == 0) {
-            $this->setError('Не обрано покупця');
+            $this->setError(__('service.import.ne_obrano_pokuptsia'));
             return;
         }
 
         $file = $this->zform->zfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError(__('common.ne_vybranyi_fail'));
             return;
         }
 
@@ -837,7 +837,7 @@ class Import extends \App\Pages\Base
                 $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                 if ($item == null) {
-                    $this->setError("Не знайдено товар {$itemname} {$itemcode}");
+                    $this->setError(__('service.import.ne_znaideno_tovar', ['itemname' => $itemname, 'itemcode' => $itemcode]));
                     return;
                 }
                 if ($qty > 0) {
@@ -852,7 +852,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('Order');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "З-00001";
+                $doc->document_number = __('service.import.z_00001');
             }
             $doc->document_date = time();
 
@@ -867,7 +867,7 @@ class Import extends \App\Pages\Base
             $doc->payamount = $doc->amount;
       
             $doc->headerdata['payed'] = 0;
-            $doc->notes = 'Імпорт з Excel';
+            $doc->notes = __('common.import_z_excel');
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->zform->zcust->getText();
 

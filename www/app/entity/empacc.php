@@ -75,15 +75,15 @@ class EmpAcc extends \ZCL\DB\Entity
     
     public static function getNames() {
         $ret=[];
-        $ret[self::INCOME_FROM_MF]= 'Перерахування з рахунку';
-        $ret[self::OUTCOME_TO_MF]= 'Перерахування на рахунок';
-        $ret[self::SALARY]= 'Нарахування зарплати';
-        $ret[self::SALARY_PAY]= 'Виплата зарплати';
-        $ret[self::ADVANCE_ACC]= 'Підзвіт';
-        $ret[self::ADVANCE]= 'Аванс';
-        $ret[self::BONUS]= 'Бонус';
-        $ret[self::FINE]= 'Штраф';
-        $ret[self::PRICE]= 'Відрядна оплата';
+        $ret[self::INCOME_FROM_MF]= __('app.empacc.pererakhuvannia_z_rakhunku');
+        $ret[self::OUTCOME_TO_MF]= __('app.empacc.pererakhuvannia_na_rakhunok');
+        $ret[self::SALARY]= __('app.empacc.narakhuvannia_zarplaty');
+        $ret[self::SALARY_PAY]= __('common.vyplata_zarplaty');
+        $ret[self::ADVANCE_ACC]= __('app.empacc.pidzvit');
+        $ret[self::ADVANCE]= __('app.empacc.avans');
+        $ret[self::BONUS]= __('common.bonus_2');
+        $ret[self::FINE]= __('app.empacc.shtraf');
+        $ret[self::PRICE]= __('app.empacc.vidriadna_oplata');
         return $ret;
     }    
     

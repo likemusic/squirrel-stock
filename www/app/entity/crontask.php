@@ -194,7 +194,7 @@ class CronTask extends \ZCL\DB\Entity
                         $n->user_id =  $admin->user_id;
                         $n->sender_id =  Notify::SYSTEM;
 
-                        $n->message = "Помилка  автоматичного закриття зміни ".$msg['type'];
+                        $n->message = __('app.crontask.pomylka_avtomatychnoho_zakryttia_zminy').$msg['type'];
                         $n->save();          
                     }
                     
@@ -219,9 +219,9 @@ class CronTask extends \ZCL\DB\Entity
  
     public static function getTypes() {
         $ret=[];
-        $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
-        $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
-        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ПРРО';
+        $ret[self::TYPE_SUBSEMAIL]  = __('app.crontask.email_po_pidpystsi');
+        $ret[self::TYPE_EVENTCUST]  = __('app.crontask.podiia_z_kontrahentom');
+        $ret[self::TYPE_AUTOSHIFT]  = __('app.crontask.avtozakryttia_zminy_prro');
             
             
         return $ret;

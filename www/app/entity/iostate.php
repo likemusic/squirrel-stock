@@ -109,34 +109,34 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeList($type = 0) {
         $list = array();
         if ($type == 1 ||   $type == 0  ) {
-            $list[self::TYPE_BASE_INCOME] = "Доходи реалізації";
+            $list[self::TYPE_BASE_INCOME] = __('app.iostate.dokhody_realizatsii');
 
-            $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
+            $list[self::TYPE_FIN] = __('app.iostate.dokhody_vid_finansovykh_operatsii');
           //  $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
-            $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
+            $list[self::TYPE_OTHER_INCOME] = __('app.iostate.inshi_dokhody');
          //  $list[self::TYPE_INEQ] = "Інші доходи";
         }
 
         if ($type == 2 ||   $type == 0  ) {
-            $list[self::TYPE_BASE_OUTCOME] = "Витрати на закупку";
-            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-            $list[self::TYPE_PROD] = "Витрати на виробництво";
-            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-            $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-            $list[self::TYPE_SALARY_OUTCOME] = "Витрати на зарплату";
-            $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
-            $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
-            $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
-            $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
-            $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
-            $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
-            $list[self::TYPE_INV] = "Інвестиції";
-            $list[self::TYPE_BANK] = "Послуги банку";
+            $list[self::TYPE_BASE_OUTCOME] = __('app.iostate.vytraty_na_zakupku');
+            $list[self::TYPE_COMMON_OUTCOME] = __('common.zahalnovyrobnychi_vytraty');
+            $list[self::TYPE_PROD] = __('app.iostate.vytraty_na_vyrobnytstvo');
+            $list[self::TYPE_ADMIN_OUTCOME] = __('common.administratyvni_vytraty');
+            $list[self::TYPE_SALE_OUTCOME] = __('common.vytraty_na_zbut');
+            $list[self::TYPE_SALARY_OUTCOME] = __('app.iostate.vytraty_na_zarplatu');
+            $list[self::TYPE_TAX_NDS] =  __('app.iostate.rozrakhunky_z_pdv');
+            $list[self::TYPE_TAX_CARE] =  __('app.iostate.rozrakhunky_z_strakhuvannia');
+            $list[self::TYPE_TAX_OUTCOME] =  __('app.iostate.inshi_podatky_ta_zbory');
+            $list[self::TYPE_BILL_OUTCOME] = __('app.iostate.vytraty_na_komunalku');
+            $list[self::TYPE_BILL_RENT] = __('app.iostate.vytraty_na_orendu');
+            $list[self::TYPE_DIVIDEND_OUTCOME] = __('app.iostate.rozpodil_prybutku');
+            $list[self::TYPE_INV] = __('app.iostate.investytsii');
+            $list[self::TYPE_BANK] = __('app.iostate.posluhy_banku');
          //   $list[self::TYPE_CANCEL] =  "Скасування платежу продажу";
-            $list[self::TYPE_NAKL] =  "Накладні витрати";
-            $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
-            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
-            $list[self::TYPE_OUTSERVICE] = "Витрати на послуги";
+            $list[self::TYPE_NAKL] =  __('app.account.nakladni_vytraty');
+            $list[self::TYPE_ADS] =  __('app.iostate.vytraty_na_marketynh_ta_reklamu');
+            $list[self::TYPE_OTHER_OUTCOME] = __('common.inshi_vytraty');
+            $list[self::TYPE_OUTSERVICE] = __('app.iostate.vytraty_na_posluhy');
      //       $list[self::TYPE_ADVANCEREP] = "Підзвіт співробітнику";
         }
 
@@ -144,14 +144,14 @@ class IOState extends \ZCL\DB\Entity
  
  
         if (  $type == 0) {
-            $list[self::TYPE_INEQ] = "Ввод ОЗ в  експлуатацію ";
-            $list[self::TYPE_INVEQ] = "Ремонт та відновлення ОЗ";
-            $list[self::TYPE_OUTEQ] = "Списання ОЗ";
-            $list[self::TYPE_AMOR] = "Амортизація ОЗ";
-            $list[self::TYPE_LOST] = "Втрати при інвентаризації";
-            $list[self::TYPE_TRASH] = "Відходи виробництва";
-            $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
-            $list[self::TYPE_BEGIN] = "Внесення початкових залишків";
+            $list[self::TYPE_INEQ] = __('app.iostate.vvod_oz_v_ekspluatatsiiu');
+            $list[self::TYPE_INVEQ] = __('app.iostate.remont_ta_vidnovlennia_oz');
+            $list[self::TYPE_OUTEQ] = __('app.iostate.spysannia_oz');
+            $list[self::TYPE_AMOR] = __('app.iostate.amortyzatsiia_oz');
+            $list[self::TYPE_LOST] = __('app.iostate.vtraty_pry_inventaryzatsii');
+            $list[self::TYPE_TRASH] = __('app.iostate.vidkhody_vyrobnytstva');
+            $list[self::TYPE_OVER] = __('app.iostate.nadlyshky_pry_inventaryzatsii');
+            $list[self::TYPE_BEGIN] = __('app.iostate.vnesennia_pochatkovykh_zalyshkiv');
            
         }
 
@@ -164,11 +164,11 @@ class IOState extends \ZCL\DB\Entity
     */
     public static function getTypeListSal( ) {
        $list = array();
-       $list[self::TYPE_PROD] = "Витрати на виробництво";
-       $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-       $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-       $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-       $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+       $list[self::TYPE_PROD] = __('app.iostate.vytraty_na_vyrobnytstvo');
+       $list[self::TYPE_COMMON_OUTCOME] = __('common.zahalnovyrobnychi_vytraty');
+       $list[self::TYPE_ADMIN_OUTCOME] = __('common.administratyvni_vytraty');
+       $list[self::TYPE_SALE_OUTCOME] = __('common.vytraty_na_zbut');
+       $list[self::TYPE_OTHER_OUTCOME] = __('common.inshi_vytraty');
   
        return $list;
     }
@@ -180,10 +180,10 @@ class IOState extends \ZCL\DB\Entity
     */
     public static function getTypeListAdv( ) {
        $list = array();
-       $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-       $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-       $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-       $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+       $list[self::TYPE_COMMON_OUTCOME] = __('common.zahalnovyrobnychi_vytraty');
+       $list[self::TYPE_ADMIN_OUTCOME] = __('common.administratyvni_vytraty');
+       $list[self::TYPE_SALE_OUTCOME] = __('common.vytraty_na_zbut');
+       $list[self::TYPE_OTHER_OUTCOME] = __('common.inshi_vytraty');
   
        return $list;
     }
@@ -195,9 +195,9 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeListInM( ) {
        $list = array();
 
-       $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
-       $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
-       $list[self::TYPE_BEGIN] = "Внесення початкових залишків";
+       $list[self::TYPE_FIN] = __('app.iostate.dokhody_vid_finansovykh_operatsii');
+       $list[self::TYPE_OTHER_INCOME] = __('app.iostate.inshi_dokhody');
+       $list[self::TYPE_BEGIN] = __('app.iostate.vnesennia_pochatkovykh_zalyshkiv');
        
        return $list;
     }
@@ -208,21 +208,21 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeListOutM( ) {
         $list = array();
 
-        $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-        $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-        $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-        $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
-        $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
-        $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
-        $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
-        $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
-        $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
-        $list[self::TYPE_INV] = "Інвестиції";
-        $list[self::TYPE_NAKL] =  "Накладні витрати";
-        $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
-        $list[self::TYPE_BANK] = "Послуги банку";
-        $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
-        $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+        $list[self::TYPE_COMMON_OUTCOME] = __('common.zahalnovyrobnychi_vytraty');
+        $list[self::TYPE_ADMIN_OUTCOME] = __('common.administratyvni_vytraty');
+        $list[self::TYPE_SALE_OUTCOME] = __('common.vytraty_na_zbut');
+        $list[self::TYPE_TAX_NDS] =  __('app.iostate.rozrakhunky_z_pdv');
+        $list[self::TYPE_TAX_CARE] =  __('app.iostate.rozrakhunky_z_strakhuvannia');
+        $list[self::TYPE_TAX_OUTCOME] =  __('app.iostate.inshi_podatky_ta_zbory');
+        $list[self::TYPE_BILL_OUTCOME] = __('app.iostate.vytraty_na_komunalku');
+        $list[self::TYPE_BILL_RENT] = __('app.iostate.vytraty_na_orendu');
+        $list[self::TYPE_DIVIDEND_OUTCOME] = __('app.iostate.rozpodil_prybutku');
+        $list[self::TYPE_INV] = __('app.iostate.investytsii');
+        $list[self::TYPE_NAKL] =  __('app.account.nakladni_vytraty');
+        $list[self::TYPE_ADS] =  __('app.iostate.vytraty_na_marketynh_ta_reklamu');
+        $list[self::TYPE_BANK] = __('app.iostate.posluhy_banku');
+        $list[self::TYPE_SALARY_OUTCOME] = __('common.vyplata_zarplaty');
+        $list[self::TYPE_OTHER_OUTCOME] = __('common.inshi_vytraty');
    
        return $list;
     }
@@ -234,25 +234,25 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeListBook( ) {
        $list = array();
 
-       $list[self::TYPE_BASE_INCOME] = "Доходи реалізації";
-       $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
-       $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
+       $list[self::TYPE_BASE_INCOME] = __('app.iostate.dokhody_realizatsii');
+       $list[self::TYPE_FIN] = __('app.iostate.dokhody_vid_finansovykh_operatsii');
+       $list[self::TYPE_OTHER_INCOME] = __('app.iostate.inshi_dokhody');
           
         
-        $list[self::TYPE_BASE_OUTCOME] = "Витрати на закупку";
-        $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+        $list[self::TYPE_BASE_OUTCOME] = __('app.iostate.vytraty_na_zakupku');
+        $list[self::TYPE_OTHER_OUTCOME] = __('common.inshi_vytraty');
             
 
-        $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
-        $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
-        $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
-        $list[self::TYPE_AMOR] = "Амортизація ОЗ";
+        $list[self::TYPE_TAX_NDS] =  __('app.iostate.rozrakhunky_z_pdv');
+        $list[self::TYPE_TAX_CARE] =  __('app.iostate.rozrakhunky_z_strakhuvannia');
+        $list[self::TYPE_TAX_OUTCOME] =  __('app.iostate.inshi_podatky_ta_zbory');
+        $list[self::TYPE_AMOR] = __('app.iostate.amortyzatsiia_oz');
               
-        $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
-        $list[self::TYPE_BANK] = "Послуги банку";
-        $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
+        $list[self::TYPE_ADS] =  __('app.iostate.vytraty_na_marketynh_ta_reklamu');
+        $list[self::TYPE_BANK] = __('app.iostate.posluhy_banku');
+        $list[self::TYPE_SALE_OUTCOME] = __('common.vytraty_na_zbut');
         
-        $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+        $list[self::TYPE_SALARY_OUTCOME] = __('common.vyplata_zarplaty');
   
    
        return $list;

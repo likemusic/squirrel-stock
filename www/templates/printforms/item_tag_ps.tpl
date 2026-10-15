@@ -4,7 +4,7 @@
 <text>{{name}}</text>
  {{#isarticle}}
 <font bold="false">a</font> 
-<text>Код {{article}}</text>
+<text>{{#t}}print.item_tag_ps.kod{{/t}}</text>
  {{/isarticle}}
  {{#isprice}}
  

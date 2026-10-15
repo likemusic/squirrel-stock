@@ -72,9 +72,9 @@ class Equipment extends \ZCL\DB\Entity
     }
 
     public static function getTypeName(int $t){
-        if($t==self::IYPR_EQ) return 'Обладнання' ;
-        if($t==self::IYPR_OS) return 'Основні фонди' ;
-        if($t==self::IYPR_NMA) return 'Нематеріальні активи' ;
+        if($t==self::IYPR_EQ) return __('app.equipment.obladnannia') ;
+        if($t==self::IYPR_OS) return __('app.equipment.osnovni_fondy') ;
+        if($t==self::IYPR_NMA) return __('app.account.nematerialni_aktyvy') ;
         return 'N/A' ;
     }
     

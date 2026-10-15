@@ -1,14 +1,14 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Замовлення {{document_number}}</text>
+<text>{{#t}}common.zamovlennia_2{{/t}}</text>
 <font >a</font>
 
-<text>від {{date}}</text>
+<text>{{#t}}common.vid_2{{/t}}</text>
 <align>left</align>
-<text>Продавець: {{firm_name}}</text>
-<text>Тел. {{phone}}</text>
-<text>Покупець: {{customer_name}}</text>
-<text>Доставка {{delivery}}</text>
+<text>{{#t}}print.goodsissue_bill_ps.prodavets{{/t}}</text>
+<text>{{#t}}common.tel_3{{/t}}</text>
+<text>{{#t}}common.pokupets_3{{/t}}</text>
+<text>{{#t}}print.order_bill.dostavka{{/t}}</text>
 <text>{{ship_address}}</text>
  <newline> </newline>
  {{#_detail}}
@@ -21,7 +21,7 @@
 {{/_detail}}
 <font bold="true">a</font>
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>{{#t}}common.vsoho_2{{/t}}</text>
 <newline ></newline>
  
  

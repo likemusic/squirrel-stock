@@ -73,7 +73,7 @@ class VK
             return $response['errortxt'];
         }
         if($response['res']>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
         return true;
@@ -206,7 +206,7 @@ class VK
         if ($payed < $doc->payamount) {
             $payment=array(
             "type"=>1,
-            "comment"=>'Кредит',
+            "comment"=>__('common.kredyt'),
  
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
@@ -237,12 +237,12 @@ class VK
             $check['disc'] = $disc;            
             $check["disc_type"] = 0 ;
             if($doc->headerdata['bonus'] >0) {
-                  $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
+                  $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> __('common.bonusy') );
                   $disc  = $disc -  $doc->headerdata['bonus']??0 ;
             }
         
             if($disc > 0) {
-                  $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
+                  $check["discounts"][] = array("disc"=>$disc,"disc_name"=> __('common.znyzhka') );
             }
             
 
@@ -302,7 +302,7 @@ class VK
             return $response['errortxt'];
         }
         if($response['res']>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
 
@@ -372,7 +372,7 @@ class VK
             return $response['errortxt'];
         }
         if($response['res']>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
         return ['fiscnumber'=>$response['serial']];
@@ -471,7 +471,7 @@ class VK
             return $response['errortxt'];
         }
         if($response['res']>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
 
@@ -535,7 +535,7 @@ class VK
             return $response['errortxt'];
         }
         if(($response['res'] ?? 0)>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
 
@@ -648,7 +648,7 @@ class VK
             return $response['errortxt'];
         }
         if($response['res']>0) {
-            return "Помилка ".$response['res'];
+            return __('mod.vk.vk.pomylka').$response['res'];
         }
   
         return $response['info'];

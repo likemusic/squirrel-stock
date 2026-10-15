@@ -60,7 +60,7 @@ class ARMFood extends \App\Pages\Base
         $food = System::getOptions("food");
         if (!is_array($food)) {
             $food = array();
-            $this->setWarn('Не вказано параметри в  налаштуваннях');
+            $this->setWarn(__('service.armfood.ne_vkazano_parametry_v_nalashtuvanniakh'));
         }
         $this->_worktype = intval( $food['worktype'] );
 
@@ -330,7 +330,7 @@ class ARMFood extends \App\Pages\Base
         $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
 
         if ($store == 0 || $nal == 0 || $beznal == 0 || $this->_pos == null) {
-            $this->setError("Не зазначено всі дані");
+            $this->setError(__('service.armfood.ne_zaznacheno_vsi_dani'));
             return;
         }
         $filter = \App\Filter::getFilter("armfood");
@@ -521,10 +521,10 @@ class ARMFood extends \App\Pages\Base
         foreach($tlist as $prod) {
             
             $status="";
-            if($prod->foodstate==1 )   $status="В черзі";
-            if($prod->foodstate==2 )   $status="Готується";
-            if($prod->foodstate==3 )   $status="Готово";
-            if($prod->foodstate==4 )   $status="Видано";
+            if($prod->foodstate==1 )   $status=__('service.armfood.v_cherzi');
+            if($prod->foodstate==2 )   $status=__('service.armfood.hotuietsia');
+            if($prod->foodstate==3 )   $status=__('service.armfood.hotovo');
+            if($prod->foodstate==4 )   $status=__('service.armfood.vydano');
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity) ."</td>" ;
@@ -653,10 +653,10 @@ class ARMFood extends \App\Pages\Base
         foreach($tlist as $prod) {
             
             $status="";
-            if($prod->foodstate==1 )   $status="В черзі";
-            if($prod->foodstate==2 )   $status="Готується";
-            if($prod->foodstate==3 )   $status="Готово";
-            if($prod->foodstate==4 )   $status="Видано";
+            if($prod->foodstate==1 )   $status=__('service.armfood.v_cherzi');
+            if($prod->foodstate==2 )   $status=__('service.armfood.hotuietsia');
+            if($prod->foodstate==3 )   $status=__('service.armfood.hotovo');
+            if($prod->foodstate==4 )   $status=__('service.armfood.vydano');
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity) ."</td>" ;
@@ -868,7 +868,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0 && $item->autoincome != 1) {
 
-            $this->setWarn("Товару {$item->itemname} немає на складі");
+            $this->setWarn(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
         $found=false;
@@ -895,7 +895,7 @@ class ARMFood extends \App\Pages\Base
             $this->_itemlist[] = $item;
         }
 
-        $this->setSuccess("Позиція додана");
+        $this->setSuccess(__('common.pozytsiia_dodana'));
         $this->docpanel->listsform->itemlist->Reload();
         $this->docpanel->listsform->itemlist_of->Reload();
         $this->calcTotal(); 
@@ -992,7 +992,7 @@ class ARMFood extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn(__('common.tovar_z_kodom_ne_znaideno', ['code' => $code]));
             return;
         }
 
@@ -1000,7 +1000,7 @@ class ARMFood extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("Товару {$item->itemname} немає на складі");
+            $this->setWarn(__('common.tovaru_nemaie_na_skladi', ['itemname' => $item->itemname]));
         }
 
 
@@ -1075,18 +1075,18 @@ class ARMFood extends \App\Pages\Base
 
 
 
-        $state="Новий";
+        $state=__('common.novyi');
         if ($item->foodstate == 1) {
-            $state="В черзі";
+            $state=__('service.armfood.v_cherzi');
         }
         if ($item->foodstate == 2) {
-            $state="Готується";
+            $state=__('service.armfood.hotuietsia');
         }
         if ($item->foodstate == 3) {
-            $state="Готово";
+            $state=__('service.armfood.hotovo');
         }
         if ($item->foodstate == 4) {
-            $state="Видано";
+            $state=__('service.armfood.vydano');
         }
         $row->add(new Label('state', $state));
 
@@ -1102,7 +1102,7 @@ class ARMFood extends \App\Pages\Base
         if ($item->foodstate ==1 ) {
             $row->removeitem->setVisible(true);
         }
-        $stext='Додати...';
+        $stext=__('service.armfood.dodaty');
         $list=$item->aklist ?? '';
         if(strlen($list) > 0) {
           $stext = str_replace(",", ", ",$list)  ;
@@ -1138,18 +1138,18 @@ class ARMFood extends \App\Pages\Base
        
 
 
-        $state="Новий";
+        $state=__('common.novyi');
         if ($item->foodstate == 1) {
-            $state="В черзі";
+            $state=__('service.armfood.v_cherzi');
         }
         if ($item->foodstate == 2) {
-            $state="Готується";
+            $state=__('service.armfood.hotuietsia');
         }
         if ($item->foodstate == 3) {
-            $state="Готово";
+            $state=__('service.armfood.hotovo');
         }
         if ($item->foodstate == 4) {
-            $state="Видано";
+            $state=__('service.armfood.vydano');
         }
         $row->add(new Label('state_of', $state));
 
@@ -1406,11 +1406,11 @@ class ARMFood extends \App\Pages\Base
         $dt = $this->docpanel->listsform->dt->getDate();
         $this->_doc->headerdata['deltime'] = $this->docpanel->listsform->time->getDateTime($dt);
         if ($this->_doc->headerdata['delivery'] > 1 && $this->_doc->headerdata['ship_address'] == "") {
-            $this->setError('Введіть адресу');
+            $this->setError(__('service.armfood.vvedit_adresu'));
             return;
         }
         if ($this->_doc->headerdata['delivery'] > 0 && $this->_doc->headerdata['contact'] == "") {
-            $this->setError('Введіть контактні дані');
+            $this->setError(__('service.armfood.vvedit_kontaktni_dani'));
             return;
         }
 
@@ -1434,7 +1434,7 @@ class ARMFood extends \App\Pages\Base
                 $conn->RollbackTrans();
                 $this->setErrorTopPage($ee->getMessage());
 
-                $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+                $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
                 return;
             }
 
@@ -1444,7 +1444,7 @@ class ARMFood extends \App\Pages\Base
             $n->message = serialize(array('document_id' => $this->_doc->document_id));
 
             $n->save();
-            $this->setInfo('Відправлено в доставку');
+            $this->setInfo(__('service.armfood.vidpravleno_v_dostavku'));
 
         } else {  //в  производство
             $this->toprod()  ;
@@ -1461,7 +1461,7 @@ class ARMFood extends \App\Pages\Base
  
         $pass=  $this->docpanel->listsform->passprod->isChecked() ? 1:0;
         if($this->_tvars['diffbp']==1 && $this->_ct<1 && $pass ==0 )  {
-            $this->setError('Не вказано тип чеку') ;
+            $this->setError(__('service.armfood.ne_vkazano_typ_cheku')) ;
             return;
         }
         
@@ -1522,12 +1522,12 @@ class ARMFood extends \App\Pages\Base
 
         }
         if($this->_doc->getHD('passprod',0)==1) {
-            $this->setInfo('Відправлено');
+            $this->setInfo(__('common.vidpravleno'));
             return ;
         }
         
         if($inprod==0) {
-            $this->setWarn('Нема  позицій для виробництва') ;
+            $this->setWarn(__('service.armfood.nema_pozytsii_dlia_vyrobnytstva')) ;
             return;
         }
        
@@ -1537,7 +1537,7 @@ class ARMFood extends \App\Pages\Base
 
 
 
-        $this->setInfo('Відправлено у виробництво');
+        $this->setInfo(__('service.armfood.vidpravleno_u_vyrobnytstvo'));
 
     }
    
@@ -1548,7 +1548,7 @@ class ARMFood extends \App\Pages\Base
  
         if($this->_doc instanceof Document) {
             if($this->_doc->hasPayments()  || $this->_doc->hasEntries()  ){
-                $this->setError("У документа  вже є проводки") ;
+                $this->setError(__('service.armfood.u_dokumenta_vzhe_ie_provodky')) ;
                 return;
             }    
         }
@@ -1578,7 +1578,7 @@ class ARMFood extends \App\Pages\Base
          $pass=  $this->docpanel->listsform->passprod->isChecked() ? 1:0;
       
          if($this->_tvars['diffbp']==1 && $this->_ct<1 && $pass ==0 )  {
-            $this->setError('Не вказано тип чеку') ;
+            $this->setError(__('service.armfood.ne_vkazano_typ_cheku')) ;
             return;
         }
         if ($this->createdoc() == false) {
@@ -1623,13 +1623,13 @@ class ARMFood extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setError("У  контрагента  всього {$b} бонусів на рахунку");                
+                $this->setError(__('service.armfood.u_kontrahenta_vsoho_bonusiv_na', ['b' => $b]));                
                 return;
             }
            
         }
         if($amount == 0) {
-            $this->setWarn("0 до сплати");  
+            $this->setWarn(__('service.armfood.0_do_splaty'));  
             $this->docpanel->payform->passfisc->setChecked(true);
                           
         }
@@ -1639,7 +1639,7 @@ class ARMFood extends \App\Pages\Base
     public function payandcloseOnClick() {
 
         if ($this->_pt != 1 && $this->_pt != 2) {
-            $this->setError("Не вказано спосіб оплати");
+            $this->setError(__('service.armfood.ne_vkazano_sposib_oplaty'));
             return;
         }
 
@@ -1668,30 +1668,30 @@ class ARMFood extends \App\Pages\Base
             }
 
             if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->setError("Недостатня сума");
+                $this->setError(__('service.armfood.nedostatnia_suma'));
                 return;
             }
 
             if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо у борг або передоплата  має бути обраний контрагент");
+                $this->setError(__('service.armfood.iakshcho_u_borh_abo_peredoplata'));
                 return;
             }
 
             if (doubleval($this->_doc->headerdata['bonus']) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо   нарахування бонусів має бути обраний контрагент");
+                $this->setError(__('service.armfood.iakshcho_narakhuvannia_bonusiv_maie_buty'));
                 return;
             }
             if (doubleval($this->_doc->headerdata['bonus']) >0) {
                 $c = Customer::load($this->_doc->customer_id);
                 if($this->_doc->headerdata['bonus']  > $c->getBonus()) {
-                    $this->setError("Недостатньо бонусів");
+                    $this->setError(__('service.armfood.nedostatno_bonusiv'));
                     return;
                 }
 
 
             }
             if (doubleval($this->_doc->headerdata['exch2b']) >0 && $this->_doc->customer_id == 0) {
-                $this->setError("Якщо оплата бонусами має бути обраний контрагент");
+                $this->setError(__('service.armfood.iakshcho_oplata_bonusamy_maie_buty'));
                 return;
             }
 
@@ -1804,7 +1804,7 @@ class ARMFood extends \App\Pages\Base
                                     $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                                 } else {
 
-                                    throw new \Exception("Не повернено фіскальний номер");
+                                    throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
                                 }
                             }
                         }
@@ -1822,7 +1822,7 @@ class ARMFood extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $this->_doc->meta_desc);
             return;
         }
 
@@ -1854,22 +1854,22 @@ class ARMFood extends \App\Pages\Base
                   foreach($stlst as $st) {
                       if(trim($st)=='')  continue;
                       if(\App\Entity\Excise::checkFormat($st) ==false){
-                         $this->setWarn("Невірний формат марки " . $st);
+                         $this->setWarn(__('service.armfood.nevirnyi_format_marky') . $st);
                          return; 
                       }
                       $exists=\App\Entity\Excise::checkUsed($st) ;
                       if($exists != null){
-                         $this->setWarn("Марка вже використана в   " . $exists->document_number);
+                         $this->setWarn(__('service.armfood.marka_vzhe_vykorystana_v') . $exists->document_number);
                          return; 
                       }
                   }
                   if(count($stlst)  !=  count(array_unique($stlst) ) ) {
-                     $this->setWarn("Марки дублюються" );
+                     $this->setWarn(__('service.armfood.marky_dubliuiutsia') );
                      return;  
                   }           
                   
                   if(count($stlst)  !=  $item->quantity) {
-                     $this->setWarn("Кількість марок не  відповідає  кількості в  позиції " );
+                     $this->setWarn(__('service.armfood.kilkist_marok_ne_vidpovidaie_kilkosti') );
                      return;  
                   }
               }
@@ -1904,7 +1904,7 @@ class ARMFood extends \App\Pages\Base
         $idnew = $this->_doc->document_id == 0;
 
         if (count($this->_itemlist) == 0) {
-            $this->setError('Не введено позиції');
+            $this->setError(__('common.ne_vvedeno_pozytsii'));
             return false;
         }
         if ($idnew) {
@@ -1914,7 +1914,7 @@ class ARMFood extends \App\Pages\Base
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
-                    $this->setError('Не створено унікальний номер документа');
+                    $this->setError(__('common.ne_stvoreno_unikalnyi_nomer_dokumenta'));
                     return false;
                 }
             }
@@ -1932,7 +1932,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['table'] = $this->docpanel->listsform->table->getText();
    
         if($this->_tvars['tables']==1  && intval($this->_doc->headerdata['table']) ==0  ) {
-            $this->setError('Не вказано номер  столу');
+            $this->setError(__('service.armfood.ne_vkazano_nomer_stolu'));
             return false;
         }
           
@@ -1968,7 +1968,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata["bonus"] = $this->docpanel->listsform->bonus->getText();
 
         if($this->_doc->customer_id==0  && $this->_doc->headerdata["bonus"] >0   ) {
-            $this->setError('Якщо  бонуси має бути вибраний  контрагент');
+            $this->setError(__('service.armfood.iakshcho_bonusy_maie_buty_vybranyi'));
             return false;
         }
         
@@ -2000,7 +2000,7 @@ class ARMFood extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError(__('common.ne_vvedeno_nazvu'));
             return;
         }
         $cust = new Customer();
@@ -2011,7 +2011,7 @@ class ARMFood extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_povynna_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
 
@@ -2019,7 +2019,7 @@ class ARMFood extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError(__('common.vzhe_isnuie_kontrahent_z_takym'));
                 return;
             }
         }
@@ -2055,11 +2055,11 @@ class ARMFood extends \App\Pages\Base
             }
             $d = $customer->getDiscount();
             if($d >0) {
-                $this->docpanel->listsform->custinfo->setText("Знижка {$d}%");
+                $this->docpanel->listsform->custinfo->setText(__('service.armfood.znyzhka', ['d' => $d]));
             } else {
                 $b= $customer->getBonus();
                 if($b>0) {
-                    $this->docpanel->listsform->custinfo->setText("Бонусів {$b}");
+                    $this->docpanel->listsform->custinfo->setText(__('service.armfood.bonusiv', ['b' => $b]));
                 }
             }
 
@@ -2230,14 +2230,14 @@ class ARMFood extends \App\Pages\Base
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $header['detail'] [] = array(
-                "myself" => $item->myself ?' З собою':'',
+                "myself" => $item->myself ?__('service.armfood.z_soboiu'):'',
                 "itemname" => $name,
                 "qty"   => H::fqty($item->quantity)
                 
             );
         }        
         if(count($header['detail']) == 0) {
-            $this->addAjaxResponse(" toastr.warning( 'Всі позиції вже в роботі' )         ");
+            $this->addAjaxResponse(__('service.armfood.toastr_warning_vsi_pozytsii_vzhe'));
             return;   
         }
         if(intval($user->prtype) == 0) {
@@ -2291,7 +2291,7 @@ class ARMFood extends \App\Pages\Base
             $ret = $cb->OpenShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
+                $this->setSuccess(__('service.armfood.zmina_vidkryta'));
             } else {
                 $this->setError($ret);
             }
@@ -2320,7 +2320,7 @@ class ARMFood extends \App\Pages\Base
             $ret = $vk->OpenShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
+                $this->setSuccess(__('service.armfood.zmina_vidkryta'));
             } else {
                 $this->setError($ret);
             }
@@ -2354,7 +2354,7 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна відкрита");
+            $this->setSuccess(__('service.armfood.zmina_vidkryta'));
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
@@ -2392,7 +2392,7 @@ class ARMFood extends \App\Pages\Base
             $ret = $cb->CloseShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна закрита");
+                $this->setSuccess(__('common.zmina_zakryta'));
             } else {
                 $this->setError($ret);
             }
@@ -2405,7 +2405,7 @@ class ARMFood extends \App\Pages\Base
             $ret = $vk->CloseShift() ;
 
             if($ret === true) {
-                $this->setSuccess("Зміна закрита");
+                $this->setSuccess(__('common.zmina_zakryta'));
             } else {
                 $this->setError($ret);
             }
@@ -2441,7 +2441,7 @@ class ARMFood extends \App\Pages\Base
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
             } else {
-                $this->setError("Не повернено фіскальний номер");
+                $this->setError(__('common.ne_poverneno_fiskalnyi_nomer'));
                 return;
             }
         }
@@ -2463,7 +2463,7 @@ class ARMFood extends \App\Pages\Base
             return false;
         } else {
             
-               $this->setSuccess("Зміна закрита");    
+               $this->setSuccess(__('common.zmina_zakryta'));    
           
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
@@ -2494,7 +2494,7 @@ class ARMFood extends \App\Pages\Base
                 $doc->headerdata["checkbox"] = $ret['checkid'];
                 $doc->headerdata["passfisc"] = 0;
                 $doc->save();
-                $this->setSuccess("Виконано");
+                $this->setSuccess(__('common.vykonano'));
             } else {
                throw new \Exception($ret);
  
@@ -2547,10 +2547,10 @@ class ARMFood extends \App\Pages\Base
                     $doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
-                    $this->setSuccess("Виконано");
+                    $this->setSuccess(__('common.vykonano'));
                 } else {
 
-                     throw new \Exception("Не повернено фіскальний номер");
+                     throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
 
                 }
             }
@@ -2562,7 +2562,7 @@ class ARMFood extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $doc->meta_desc);
            
             
             return;
@@ -2578,7 +2578,7 @@ class ARMFood extends \App\Pages\Base
         $pay =  $sender->pbpay->getValue();
         
         if($pay==0) {
-            $this->setError("Не вибрана  оплата");
+            $this->setError(__('service.armfood.ne_vybrana_oplata'));
             return;
         }
         
@@ -2593,11 +2593,11 @@ class ARMFood extends \App\Pages\Base
         $doc = Document::load($id);
         $am= H::fa($doc->payamount -   $doc->payed);
         if( $sum==0 ) {
-            $this->setError("Не вказана  сума");
+            $this->setError(__('service.armfood.ne_vkazana_suma'));
             return;
         }
         if($sum > $am ) {
-            $this->setError("Сума більшк боргу");
+            $this->setError(__('service.armfood.suma_bilshk_borhu'));
             return;
         }
       
@@ -2681,7 +2681,7 @@ class ARMFood extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() . __('common.dokument_2') . $doc->meta_desc);
       
             
             return;
@@ -2717,14 +2717,14 @@ class ARMFood extends \App\Pages\Base
                $doc= \App\Entity\Doc\Document::create('IncomeMoney') ;
                $doc->setHD('type',   $sender->siniostate->getValue() );
                $doc->setHD('detail', 0);
-               $doc->notes='Службове внесення';
+               $doc->notes=__('common.sluzhbove_vnesennia');
 
            }
            if( $type==2) {
                $doc= \App\Entity\Doc\Document::create('OutcomeMoney') ;
                $doc->setHD('type',  $sender->soutiostate->getValue());
                $doc->setHD('detail', 0);
-               $doc->notes='Службова  видача';
+               $doc->notes=__('service.armfood.sluzhbova_vydacha');
 
            }
            
@@ -2797,7 +2797,7 @@ class ARMFood extends \App\Pages\Base
                     $this->_pos->save();
   
                 } else {
-                    throw new \Exception("Не повернено фіскальний номер");
+                    throw new \Exception(__('common.ne_poverneno_fiskalnyi_nomer'));
                 }                
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['error']);
@@ -2807,7 +2807,7 @@ class ARMFood extends \App\Pages\Base
             }
             
                
-            $this->setSuccess("Виконано");   
+            $this->setSuccess(__('common.vykonano'));   
         } catch(\Throwable $ee) {
             global $logger;
           
@@ -2906,7 +2906,7 @@ class ARMFood extends \App\Pages\Base
         $food['foodmenuname4'] = $sender->foodmenu4->getValueName() ;
 
         System::setOptions("food", $food);
-        $this->setSuccess('Збережено');       
+        $this->setSuccess(__('common.zberezheno'));       
          
          
         \App\Application::Redirect("\\App\\Pages\\Service\\ARMFood");; 
@@ -3064,7 +3064,7 @@ class ARMFood extends \App\Pages\Base
      
        if($from==0 || $to==0 || $qty==0 )
        {  
-           $this->addAjaxResponse("  toastr.error('Не введено дані','',{timeOut:8000})        ", true  ) ;
+           $this->addAjaxResponse(__('service.armfood.toastr_error_ne_vvedeno_dani'), true  ) ;
            return; 
        }
      
@@ -3089,7 +3089,7 @@ class ARMFood extends \App\Pages\Base
            $doc->headerdata['store'] = $store_id;
            $doc->headerdata['tostore'] = $store_id;
            $doc->amount = $stfrom->partion;
-           $doc->notes = "АРМ кафе";
+           $doc->notes = __('service.armfood.arm_kafe');
            
            $doc->save();
            $doc->updateStatus(Document::STATE_NEW);
@@ -3097,7 +3097,7 @@ class ARMFood extends \App\Pages\Base
            $conn->CommitTrans();
            $this->trform->clean();
        
-           $this->addAjaxResponse(" closeModal('modaltran' )    ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
+           $this->addAjaxResponse(__('service.armfood.closemodal_modaltran_toastr_success_stvo', ['document_number' => $doc->document_number]), true  ) ;
            
        }
        catch(\Exception $e)  {

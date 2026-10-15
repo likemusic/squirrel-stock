@@ -52,8 +52,8 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
         $pages = array();
-        $pages["\\App\\Pages\\Blank"] =  'Не вказано' ;
-        $pages["\\App\\Pages\\Main"] =  'Дашборд' ;
+        $pages["\\App\\Pages\\Blank"] =  __('common.ne_vkazano') ;
+        $pages["\\App\\Pages\\Main"] =  __('common.dashbord') ;
         foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
             $p = "";
             $n = "";
@@ -63,19 +63,19 @@ class UserProfile extends \App\Pages\Base
               
                 case 2:
                     $p = "\\App\\Pages\\Report\\";
-                    $n = 'Звіт';
+                    $n = __('common.zvit');
                     break;
                 case 3:
                     $p = "\\App\\Pages\\Register\\";
-                    $n = 'Журнал';
+                    $n = __('common.zhurnal');
                     break;
                 case 4:
                     $p = "\\App\\Pages\\Reference\\";
-                    $n = "Довідник";
+                    $n = __('common.dovidnyk');
                     break;
                 case 5:
                     $p = "\\App\\Pages\\Service\\";
-                    $n = 'Сервісна сторінка';
+                    $n = __('common.servisna_storinka');
                     break;
             }
 
@@ -183,12 +183,12 @@ class UserProfile extends \App\Pages\Base
         $this->user->mainpage = $sender->mainpage->getValue();
         $this->user->usemobileprinter = $this->profileform->usemobileprinter->isChecked() ? 1 : 0;
         if (strlen($this->user->phone) > 0 && strlen($this->user->phone) != \App\Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError(__('common.dovzhyna_nomera_telefona_maie_buty').\App\Helper::PhoneL().__('common.tsyfr'));
             return;
         }
    
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
         \App\Translator::reset();
        
@@ -201,14 +201,14 @@ class UserProfile extends \App\Pages\Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введіть пароль');
+            $this->setError(__('common.vvedit_parol'));
         } else {
             if ($confirm == '') {
-                $this->setError('Підтвердіть пароль');
+                $this->setError(__('common.pidtverdit_parol'));
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('Невірне підтвердження');
+                    $this->setError(__('common.nevirne_pidtverdzhennia'));
                 }
             }
         }
@@ -223,7 +223,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
 
-                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>") ;
+                \App\Entity\Notify::toSystemLog(__('app.userprofile.korystuvach_zminyv_parol_na', ['username' => $this->user->username, 'pass' => $pass])) ;
 
             }
 
@@ -253,7 +253,7 @@ class UserProfile extends \App\Pages\Base
 
             $pr = new \App\Printer() ;
             $pr->text("Printer test");
-            $pr->text("Тест принтера");
+            $pr->text(__('app.userprofile.test_pryntera'));
 
             $buf = $pr->getBuffer() ;
             $b = json_encode($buf) ;
@@ -282,7 +282,7 @@ class UserProfile extends \App\Pages\Base
            $this->profileform->usemobileprinter->setChecked(0) ;                     
         }
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
@@ -304,7 +304,7 @@ class UserProfile extends \App\Pages\Base
             $pr = new \App\Printer(true) ;
             if($prtype==1) {
               $pr->text("Printer test");
-              $pr->text("Тест принтера");
+              $pr->text(__('app.userprofile.test_pryntera'));
             }
             if($prtype==2) {
               $pr->labelrow("CLS");
@@ -338,7 +338,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->pserverlabel  = rtrim($this->user->pserverlabel, "/") ;
 
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
@@ -347,7 +347,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->scalescript = $sender->scalescript->getText() ;
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
         App::Redirect("\\App\\Pages\\UserProfile");               
          
