@@ -41,14 +41,20 @@ class Helper
         }
      
  
-        if($user->userpass == $password) {
+        if(strlen($password ?? '') == 0) {
+            return null;
+        }
+        // SquirrelStock: пароль проверяется только по хешу; пароль, записанный в базе открытым текстом
+        // (старая база, admin/admin из db.sql), принимается и сразу заменяется хешем
+        if(password_get_info((string)$user->userpass)['algo'] === null) {
+            if(!hash_equals((string)$user->userpass, (string)$password)) {
+                return null;
+            }
+            $user->userpass = password_hash($password, PASSWORD_DEFAULT);
+            $user->save();
             return $user;
         }
-        if(strlen($password) > 0) {
-            $b = password_verify($password, $user->userpass);
-            return $b ? $user : null;
-        }
-        return null;
+        return password_verify($password, $user->userpass) ? $user : null;
     }
 
     /**
