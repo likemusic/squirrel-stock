@@ -29,7 +29,8 @@ test('страницы меню на русском без украинског�
   try {
     await page.goto('/');
     const links = [...new Set(await page.locator('a[href*="index.php?p=App/Pages/"]').evaluateAll(as => as.map(a => a.getAttribute('href'))))]
-      .filter(h => !/Update|Logout|UserLogin/i.test(h));
+      // NotifyList показывает сохраненные сообщения: они на языке, действовавшем при их создании (вход — до смены языка)
+      .filter(h => !/Update|Logout|UserLogin|NotifyList/i.test(h));
     expect(links.length).toBeGreaterThan(30);
     const found = [];
     for (const href of links) {
