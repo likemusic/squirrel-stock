@@ -1,63 +1,26 @@
-#  Zippy CRM      
+# SquirrelStock
 
-CRM система (склад, торгівля, виробництво,кафе,ПРРО) з веб-інтерфейсом.  
-Призначена для автоматизації обліку малого бізнесу  як альтернатива платного та/або  російського  ПЗ.   
-Може бути  розгорнута  як  онлайн (на  хостингу сайтів)   так  і
-оффлайн (на персональному компьютері або в локальній мережі). 
-Веб інтерфейс дозволяє працювати як  с десктопного  браузера  
-так і з мобільного.  
-   
-Домашня сторінка проекту:  <https://zippy.com.ua/>
- 
-## Основна функціональність
- 
-* управління складами
-* закупівля
-* продаж
-* облік платежів та взаєморозрахунки з контрагентами
-* управління користувачами та розділенням доступу 
-* робота з лідами та інші елементи CRM
-* звіти з продажу, закупівлі, руху товару
-* послуги, завдання, календар виконання робіт
-* виробництво, наряди, виробничі процеси та  виробничі етапи
-* розрахунок зарплати
-* підтримка сканера (клавіатурного) штрих-коду  
-* підтримка принтерів чеків та етикеток 
-* розділення доступу між філіями (наприклад торговими точками)
-* інтеграція з Опенкар,Woocommerce,PromUa 
-* інтеграція з Новою Поштою  
-* вбудований програмний РРО         
-* інтеграція з CheckBox та  ВчасноКаса 
-* підключення фіскального реєстратора 
-* інтеграція з сервісами СМС розсилок
-* API для доступу із зовнішніх систем, наприклад з 1С.
-* модуль для громадського харчування
-* модуль для дропшипінгу та фулфілменту
-* вбудований інтернет-магазин
-* бухгалтерський облік
- 
-#### Вимоги для установки:  
-Apache  (необхідна підтримка .htaccess)  
-PHP 8.1+  
-Mysql 8.0+  (MariaDB)    
+Lightweight web-based inventory and warehouse management in PHP. Keeps stock the way a squirrel keeps its supplies: knows what is stored where, and stays quick.
 
+**SquirrelStock is an unofficial fork of [Zippy](https://zippy.com.ua/) ([leon-mbs/zstore](https://github.com/leon-mbs/zstore)) by Leon, MIT License.** It is not affiliated with or endorsed by the original author. The original README is kept in [README.zippy.md](README.zippy.md) (Ukrainian).
 
-### Встановлення та налаштування   
+## Why a fork
 
- 
-  Створити БД (кодування utf8_general_ci), виконати SQL скрипт /db/db.sql   .
-  
-  Зкопіювати вміст папки www у кореневий каталог сайту.  
-  Виконати composer.json для завантаження сторонніх бібліотек (або зкачати [готову збірку](https://zippy.com.ua/download/fullzstore.zip) ).
-  
-  Конфігураційні файли лежать у папці config.
+The fork is developed for charities and non-profits that hand out supplies and equipment free of charge (first user: a children's hospice). Planned changes:
 
-  Встановити параметри з'єднання з базою даних у файлі /config/config.php та задати налаштування поштового серверу.
-  В загальних налаштуваннях задати  основні параметри робочого оточення та увімкнути необхідні модулі .  
-  Також необхідно переконатися, що дозволено право запису в папки uploads та logs.  
-  Залогінитись дефолтним користувачем admin admin  
-  Змінити дефолтний пароль у профілі. Задати персональні налаштування профілю.  
+- fixes for stock accounting reliability (double posting, batch order by expiry date, import date and others);
+- interface translation with English keys (`uk`, `ru`, later `be` and `en`);
+- full offline operation (no external scripts or CDNs);
+- equipment lending: who has each unit now, contracts, returns, repairs;
+- reports for free issue of supplies: write-off act, recipient × month, item and recipient movements for a period;
+- regression tests.
 
-  Установка ПЗ на Ubuntu:  <https://github.com/aurodion/zstore-installer-ubuntu>  
-  
-  Установка в  Docker:  <https://github.com/VladyslavHor/zstore-ci-docker>
+Status: early stage, the code currently equals upstream commit `c74df59f4` (13.10.2026).
+
+## Русский
+
+SquirrelStock — неофициальный форк складской программы Zippy (leon-mbs/zstore, лицензия MIT) для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование. Первый пользователь — детский хоспис. В планах: исправления надёжности учёта, перевод интерфейса на русский (ключи на английском), работа без интернета, учёт выдачи оборудования по договорам, отчёты для бухгалтерии, автотесты.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Copyright (c) 2018 Leon (original Zippy code), (c) 2026 SquirrelStock contributors.
