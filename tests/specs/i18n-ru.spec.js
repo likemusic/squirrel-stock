@@ -1,5 +1,6 @@
 // Русский интерфейс полный: на страницах меню нет украинского текста — ни из шаблонов и PHP (lang/ru.json),
-// ни из значений по умолчанию в базе (cli/localize-db.php ru). Названия языков в списке языков — на самом языке.
+// ни из значений по умолчанию в базе (cli/localize-db.php ru), ни в скриптах и атрибутах страницы.
+// Названия языков в списке языков — на самом языке.
 const { test, expect } = require('@playwright/test');
 const { blockExternal, login, clickWait } = require('../helpers/zippy');
 const { webPhp } = require('../helpers/stand');
@@ -37,6 +38,12 @@ test('страницы меню на русском без украинског�
       for (const line of text.split('\n').map(s => s.trim())) {
         if (UKRAINIAN.test(line) && !ALLOWED.includes(line)) found.push(`${href}: ${line.slice(0, 100)}`);
       }
+      // невидимое: строки в скриптах (confirm, toastr), подсказки в атрибутах
+      const html = (await page.content())
+        .replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '')   // комментарии пользователь не видит
+        .split(/\n/).map(l => l.replace(/(^|\s)\/\/.*$/, ''))
+        .filter(l => UKRAINIAN.test(l) && !ALLOWED.some(a => l.includes(a)));
+      for (const l of html) found.push(`${href}: [html] ${l.trim().slice(0, 100)}`);
     }
     expect(found).toEqual([]);
   } finally {

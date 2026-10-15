@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html  lang="uk">
+<html  lang="{{lang}}">
     <head>
         <title>Zippy CRM</title>
 
         <meta name="robots" content="noindex">     
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="{{lang}}">
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css?v=825">
       
 
@@ -26,11 +26,18 @@
         <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?v=826" type="text/javascript"></script>
         <script src="/assets/js/select2.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/select2-uk.js?v=825" type="text/javascript"></script>
+        {{#lang_ru}}<script src="/assets/js/select2-ru.js?v=1" type="text/javascript"></script>{{/lang_ru}}
+        <script>$.fn.select2.defaults.set('language', '{{lang}}');</script>
 
         <script src="/assets/js/toastr.min.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/printThis.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/summernote/summernote-bs5.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js?v=825" type="text/javascript"></script>
+        {{#lang_ru}}
+        <!-- шаблоны редакторов задают lang: 'uk-UA'; при русском интерфейсе эта таблица заменяется русской -->
+        <script src="/assets/js/summernote/lang/summernote-ru-RU.js?v=1" type="text/javascript"></script>
+        <script>$.extend(true, $.summernote.lang['uk-UA'], $.summernote.lang['ru-RU']);</script>
+        {{/lang_ru}}
 
         <script src="/assets/js/app.js?v=828"></script>     
         <script src="/assets/js/vue/vue.min.js?v=825"></script>     
