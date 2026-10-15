@@ -25,7 +25,7 @@ test('договор и выдача одной формой, поиск еди�
   await expect(page.locator('#iform [id^=unitlabel]')).toHaveCount(1);
   await expect(page.locator('#iform [id^=unitlabel]').first()).toContainText(factory);
   await clickWait(page, '#iform #issue');
-  expect((await messages(page)).join(' ')).toContain(number);
+  await expect(page.locator('.toast-message, .alert-success').first(), 'сообщение о выдаче').toContainText(number);   // ждать сообщение, а не читать сразу
 
   const c = value(`select concat(c.state, '|', c.details like '%<shortdesc><![CDATA[Врач Тестовый]]>%', '|', substring_index(substring_index(c.details, '<enddate>', -1), '</enddate>', 1), '|', cu.phone)
                    from contracts c join customers cu on cu.customer_id = c.customer_id where c.contract_number = '${esc(number)}' and cu.customer_name = '${esc(who)}'`);
