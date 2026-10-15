@@ -71,7 +71,7 @@ async function createCustomer(page, { name, type = 1 }) {
 
 // Документ через форму и проведение.
 // type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem
-// d: { date, customer, payment, notes, rows: [{ code, qty, price, sn, sdate }], dblclick }
+// d: { date, customer, payment, contract, notes, rows: [{ code, qty, price, sn, sdate }], dblclick }
 // dblclick — нажать «Провести» двойным щелчком (как делают торопливые пользователи)
 // Возвращает номер, сообщения и то, что форма сама подставила в строки (цена, партия).
 async function createDoc(page, type, d) {
@@ -81,6 +81,11 @@ async function createDoc(page, type, d) {
   await page.locator('#docform #store').selectOption('1');
   if (d.customer) await pickAuto(page, '#docform #customer', d.customer, d.customer);
   if (d.payment !== undefined && await page.locator('#docform #payment').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
+  if (d.contract) {   // договор выбирается по номеру; список появляется после выбора контрагента
+    const value = await page.locator('#docform #contract option').evaluateAll((os, n) => (os.find(o => o.textContent.trim().startsWith(n + ' ')) || {}).value, d.contract);
+    if (!value) throw new Error(`договор ${d.contract} не найден в накладной`);
+    await page.locator('#docform #contract').selectOption(value);
+  }
   if (d.notes) await page.locator('#docform #notes').fill(d.notes);
   const suggested = [];
   for (const r of d.rows) {
@@ -133,6 +138,24 @@ async function runReport(page, path, f = {}) {
   await page.waitForTimeout(600);
 }
 
+// Договор (Довідники → Договори) в состоянии «В работе» — только такие выбираются в документах.
+// d: { number, customer, from, to, note } — to: дата окончания (срок), note: краткое описание
+async function createContract(page, d) {
+  await page.goto('/index.php?p=App/Pages/Reference/ContractList');
+  await clickWait(page, '#addnew');
+  await page.locator('#editcontract_number').fill(d.number);
+  if (d.from) await page.locator('#editcreatedon').fill(d.from);
+  if (d.to) await page.locator('#editenddate').fill(d.to);
+  await pickAuto(page, '#editcust', d.customer, d.customer);
+  if (d.note) await page.locator('#editshortdesc').fill(d.note);
+  await clickWait(page, '#contractdetail #save');
+  await page.locator('#filter #searchkey').fill(d.number);
+  await Promise.all([page.waitForLoadState('networkidle'), page.locator('#filter #searchkey').press('Enter')]);
+  await clickWait(page, 'a[id^=show_]:visible');
+  await page.locator('#mstates').selectOption('6');
+  await clickWait(page, '#bstatus');
+}
+
 async function setUsesnumber(page, value) {
   await page.goto('/index.php?p=App/Pages/Options');
   await page.locator('#business #usesnumber').selectOption(String(value));
@@ -149,4 +172,4 @@ async function bodyText(page) {
   return (await page.locator('body').innerText()).replace(/\s+/g, ' ');
 }
 
-module.exports = { printForm, USESNUMBER_HOSPICE, setUsesnumber, blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };
+module.exports = { createContract, printForm, USESNUMBER_HOSPICE, setUsesnumber, blockExternal, login, messages, clickWait, pickAuto, createItem, createCustomer, createDoc, runReport, bodyText };

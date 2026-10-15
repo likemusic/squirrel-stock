@@ -14,3 +14,7 @@ WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'Re
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 2, 'Оборот по позиціях', 'ItemTurnover', 'Склад', 0 FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'ItemTurnover');
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 2, 'Обладнання: де зараз', 'EquipmentWhere', 'Склад', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 2 AND meta_name = 'EquipmentWhere');
