@@ -142,6 +142,13 @@ class ImportEquipmentHistory extends \App\Pages\Base
             }
             $h .= '</table>';
         }
+        if (count($eh->onhand)) {
+            $h .= '<h6>' . __('sqs.eqhist.onhand_title') . '</h6><table class="table table-sm w-auto" id="eqh-onhand">';
+            foreach ($eh->onhand as $item => $n) {
+                $h .= '<tr><td>' . self::e($item) . '</td><td class="text-end">' . $n . '</td></tr>';
+            }
+            $h .= '</table>';
+        }
         if (count($eh->skipped)) {
             $h .= '<h6>' . __('sqs.eqhist.skipped_title') . '</h6><table class="table table-sm w-auto" id="eqh-skipped">';
             foreach ($eh->skipped as $sheet => $items) {

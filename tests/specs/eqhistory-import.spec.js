@@ -5,8 +5,9 @@
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
-const { clickWait } = require('../helpers/zippy');
+const { clickWait, pickAuto } = require('../helpers/zippy');
 const { query, value } = require('../helpers/db');
+const { webPhp } = require('../helpers/stand');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
 const qty = sn => Number(value(`select coalesce(sum(qty), 0) from store_stock where snumber = '${sn}'`));
@@ -67,31 +68,41 @@ test('импорт истории оборудования: проверка, з
 
   // проверка: ничего не записано, план и ошибки с причиной
   await run('check');
-  expect(await stat('issue')).toBe(5);       // единицы 1, 2, 3, 5 и кровать с заводским номером
-  expect(await stat('merged')).toBe(1);      // единица 1 — в переписи и в журнале
-  expect(await stat('income')).toBe(1);      // кровать: только заводской номер
-  expect(await stat('return')).toBe(2);      // 1 — возврат; 3 — возврат перед списанием
-  expect(await stat('writeoff')).toBe(2);    // 3 — «списан» с датой; 6 — лист «СПИСАНО»
-  expect(await stat('errors')).toBe(6);      // 5 по строкам + закрытый период
+  // выдачи: единицы 1, 2, 3, 5 (дважды), 8, 9, кровать с заводским номером; без номеров — мешок Амбу и ингалятор
+  expect(await stat('issue')).toBe(10);
+  expect(await stat('merged')).toBe(2);      // единица 1 и мешок Амбу — в переписи и в журнале
+  expect(await stat('income')).toBe(3);      // кровать (только заводской номер), мешок Амбу и ингалятор (количеством)
+  expect(await stat('return')).toBe(5);      // 1; 3 перед списанием; 5 накануне новой выдачи; 8 и 9 — датой импорта
+  expect(await stat('writeoff')).toBe(4);    // 3 «списан» с датой; 9 «списан» без даты; 6 и 10 — лист «СПИСАНО»
+  expect(await stat('errors')).toBe(5);      // 4 по строкам + закрытый период
   const problems = (await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n');
   expect(problems).toMatch(/до початку актуального періоду .*01\.01\.2025.* від 05\.05\.2024/);
   expect(problems).toMatch(/Дату не розпізнано: весна/);
   expect(problems).toContain(`Інвентарного номера ${inv(99)} немає в базі`);
-  expect(problems).toMatch(/Повернення без дати/);
   expect(problems).toMatch(/Кілька одиниць в одній клітинці/);
   expect(problems).toContain(`Номера XX-${uniq} немає ні в базі, ні в переписі`);
   const notes = (await page.locator('#eqh-problems tr.note').allInnerTexts()).join('\n');
   expect(notes).toMatch(/Стан отримувача «умер»/);
   expect(notes).toMatch(/Дата видачі = дата договору/);
+  // дата импорта — как ее считает программа (часовой пояс из config.php), а не по часам этого компьютера или базы
+  const todayIso = webPhp('-r', "include 'config/config.php'; date_default_timezone_set($_config['common']['timezone']); echo date('Y-m-d');").trim();
+  const today = todayIso.split('-').reverse().join('.');
+  expect(notes).toContain('Повернення без дати: напередодні наступної видачі (02.04.2025)');
+  expect(notes).toContain(`Повернення без дати: датою імпорту (${today})`);
+  expect(notes).toContain(`Списання без дати: датою імпорту (${today})`);
+  expect(notes).not.toMatch(/подарили/);    // подаренное — обычная выдача, без заметки
   expect(await page.locator('#eqh-missing').innerText()).toContain(inv(99));
-  expect(await page.locator('#eqh-skipped').innerText()).toMatch(/кровати\s+мешок Амбу\s+1/);
+  expect(await page.locator('#eqh-skipped').innerText()).toMatch(/мешки Амбу\s+мешок Амбу\s+1/);   // возвращенный — пропуск
+  const onhand = await page.locator('#eqh-onhand').innerText();
+  expect(onhand).toMatch(/Мешки Амбу\s+1/);
+  expect(onhand).toMatch(/Ингалятор детский\s+1/);
   expect(await page.locator('#eqh-unitonly').innerText()).toMatch(/кровати\s+1/);
   expect(qty(inv(2))).toBe(1);
   expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
 
   // запись без галочки: отказ из-за закрытого периода, ничего не записано
   await clickWait(page, '#iform #write');
-  expect(await page.locator('.toast-message, .alert-danger').allInnerTexts()).toEqual(expect.arrayContaining([expect.stringMatching(/до початку актуального періоду/)]));
+  await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/до початку актуального періоду/);
   expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
   expect(qty(inv(2))).toBe(1);
 
@@ -112,6 +123,19 @@ test('импорт истории оборудования: проверка, з
   expect(contract(cn(3, '24'))[0]).toBe('8');
   expect(qty(inv(5))).toBe(0);
   expect(contract(cn(5, '25'))).toEqual(['6', 'Врач тестовый', who(5)]);   // номер договора журнала — «№/ГГ»
+  expect(contract(cn(8, '25'))[0]).toBe('8');        // «вернули» без даты: возврат накануне следующей выдачи, договор закрыт
+  expect(qty(inv(8))).toBe(1);                       // возврат датой импорта с примечанием
+  expect(value(`select concat(date(d.document_date), '|', d.notes like '%Дата повернення невідома%') from documents d join metadata m on m.meta_id = d.meta_id
+                join entrylist e on e.document_id = d.document_id join store_stock s on s.stock_id = e.stock_id
+                where m.meta_name = 'ReturnIssue' and s.snumber = '${inv(8)}'`)).toBe(`${todayIso}|1`);
+  expect(qty(inv(9))).toBe(0);                       // «списан» без даты: возврат и списание датой импорта
+  expect(lastDoc(inv(9))).toBe('OutcomeItem');
+  expect(qty(inv(10))).toBe(0);                      // лист «СПИСАНО» без даты
+  expect(lastDoc(inv(10))).toBe('OutcomeItem');
+  // подаренное — обычная выдача, слово в примечании документа
+  expect(value(`select d.notes like '%подарили%' from documents d join customers c on c.customer_id = d.customer_id where c.customer_name = '${who(1)}' and d.meta_id = (select meta_id from metadata where meta_name = 'GoodsIssue')`)).toBe('1');
+  // мелочь без номеров — у получателя количеством, позиция без серийного учета
+  expect(value(`select concat(detail like '%<useserial>1</useserial>%', '|', coalesce((select sum(qty) from store_stock s where s.item_id = items.item_id), 0)) from items where itemname = 'Мешки Амбу'`)).toMatch(/^0\|/);
   expect(qty(inv(6))).toBe(0);
   expect(lastDoc(inv(6))).toBe('OutcomeItem');
   expect(value(`select i.itemname from store_stock s join items i on i.item_id = s.item_id where s.snumber = 'KR-${uniq}'`)).toBe('кровати');
@@ -124,8 +148,15 @@ test('импорт истории оборудования: проверка, з
   // повторный запуск: все уже импортировано
   await run('check');
   for (const k of ['income', 'issue', 'return', 'writeoff']) expect(await stat(k)).toBe(0);
-  expect(await stat('done')).toBe(9);   // выдачи, возвраты, списания; приход кровати не нужен — она уже в базе
+  expect(await stat('done')).toBe(21);   // все события, кроме прихода кровати — она уже в базе; события «датой импорта» — тоже
   await expect(page.locator('#iform #write')).toHaveCount(0);
+
+  // мелочь на руках видна в «Обороте по позициям» по получателю
+  await page.goto('/index.php?p=App/Pages/Report/ItemTurnover');
+  await page.locator('#filter #from').fill('2025-01-01');
+  await pickAuto(page, '#filter #cust', who(16), who(16));
+  await clickWait(page, '#filter #onreport');
+  expect((await page.locator('body').innerText()).replace(/\s+/g, ' ')).toMatch(/Мешки Амбу/);
   } finally {
     await setActual(actual);
   }
