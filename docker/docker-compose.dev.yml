@@ -7,4 +7,5 @@ services:
       - ../www/templates:/var/www/html/templates
       - ../www/assets:/var/www/html/assets
       - ../www/lang:/var/www/html/lang
+      - ../www/cli:/var/www/html/cli
       - ../www/init.php:/var/www/html/init.php
