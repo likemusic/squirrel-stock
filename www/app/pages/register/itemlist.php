@@ -261,7 +261,7 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->itemdetname->setText($this->_item->itemname);
         $this->detailpanel->stocklist->Reload();
         
-        $store = $this->filter->searchstore->getValue();
+        $store = intval($this->filter->searchstore->getValue());
         
         $this->_tvars['i_plist'] =[];
 
@@ -509,9 +509,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
        
-        $cat = $form->searchcat->getValue();
-        $store = $form->searchstore->getValue();
-        $emp = $form->searchemp->getValue();
+        $cat = intval($form->searchcat->getValue());
+        $store = intval($form->searchstore->getValue());
+        $emp = intval($form->searchemp->getValue());
            
        
         $sqty = $form->searchqty->getValue();
@@ -564,7 +564,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if($sqty==1) {
            $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str}) <0 ";
         }
-        $stype = $form->searchtype->getValue();
+        $stype = intval($form->searchtype->getValue());
         if ($stype > 0) {
             $where = $where . " and   item_type={$stype}  ";
         }     
@@ -639,7 +639,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         }
                 
         $where = $where . $cstr ;
-        $store = $form->searchstore->getValue();
+        $store = intval($form->searchstore->getValue());
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
         }
@@ -647,7 +647,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
              $where = $where . "   and sdate is not null and sdate < CURDATE()   ";
             
         }         
-        $emp = $form->searchemp->getValue();
+        $emp = intval($form->searchemp->getValue());
         if ($emp > 0) {
             $where = $where . " and  emp_id={$emp}  ";
         }

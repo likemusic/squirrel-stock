@@ -980,7 +980,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_date >= ".$actualdate;
 
-        $salesource = $this->page->listpan->filter->salesource->getValue();
+        $salesource = intval($this->page->listpan->filter->salesource->getValue());
         if ($salesource > 0) {
             $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
         }
@@ -1000,12 +1000,12 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
 
       
-        $cust = $this->page->listpan->filter->searchcust->getKey();
+        $cust = intval($this->page->listpan->filter->searchcust->getKey());
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;
         }
 
-        $store_id = $this->page->listpan->filter->fstore->getValue();
+        $store_id = intval($this->page->listpan->filter->fstore->getValue());
         if ($store_id > 0) {
             $where .= " and   content like '%<store>{$store_id}</store>%' ";
         }
