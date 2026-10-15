@@ -73,7 +73,7 @@ class Helper
         System::clean();
         System::getSession()->clean();
 
-        setcookie("remember", '', 0);
+        \App\SQS\Remember::forget();   // SquirrelStock: токен «Запомнить» этой cookie больше не действует
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
         $_SESSION['userlogin'] = __('app.helper.hist');

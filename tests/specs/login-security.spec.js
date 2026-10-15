@@ -54,3 +54,60 @@ test('напоминание сменить пароль admin по умолча
   expect(value("select userpass from users where userlogin = 'admin'")).toMatch(/^\$2y\$/);
   expect(remind(), 'напоминание о пароле по умолчанию').toBe(before + 1);
 });
+
+// «Запомнить»: вход с галочкой, cookie remember из ответа
+async function rememberCookie(browser, login, pass) {
+  const context = await browser.newContext({ storageState: undefined });
+  await blockExternal(context);
+  const page = await context.newPage();
+  await page.goto('/');
+  await page.locator('#userlog').fill(login);
+  await page.locator('input[type=password]').first().fill(pass);
+  await page.locator('#remember').setChecked(true);
+  await Promise.all([page.waitForLoadState('networkidle'), page.locator('button[type=submit], input[type=submit]').first().click()]);
+  const cookie = (await context.cookies()).find(c => c.name === 'remember');
+  return { context, page, cookie };
+}
+
+// новая сессия только с cookie remember: вошли ли
+async function loggedInBy(browser, cookie) {
+  const context = await browser.newContext({ storageState: undefined });
+  await blockExternal(context);
+  await context.addCookies([{ name: 'remember', value: cookie.value, domain: cookie.domain, path: '/' }]);
+  const page = await context.newPage();
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  const ok = (await page.locator('input[type=password]').count()) == 0;
+  await context.close();
+  return ok;
+}
+
+test('«Запомнить»: случайный токен с флагами, отзывается сменой пароля и выходом', async ({ browser }) => {
+  const login = 'rem' + Date.now().toString(36), pass = 'Пароль-' + Date.now();
+  createUser(login, hashOf(pass));
+
+  let { context, cookie } = await rememberCookie(browser, login, pass);
+  await context.close();
+  expect(cookie, 'cookie выдана').toBeTruthy();
+  expect(cookie.value, 'случайный токен').toMatch(/^[0-9a-f]{24}\.[0-9a-f]{64}$/);
+  expect(cookie.httpOnly).toBe(true);
+  expect(cookie.sameSite).toBe('Lax');
+  const second = (await rememberCookie(browser, login, pass));
+  await second.context.close();
+  expect(second.cookie.value, 'каждый вход — новый токен').not.toBe(cookie.value);
+
+  expect(await loggedInBy(browser, cookie), 'вход по cookie').toBe(true);
+  expect(await loggedInBy(browser, { ...cookie, value: 'a'.repeat(24) + '.' + 'b'.repeat(64) }), 'выдуманный токен').toBe(false);
+
+  // смена пароля — все токены перестают действовать
+  query(`update users set userpass = '${esc(hashOf(pass + '-new'))}' where userlogin = '${esc(login)}'`);
+  expect(await loggedInBy(browser, cookie), 'после смены пароля').toBe(false);
+  expect(await loggedInBy(browser, second.cookie), 'после смены пароля, второй токен').toBe(false);
+
+  // выход — токен этой cookie перестает действовать
+  const third = await rememberCookie(browser, login, pass + '-new');
+  // ссылка «Выход» — в выпадающем меню пользователя
+  await Promise.all([third.page.waitForURL(/UserLogin/), third.page.locator('#logout').first().evaluate(a => a.click())]);
+  await third.context.close();
+  expect(await loggedInBy(browser, third.cookie), 'после выхода').toBe(false);
+});

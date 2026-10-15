@@ -118,9 +118,9 @@ class UserLogin extends \Zippy\Html\WebPage
       //  $_SESSION['userlogin'] = $this->_user->userlogin; //для  использования  вне  Application
 
         if ($this->loginform->remember->isChecked()) {
-            setcookie("remember", $this->_user->user_id . '_' . md5($this->_user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 14);
+            \App\SQS\Remember::issue($this->_user);   // SquirrelStock: случайный токен, отзывается сменой пароля и выходом
         } else {
-            setcookie("remember", '', 0);
+            \App\SQS\Remember::forget();
         }
         if (($_COOKIE['branch_id'] ?? 0) > 0) {
             System::getSession()->defbranch = $_COOKIE['branch_id'];
