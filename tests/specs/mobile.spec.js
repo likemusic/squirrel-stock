@@ -60,7 +60,15 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       expect(off, 'кнопки за краем экрана').toEqual([]);
     });
 
-    test('журналы: действия со строкой видны без прокрутки', async ({ page }, testInfo) => {
+    test('журналы: действия со строкой видны без прокрутки', async ({ page, uniq }, testInfo) => {
+      // первые строки журналов — с заведомо длинными названиями без пробелов (поставщик, получатель, позиция)
+      const long = 'Длинноеназваниебезпробелов' + uniq + 'ещедлиннееещедлиннее';
+      const code = 'LG-' + uniq;
+      await createItem(page, { name: 'Позиция' + long, code });
+      await createCustomer(page, { name: 'Поставщик' + long, type: 2 });
+      await createCustomer(page, { name: 'Получатель' + long, type: 1 });
+      await createDoc(page, 'GoodsReceipt', { date: '2026-10-14', customer: 'Поставщик' + long, payment: 0, rows: [{ code, qty: 3, price: 0 }] });
+      await createDoc(page, 'GoodsIssue', { date: '2026-10-14', customer: 'Получатель' + long, payment: 0, rows: [{ code, qty: 1, price: 0 }] });
       const off = [];
       for (const name of Object.keys(JOURNALS)) {
         const row = await openJournal(page, name);
