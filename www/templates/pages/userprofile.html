@@ -144,6 +144,8 @@
                      <button type="submit"   class="btn btn-primary">{{#t}}common.zberehty{{/t}}</button>
                   </div>   
                 </form>
+                <!-- SquirrelStock: двухфакторный вход по коду из приложения (App\Pages\TwoFactor) -->
+                <a id="twofa-link" class="d-block mt-3" href="/index.php?p=App/Pages/TwoFactor"><i class="fa fa-shield-alt me-1"></i>{{#t}}sqs.2fa.profile_link{{/t}}</a>
                 
                 {{#hideblock}}
                  <h5>{{#t}}app.userprofile.dvofaktorna_autentyfikatsiia{{/t}}</h5>   
