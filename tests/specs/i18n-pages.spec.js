@@ -4,7 +4,10 @@ const fs = require('fs');
 const { test, expect } = require('../fixtures');
 const { value } = require('../helpers/db');
 
-const UK = JSON.parse(fs.readFileSync(__dirname + '/../../www/lang/uk.json', 'utf8'));
+// ключи общего словаря и словарей модулей (www/app/sqs/modules/<имя>/lang)
+const MODULES = __dirname + '/../../www/app/sqs/modules';
+const UK = Object.assign({}, ...fs.readdirSync(MODULES).filter(d => d[0] != '.' && fs.existsSync(`${MODULES}/${d}/lang/uk.json`))
+  .map(d => JSON.parse(fs.readFileSync(`${MODULES}/${d}/lang/uk.json`, 'utf8'))), JSON.parse(fs.readFileSync(__dirname + '/../../www/lang/uk.json', 'utf8')));
 const KEYS = Object.keys(UK).filter(k => k.includes('.'));
 
 test('страницы меню без сырых ключей перевода', async ({ page }) => {

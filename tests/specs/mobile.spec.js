@@ -104,7 +104,8 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       if (await page.locator('#editdetail:visible').count()) await tap(page, '#cancelrow');
       await expect(page.locator('#docform a[id^=delete_]:visible')).toHaveCount(1);
       await shot(page, testInfo, 'goodsissue');
-      await tap(page, '#execdoc');
+      // после проведения — переход в журнал продаж; форму не опрашивать, пока страница перезагружается
+      await Promise.all([page.waitForURL(/Register\/GIList/, { timeout: 20000 }), page.locator('#execdoc').first().tap()]);
       expect(await page.locator('#docform #execdoc:visible').count(), (await messages(page)).join(' ')).toBe(0);
       expect(value(`select state from documents where document_number = '${esc(number)}' order by document_id desc limit 1`)).toBe('5');
       expect(stockQty(code)).toBe(3);
