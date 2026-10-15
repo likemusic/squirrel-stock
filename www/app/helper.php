@@ -1282,7 +1282,7 @@ class Helper
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
         if(strlen($salt ?? '') == 0) {
-            $salt = '' . rand(1000, 999999);
+            $salt = bin2hex(random_bytes(32));   // SquirrelStock: длинная случайная соль для новой установки
             self::setKeyVal('salt', $salt);
         }
         return $salt;

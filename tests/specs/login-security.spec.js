@@ -111,3 +111,15 @@ test('«Запомнить»: случайный токен с флагами, �
   await third.context.close();
   expect(await loggedInBy(browser, third.cookie), 'после выхода').toBe(false);
 });
+
+test('новая установка получает длинную случайную «соль»', async () => {
+  const saved = value("select vald from keyval where keyd = 'salt'");
+  query("delete from keyval where keyd = 'salt'");
+  try {
+    execFileSync('docker', ['exec', '-w', '/var/www/html', WEB, 'php', '-r', '$_SERVER["HTTP_HOST"] = "localhost"; require "init.php"; \\App\\Helper::getSalt();']);
+    expect(value("select vald from keyval where keyd = 'salt'")).toMatch(/^[0-9a-f]{64}$/);
+  } finally {
+    query("delete from keyval where keyd = 'salt'");
+    if (saved !== null) query(`insert into keyval (keyd, vald) values ('salt', '${esc(saved)}')`);
+  }
+});
