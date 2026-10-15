@@ -32,6 +32,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `04cf0e89f` | `www/app/helper.php` `login()`, `www/app/system.php` `checkUpdate()` | password checked only with `password_verify()`; a plain-text password from an old database is accepted once and re-hashed; default admin password reminder recognises any hash of it | `tests/specs/login-security.spec.js` |
 | `76a1b7639` | `www/index.php`, `www/app/pages/userlogin.php` `successLogin()`, `www/app/helper.php` `logout()`; new `www/app/sqs/remember.php`, table `sqs_remember` | "Remember me" cookie holds a random token; only its hash is stored, it expires, and stops working on password change and logout; cookie HttpOnly, SameSite=Lax, Secure over HTTPS | `tests/specs/login-security.spec.js` |
 | `dfaa29dd5` | `www/app/helper.php` `getSalt()` | a new installation gets a long random salt (`random_bytes`); existing salts kept | `tests/specs/login-security.spec.js` |
+| `3d6a53090` | `www/templates/pages/register/doclist.html`, `gilist.html`, `grlist.html`, `itemlist.html` | counterparty and item name cells `text-break`: long names wrap instead of widening the table on a phone | `tests/specs/mobile.spec.js` |
 
 ## Proposed upstream
 
