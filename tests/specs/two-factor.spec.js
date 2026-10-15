@@ -113,3 +113,26 @@ test('двухфакторный вход: включение, вход с ко�
   expect(s.state, 'после сброса').toBe('in');
   await s.context.close();
 });
+
+// вход только по паролю мимо страницы входа (токен API): учитывает блокировку подбора и недоступен при двухфакторном входе
+test('токен API по паролю: блокировка подбора и отказ при двухфакторном входе', async ({ playwright, uniq }, testInfo) => {
+  const user = 'api' + uniq.toLowerCase(), pass = 'Пароль-' + uniq;
+  query(`insert into users (userlogin, userpass, createdon, email, acl, disabled, options, role_id)
+         select '${esc(user)}', '${esc(hashOf(pass))}', now(), '', acl, 0, options, role_id from users where userlogin = 'admin'`);
+  const api = await playwright.request.newContext({ baseURL: testInfo.project.use.baseURL, storageState: { cookies: [], origins: [] } });
+  const token = async (login, password) => {
+    const r = await api.post('/api/common', { data: { jsonrpc: '2.0', method: 'token', params: { login, password }, id: 1 } });
+    const j = await r.json();
+    return j.result ? 'token' : 'error';
+  };
+  try {
+    expect(await token(user, pass), 'обычный пользователь').toBe('token');
+    for (let i = 0; i < 5; i++) expect(await token(user, 'wrong-' + i)).toBe('error');
+    expect(await token(user, pass), 'после 5 неудач — блокировка').toBe('error');
+    query(`delete from sqs_loginfail where login = '${esc(user)}'`);
+    query(`insert into sqs_2fa (user_id, secret, enabled, last_step, updated) select user_id, 'JBSWY3DPEHPK3PXP', 1, 0, now() from users where userlogin = '${esc(user)}'`);
+    expect(await token(user, pass), 'двухфакторный вход: только по паролю нельзя').toBe('error');
+  } finally {
+    await api.dispose();
+  }
+});

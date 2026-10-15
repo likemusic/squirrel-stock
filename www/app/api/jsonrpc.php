@@ -90,7 +90,8 @@ abstract class JsonRPC
         //Basic
         if ($api['atype'] == 2) {
 
-            $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            // SquirrelStock: блокировка подбора, без двухфакторного входа (App\SQS\LoginGuard::passwordOnly)
+            $user = \App\SQS\LoginGuard::passwordOnly((string)($_SERVER['PHP_AUTH_USER'] ?? ''), (string)($_SERVER['PHP_AUTH_PW'] ?? ''), (string)($_SERVER['REMOTE_ADDR'] ?? ''));
 
         }
         //без  авторизации

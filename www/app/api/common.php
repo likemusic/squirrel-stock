@@ -10,7 +10,8 @@ class common extends JsonRPC
 
         $api = \App\System::getOptions('api');
 
-        $user = \App\Helper::login($args['login'], $args['password']);
+        // SquirrelStock: блокировка подбора, без двухфакторного входа (App\SQS\LoginGuard::passwordOnly)
+        $user = \App\SQS\LoginGuard::passwordOnly((string)($args['login'] ?? ''), (string)($args['password'] ?? ''), (string)($_SERVER['REMOTE_ADDR'] ?? ''));
 
         if ($user instanceof \App\Entity\User) {
             $key = hash('sha256', 'api' . \App\Helper::getSalt());            

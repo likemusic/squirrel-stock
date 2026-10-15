@@ -38,6 +38,25 @@ class LoginGuard
             . $conn->qstr($ip) . ', ' . $conn->qstr(date('Y-m-d H:i:s')) . ')');
     }
 
+    /**
+     * Вход только по паролю мимо страницы входа (токен API, Basic-авторизация API, Telegram-бот): та же блокировка
+     * подбора; пользователю с двухфакторным входом так войти нельзя — второго шага здесь нет. null — отказ.
+     */
+    public static function passwordOnly(string $login, string $password, string $ip): ?\App\Entity\User {
+        if (self::blockedMinutes($login, $ip) > 0) {
+            return null;
+        }
+        $user = \App\Helper::login($login, $password);
+        if (!($user instanceof \App\Entity\User)) {
+            if (strlen($login) > 0) {
+                self::fail($login, $ip);
+            }
+            return null;
+        }
+        self::success($login);
+        return TwoFactor::enabled(intval($user->user_id)) ? null : $user;
+    }
+
     public static function success(string $login): void {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute('DELETE FROM sqs_loginfail WHERE login = ' . $conn->qstr($login));
