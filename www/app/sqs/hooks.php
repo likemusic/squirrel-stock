@@ -67,5 +67,7 @@ class Hooks
         self::on('beforeSave', '*', [DocAudit::class, 'beforeSave']);
         self::on('afterSave', '*', [DocAudit::class, 'afterSave']);
         self::on('afterExecute', 'GoodsIssue', [IssueInterval::class, 'afterExecute']);   // интервал выдачи: предупреждение
+        self::listen('mainBlocks', [BackupJob::class, 'mainBlock']);      // до переноса в модули
+        self::listen('mainBlocks', [EquipmentDue::class, 'mainBlock']);
     }
 }
