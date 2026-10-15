@@ -31,6 +31,8 @@ class Main extends Base
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
         $this->_tvars['dashboard'] =  (($user->dashboard ==1 ) ||  ($user->rolename=='admins') );
+        // SquirrelStock: напоминание о сроке пользования выданного оборудования
+        $this->_tvars = array_merge($this->_tvars, \App\SQS\EquipmentDue::tvars());
  
         $br = '';
         $cstr = '';
