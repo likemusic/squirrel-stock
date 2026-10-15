@@ -4,6 +4,20 @@ const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, pickAuto, messages, runReport } = require('../helpers/zippy');
 const { value, esc, stockQty } = require('../helpers/db');
 
+// Журналы из меню профиля: строка документа (или позиции) и все ссылки и кнопки в ней. GIList и GRList по умолчанию
+// показывают только открытые документы — фильтр «Все».
+const JOURNALS = { DocList: null, GIList: '3', GRList: '2', ItemList: null };
+async function openJournal(page, name) {
+  await page.goto('/index.php?p=App/Pages/Register/' + name);
+  if (JOURNALS[name]) {
+    await page.locator('#filter #status').selectOption(JOURNALS[name]);
+    await Promise.all([page.waitForLoadState('networkidle'), page.locator('#filter').evaluate(f => f.requestSubmit())]);
+  }
+  const row = page.locator('tr:has([id^=number_]), tr:has([id^=itemname_])').first();
+  await row.waitFor();
+  return row;
+}
+
 for (const [width, height] of [[375, 667], [414, 896]]) {
   test.describe(`телефон ${width} px`, () => {
     test.use({ viewport: { width, height }, isMobile: true, hasTouch: true });
@@ -44,6 +58,19 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
         }
       }
       expect(off, 'кнопки за краем экрана').toEqual([]);
+    });
+
+    test('журналы: действия со строкой видны без прокрутки', async ({ page }, testInfo) => {
+      const off = [];
+      for (const name of Object.keys(JOURNALS)) {
+        const row = await openJournal(page, name);
+        await page.screenshot({ path: testInfo.outputPath('journal-' + name + '.png'), fullPage: true });
+        for (const el of await row.locator('a:visible, button:visible').all()) {
+          const box = await el.boundingBox();
+          if (box && box.width > 0 && box.x + box.width > width + 0.5) off.push(`${name} ${await el.getAttribute('id') || 'button'}: ${Math.round(box.x + box.width)}`);
+        }
+      }
+      expect(off, 'за правым краем экрана').toEqual([]);
     });
 
     test('выдача расходной накладной с телефона', async ({ page, uniq }, testInfo) => {
@@ -111,4 +138,16 @@ test('десктоп: меню по-прежнему сдвигает стран
   await expect.poll(async () => Math.round((await page.locator('.main').boundingBox()).x)).toBe(300);
   await page.locator('#barbtn').click();
   await expect.poll(async () => Math.round((await page.locator('.main').boundingBox()).x)).toBe(0);
+});
+
+test('десктоп: в журналах все колонки на месте', async ({ page }) => {
+  // число колонок до правки для телефона (1440 px): скрываются только на узком экране
+  const expected = { DocList: 15, GIList: null, GRList: null, ItemList: 14 };
+  for (const name of Object.keys(JOURNALS)) {
+    const row = await openJournal(page, name);
+    const visible = await row.locator('xpath=ancestor::table[1]').locator('th:visible').count();
+    if (expected[name] !== null) expect(visible, name).toBe(expected[name]);
+    const all = await row.locator('xpath=ancestor::table[1]').locator('th').count();
+    expect(visible, name + ': на десктопе скрытых колонок нет').toBe(all);
+  }
 });

@@ -133,67 +133,67 @@
                   
                 <table class="table   table-sm  table-hover   ">
                   <thead>  <tr>
-                        <th></th>
+                        <th class="d-none d-md-table-cell"></th>
 
-                         <th class="text-nowrap  "><a zippy="sortdoc">{{#t}}common.typ_dokumenta{{/t}}</a></th>
+                         <th class="text-nowrap d-none d-md-table-cell"><a zippy="sortdoc">{{#t}}common.typ_dokumenta{{/t}}</a></th>
                         <th  ><a zippy="sortnum">{{#t}}common.nomer{{/t}}</a></th>
                         <th  ><a zippy="sortdate">{{#t}}common.data{{/t}}</a></th>
                         <th ><a zippy="sortcust">{{#t}}common.kontrahent{{/t}}</a></th>
-                        <th class="text-end   "><a zippy="sortamount">{{#t}}common.suma{{/t}}</a></th>
-                        <th  > {{#t}}common.status{{/t}} </th>
+                        <th class="text-end d-none d-md-table-cell"><a zippy="sortamount">{{#t}}common.suma{{/t}}</a></th>
+                        <th class="d-none d-md-table-cell"> {{#t}}common.status{{/t}} </th>
                         {{#usebranch}}
-                        <th>{{#t}}common.filiia{{/t}}</th>
+                        <th class="d-none d-md-table-cell">{{#t}}common.filiia{{/t}}</th>
                         {{/usebranch}}
 
-                        <th>{{#t}}common.pidstava_2{{/t}}</th>
-                        <th></th>
-                        <th></th>
+                        <th class="d-none d-md-table-cell">{{#t}}common.pidstava_2{{/t}}</th>
+                        <th class="d-none d-md-table-cell"></th>
+                        <th class="d-none d-md-table-cell"></th>
 
-                        <th></th>
+                        <th class="d-none d-md-table-cell"></th>
                       
-                        <th></th>
-                        <th></th>
+                        <th class="d-none d-md-table-cell"></th>
+                        <th class="d-none d-md-table-cell"></th>
                         <th></th>
                         <th></th>
                     </tr>  </thead>
                     <tbody>
                         <tr zippy="doclist">
-                            <td>
+                            <td class="d-none d-md-table-cell">
                            <a  zippy="tofav"><i title="{{#t}}register.doclist.dodaty_v_obrane{{/t}}" zippy="top" class="far fa-star"  ></i></a>
                             <a  zippy="fromfav"><i title="{{#t}}register.doclist.vydalyty_z_obranoho{{/t}}" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
-                            <td class="text-nowrap  "><a zippy="name"></a></td>
+                            <td class="text-nowrap d-none d-md-table-cell"><a zippy="name"></a></td>
                             <td class="text-nowrap  "><a zippy="number"></a></td>
                             <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
-                            <td zippy="amount" class="text-end  "></td>
+                            <td zippy="amount" class="text-end d-none d-md-table-cell"></td>
 
-                            <td style="white-space:  nowrap" zippy="state"></td>
+                            <td style="white-space:  nowrap" class="d-none d-md-table-cell" zippy="state"></td>
                             {{#usebranch}}
-                            <td zippy="branch"></td>
+                            <td zippy="branch" class="d-none d-md-table-cell"></td>
                             {{/usebranch}}
 
-                            <td><a zippy="parentdoc"></a></td>
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
-                            <td><i zippy="hasscan" class="far fa-image" title="{{#t}}register.doclist.prykripleno_skan_oryhinalu{{/t}}"></i></td>
+                            <td class="d-none d-md-table-cell"><a zippy="parentdoc"></a></td>
+                            <td class="d-none d-md-table-cell"><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
+                            <td class="d-none d-md-table-cell"><i zippy="hasscan" class="far fa-image" title="{{#t}}register.doclist.prykripleno_skan_oryhinalu{{/t}}"></i></td>
 
-                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="{{#t}}register.doclist.zaplanovanyi{{/t}}"></i></td>
-                            <td><i zippy="waitapp" class="fa fa-gavel" title="{{#t}}doc.document.ochikuie_zatverdzhennia{{/t}} "></i></td>
-                         <td  >
+                            <td class="d-none d-md-table-cell"><i zippy="isplanned" class="fa fa-calendar-alt" title="{{#t}}register.doclist.zaplanovanyi{{/t}}"></i></td>
+                            <td class="d-none d-md-table-cell"><i zippy="waitapp" class="fa fa-gavel" title="{{#t}}doc.document.ochikuie_zatverdzhennia{{/t}} "></i></td>
+                         <td class="d-none d-md-table-cell">
                                 <a zippy="qr" title="{{#t}}register.doclist.zovnishnie_posylannia_na_dokument{{/t}}"><i class="fa fa-link"></i></a> &nbsp; &nbsp;
                             </td>
 
-                            <td style="white-space:   nowrap"> &nbsp;&nbsp;
+                            <td style="white-space:   nowrap"><span class="d-none d-md-inline"> &nbsp;&nbsp;</span>
                                 <a zippy="show" title="{{#t}}common.perehliad{{/t}}"><i class="fa fa-eye"></i> </a>
-                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i> </a>
+                              <span class="d-none d-md-inline">&nbsp; &nbsp; &nbsp; &nbsp;</span><span class="d-md-none ms-2"></span>   <a zippy="edit" title="{{#t}}common.redahuvannia{{/t}}"><i class="fa fa-edit"></i> </a>
                                 <a zippy="cancel" title="{{#t}}register.doclist.skasuvaty_vykonannia{{/t}}"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
                                 <a zippy="delete" title="{{#t}}app.roles.vydalennia{{/t}}"><i class="fa fa-trash"></i></a>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <div class="btn-group" zippy="basedon">
                                     <button title="{{#t}}register.doclist.stvoryty_na_pidstavi{{/t}}" type="button"
                                             class="btn btn-secondary btn-sm  dropdown-toggle" data-bs-toggle="dropdown">

@@ -118,32 +118,32 @@
                    <thead>
                     <tr>
                         {{#useimages}}
-                        <th></th>
+                        <th class="d-none d-md-table-cell"></th>
                         {{/useimages}}
 
                         <th>{{#t}}common.nazva{{/t}}</th>
 
 
-                        <th>{{#t}}common.kod{{/t}}</th>
-                        <th>{{#t}}common.katehoriia{{/t}}</th>
-                        <th>{{#t}}common.brend{{/t}}</th>
+                        <th class="d-none d-md-table-cell">{{#t}}common.kod{{/t}}</th>
+                        <th class="d-none d-md-table-cell">{{#t}}common.katehoriia{{/t}}</th>
+                        <th class="d-none d-md-table-cell">{{#t}}common.brend{{/t}}</th>
                           {{#usecf}}
-                            <th>{{#t}}reference.itemlist.kast_polia{{/t}}</th>
+                            <th class="d-none d-md-table-cell">{{#t}}reference.itemlist.kast_polia{{/t}}</th>
                              {{/usecf}}
                         <th>{{#t}}common.od{{/t}}</th>
-                        <th> <i title="{{#t}}common.komirka{{/t}}" class="fa fa-box"></i> </th>     
+                        <th class="d-none d-md-table-cell"> <i title="{{#t}}common.komirka{{/t}}" class="fa fa-box"></i> </th>     
 
                         <th class="text-end  ">{{#t}}common.kil{{/t}}</th>
-  <th class="text-end  "> <i title="{{#t}}register.itemlist.zarezervovano{{/t}}" class="fa fa-archive"></i> </th>     
-  <th class="text-end  "> <i title="{{#t}}register.itemlist.v_zakuptsi{{/t}}" class="fa fa fa-truck"></i> </th>     
+  <th class="text-end d-none d-md-table-cell"> <i title="{{#t}}register.itemlist.zarezervovano{{/t}}" class="fa fa-archive"></i> </th>     
+  <th class="text-end d-none d-md-table-cell"> <i title="{{#t}}register.itemlist.v_zakuptsi{{/t}}" class="fa fa fa-truck"></i> </th>     
                         
    {{^noshowpartion}}                         
-                    <th class="text-end  ">{{#t}}common.obl_tsina{{/t}}</th>
-                    <th class="text-end  ">{{#t}}common.na_sumu{{/t}}</th>
+                    <th class="text-end d-none d-md-table-cell">{{#t}}common.obl_tsina{{/t}}</th>
+                    <th class="text-end d-none d-md-table-cell">{{#t}}common.na_sumu{{/t}}</th>
       {{/noshowpartion}}  
         {{^nohowprodprice}}       
-                        <th class="text-end  ">{{#t}}common.prod_tsina{{/t}}</th>
-                        <th class="text-end  ">{{#t}}common.na_sumu{{/t}}</th>
+                        <th class="text-end d-none d-md-table-cell">{{#t}}common.prod_tsina{{/t}}</th>
+                        <th class="text-end d-none d-md-table-cell">{{#t}}common.na_sumu{{/t}}</th>
    {{/nohowprodprice}}                                        
 
 
@@ -154,7 +154,7 @@
                     <tbody>
                     <tr zippy="itemlist"  >
                         {{#useimages}}
-                        <td>
+                        <td class="d-none d-md-table-cell">
                             <a zippy="imagelistitem" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
                                     style="float:left; width:64px"></a>
 
@@ -163,27 +163,27 @@
 
                         <td ><a zippy="itemname"></a></td>
 
-                        <td zippy="code" class=" text-nowrap"></td>
-                        <td zippy="cat_name"></td>
-                        <td zippy="brand"></td>
+                        <td zippy="code" class="text-nowrap d-none d-md-table-cell"></td>
+                        <td zippy="cat_name" class="d-none d-md-table-cell"></td>
+                        <td zippy="brand" class="d-none d-md-table-cell"></td>
                               {{#usecf}}
-                            <td zippy="cfval"> </td>
+                            <td zippy="cfval" class="d-none d-md-table-cell"> </td>
                              {{/usecf}} 
                         <td zippy="msr"></td>
-                        <td zippy="cell"></td>
+                        <td zippy="cell" class="d-none d-md-table-cell"></td>
 
                         <td zippy="iqty" class="text-end  "></td>
-                        <td zippy="iqtyr" class="text-end  "></td>
-                        <td zippy="iqtyb" class="text-end  "></td>
+                        <td zippy="iqtyr" class="text-end d-none d-md-table-cell"></td>
+                        <td zippy="iqtyb" class="text-end d-none d-md-table-cell"></td>
                         
                     {{^noshowpartion}} 
-                        <td zippy="inprice" class="text-end  "></td>
-                        <td zippy="iamount" class="text-end  "></td>
+                        <td zippy="inprice" class="text-end d-none d-md-table-cell"></td>
+                        <td zippy="iamount" class="text-end d-none d-md-table-cell"></td>
                     {{/noshowpartion}} 
                       
                      {{^nohowprodprice}}       
-                        <td zippy="iprodprice" class="text-end  "></td>
-                        <td zippy="iprodamount" class="text-end  "></td>
+                        <td zippy="iprodprice" class="text-end d-none d-md-table-cell"></td>
+                        <td zippy="iprodamount" class="text-end d-none d-md-table-cell"></td>
                     {{/nohowprodprice}}                     
 
                         <td>
@@ -195,7 +195,7 @@
 
 
                     </tr>
-                    <tr>
+                    <tr class="d-none d-md-table-row">
                       {{#useimages}}
                        <td>   </td>
                       {{/useimages}}
