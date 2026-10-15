@@ -383,7 +383,7 @@ class MoveItem extends \App\Pages\Base
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
@@ -394,7 +394,7 @@ class MoveItem extends \App\Pages\Base
        
 
         $this->docform->barcode->setText('');
-        $store_id = $this->docform->store->getValue();
+        $store_id = intval($this->docform->store->getValue());
         if ($store_id == 0) {
             $this->setError(__('common.ne_obrano_sklad'));
             return;
