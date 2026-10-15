@@ -35,6 +35,7 @@ services:
       DB_NAME: zstore
       DB_USER: zstore
       DB_PASS: zstore
+      SQS_LANG: ${SQS_LANG:-uk}   # язык интерфейса по умолчанию: uk, ru
     ports:
       - "127.0.0.1:${SQS_PORT:-8083}:80"
     volumes:

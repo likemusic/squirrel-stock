@@ -9,7 +9,7 @@ async function setLang(page, lang) {
   await clickWait(page, '#profileform button[type=submit], #profileform input[type=submit]');
 }
 
-test.afterEach(async ({ page }) => setLang(page, ''));
+test.afterEach(async ({ page }) => setLang(page, 'uk'));   // язык тестов (global-setup)
 
 for (const [lang, label, search, def] of [
   ['ru', 'Язык интерфейса', 'Поиск...', 'По умолчанию'],

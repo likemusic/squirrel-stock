@@ -34,10 +34,24 @@ async function clickWait(page, sel) {
 // Подсказка (autocomplete): ввести запрос и выбрать вариант.
 // firstMustContain — ждать, пока первым в списке станет нужный вариант: список по недопечатанному запросу
 // успевает показаться раньше («1C-03» → 1C-030 вместо 1C-039)
+// Набор текста по символам. Скобки — через Shift+9/0, как на настоящей клавиатуре: подсказка (bootstrap-typeahead)
+// принимает «(» (код 40, как у стрелки вниз) только с Shift, а Playwright печатает ее без Shift.
+async function typeText(page, inp, text) {
+  for (const part of text.split(/([()])/)) {
+    if (part === '(' || part === ')') {
+      await page.keyboard.down('Shift');
+      await page.keyboard.press(part === '(' ? 'Digit9' : 'Digit0');
+      await page.keyboard.up('Shift');
+    } else if (part) {
+      await inp.pressSequentially(part, { delay: 40 });
+    }
+  }
+}
+
 async function pickAuto(page, sel, query, expect, firstMustContain) {
   const inp = page.locator(sel);
   await inp.fill('');
-  await inp.pressSequentially(query, { delay: 40 });
+  await typeText(page, inp, query);
   let opt = page.locator('li a.dropdown-item:visible', { hasText: expect || '' }).first();
   if (firstMustContain) {
     opt = page.locator('li a.dropdown-item:visible').first();
@@ -60,12 +74,14 @@ async function createItem(page, { name, code, msr = 'шт', serial = false }) {
   await clickWait(page, '#save');
 }
 
-// type: 1 — физлицо (получатель), 2 — организация (донор, поставщик)
-async function createCustomer(page, { name, type = 1 }) {
+// type: 1 — покупатель (получатель), 2 — поставщик (донор)
+async function createCustomer(page, { name, type = 1, phone, address }) {
   await page.goto('/index.php?p=App/Pages/Reference/CustomerList');
   await clickWait(page, '#addnew');
   await page.locator('#editcustomername').fill(name);
   await page.locator('#edittype').selectOption(String(type));
+  if (phone) await page.locator('#editphone').fill(phone);
+  if (address) await page.locator('#editaddress').fill(address);
   await clickWait(page, '#customerdetail button[type=submit], #customerdetail input[type=submit], #save');
 }
 

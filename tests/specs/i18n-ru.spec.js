@@ -48,7 +48,7 @@ test('страницы меню на русском без украинског�
     }
     expect(found).toEqual([]);
   } finally {
-    await setLang(page, '');
+    await setLang(page, 'uk');   // язык тестов (global-setup)
     await context.close();
   }
 });
