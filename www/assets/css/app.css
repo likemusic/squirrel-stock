@@ -275,3 +275,26 @@ a.sidebar-link {
 
 }
   
+/* SquirrelStock: на телефоне ряд кнопок документа («Скасувати / Зберегти / Провести») переносится, а не уезжает за левый край */
+@media (max-width: 575.98px) {
+    form .d-flex.justify-content-end {
+        flex-wrap: wrap;
+        row-gap: .5rem;
+    }
+}
+
+/* SquirrelStock: на телефоне открытое меню сдвигает страницу, не сжимая ее (раньше страница сжималась до 60 px);
+   страница уходит за правый край, кнопка ≡ остается видна справа от меню и закрывает его */
+@media (max-width: 767.98px) {
+    .wrapper {
+        overflow-x: hidden;
+    }
+    .main {
+        min-width: calc(100vw - 12px);
+    }
+}
+
+/* SquirrelStock: у свернутого меню нет тени — раньше на левом краю страницы оставалась серая полоса */
+#sidebar.collapsed {
+    box-shadow: none;
+}

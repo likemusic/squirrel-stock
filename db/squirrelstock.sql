@@ -56,6 +56,11 @@ CREATE TABLE IF NOT EXISTS sqs_unit (
   KEY factory_no (factory_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Выдача расходников одной короткой формой (основная ежедневная операция): проведенная расходная накладная по цене 0
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 5, 'Видача витратних матеріалів', 'ConsumablesIssue', '', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'ConsumablesIssue');
+
 -- Выдача оборудования одной формой: договор + расходная накладная
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
 SELECT 5, 'Видача обладнання за договором', 'EquipmentIssue', '', 0 FROM DUAL
