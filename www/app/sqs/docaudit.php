@@ -83,8 +83,9 @@ class DocAudit
             return;
         }
         $conn = \ZDB\DB::getConnect();
+        // время программы, не базы: NOW() в базе может быть в другом поясе (в Docker — UTC)
         $conn->Execute('INSERT INTO sqs_doclog (document_id, user_id, createdon, changes) VALUES (' . intval($doc->document_id) . ', '
-            . intval(\App\System::getUser()->user_id) . ', NOW(), ' . $conn->qstr(json_encode($changes, JSON_UNESCAPED_UNICODE)) . ')');
+            . intval(\App\System::getUser()->user_id) . ', ' . $conn->qstr(date('Y-m-d H:i:s')) . ', ' . $conn->qstr(json_encode($changes, JSON_UNESCAPED_UNICODE)) . ')');
     }
 
     /**

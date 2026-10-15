@@ -3,6 +3,7 @@
 const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, clickWait, messages } = require('../helpers/zippy');
 const { value, stockQty, esc } = require('../helpers/db');
+const { webPhp } = require('../helpers/stand');
 
 async function editFirstRowQty(page, id, qty) {
   await page.goto('/index.php?p=App/Pages/Doc/GoodsReceipt&arg=' + id);
@@ -38,6 +39,11 @@ test('правка проведенного документа: запрет, о
 
   const log = value(`select group_concat(changes) from sqs_doclog where document_id = ${id}`);
   expect(log).toContain('"field":"rows"');
+  // время правки — по часовому поясу программы, а не базы (в Docker база в UTC, программа в Europe/Minsk)
+  // запись — строкой «дата время», журнал показывает её как есть, поэтому строка должна быть по времени программы
+  const logged = value(`select max(createdon) from sqs_doclog where document_id = ${id}`);
+  const now = webPhp('-r', `echo strtotime(date("Y-m-d H:i:s")) - strtotime("${logged}");`);
+  expect(Math.abs(Number(now)), 'расхождение времени записи журнала со временем программы, с').toBeLessThan(600);
   expect(log).toMatch(/"old":"5 × [^"]*","new":"7 × /);
 
   // история в просмотре документа
