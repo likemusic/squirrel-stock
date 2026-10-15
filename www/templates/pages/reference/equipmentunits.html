@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.units.title{{/t}}</title>
+    </head>
+    <body>
+        <h3>{{#t}}sqs.units.title{{/t}}</h3>
+        <p class="text-muted">{{#t}}sqs.units.help{{/t}}</p>
+        <form zippy="editform" class="card card-body mb-3 col-12 col-lg-8">
+            <div class="mb-2"><b zippy="editunit"></b></div>
+            <div class="mb-2">
+                <label class="form-label" for="editfactory">{{#t}}sqs.units.factory{{/t}}</label>
+                <input zippy="editfactory" class="form-control" type="text">
+            </div>
+            <div>
+                <input zippy="save" type="submit" class="btn btn-primary" value="{{#t}}common.zberehty{{/t}}">
+                <input zippy="cancel" type="submit" class="btn btn-outline-secondary" value="{{#t}}common.skasuvaty{{/t}}">
+            </div>
+        </form>
+        <form zippy="filter" class="row g-2 mb-2">
+            <div class="col-12 col-md-5"><input zippy="searchtext" class="form-control" type="text" placeholder="{{#t}}sqs.units.search_ph{{/t}}"></div>
+            <div class="col-8 col-md-3"><select zippy="kind" class="form-select"></select></div>
+            <div class="col-4 col-md-2"><input type="submit" class="btn btn-outline-primary" value="{{#t}}sqs.units.find{{/t}}"></div>
+        </form>
+        <div class="text-muted mb-1" zippy="count"></div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <tr>
+                    <th>{{#t}}sqs.units.model{{/t}}</th>
+                    <th>{{#t}}sqs.units.inv{{/t}}</th>
+                    <th>{{#t}}sqs.units.factory{{/t}}</th>
+                    <th>{{#t}}sqs.units.where{{/t}}</th>
+                    <th></th>
+                </tr>
+                <tr zippy="units">
+                    <td zippy="itemname"></td>
+                    <td zippy="snumber"></td>
+                    <td zippy="factory"></td>
+                    <td zippy="where"></td>
+                    <td class="text-end"><a zippy="edit" title="{{#t}}sqs.units.edit{{/t}}"><i class="fa fa-edit"></i></a></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
