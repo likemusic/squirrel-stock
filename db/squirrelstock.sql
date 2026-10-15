@@ -47,6 +47,25 @@ CREATE TABLE IF NOT EXISTS sqs_doclog (
   KEY document_id (document_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Единицы оборудования (App\SQS\Units): заводской номер к инвентарному (серийному номеру Zippy, store_stock.snumber)
+CREATE TABLE IF NOT EXISTS sqs_unit (
+  item_id int NOT NULL,
+  snumber varchar(255) NOT NULL,
+  factory_no varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (item_id, snumber),
+  KEY factory_no (factory_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Выдача оборудования одной формой: договор + расходная накладная
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 5, 'Видача обладнання за договором', 'EquipmentIssue', '', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 5 AND meta_name = 'EquipmentIssue');
+
+-- Справочник единиц оборудования: инвентарный и заводской номер, где сейчас
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled)
+SELECT 4, 'Одиниці обладнання', 'EquipmentUnits', '', 0 FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM metadata WHERE meta_type = 4 AND meta_name = 'EquipmentUnits');
+
 -- Журнал автоматических резервных копий (App\SQS\BackupJob, cli/backup.php): попытка по каждому месту — папка, сеть, облако
 CREATE TABLE IF NOT EXISTS sqs_backuplog (
   id bigint NOT NULL AUTO_INCREMENT,

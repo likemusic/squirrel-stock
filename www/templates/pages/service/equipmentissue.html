@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.eqissue.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <h3>{{#t}}sqs.eqissue.title{{/t}}</h3>
+                <p class="text-muted">{{#t}}sqs.eqissue.help{{/t}}</p>
+                <form zippy="iform">
+                    <h5 class="mt-3">{{#t}}sqs.eqissue.recipient{{/t}}</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="customer">{{#t}}sqs.eqissue.customer{{/t}}</label>
+                            <input zippy="customer" class="form-control" type="text" autocomplete="off" placeholder="{{#t}}sqs.eqissue.customer_ph{{/t}}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="phone">{{#t}}sqs.eqissue.phone{{/t}}</label>
+                            <input zippy="phone" class="form-control" type="text">
+                        </div>
+                        <div class="col-12 mb-2">
+                            <label class="form-label" for="address">{{#t}}sqs.eqissue.address{{/t}}</label>
+                            <input zippy="address" class="form-control" type="text">
+                        </div>
+                    </div>
+                    <h5 class="mt-3">{{#t}}sqs.eqissue.contract{{/t}}</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label" for="contract_number">{{#t}}sqs.eqissue.number{{/t}}</label>
+                            <input zippy="contract_number" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label" for="date">{{#t}}sqs.eqissue.date{{/t}}</label>
+                            <input zippy="date" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label" for="enddate">{{#t}}sqs.eqissue.enddate{{/t}}</label>
+                            <input zippy="enddate" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-3 mb-2 d-flex align-items-end">
+                            <div class="form-check mb-2">
+                                <input zippy="ondemand" class="form-check-input" type="checkbox">
+                                <label class="form-check-label" for="ondemand">{{#t}}sqs.eqissue.ondemand{{/t}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="referrer">{{#t}}sqs.eqissue.referrer{{/t}}</label>
+                            <input zippy="referrer" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="store">{{#t}}common.sklad{{/t}}</label>
+                            <select zippy="store" class="form-select"></select>
+                        </div>
+                    </div>
+                    <h5 class="mt-3">{{#t}}sqs.eqissue.units{{/t}}</h5>
+                    <div class="input-group mb-2">
+                        <input zippy="unit" class="form-control" type="text" autocomplete="off" placeholder="{{#t}}sqs.eqissue.unit_ph{{/t}}">
+                        <input zippy="addunit" type="submit" class="btn btn-outline-primary" value="{{#t}}sqs.eqissue.add{{/t}}">
+                    </div>
+                    <table class="table table-sm">
+                        <tr zippy="units">
+                            <td zippy="unitlabel"></td>
+                            <td class="text-end"><a zippy="delunit" title="{{#t}}sqs.eqissue.remove{{/t}}"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </table>
+                    <div class="mb-2">
+                        <label class="form-label" for="notes">{{#t}}sqs.eqissue.notes{{/t}}</label>
+                        <textarea zippy="notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <input zippy="issue" type="submit" class="btn btn-primary" value="{{#t}}sqs.eqissue.do{{/t}}">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
