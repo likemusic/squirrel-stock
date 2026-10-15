@@ -40,6 +40,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
+        $this->common->add(new DropDownChoice('money2str', ['ua' => __('app.helper.hryvnia'), 'ru' => __('app.helper.rubl'), 'us' => __('app.helper.dolar'), 'eu' => __('app.helper.ievro')], 'ua'));
         $this->common->add(new DropDownChoice('dateformat'));
 
 
@@ -65,6 +66,7 @@ class Options extends \App\Pages\Base
 
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
+        $this->common->money2str->setValue($common['money2str'] ?? 'ua');
         $this->common->dateformat->setValue($common['dateformat']);
 
         $this->common->phonel->setValue($common['phonel']);
@@ -308,6 +310,7 @@ class Options extends \App\Pages\Base
 
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
+        $common['money2str'] = $this->common->money2str->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
 
         $common['phonel'] = $this->common->phonel->getValue();

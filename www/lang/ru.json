@@ -607,6 +607,7 @@
     "app.options.typy_vidpusknykh_tsin": "Типы отпускных цен",
     "app.options.upravliaiuchi_tehy": "Управляющие теги",
     "app.options.vaha_dlia_vahovoho_tmts": "Вес (для весового ТМЦ)",
+    "app.options.valiuta_sumy_propysom": "Валюта суммы прописью",
     "app.options.valiuta_v_zakupivli": "Валюта в закупке",
     "app.options.vidnesty_do_zahalnykh_vytrat": "Отнести к общим расходам",
     "app.options.vrakhovuvaty_kursovu_riznytsiu_pry_proda": "Учитывать курсовую разницу при продаже",

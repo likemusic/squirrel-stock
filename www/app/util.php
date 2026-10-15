@@ -126,8 +126,15 @@ class Util
   
 
     public static function money2str($number) {
+        // SquirrelStock: валюта суммы прописью из настроек (ua — гривна, ru — рубль, us — доллар, eu — евро)
+        $f = 'money2str_' . (\App\System::getOptions('common')['money2str'] ?? 'ua');
+        if (!in_array($f, ['money2str_ua', 'money2str_ru', 'money2str_us', 'money2str_eu'], true)) {
+            $f = 'money2str_ua';
+        }
 
-        return mb_ucfirst( money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
+        $f = __NAMESPACE__ . '\\' . $f;   // функции money2str_* объявлены в этом пространстве имен
+
+        return mb_ucfirst( $f($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
     }
 
     /**
