@@ -22,6 +22,7 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       await page.locator('#barbtn').tap();
       await expect(page.locator('#sidebar')).not.toHaveClass(/collapsed/);
       await expect.poll(async () => (await page.locator('#sidebar').boundingBox()).x, 'меню выехало на экран').toBeGreaterThanOrEqual(0);
+      expect((await page.locator('.main').boundingBox()).width, 'меню накрывает страницу, а не сжимает ее').toBeGreaterThan(width - 30);
       await page.locator('a[data-bs-target="#mnrefs"]').tap();
       const link = page.locator('#mnrefs a[href*="Reference/EquipmentUnits"]').first();
       await expect(link).toBeVisible();
@@ -100,3 +101,13 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
     });
   });
 }
+
+test('десктоп: меню по-прежнему сдвигает страницу, а не накрывает', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#sidebar')).toHaveClass(/collapsed/);
+  await page.locator('#barbtn').click();
+  await expect.poll(async () => (await page.locator('#sidebar').boundingBox()).x).toBeGreaterThanOrEqual(0);
+  await expect.poll(async () => Math.round((await page.locator('.main').boundingBox()).x)).toBe(300);
+  await page.locator('#barbtn').click();
+  await expect.poll(async () => Math.round((await page.locator('.main').boundingBox()).x)).toBe(0);
+});
