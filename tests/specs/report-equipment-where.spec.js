@@ -2,6 +2,7 @@
 // Выдача — по договору (номер, дата, срок, «кем направлен» в кратком описании договора). ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, createContract, clickWait } = require('../helpers/zippy');
+const { query, value } = require('../helpers/db');
 
 test('оборудование: выдано по договору, на складе, списано', async ({ page, uniq }) => {
   const code = 'EQ-' + uniq, name = 'Концентратор ' + uniq, r1 = 'Получатель ' + uniq;
@@ -18,7 +19,7 @@ test('оборудование: выдано по договору, на скл�
     await page.locator('#filter #searchtext').fill(search);
     if (state) await page.locator('#filter #state').selectOption(state);
     await clickWait(page, '#filter #onreport');
-    const table = page.locator('#preview table');
+    const table = page.locator('#preview table.sqs-units');
     const head = (await table.locator('tr').nth(1).locator('th').allInnerTexts()).map(s => s.trim());
     const rows = {};
     for (const n of [1, 2, 3]) {
@@ -41,4 +42,37 @@ test('оборудование: выдано по договору, на скл�
 
   r = await run(r1, 'all');   // поиск по получателю
   expect(Object.keys(r)).toEqual(['1']);
+
+  // итог по моделям (над списком): выдано, по складам (склад «Ремонт» — состояние «в ремонте»), списано, всего
+  const name2 = 'Кровать ' + uniq, code2 = 'EQB-' + uniq;
+  await createItem(page, { name: name2, code: code2, serial: true });
+  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [4, 5].map(n => ({ code: code2, qty: 1, price: 0, sn: inv(n) })) });
+  const repair = 'Ремонт ' + uniq;
+  query(`insert into stores (storename, branch_id, disabled) values ('${repair}', 0, 0)`);
+  query(`update store_stock set store_id = ${value(`select max(store_id) from stores where storename = '${repair}'`)} where snumber = '${inv(5)}'`);
+
+  const summary = async state => {
+    await page.goto('/index.php?p=App/Pages/Report/EquipmentWhere');
+    await page.locator('#filter #searchtext').fill(uniq);
+    if (state) await page.locator('#filter #state').selectOption(state);
+    await clickWait(page, '#filter #onreport');
+    const table = page.locator('#preview table.sqs-summary');
+    const head = (await table.locator('tr').nth(1).locator('th').allInnerTexts()).map(s => s.trim());
+    const out = {};
+    for (const n of [name, name2]) {
+      const td = (await table.locator('tr', { hasText: n }).locator('td').allInnerTexts()).map(s => s.trim());
+      out[n] = Object.fromEntries(head.map((h, i) => [h, td[i]]));
+    }
+    return out;
+  };
+  let s = await summary('all');
+  expect(s[name]).toMatchObject({ 'Видано': '1', 'Основний склад': '1', [repair]: '', 'Списано': '1', 'Всього': '3' });
+  expect(s[name2]).toMatchObject({ 'Видано': '', 'Основний склад': '1', [repair]: '1', 'Списано': '', 'Всього': '2' });
+  s = await summary();   // по умолчанию без списанного
+  expect(s[name]).toMatchObject({ 'Видано': '1', 'Основний склад': '1', 'Всього': '2' });
+  expect(s[name]['Списано']).toBeUndefined();
+
+  const resp = await page.context().request.get('/index.php?p=App/Pages/ShowReport&arg=xls/equipmentwhere');   // две таблицы — один лист Excel
+  expect(resp.status()).toBe(200);
+  expect(resp.headers()['content-type']).toContain('spreadsheetml');
 });

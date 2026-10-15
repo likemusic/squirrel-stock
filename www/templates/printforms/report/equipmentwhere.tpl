@@ -1,4 +1,23 @@
-<table class="ctable" border="0" cellpadding="2" cellspacing="0">
+{{#hassummary}}
+<table class="ctable sqs-summary" border="0" cellpadding="2" cellspacing="0" style="margin-bottom: 1em;">
+    <tr style="font-weight: bolder;">
+        <td colspan="{{scolspan}}">{{#t}}report.equipmentwhere.summary{{/t}}</td>
+    </tr>
+    <tr style="font-weight: bolder;">
+        <th style="border: solid black 1px; text-align: left;">{{#t}}report.equipmentwhere.model{{/t}}</th>
+        {{#_scols}}<th style="border: solid black 1px;">{{name}}</th>{{/_scols}}
+        <th style="border: solid black 1px;">{{#t}}report.equipmentwhere.col_total{{/t}}</th>
+    </tr>
+    {{#_srows}}
+    <tr>
+        <td style="border: solid black 1px;">{{name}}</td>
+        {{#cells}}<td style="border: solid black 1px; text-align: right;">{{v}}</td>{{/cells}}
+        <td style="border: solid black 1px; text-align: right; font-weight: bolder;">{{total}}</td>
+    </tr>
+    {{/_srows}}
+</table>
+{{/hassummary}}
+<table class="ctable sqs-units" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="11">{{#t}}report.equipmentwhere.title{{/t}} {{#t}}report.equipmentwhere.on_date{{/t}} {{date}} ({{#t}}report.equipmentwhere.units{{/t}}: {{cnt}})</td>
     </tr>
