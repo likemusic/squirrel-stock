@@ -106,14 +106,24 @@ class IssueAct extends \App\Pages\Base
                 $names[$item->item_id] = $names[$item->item_id] ?? $item->itemname;
             }
         }
-        uasort($names, fn($a, $b) => strcasecmp($a, $b));
+        // названия — как в 1С (App\SQS\Item1C): одноименные позиции 1С (разные цены) в акте — одна строка
+        $n1c = \App\SQS\Item1C::names(array_keys($names));
+        $byName = [];
+        foreach ($names as $id => $name) {
+            $name = $n1c[$id] ?? $name;
+            $byName[$name] = $byName[$name] ?? [];
+            foreach ($cells[$id] ?? [] as $col => $q) {
+                $byName[$name][$col] = ($byName[$name][$col] ?? 0) + $q;
+            }
+        }
+        uksort($byName, fn($a, $b) => strcasecmp($a, $b));
 
         $rows = [];
         $coltotal = array_fill_keys(array_keys($cols), 0);
-        foreach ($names as $id => $name) {
+        foreach ($byName as $name => $namecells) {
             $row = ['name' => $name, 'cells' => [], 'total' => 0];
             foreach (array_keys($cols) as $col) {
-                $q = $cells[$id][$col] ?? 0;
+                $q = $namecells[$col] ?? 0;
                 $row['cells'][] = ['qty' => $q != 0 ? H::fqty($q) : ''];
                 $row['total'] += $q;
                 $coltotal[$col] += $q;
