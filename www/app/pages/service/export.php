@@ -80,7 +80,7 @@ class Export extends \App\Pages\Base
     }
 
     public function onCExport($sender) {
-        $t = $this->cform->ctype->getValue();
+        $t = intval($this->cform->ctype->getValue());
 
         $sql = "  status=" . Customer::STATUS_ACTUAL;
         if ($t > 0) {
@@ -138,9 +138,9 @@ class Export extends \App\Pages\Base
         $option = \App\System::getOptions('common');
  
         $t = $this->iform->itype->getValue();
-        $tp = $this->iform->item_type->getValue();
-        $store = $this->iform->store->getValue();
-        $cat = $this->iform->cat->getValue();
+        $tp = intval($this->iform->item_type->getValue());
+        $store = intval($this->iform->store->getValue());
+        $cat = intval($this->iform->cat->getValue());
         $brand = $this->iform->brand->getText();
 
         $sql = "disabled <> 1 ";
@@ -151,7 +151,7 @@ class Export extends \App\Pages\Base
             $sql .= " and cat_id=" . $cat;
         }
         if ( strlen($brand) > 0) {
-            $sql .= " and manufacturer=" .  Item::qstr($$brand);
+            $sql .= " and manufacturer=" .  Item::qstr($brand);
         }
         
 
@@ -248,7 +248,7 @@ class Export extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "meta_name='{$dt}' and   document_date  >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  document_date <= " . $conn->DBDate($sender->dto->getDate());
+        $sql = "meta_name=" . $conn->qstr($dt) . " and   document_date  >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  document_date <= " . $conn->DBDate($sender->dto->getDate());
         $this->_docs = Document::find($sql);
         $this->dformlist->doclist->Reload();
     }
