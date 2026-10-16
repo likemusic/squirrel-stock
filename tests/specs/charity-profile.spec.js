@@ -1,8 +1,18 @@
 // Профиль для благотворительной организации (cli/charity-profile.php): в меню нужное для выдачи расходников
 // и оборудования, лишнее (продажи, касса, производство, кафе) выключено; --back возвращает меню. ZIPPY_GAPS п. 22.
-const { test, expect } = require('@playwright/test');
-const { blockExternal, login } = require('../helpers/zippy');
+const { test, expect } = require('../fixtures');
+const { blockExternal, login, createItem, createCustomer, createDoc, printForm } = require('../helpers/zippy');
 const { webPhp } = require('../helpers/stand');
+const { value, esc } = require('../helpers/db');
+
+// новая сессия: меню и настройки (в том числе флаг профиля) кэшируются в сессии
+async function freshPage(browser) {
+  const context = await browser.newContext({ storageState: undefined });
+  await blockExternal(context);
+  const page = await context.newPage();
+  await login(page);
+  return page;
+}
 
 test.afterAll(() => webPhp('cli/charity-profile.php', '--back'));
 
@@ -21,4 +31,21 @@ test('меню профиля для благотворительной орга
     expect(hrefs.some(h => h.includes(off + '&') || h.endsWith(off)), off).toBe(false);
   }
   await context.close();
+});
+
+test('главная в профиле: без денежных плиток и графиков доходов', async ({ browser }) => {
+  webPhp('cli/charity-profile.php');
+  let page = await freshPage(browser);
+  await page.goto('/index.php');
+  await expect(page.locator('a[href$="Register/GIList"]').first()).toBeAttached();   // страница отрисована, а не ошибка
+  await expect(page.locator('.info-box')).toHaveCount(0);
+  await expect(page.locator('#paystructure, #paycompare, #sellstat')).toHaveCount(0);
+  await page.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');
+  page = await freshPage(browser);
+  await page.goto('/index.php');
+  await expect(page.locator('.info-box')).toHaveCount(6);
+  await expect(page.locator('#paystructure')).toHaveCount(1);
+  await page.context().close();
 });
