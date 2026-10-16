@@ -21,7 +21,8 @@ namespace App\SQS;
  * Выключить модуль — удалить папку или переименовать с точкой в начале (.имя): его пункты меню выключаются (disabled = 1).
  * Загрузка — из init.php на каждый запрос (и в консольных скриптах): обход папок; база читается один раз за сессию и при
  * смене набора модулей (пункты меню, схемы); metadata и таблицы меняются только при смене. Так же применяются таблицы
- * платформы (app/sqs/schema.sql): копия старой версии после восстановления и обновление программы не требуют ручного шага.
+ * платформы (app/sqs/schema.sql): копия старой версии после восстановления и обновление программы не требуют ручного шага;
+ * смена версии программы (App\SQS\Release) отмечается здесь же.
  * Подробно — docs/MODULES.md.
  */
 class Modules
@@ -149,7 +150,7 @@ class Modules
     private static function sync(): void {
         $items = self::menuItems();
         $schemas = self::schemas();
-        $fp = md5(implode(',', array_keys($items)) . '|' . json_encode($schemas));
+        $fp = md5(implode(',', array_keys($items)) . '|' . json_encode($schemas) . '|' . Release::version());
         if (session_status() == PHP_SESSION_ACTIVE) {
             if (($_SESSION['sqs_modules_fp'] ?? null) === $fp) {
                 return;
@@ -162,6 +163,7 @@ class Modules
             self::applySchema($key, $file, $hash);
         }
         self::syncMenu($items);
+        Release::note();   // смена версии программы — в историю обновлений и журнал
     }
 
     /**

@@ -1,70 +1,68 @@
 # SquirrelStock
 
-Lightweight web-based inventory and warehouse management in PHP. Keeps stock the way a squirrel keeps its supplies: knows what is stored where, and stays quick.
+Складской учёт для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование: подопечным, семьям, учреждениям. Веб-программа на PHP и MySQL/MariaDB. Работает на отдельном компьютере без интернета, в локальной сети или на хостинге; с телефона тоже.
 
-**SquirrelStock is an unofficial fork of [Zippy](https://zippy.com.ua/) ([leon-mbs/zstore](https://github.com/leon-mbs/zstore)) by Leon, MIT License.** It is not affiliated with or endorsed by the original author. The original README is kept in [README.zippy.md](README.zippy.md) (Ukrainian).
+SquirrelStock — неофициальный форк складской программы [Zippy](https://zippy.com.ua/) ([leon-mbs/zstore](https://github.com/leon-mbs/zstore)), автор — Leon, лицензия MIT. Автор Zippy в разработке форка не участвует и его не одобрял. Первый пользователь — детский хоспис.
 
-## Why a fork
+English: [README.en.md](README.en.md).
 
-The fork is developed for charities and non-profits that hand out supplies and equipment free of charge (first user: a children's hospice). Planned changes:
+## Что умеет
 
-- fixes for stock accounting reliability (double posting, batch order by expiry date, import date and others);
-- interface translation with English keys (`uk`, `ru`, later `be` and `en`);
-- full offline operation (no external scripts or CDNs);
-- equipment lending: who has each unit now, contracts, returns, repairs;
-- reports for free issue of supplies: write-off act, recipient × month, item and recipient movements for a period;
-- regression tests.
+- **Выдача расходников** короткой формой, удобной с телефона: получатель, позиции из того, что есть на складе, «Выдать». Возврат — на основании выдачи.
+- **Интервалы выдачи**: «не чаще раза в N дней» для позиции или категории; если получатель берёт раньше срока, программа предупредит.
+- **Оборудование по договорам**: каждая единица с инвентарным и заводским номером. Выдача с договором одной формой, отчёт «Где сейчас» (на каком складе или у кого, с договором и сроком), журнал выдачи, мелкое оборудование без номеров — количеством.
+- **Сроки пользования**: напоминание на главной о просроченных и истекающих сроках, кнопка «Продлить» (кто и когда продлил, записывается в договор).
+- **Карточка получателя**: всё по одному получателю на одной странице — оборудование на руках, выданные расходники по месяцам, когда можно следующую выдачу.
+- **Отчёты для бухгалтерии**: акт списания за месяц (строки — позиции, колонки — выдачи), получатели по месяцам, оборот по позициям, позиции ниже минимального остатка; выгрузка в Excel.
+- **Перенос данных**: импорт оборотно-сальдовой ведомости 1С (материалы и основные средства), импорт истории выдачи оборудования из таблиц Excel с проверкой перед записью и таблицей соответствий написаний.
+- **Резервная копия** одной кнопкой и по расписанию: в папку, в сетевую папку, в одно или несколько облаков (зашифрованной); предупреждение, если копии давно не было.
+- **Безопасность**: двухфакторный вход, ограничение подбора пароля, журнал правок документов, скрипт проверки выложенного сайта `tools/release/check-site.sh`.
+- **Модули**: свои документы, отчёты и проверки подключаются папкой, без правки кода Zippy ([docs/MODULES.md](docs/MODULES.md)).
+- **Профиль для благотворительной организации**: в меню только нужное для выдачи, без денег и цен; названия под выдачу («Выдача», «Поступление», «Выдача (накладная)», «Возврат от получателя», журнал «Выдачи»), печатные формы «Выдал / Получатель».
+- Интерфейс на русском и украинском. Внешних запросов нет: работает без интернета.
 
-Status (October 2026), based on upstream commit `c74df59f4` (13.10.2026):
+| | |
+|---|---|
+| ![Выдача расходников](docs/img/consumables-issue.png) | ![Напоминание о сроках на главной](docs/img/main-due.png) |
+| ![Оборудование: где сейчас](docs/img/equipment-where.png) | ![Акт списания за месяц](docs/img/issue-act.png) |
 
-- fixed: double posting (repeated "Execute", browser "Back"), batch with the nearest expiry date, division by zero in the sales report, item autocomplete order, document date in import, amount in words currency;
-- interface by English keys with Ukrainian and Russian dictionaries, works offline;
-- for charities: monthly issue act for the accounting, recipients by month, item turnover, equipment by contracts ("where each unit is now", issue journal), import of the 1C trial balance, backup and restore in one click, a menu profile;
-- regression tests (Playwright) for all of the above; changes to upstream files are listed in [docs/CORE_CHANGES.md](docs/CORE_CHANGES.md).
+Снимки сделаны на демо-базе, все имена вымышленные.
 
-Not yet: Windows installer, audit log of document edits, extension hooks.
+## Попробовать
 
-## Development
-
-Local stand (Docker, PHP 8.2 + MariaDB 10.11), code is taken from `www/` as is:
-
-```bash
-cd docker && docker compose up -d --build        # http://127.0.0.1:8083, login admin / admin
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d   # mount www/app, templates, assets for live editing
-docker compose -f docker-compose.yml -f docker-compose.offline.yml up -d   # no internet for web and db (offline check)
-docker compose down -v                           # stop and drop the database
-```
-
-Port and Docker subnet can be changed with `SQS_PORT` and `SQS_SUBNET`.
-
-Regression tests (Playwright, through the UI; external requests are blocked so that offline problems show up):
+Нужен Docker:
 
 ```bash
-cd tests && npm ci && npx playwright install chromium
-npm test                                          # SQS_BASE=http://127.0.0.1:8083 by default
+git clone https://github.com/likemusic/squirrel-stock.git && cd squirrel-stock/docker
+SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход admin / admin
 ```
 
-Tests create their own data with unique names and can run against a non-empty database. Bugs are reproduced with a test first, then fixed.
+Чтобы посмотреть с данными, загрузите демо-базу `db/demo/squirrelstock-demo.zip`: «Сервисные страницы → Резервная копия → Восстановить». В ней вымышленные получатели, выдачи, договоры на оборудование, настройки для благотворительной организации. Пустую базу настраивают два скрипта — [docs/GUIDE.ru.md](docs/GUIDE.ru.md), раздел «Начальная настройка».
 
-## Interface languages
+Остановить стенд и удалить его базу: `docker compose down -v`.
 
-Interface texts are English keys: `__('key')` in PHP, `{{#t}}key{{/t}}` in templates (`{|#t|}key{|/t|}` where a template switches Mustache delimiters for Vue). Texts are in `www/lang/<lang>.json`: `uk` (the original Ukrainian text of Zippy) and `ru`. The language is chosen in the user profile; the default is `$_config['common']['lang']` in `config/config.php` (Docker stand: `SQS_LANG`).
+## Установка
 
-Default names stored in the database (documents and menu items, main store, cash desk, price types) are translated once per installation:
+- Linux (Debian 12, Ubuntu 24.04), отдельный компьютер или VPS, одним скриптом: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md).
+- Хостинг с Apache (ISPmanager и т. п.): [docs/INSTALL_HOSTING.ru.md](docs/INSTALL_HOSTING.ru.md).
+- Windows 10 и 11, компьютер на складе: Apache, PHP и MariaDB службами Windows, пошагово: [docs/INSTALL_WINDOWS.ru.md](docs/INSTALL_WINDOWS.ru.md) (на Windows целиком ещё не проходилась).
+- Обновление программы: [docs/UPDATE.ru.md](docs/UPDATE.ru.md).
+- Резервная копия по расписанию: [docs/BACKUP.ru.md](docs/BACKUP.ru.md).
 
-```bash
-php cli/localize-db.php ru          # in Docker: docker exec squirrelstock-web-1 php cli/localize-db.php ru
-php cli/localize-db.php ru --back   # back to Ukrainian
-```
+Все документы и кому какой: [docs/README.md](docs/README.md).
 
-Tools in `tools/i18n/`: `convert.php` replaces Ukrainian strings with keys (used on every upstream update), `pairs.php` collects translation pairs from the Russian edition of Zippy, `merge_tsv.py` builds a dictionary from `key<TAB>text` files and checks placeholders and quotes.
+## Чем отличается от Zippy
 
-## Русский
+Zippy — программа для малого бизнеса: склад, торговля, касса, производство. SquirrelStock берёт её склад и меняет то, что нужно для бесплатной выдачи:
 
-Руководство по настройке и работе: [docs/GUIDE.ru.md](docs/GUIDE.ru.md).
+- исправлены ошибки учёта: двойное проведение (повторное «Провести», кнопка «Назад»), выбор партии с ближайшим сроком годности, дата документа при импорте, выдача единицы с серийным номером на дату, когда её нет на складе, и другие. Каждая правка кода Zippy описана в [docs/CORE_CHANGES.md](docs/CORE_CHANGES.md) и закрыта автотестом;
+- перевод интерфейса по английским ключам (украинский и русский словари);
+- работа без интернета: графики и библиотеки локальные, проверка обновлений с сайта Zippy отключена;
+- выдача, оборудование, отчёты, импорт, резервная копия и безопасность из списка выше;
+- автотесты Playwright через интерфейс.
 
-SquirrelStock — неофициальный форк складской программы Zippy (leon-mbs/zstore, лицензия MIT) для благотворительных организаций, которые бесплатно выдают расходные материалы и оборудование. Первый пользователь — детский хоспис. В планах: исправления надёжности учёта, перевод интерфейса на русский (ключи на английском), работа без интернета, учёт выдачи оборудования по договорам, отчёты для бухгалтерии, автотесты.
+Разработка, стенд, тесты, переводы: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
-## License
+## Лицензия
 
-MIT, see [LICENSE](LICENSE). Copyright (c) 2018 Leon (original Zippy code), (c) 2026 SquirrelStock contributors.
+MIT, см. [LICENSE](LICENSE). Copyright (c) 2018 Leon (исходный код Zippy), (c) 2026 SquirrelStock contributors. Исходный README Zippy (на украинском) — [README.zippy.md](README.zippy.md).

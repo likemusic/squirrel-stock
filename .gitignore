@@ -12,3 +12,7 @@ dist/
 # временные модули тестов (tests/specs/hooks.spec.js)
 www/app/sqs/modules/zz-test-*/
 www/app/sqs/modules/.zz-test-*/
+
+# версия и список файлов пакета (tools/release/build.sh; tests/specs/app-update.spec.js пишет version.txt на время теста)
+www/config/version.txt
+www/config/manifest.txt

@@ -204,9 +204,7 @@ class GoodsIssue extends Document
 
             }
             // SquirrelStock: единица с серийным номером — на складе на дату документа и не выдана позже
-            if (\App\SQS\SerialStock::shortage($item, $item->quantity, intval($this->headerdata['store']), intval($this->document_date), intval($this->document_id)) > 0) {
-                throw new \Exception(__('sqs.serial_not_on_date', ['snumber' => $item->snumber, 'itemname' => $item->itemname, 'date' => date('d.m.Y', $this->document_date)]));
-            }
+            \App\SQS\SerialStock::check($item, $item->quantity, intval($this->headerdata['store']), $this);
 
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']??0);

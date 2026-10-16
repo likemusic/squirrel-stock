@@ -48,6 +48,8 @@ test('страницы меню на русском без украинског�
         // на языке того, кто создал документ — здесь другие тесты на украинском)
         // (title, а после включения подсказки Bootstrap — aria-label и data-bs-original-title)
         .map(l => /<i zippy="hasnotes/.test(l) ? l.replace(/\b(title|aria-label|data-bs-original-title)="[^"]*"/g, '$1=""') : l)
+        // номер нового документа продолжает последний номер этого вида — данные (префикс «ІН-» у документа другого теста на украинском)
+        .map(l => /zippy="document_number"/.test(l) ? l.replace(/\bvalue="[^"]*"/, 'value=""') : l)
         .filter(l => UKRAINIAN.test(l) && !ALLOWED.some(a => l.includes(a)));
       for (const l of html) found.push(`${href}: [html] ${l.trim().slice(0, 100)}`);
     }
@@ -140,6 +142,8 @@ test('страницы модулей на русском без украинс�
         // на языке того, кто создал документ — здесь другие тесты на украинском)
         // (title, а после включения подсказки Bootstrap — aria-label и data-bs-original-title)
         .map(l => /<i zippy="hasnotes/.test(l) ? l.replace(/\b(title|aria-label|data-bs-original-title)="[^"]*"/g, '$1=""') : l)
+        // номер нового документа продолжает последний номер этого вида — данные (префикс «ІН-» у документа другого теста на украинском)
+        .map(l => /zippy="document_number"/.test(l) ? l.replace(/\bvalue="[^"]*"/, 'value=""') : l)
         .filter(l => UKRAINIAN.test(l) && !ALLOWED.some(a => l.includes(a)));
       for (const l of html) found.push(`${href}: [html] ${l.trim().slice(0, 100)}`);
     }

@@ -8,6 +8,9 @@
 #
 # Повторный запуск безопасен: пакеты доустанавливаются, код сайта обновляется (config.php, upload/, logs/ не трогаются),
 # база, ее пользователь и пароль admin не меняются. Пароль admin печатается один раз — при создании базы.
+# Обновление (повторный запуск с новой git-копией или новым пакетом): сначала резервная копия базы и файлов в
+# <папка копий>/before-update/, потом замена кода (файлы, которых нет в новой версии, удаляются), досоздание таблиц;
+# версия «было → стало» печатается и пишется в logs/update.log. Порядок — docs/UPDATE.ru.md.
 #
 # Почему mod_php, а не php-fpm: одна служба вместо двух, меньше памяти на слабом компьютере, и так же устроены
 # Docker-образ стенда (php:8.2-apache) и обычный хостинг — .htaccess и настройки PHP ведут себя одинаково.
@@ -27,7 +30,7 @@ for a in "$@"; do
     --zip=*) ZIP=$(realpath "${a#*=}") ;;
     --demo) DEMO=1 ;;
     --no-profile) PROFILE=0 ;;
-    -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
     *) echo "неизвестный параметр: $a" >&2; exit 2 ;;
   esac
 done
@@ -56,6 +59,24 @@ apt-get install -y -qq --no-install-recommends apache2 libapache2-mod-php php-cl
 svc mariadb start
 svc cron start || true
 
+# обновление: копия базы и файлов до замены кода — старой версией программы (cli/backup.php; копию можно восстановить
+# на странице «Сервис → Резервная копия»), а если она не сработала — mysqldump и архив config.php и upload/
+OLDVER=
+if [[ -f $DIR/config/config.php && $(mysql -uroot -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$DB'") != 0 ]]; then
+  OLDVER=$(cat "$DIR/config/version.txt" 2>/dev/null || echo "без номера")
+  say "резервная копия перед обновлением (версия $OLDVER)"
+  mkdir -p "$BACKUP/before-update"
+  chown www-data:www-data "$BACKUP" "$BACKUP/before-update"
+  if [[ -f $DIR/cli/backup.php ]] && runuser -u www-data -- php "$DIR/cli/backup.php" --only=local "$BACKUP/before-update" >/dev/null 2>&1; then
+    echo "копия: $(ls -t "$BACKUP"/before-update/*.zip | head -1)"
+  else
+    ts=$(date +%Y-%m-%d-%H%M%S)
+    mysqldump -uroot --single-transaction --routines "$DB" | gzip > "$BACKUP/before-update/database-$ts.sql.gz"
+    tar -czf "$BACKUP/before-update/files-$ts.tar.gz" -C "$DIR" config/config.php upload
+    echo "копия (mysqldump): $BACKUP/before-update/database-$ts.sql.gz, файлы: files-$ts.tar.gz"
+  fi
+fi
+
 say "сайт в $DIR"
 mkdir -p "$DIR"
 # код обновляется, а настройки, загруженные файлы и журналы остаются
@@ -66,7 +87,14 @@ if [[ -n $ZIP ]]; then
 else
   rsync -a --delete --exclude=/config/config.php --exclude=/upload/ --exclude=/logs/ --exclude=/vendor/ "$REPO/www/" "$DIR/"
   (cd "$DIR" && COMPOSER_ALLOW_SUPERUSER=1 composer install -q --no-dev --no-interaction --prefer-dist --optimize-autoloader)
+  # версия для «Сервис → Обновление программы» и подвала меню: как в пакете (tools/release/build.sh), без git — dev
+  if git -C "$REPO" rev-parse HEAD >/dev/null 2>&1; then
+    v=$(git -C "$REPO" log -1 --format=%cd --date=format:%Y.%m.%d HEAD)-$(git -C "$REPO" rev-parse --short=9 HEAD)
+    [[ -z $(git -C "$REPO" status --porcelain --untracked-files=no 2>/dev/null) ]] || v=$v-dirty
+    echo "$v" > "$DIR/config/version.txt"
+  fi
 fi
+NEWVER=$(cat "$DIR/config/version.txt" 2>/dev/null || echo dev)
 rm -f "$DIR/script_examples.zip"   # примеры скриптов автора Zippy на сайте не нужны
 mkdir -p "$DIR/upload" "$DIR/logs" "$BACKUP"
 # upload/ выше исключена из копирования (там файлы пользователей), но ее .htaccess — часть программы
@@ -109,6 +137,9 @@ if [[ $(mysql -uroot -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE
 else
   # новые таблицы платформы (app/sqs/schema.sql) и модулей, пункты меню модулей после обновления кода
   php "$DIR/cli/modules.php" >/dev/null
+fi
+if [[ -n $OLDVER ]]; then
+  echo "$(date '+%Y-%m-%d %H:%M:%S') обновление: $OLDVER -> $NEWVER (tools/install/linux.sh)" >> "$DIR/logs/update.log"
 fi
 chown -R www-data:www-data "$DIR" "$BACKUP"
 chmod 640 "$CONF"
@@ -167,10 +198,15 @@ chmod 644 /etc/cron.d/squirrelstock
 ADDR=$(hostname -I 2>/dev/null | awk '{print $1}')
 echo
 echo "Готово: http://${ADDR:-localhost}$([[ $PORT == 80 ]] || echo ":$PORT")/"
+if [[ -n $OLDVER ]]; then
+  echo "Обновлено: $OLDVER -> $NEWVER. Копия до обновления — в $BACKUP/before-update."
+else
+  echo "Версия: $NEWVER"
+fi
 if [[ -n $ADMINPASS ]]; then
   echo "Вход: admin / $ADMINPASS"
   echo "Запишите пароль: он нигде не сохраняется и больше не показывается. Сменить — в профиле пользователя."
 else
   echo "База уже была: пароль admin не менялся."
 fi
-echo "Копии базы: $BACKUP (каждые сутки), настройки — «Сервис → Резервная копия»."
+echo "Копии базы: $BACKUP (каждые сутки), настройки — «Сервисные страницы → Резервная копия»."

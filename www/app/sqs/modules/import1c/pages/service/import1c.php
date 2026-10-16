@@ -199,9 +199,9 @@ class Import1C extends \App\Pages\Base
             $cands = Item1C::candidates($name);
             if (count($cands) == 0) {
                 // позиция из импорта до отметок «из 1С» — по точному названию, если она одна на это название
-                $legacy = Item::find('itemname = ' . Item::qstr($name) . ' and disabled <> 1 and item_id not in (select item_id from sqs_item1c)');
+                $legacy = Item::find('itemname = ' . Item::qstr(Item1C::itemName($name)) . ' and disabled <> 1 and item_id not in (select item_id from sqs_item1c)');
                 if (count($legacy) == 1 && count($rows) == 1) {
-                    $cands = [['item_id' => (int)reset($legacy)->item_id, 'itemname' => $name, 'price1c' => null]];
+                    $cands = [['item_id' => (int)reset($legacy)->item_id, 'itemname' => Item1C::itemName($name), 'price1c' => null]];
                 } elseif (count($legacy) > 0) {
                     $cands = array_map(fn($it) => ['item_id' => (int)$it->item_id, 'itemname' => $it->itemname, 'price1c' => null], array_values($legacy));
                     $this->_ambiguous[] = ['name' => $name, 'rows' => $rows, 'cands' => $cands];
@@ -222,7 +222,7 @@ class Import1C extends \App\Pages\Base
                     $created++;
                 }
                 Item1C::set((int)$item->item_id, $name, $p['price']);
-                if ($item->itemname !== $name) {
+                if ($item->itemname !== Item1C::itemName($name)) {
                     $this->_notes[] = __('service.import1c.renamed', ['name' => $item->itemname, 'name1c' => $name]);
                 }
                 if (in_array($i, $m['drift'], true)) {
@@ -283,7 +283,7 @@ class Import1C extends \App\Pages\Base
      */
     private function findOrCreate(string $name, bool $serial): array {
         $cands = Item1C::candidates($name);
-        $item = count($cands) ? Item::load($cands[0]['item_id']) : Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');
+        $item = count($cands) ? Item::load($cands[0]['item_id']) : Item::getFirst('itemname = ' . Item::qstr(Item1C::itemName($name)) . ' and disabled <> 1');
         $new = false;
         if ($item == null) {
             $item = $this->newItem($name, $serial);

@@ -23,6 +23,12 @@ if (file_exists(_ROOT . 'config/config.php')) {
 
 }  
 
+// SquirrelStock: пакет приходит с config/config.example.php (распаковка нового пакета поверх не затирает настройки)
+if (!isset($_config) && is_file(_ROOT . 'config/config.example.php')) {
+    http_response_code(503);
+    header('Content-Type: text/plain; charset=utf-8');
+    die("SquirrelStock: нет файла config/config.php. Скопируйте config/config.example.php в config/config.php и впишите параметры базы данных.\n");
+}
 if (!is_array($_config)) {
     die("Invalid config file");
 }

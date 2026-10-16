@@ -98,8 +98,8 @@ async function createCustomer(page, { name, type = 1, phone, address }) {
 }
 
 // Документ через форму и проведение.
-// type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem
-// d: { date, customer, payment, contract, notes, rows: [{ code, qty, price, sn, sdate }], dblclick, draft }
+// type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem | MoveItem
+// d: { date, tostore, customer, payment, contract, notes, rows: [{ code, qty, price, sn, sdate }], dblclick, draft }
 // dblclick — нажать «Провести» двойным щелчком (как делают торопливые пользователи)
 // Возвращает номер, сообщения и то, что форма сама подставила в строки (цена, партия).
 async function createDoc(page, type, d) {
@@ -107,6 +107,7 @@ async function createDoc(page, type, d) {
   const number = await page.locator('#document_number').inputValue();
   await page.locator('#document_date').fill(d.date);
   await page.locator('#docform #store').selectOption('1');
+  if (d.tostore) await page.locator('#docform #tostore').selectOption(String(d.tostore));   // перемещение: склад-получатель
   if (d.customer) await pickAuto(page, '#docform #customer', d.customer, d.customer);
   if (d.payment !== undefined && await page.locator('#docform #payment:visible').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
   if (d.contract) {   // договор выбирается по номеру; список появляется после выбора контрагента

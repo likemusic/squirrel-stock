@@ -56,6 +56,8 @@ class Inventory extends Document
             //списываем  со склада
             if ($item->quantity > $item->qfact && $this->headerdata['autooutcome'] == 1) {
                 $qty = $item->quantity - $item->qfact;
+                // SquirrelStock: недостающая единица с серийным номером — на складе на дату документа и не выдана позже
+                \App\SQS\SerialStock::check($item, $qty, intval($this->headerdata['store']), $this);
       
                 $q= $item->quantity;
                 $item->quantity = $qty;

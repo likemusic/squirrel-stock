@@ -7,6 +7,7 @@ const { query, value, esc } = require('../helpers/db');
 const { xlsxText } = require('../helpers/xlsx');
 
 test('карточка получателя: оборудование, расходники, история, интервал, вход из журнала и справочника', async ({ page, uniq }) => {
+  test.setTimeout(6 * 60_000);   // десяток документов на подготовку: на загруженной машине больше двух минут
   const r1 = 'Подопечный ' + uniq + ' карточка', r2 = 'Подопечный ' + uniq + ' другой';
   const phone = '029' + String(Date.now()).slice(-7);
   const eq = 'CEQ-' + uniq, small = 'CSM-' + uniq, a = 'CA-' + uniq, b = 'CB-' + uniq, inv = 'INV-' + uniq;
