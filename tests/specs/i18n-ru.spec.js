@@ -62,6 +62,10 @@ test('календари и moment на русском', async ({ browser }) => 
   const page = await context.newPage();
   await login(page);
   await setLang(page, 'ru');
+  // «Задачи» профиль благотворительной организации выключает, а страница выключенного пункта не открывается и по адресу
+  // (App\SQS\PageGuard): на время теста пункт включается
+  const wasTask = value(`select disabled from metadata where meta_type = 3 and meta_name = 'TaskList'`);
+  query(`update metadata set disabled = 0 where meta_type = 3 and meta_name = 'TaskList'`);
   try {
     const calendarText = async () => {
       await page.locator('.fc-today-button').first().waitFor();
@@ -88,6 +92,7 @@ test('календари и moment на русском', async ({ browser }) => 
     expect(cal.title).toMatch(/^[а-яё]+ \d{4}/i);
     expect(await page.evaluate(() => moment.locale())).toBe('ru');
   } finally {
+    if (wasTask !== null && wasTask !== undefined) query(`update metadata set disabled = ${Number(wasTask)} where meta_type = 3 and meta_name = 'TaskList'`);
     await setLang(page, 'uk');
     await context.close();
   }
