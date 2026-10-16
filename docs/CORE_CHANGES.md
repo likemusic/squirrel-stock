@@ -61,6 +61,9 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `bd749b914` | `www/app/entity/customer.php` `getList()` | `coalesce(phone,'')`: a customer without phone was empty in the autocomplete | `tests/specs/customer-no-phone.spec.js` |
 | `0e49684bc` | `www/index.php` (one line); new `www/app/sqs/requestorigin.php` | actions (events `?q=...::component`, any POST except `/api/`) run only when the request comes from the program's own pages: Sec-Fetch-Site, otherwise Origin or Referer with the same host:port; before: a link on another site could run an action of a logged-in user (Zippy has no form token, events are GET, SameSite=Lax sends the cookie on a link) | `tests/specs/request-origin.spec.js` |
 | `8ba11fb4e` | `www/index.php` ("Remember me" login), `www/app/pages/userlogin.php` `successLogin()`, `www/app/sqs/twofactor.php` `completeLogin()` | `session_regenerate_id(true)` after login: new session id | `tests/specs/request-origin.spec.js` |
+| `0e23db722` | `www/app/pages/main.php`, `www/templates/pages/main.html` | charity profile (`App\SQS\Profile::charity()`, new): no money tiles and income/sales charts, their queries skipped; placeholder `{{#sqs_money}}` | `tests/specs/charity-profile.spec.js` |
+| `8d2d4c981` | `www/app/pages/register/gilist.php`, `www/templates/pages/register/gilist.html` | charity profile: status filter "All" by default (executed issues and returns are found here), title "Issue journal" | `tests/specs/charity-profile.spec.js` |
+| `06bf3acca` | `www/app/report.php` `generate()` | charity profile: print form `printforms/charity/<template>` first (modules, then `www/templates`); new `www/templates/printforms/charity/doc/goodsissue.tpl` | `tests/specs/charity-profile.spec.js` |
 
 ## Proposed upstream
 
@@ -83,7 +86,7 @@ When merging an upstream update, check these places first: modules (`www/app/sqs
 |---|---|
 | `www/init.php` | `App\SQS\Modules::load()` after `session_start()` |
 | `www/app/application.php` `getTemplate()` | page template from a module |
-| `www/app/report.php` `generate()` | print form from a module |
+| `www/app/report.php` `generate()` | print form from a module; in the charity profile `printforms/charity/<template>` first |
 | `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()` | document hooks |
 | `www/app/pages/main.php`, `www/templates/pages/main.html` | `mainBlocks` |
 | `www/app/pages/reference/itemlist.php` | `itemSaved` |
