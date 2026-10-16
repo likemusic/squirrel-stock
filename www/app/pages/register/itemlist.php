@@ -196,7 +196,7 @@ class ItemList extends \App\Pages\Base
            $cf="";
            foreach($item->getcf() as $f){
                if( strlen($f->val??'')>0){
-                  $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+                  $cf=$cf. "<small style=\"display:block\">". htmlspecialchars($f->name.": ".$f->val)."</small>"   /* SquirrelStock: разметка из данных — текстом */ ; 
                }
            }
            if(strlen($cf) >0) {

@@ -78,7 +78,7 @@ class NotifyList extends \App\Pages\Base
         }
 
 
-        $row->add(new Label("msg"))->setText($notify->message, true);
+        $row->add(new Label("msg"))->setText($notify->messageHtml(), true);   // SquirrelStock: разметка из данных — текстом
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
         $row->add(new ClickLink("nanswer",$this,'onAnswer'))->setVisible($notify->sender_id > 0);

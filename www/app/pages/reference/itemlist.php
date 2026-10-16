@@ -311,7 +311,7 @@ class ItemList extends \App\Pages\Base
            $cf="";
            foreach($item->getcf() as $f){
                if( strlen($f->val??'')>0){
-                    $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+                    $cf=$cf. "<small style=\"display:block\">". htmlspecialchars($f->name.": ".$f->val)."</small>"   /* SquirrelStock: разметка из данных — текстом */ ; 
                }
            }
            if(strlen($cf) >0) {
@@ -1172,14 +1172,11 @@ class ItemList extends \App\Pages\Base
     
     public function  showdescOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
-        $desc = str_replace("'","`",$item->description);
-        $desc = str_replace("\"","`",$desc);
-      //  $desc = nl2br ($desc);        
-        $desc = str_replace ("\n","",$desc);
-        $desc = str_replace ("\r","",$desc);
-        
-        
-        $this->addAjaxResponse("   openModal('idesc')   ; $('#idesccontent').html('{$desc}'); ")  ;
+        // SquirrelStock: описание — текст: экранируется, переносы строк — <br>, в скрипт — строкой JSON
+        $desc = str_replace(["\r", "\n"], ['', '<br>'], htmlspecialchars((string)$item->description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+        $desc = json_encode($desc, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+
+        $this->addAjaxResponse("   openModal('idesc')   ; $('#idesccontent').html({$desc}); ")  ;
        //  $this->addAjaxAnswer("fn_opendesc",['desc'=> str_replace(";","`",$desc)  ])  ;
         
     }

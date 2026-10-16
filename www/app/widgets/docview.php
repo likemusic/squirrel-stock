@@ -260,7 +260,7 @@ class DocView extends \Zippy\Html\PageFragment
         foreach(\App\Entity\Message::getMessages(1, $docid) as $msg) {
             $msglist[]=array(
             'id'=>$msg->message_id,
-            'msgdata'=>nl2br($msg->message),
+            'msgdata'=>nl2br(htmlspecialchars((string)$msg->message)),   // SquirrelStock: выводится через v-html
             'msgdate'=>\App\Helper::fdt($msg->created)  ,
             'msguser'=>$msg->username ,
             'candel'=>($user->user_id == $msg->user_id || $user->rolename  =='admins')
