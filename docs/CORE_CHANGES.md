@@ -56,6 +56,9 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `eb9698c37` | `www/app/pages/service/export.php` | ids cast to int, document type quoted; `Item::qstr($$brand)` → `$brand`: the brand filter of the item export never matched | `tests/specs/filters-int.spec.js` |
 | `7db89d28f` | `www/app/pages/doc/goodsreceipt.php`, `goodsissue.php`, `outcomeitem.php`, `moveitem.php`, `inventory.php`, `retcustissue.php` | store, customer, employee and category ids from the form cast to int before queries | `tests/specs/filters-int.spec.js` (Inventory) |
 | `8480e1748` | `www/index.php` (one line before `Run`); new `www/app/sqs/pageguard.php` | a page of a disabled menu item (`metadata.disabled = 1`: profile, menu settings, disabled module) shows "no access" by direct URL too, for all roles; before: only hidden from the menu, a disabled module page stopped with "Невірний клас" | `tests/specs/menu-disabled.spec.js` |
+| `fc70acff4` | `www/app/entity/item.php` `findBarCode()` | category condition appended to `disabled = 0` instead of replacing it (inventory by category: SQL error); code alternatives in parentheses (a disabled item was found by barcode) | `tests/specs/barcode-find.spec.js` |
+| `66e22212b` | `www/init.php` (one line), `www/index.php` (catch); new `www/app/sqs/dbexception.php` | database error: ADOdb creates `App\SQS\DbException`, full text and query go to `logs/`, the user sees a generic translated message (pages, toastr, AJAX) | `tests/specs/db-error.spec.js` |
+| `bd749b914` | `www/app/entity/customer.php` `getList()` | `coalesce(phone,'')`: a customer without phone was empty in the autocomplete | `tests/specs/customer-no-phone.spec.js` |
 
 ## Proposed upstream
 

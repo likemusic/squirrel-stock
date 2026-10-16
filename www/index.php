@@ -56,7 +56,9 @@ try {
         $logger->debug($e->sql);        
     }
 
-    if ($e instanceof Throwable) {
+    if ($e instanceof \ADODB_Exception) {
+        echo $e->getMessage() . '<br>';   // SquirrelStock: общее сообщение (App\SQS\DbException), подробности — в журнале
+    } elseif ($e instanceof Throwable) {
         echo $e->getMessage() . '<br>';
         echo $e->getLine() . ' ';
         echo $e->getFile() . '<br>';
