@@ -108,7 +108,7 @@ async function createDoc(page, type, d) {
   await page.locator('#document_date').fill(d.date);
   await page.locator('#docform #store').selectOption('1');
   if (d.customer) await pickAuto(page, '#docform #customer', d.customer, d.customer);
-  if (d.payment !== undefined && await page.locator('#docform #payment').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
+  if (d.payment !== undefined && await page.locator('#docform #payment:visible').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
   if (d.contract) {   // договор выбирается по номеру; список появляется после выбора контрагента
     const find = () => page.locator('#docform #contract option').evaluateAll((os, n) => (os.find(o => o.textContent.trim().startsWith(n + ' ')) || {}).value, d.contract);
     let value = await find();
@@ -128,7 +128,7 @@ async function createDoc(page, type, d) {
     if (type === 'GoodsIssue' && await page.locator('#editserial').count()) s.serial = await page.locator('#editserial').inputValue();
     suggested.push(s);
     if (r.qty !== undefined) await page.locator('#editquantity').fill(String(r.qty));
-    if (r.price !== undefined && await page.locator('#editprice').count()) await page.locator('#editprice').fill(String(r.price));
+    if (r.price !== undefined && await page.locator('#editprice:visible').count()) await page.locator('#editprice').fill(String(r.price));
     if (r.sn) await page.locator(type === 'GoodsIssue' ? '#editserial' : '#editsnumber').fill(r.sn);
     if (r.sdate) await page.locator('#editsdate').fill(r.sdate);
     await clickWait(page, type === 'GoodsIssue' ? '#submitrow' : '#saverow');

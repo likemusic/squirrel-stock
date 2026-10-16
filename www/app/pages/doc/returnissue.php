@@ -41,6 +41,8 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->setWarn(__('doc.returnissue.povernennia_slid_stvoriuvaty_na_osnovi'));
         }
+        // SquirrelStock: в профиле благотворительной организации (App\SQS\Profile) — без кассы, цен и возврата оплаты (savedocOnClick)
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -309,6 +311,11 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = doubleval($this->docform->payed->getText());
+        if (\App\SQS\Profile::charity()) {   // SquirrelStock: выдача была бесплатной — оплату не возвращают; цены остаются как в выдаче (их сверяет checkForm)
+            $this->_doc->payed = 0;
+            $this->_doc->headerdata['payment'] = 0;
+            $this->docform->payment->setValue(0);
+        }
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['discount'] = $this->docform->discount->getText();

@@ -55,7 +55,9 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        // SquirrelStock: в профиле благотворительной организации (App\SQS\Profile) выдача бесплатная — без кассы, цен и оплаты (savedocOnClick)
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), $this->_tvars['sqs_charity'] ? 0 : H::getDefMF()));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new Label('custinfo'));
@@ -726,6 +728,18 @@ class GoodsIssue extends \App\Pages\Base
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
+        if (\App\SQS\Profile::charity()) {   // SquirrelStock: цена 0 (подставленная из карточки позиции не нужна), без скидки, кассы и оплаты
+            foreach ($this->_itemlist as $item) {
+                $item->price = 0;
+                $item->pricenonds = 0;
+                $item->disc = '';
+            }
+            $this->docform->totaldisc->setText('');
+            $this->calcTotal();
+            $this->calcPay();
+            $this->docform->payed->setText(H::fa(0));
+            $this->docform->payment->setValue(0);
         }
 
 
