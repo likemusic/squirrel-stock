@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>{{#t}}service.appupdate.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-xl-9">
+                <h3>{{#t}}service.appupdate.title{{/t}}</h3>
+                <p class="fs-5">{{#t}}service.appupdate.version{{/t}}: <b id="appupdate-version">{{version}}</b></p>
+                <p class="text-muted">{{#t}}service.appupdate.help{{/t}}</p>
+
+                {{#nomanifest}}
+                <div class="alert alert-secondary" id="appupdate-nomanifest">{{#t}}service.appupdate.nomanifest{{/t}}</div>
+                {{/nomanifest}}
+                {{#ok}}
+                <div class="alert alert-success" id="appupdate-ok">{{#t}}service.appupdate.ok{{/t}}</div>
+                {{/ok}}
+
+                {{#broken}}
+                <div class="alert alert-danger" id="appupdate-broken">
+                    <i class="fa fa-exclamation-triangle me-2"></i>{{#t}}service.appupdate.broken{{/t}}
+                    <ul class="mb-0 mt-2 small font-monospace">
+                        {{#missing}}<li>{{#t}}service.appupdate.missing{{/t}}: {{path}}</li>{{/missing}}
+                        {{#changed}}<li>{{#t}}service.appupdate.changed{{/t}}: {{path}}</li>{{/changed}}
+                    </ul>
+                    {{missing_more}} {{changed_more}}
+                </div>
+                {{/broken}}
+
+                {{#stale_n}}
+                <h4 class="mt-4">{{#t}}service.appupdate.stale_title{{/t}} (<span id="appupdate-stale-n">{{stale_n}}</span>)</h4>
+                <p class="text-muted">{{#t}}service.appupdate.stale_help{{/t}}</p>
+                <ul class="small font-monospace" id="appupdate-stale">
+                    {{#stale}}<li>{{path}}</li>{{/stale}}
+                </ul>
+                <p class="text-muted">{{stale_more}}</p>
+                {{/stale_n}}
+                <form zippy="cform">
+                    <input zippy="clean" type="submit" class="btn btn-warning" value="{{#t}}service.appupdate.clean{{/t}}" onclick="return confirm(this.dataset.confirm)" data-confirm="{{#t}}service.appupdate.clean_confirm{{/t}}">
+                </form>
+
+                {{#foreign_n}}
+                <details class="mt-4" id="appupdate-foreign">
+                    <summary>{{#t}}service.appupdate.foreign_title{{/t}} ({{foreign_n}})</summary>
+                    <p class="text-muted mt-2">{{#t}}service.appupdate.foreign_help{{/t}}</p>
+                    <ul class="small font-monospace">
+                        {{#foreign}}<li>{{path}}</li>{{/foreign}}
+                    </ul>
+                    <p class="text-muted">{{foreign_more}}</p>
+                </details>
+                {{/foreign_n}}
+
+                <h4 class="mt-4">{{#t}}service.appupdate.history_title{{/t}}</h4>
+                <div class="table-responsive">
+                <table class="table table-sm table-bordered" id="appupdate-history">
+                    <tr>
+                        <th>{{#t}}service.appupdate.at{{/t}}</th>
+                        <th>{{#t}}service.appupdate.from{{/t}}</th>
+                        <th>{{#t}}service.appupdate.to{{/t}}</th>
+                    </tr>
+                    {{#history}}
+                    <tr><td>{{at}}</td><td>{{from}}</td><td>{{to}}</td></tr>
+                    {{/history}}
+                </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
