@@ -467,6 +467,10 @@ class EqHistory
             if ($d !== null && (is_array($v) || preg_match('/^\D{0,12}\d{1,2}[.,\/]\d{1,2}[.,\/]\d{2,4}\D{0,3}$/u', $v))) {
                 if (!self::yearOk($d)) {
                     $this->fail($rec, __('sqs.eqhist.bad_year', ['value' => date('d.m.Y', $d)]));
+                } elseif ($d > strtotime(date('Y-m-d'))) {
+                    // возврат будущим числом — похоже на плановый срок: единица на руках, дата — срок договора, если срок пуст
+                    $rec['futureret'] = $d;
+                    $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.future_return', ['date' => date('d.m.Y', $d)]));
                 } else {
                     $rec['ret'] = $d;
                     if (!is_array($v) && self::status($v) != 'note') {
@@ -518,8 +522,11 @@ class EqHistory
                     $rec['notes'][] = $w;
             }
         }
+        if (!empty($rec['futureret']) && $rec['enddate'] === null) {
+            $rec['enddate'] = $rec['futureret'];
+        }
         // без даты (ответ 1.12): дата возврата выводится при составлении цепочки единицы, списание — датой импорта
-        if (!empty($rec['returned']) && !$rec['ret']) {
+        if (!empty($rec['returned']) && !$rec['ret'] && empty($rec['futureret'])) {
             $rec['retunknown'] = true;
         }
         if (!empty($rec['offword'])) {
@@ -757,6 +764,7 @@ class EqHistory
         foreach ($byUnit as $uk => $list) {
             usort($list, fn($a, $b) => $a['idate'] <=> $b['idate']);
             $out = false;
+            $busy = 0;          // дата возврата по прошлой выдаче: раньше нее единица у прежнего получателя
             $first = true;
             $offToday = null;   // «списан» без даты — списание датой импорта в конце цепочки
             foreach ($list as $k => $is) {
@@ -766,6 +774,10 @@ class EqHistory
                 }
                 if ($out) {
                     $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_twice'));
+                    continue;
+                }
+                if ($is['idate'] < $busy) {
+                    $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_before_return', ['date' => date('d.m.Y', $busy)]));
                     continue;
                 }
                 if ($is['ret'] && $is['ret'] < $is['idate']) {
@@ -797,6 +809,7 @@ class EqHistory
                 if ($ret) {
                     $events[] = ['kind' => 'return', 'date' => $ret, 'unit' => $is['unit'], 'rec' => $is, 'extra' => $retExtra, 'nodate' => $retNodate];
                     $out = false;
+                    $busy = $ret;
                 }
                 if ($is['off']) {
                     $events[] = ['kind' => 'writeoff', 'date' => $is['off'], 'unit' => $is['unit'], 'rec' => $is];
@@ -882,6 +895,7 @@ class EqHistory
         }
         unset($ev);
         usort($events, fn($a, $b) => [$a['date'], $a['seq']] <=> [$b['date'], $b['seq']]);
+        $events = $this->dropForeignContracts($events);
 
         // уже импортированное
         $done = self::doneKeys();
@@ -925,6 +939,42 @@ class EqHistory
         foreach ($this->problems as $p) {
             $this->stat[$p['level'] == 'error' ? 'errors' : 'notes']++;
         }
+    }
+
+    /**
+     * Договор — у одного получателя. Выдача по договору, который в базе или в более ранней строке таблиц записан на другое
+     * ФИО, при записи не пройдет: ошибка здесь, выдача и ее возврат (у мелочи — и приход) не входят в план.
+     */
+    private function dropForeignContracts(array $events): array {
+        $who = fn(string $name) => mb_strtolower(trim(preg_replace('/\s+/u', ' ', $name)));
+        $owner = [];
+        foreach (\ZDB\DB::getConnect()->Execute("SELECT c.contract_number, cu.customer_name FROM contracts c JOIN customers cu ON cu.customer_id = c.customer_id") as $r) {
+            $owner[$r['contract_number']] = $who((string)$r['customer_name']);
+        }
+        $drop = [];
+        foreach ($events as $e) {
+            if ($e['kind'] != 'issue' || $e['rec']['contract'] === '') {
+                continue;
+            }
+            $c = $e['rec']['contract'];
+            $n = $who($e['rec']['name']);
+            if (!isset($owner[$c])) {
+                $owner[$c] = $n;
+            } elseif ($owner[$c] !== $n) {
+                $drop[self::recKey($e)] = 1;
+                $this->problem('error', $e['rec']['sheet'], $e['rec']['row'], $c, self::unitLabel($e['rec']), __('sqs.eqhist.contract_other_customer', ['number' => $c]));
+                if (!empty($e['unit']['qty'])) {
+                    $this->onhand[$e['unit']['itemname']]--;
+                }
+            }
+        }
+        return array_values(array_filter($events, fn($e) => !isset($drop[self::recKey($e)])
+            || $e['kind'] == 'writeoff' || ($e['kind'] == 'income' && empty($e['unit']['qty']))));
+    }
+
+    // строка таблицы события (у одинаковых строк мелочи — с номером повтора)
+    private static function recKey(array $e): string {
+        return $e['rec']['file'] . '|' . $e['rec']['sheet'] . '|' . $e['rec']['row'] . ($e['keysuffix'] ?? '');
     }
 
     // товар с этим названием ведется по серийным (инвентарным) номерам
@@ -986,15 +1036,20 @@ class EqHistory
     // ---------- запись ----------
 
     /**
-     * Создать документы по плану в хронологическом порядке. Каждое событие — отдельная транзакция; если событие не
-     * записалось, следующие события этой единицы пропускаются (ошибка в отчете).
+     * Создать документы по плану в хронологическом порядке, частями: за вызов — пока не истекло $seconds секунд
+     * (на хостинге запрос обрывается через 30–60 с) или не пройдено $limit событий; вызывать снова, пока left > 0.
+     * Каждое событие — отдельная транзакция, записанное отмечается в sqs_eqhistory: после обрыва повторный запуск
+     * продолжает с места обрыва. Если событие не записалось, пропускаются только события той же строки таблицы
+     * (возврат невыданного, выдача неприходованного); в отчете — причина и что пропущено из-за нее. Остальные события
+     * единицы записываются: несогласованное с незаписанным не пройдет само, со своей ошибкой (единицы нет на складе).
      */
-    public function apply(int $store, bool $liftPeriod = false): array {
+    public function apply(int $store, bool $liftPeriod = false, float $seconds = 20, int $limit = 0): array {
         if ($this->blocked && !$liftPeriod) {
             throw new \Exception(__('sqs.eqhist.actualdate', ['actual' => date('d.m.Y', $this->blocked), 'first' => date('d.m.Y', $this->plan[0]['date'])]));
         }
+        $deadline = microtime(true) + $seconds;
         if (!$this->blocked) {
-            return $this->applyEvents($store);
+            return $this->applyEvents($store, $deadline, $limit);
         }
         // закрытый период снимается только на время записи: начало периода — на дату самой ранней записи, после — как было
         $common = \App\System::getOptions('common', true);
@@ -1002,9 +1057,9 @@ class EqHistory
         $was = $common['actualdate'] ?? null;
         $common['actualdate'] = strtotime(date('Y-m-d', $this->plan[0]['date']));
         \App\System::setOptions('common', $common);
-        $period = ['was' => $was, 'set' => $common['actualdate']];
+        $period = ['was' => $this->period['was'] ?? $was, 'set' => $common['actualdate']];   // при записи частями «было» — до первой части
         try {
-            $res = $this->applyEvents($store);
+            $res = $this->applyEvents($store, $deadline, $limit);
         } finally {
             $common = \App\System::getOptions('common', true);
             if ($had) {
@@ -1027,38 +1082,64 @@ class EqHistory
         return ['was' => $d($p['was']), 'set' => $d($p['set']), 'restored' => $d($p['restored'] ?? null)];
     }
 
-    private function applyEvents(int $store): array {
+    // запись частями: состояние между вызовами (объект сохраняется страницей между запросами)
+    public int $pos = 0;                                  // пройдено событий плана
+    public array $written = ['income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'failed' => 0, 'skipped' => 0];
+    private array $broken = [];                           // строка таблицы => [индекс ошибки в problems, [пропущенные события]]
+    private array $contractUnits = [];                    // contract_id => [ukey => выдана ли сейчас]
+
+    private function applyEvents(int $store, float $deadline, int $limit): array {
         $conn = \ZDB\DB::getConnect();
-        $res = ['income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'failed' => 0];
-        $broken = [];
-        $issueDoc = [];      // ukey|contract => document_id выдачи (для возврата)
-        $contractUnits = []; // contract_id => [ukey => выдана ли сейчас]
-        foreach ($this->plan as $e) {
-            $uk = empty($e['unit']['qty']) ? self::ukey($e['unit']) : $e['key'];   // мелочь: строки независимы
-            if (isset($broken[$uk])) {
+        $n = count($this->plan);
+        $done = 0;
+        while ($this->pos < $n && ($done == 0 || (microtime(true) < $deadline && ($limit == 0 || $done < $limit)))) {
+            $e = $this->plan[$this->pos++];
+            $done++;
+            // после обрыва запроса состояние могло не сохраниться: записанное уже есть в sqs_eqhistory
+            if ($conn->GetOne("SELECT COUNT(*) FROM sqs_eqhistory WHERE eventkey = " . $conn->qstr($e['key'])) > 0) {
+                continue;
+            }
+            $rk = self::recKey($e);
+            if (isset($this->broken[$rk]) && $e['kind'] != 'writeoff') {   // списание — самостоятельно: если не выйдет, будет своя ошибка
+                $this->broken[$rk][1][] = __('sqs.eqhist.kind_' . $e['kind']) . ' ' . date('d.m.Y', $e['date']);
+                $this->written['skipped']++;
                 continue;
             }
             $conn->BeginTrans();
             try {
                 $docId = match ($e['kind']) {
                     'income' => $this->doIncome($e, $store),
-                    'issue' => $this->doIssue($e, $store, $contractUnits),
-                    'return' => $this->doReturn($e, $store, $contractUnits),
+                    'issue' => $this->doIssue($e, $store, $this->contractUnits),
+                    'return' => $this->doReturn($e, $store, $this->contractUnits),
                     'writeoff' => $this->doWriteoff($e, $store),
                 };
                 $conn->Execute("INSERT INTO sqs_eqhistory (eventkey, document_id, createdon) VALUES (" . $conn->qstr($e['key']) . ", " . intval($docId) . ", NOW())");
                 $conn->CommitTrans();
-                $res[$e['kind']]++;
+                $this->written[$e['kind']]++;
             } catch (\Throwable $ex) {
                 $conn->RollbackTrans();
-                $broken[$uk] = 1;
-                $res['failed']++;
+                $this->written['failed']++;
                 $this->problem('error', $e['rec']['sheet'], $e['rec']['row'], $e['rec']['contract'], self::unitLabel($e['rec']),
                     __('sqs.eqhist.write_failed', ['kind' => __('sqs.eqhist.kind_' . $e['kind']), 'date' => date('d.m.Y', $e['date']), 'error' => $ex->getMessage()]));
+                $this->broken[$rk] = [count($this->problems) - 1, []];
             }
         }
+        if ($this->pos >= $n) {
+            $this->finish();
+        }
+        return $this->written + ['left' => $n - $this->pos, 'total' => $n];
+    }
+
+    // после последней части: что пропущено из-за незаписанных событий — к их ошибкам; закрыть договоры без единиц на руках
+    private function finish(): void {
+        foreach ($this->broken as [$i, $skipped]) {
+            if (count($skipped)) {
+                $this->problems[$i]['text'] .= '. ' . __('sqs.eqhist.write_skipped', ['events' => implode(', ', $skipped)]);
+            }
+        }
+        $this->broken = [];
         // договор закрыт, если все его единицы возвращены или списаны
-        foreach ($contractUnits as $cid => $units) {
+        foreach ($this->contractUnits as $cid => $units) {
             if (count(array_filter($units)) == 0) {
                 $c = Contract::load($cid);
                 if ($c && $c->state != Contract::STATE_CLODED) {
@@ -1067,7 +1148,7 @@ class EqHistory
                 }
             }
         }
-        return $res;
+        $this->contractUnits = [];
     }
 
     // товар новой единицы — один на лист, с учетом по серийным номерам; мелочи без номеров — без серийного учета
