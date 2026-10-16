@@ -63,7 +63,7 @@ class IncomeItem extends Document
             "to"              => $this->headerdata["storename"],
          
             "storeemp"             => false,
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number
         );
      

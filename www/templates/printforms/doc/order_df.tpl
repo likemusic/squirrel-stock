@@ -34,7 +34,7 @@
     {{#_detail}}
     <tr>
      
-        <td colspan="2">{{{tovar_name}}}</td>
+        <td colspan="2">{{tovar_name}}</td>
         <td colspan="2" valign="top">{{tovar_code}}</td>
         <td valign="top">{{msr}}</td>
         <td valign="top">{{desc}}</td>

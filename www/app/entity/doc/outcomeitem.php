@@ -64,7 +64,7 @@ class OutcomeItem extends Document
             "emp"             => false,
             "customer"             => false,
             "from"            => $this->headerdata["storename"],
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number
         );
         

@@ -64,7 +64,7 @@ class MoveItem extends Document
             "to"              => $this->headerdata["tostorename"],
             "storeemp"             => false,
             "tostoreemp"             => false,
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number
         );
         if ($this->headerdata["storeemp"] > 0  ) {

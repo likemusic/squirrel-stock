@@ -80,7 +80,7 @@ class Task extends Document
                         "pareaname"       => strlen($this->headerdata["pa_name"]) > 0 ? $this->headerdata["pa_name"] : false,
                         "document_date"   => H::fd($this->document_date),
                         "document_number" => $this->document_number,
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                         "baseddoc"        => strlen($this->headerdata["parent_number"]??'') > 0 ? $this->headerdata["parent_number"] : false,
                         "cust"            => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,

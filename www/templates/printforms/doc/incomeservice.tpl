@@ -25,7 +25,7 @@
 
  
    <tr>
-        <td colspan="6">{{{notes}}}</td>
+        <td colspan="6">{{notes}}</td>
     </tr>
     
     <tr style="font-weight: bolder;">

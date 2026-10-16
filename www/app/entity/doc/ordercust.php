@@ -34,7 +34,7 @@ class OrderCust extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                        "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount)
         );

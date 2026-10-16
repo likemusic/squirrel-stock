@@ -78,7 +78,7 @@ class TransItem extends Document
             "tolist"          => $to,
             "from"            => Store::load($this->headerdata["store"])->storename,
             "to"              => Store::load($this->headerdata["tostore"])->storename,
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number,
             "amount"          => H::fa($this->amount)
         );

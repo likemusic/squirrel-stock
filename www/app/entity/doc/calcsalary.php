@@ -119,7 +119,7 @@ class CalcSalary extends Document
             "_detail" => $detail,
             'total'   => H::fa($this->amount),
             'date'    => H::fd($this->document_date),
-            "notes"   => nl2br($this->notes),
+            "notes"   => nl2br(htmlspecialchars((string)$this->notes)),
             "month"   => $this->headerdata["monthname"],
             "department"   => ($this->headerdata["department"] ?? "") == "" ? false : $this->headerdata["department"],
             "year"    => $this->headerdata["year"],

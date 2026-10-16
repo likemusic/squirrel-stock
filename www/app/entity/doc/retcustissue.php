@@ -55,7 +55,7 @@ class RetCustIssue extends Document
                         "_detail"         => $detail,
                         "firm_name"       => $this->headerdata["firm_name"],
                         "customer_name"   => $this->customer_name,
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                         "document_number" => $this->document_number,
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",

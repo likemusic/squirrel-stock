@@ -144,7 +144,7 @@ class Inventory extends Document
             "_detailover"     => $detailover,
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "reserved"           => $this->headerdata["reserved"]==1,
             "store"           => $this->headerdata["storename"],
             "storeemp"             => false,

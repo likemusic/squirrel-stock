@@ -62,7 +62,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "isbank"          => (strlen($mf->bankacc??'') > 0 || strlen($mf->bank ?? '') > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
                        
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
