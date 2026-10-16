@@ -78,6 +78,7 @@ test('фильтры со своими обычными значениями о�
   await Promise.all([page.waitForLoadState('networkidle'), page.locator('#docform #store').selectOption('1')]);
   await Promise.all([page.waitForLoadState('networkidle'), page.locator('#docform #category').selectOption(String(catB))]);
   await clickWait(page, '#docform #loadall');
+  await page.locator('#docform').getByText(itemB).first().waitFor({ timeout: 5000 }).catch(() => {});   // список перерисовывается после ответа
   await check('Doc/Inventory', [itemB], [itemA]);
 
   expect(wrong).toEqual([]);
