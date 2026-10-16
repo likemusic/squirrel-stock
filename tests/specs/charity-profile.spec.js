@@ -241,6 +241,7 @@ test('формы выдачи и возврата в профиле: «Отри�
     await expect(p.locator('#docform #' + id), id).toBeHidden();
   }
   await expect(p.locator('#docform th', { hasText: 'Ціна' })).toBeHidden();
+  await expect(p.locator('#docform #addrow')).toHaveText('Додати позицію');
   await p.locator('#document_date').fill('2026-10-03');
   await p.locator('#docform #notes').fill('Возврат ' + uniq);
   await clickWait(p, '#execdoc');
@@ -260,4 +261,20 @@ test('формы выдачи и возврата в профиле: «Отри�
   await expect(q.locator('#docform label[for=customer]')).toHaveText('Покупець');
   await expect(q.locator('#docform #payment')).toBeVisible();
   await q.context().close();
+});
+
+test('отчет «Надходження» в профиле: заголовок страницы и разделов без «закупок»', async ({ browser }) => {
+  const check = async (title, section) => {
+    const p = await freshPage(browser);
+    await p.goto('/index.php?p=App/Pages/Report/Income');
+    await expect(p.locator('h3').first()).toHaveText(title);
+    await expect(p).toHaveTitle(new RegExp(title));
+    await clickWait(p, '#onreport');
+    await expect(p.locator('#preview')).toContainText(section);
+    await p.context().close();
+  };
+  webPhp('cli/charity-profile.php');
+  await check('Звіт по надходженню', 'Надходження по товарам');
+  webPhp('cli/charity-profile.php', '--back');   // без профиля — названия ядра
+  await check('Звіт по закупках', 'Закупівлі по товарам');
 });
