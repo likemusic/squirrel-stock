@@ -184,5 +184,12 @@
     "sqs.extend.save": "Подовжити",
     "sqs.extend.link": "Подовжити",
     "sqs.extend.note": "Строк користування змінено: {from} → {to}",
-    "sqs.extend.done": "Договір {number}: строк {term}"
+    "sqs.extend.done": "Договір {number}: строк {term}",
+    "sqs.eqhist.issued_before_return": "Одиницю видано повторно раніше повернення за попередньою видачею (повернення {date})",
+    "sqs.eqhist.future_return": "Повернення майбутньою датою ({date}) — схоже на плановий строк: одиниця вважається на руках",
+    "sqs.eqhist.write_skipped": "Через це не записано: {events}",
+    "sqs.eqhist.stat_skipped": "Пропущено через незаписані",
+    "sqs.eqhist.progress": "Запис: {done} з {total} подій. Не закривайте сторінку — запис триває сам.",
+    "sqs.eqhist.next": "Продовжити запис",
+    "sqs.eqhist.state_lost": "Хід запису втрачено (тимчасовий файл видалено). Натисніть «Перевірити» і «Записати» знову: записане не повториться."
 }

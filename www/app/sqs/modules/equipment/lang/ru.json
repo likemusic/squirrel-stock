@@ -184,5 +184,12 @@
     "sqs.extend.save": "Продлить",
     "sqs.extend.link": "Продлить",
     "sqs.extend.note": "Срок пользования изменен: {from} → {to}",
-    "sqs.extend.done": "Договор {number}: срок {term}"
+    "sqs.extend.done": "Договор {number}: срок {term}",
+    "sqs.eqhist.issued_before_return": "Единица выдана повторно раньше возврата по прошлой выдаче (возврат {date})",
+    "sqs.eqhist.future_return": "Возврат будущим числом ({date}) — похоже на плановый срок: единица считается на руках",
+    "sqs.eqhist.write_skipped": "Из-за этого не записано: {events}",
+    "sqs.eqhist.stat_skipped": "Пропущено из-за незаписанных",
+    "sqs.eqhist.progress": "Запись: {done} из {total} событий. Не закрывайте страницу — запись продолжается сама.",
+    "sqs.eqhist.next": "Продолжить запись",
+    "sqs.eqhist.state_lost": "Ход записи потерян (временный файл удален). Нажмите «Проверить» и «Записать» снова: записанное не повторится."
 }
