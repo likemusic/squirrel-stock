@@ -288,8 +288,11 @@ class Import1C extends \App\Pages\Base
         if ($item == null) {
             $item = $this->newItem($name, $serial);
             $new = true;
-        } elseif ($serial && $item->useserial != 1) {
+        } elseif ($serial && ($item->useserial != 1 || in_array($item->serialMode(), [1, 2]))) {
             $item->useserial = 1;
+            if ($item->serialMode() != 3) {
+                $item->snmode = 3;   // общий режим — партии: основному средству режим серийных номеров задается явно
+            }
             $item->save();
         }
         Item1C::set((int)$item->item_id, $name);
@@ -304,6 +307,9 @@ class Import1C extends \App\Pages\Base
         $item->msr = __('app.item.sht');
         $item->cat_id = intval($this->iform->cat->getValue());
         $item->useserial = $serial ? 1 : 0;
+        if ($serial && $item->serialMode() != 3) {
+            $item->snmode = 3;   // общий режим — партии: основному средству режим серийных номеров задается явно
+        }
         $item->save();
         return $item;
     }

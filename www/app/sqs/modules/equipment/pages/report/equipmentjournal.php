@@ -46,7 +46,7 @@ class EquipmentJournal extends \App\Pages\Base
         $from = date('Y-m-d', $this->filter->from->getDate());
         $to = date('Y-m-d', $this->filter->to->getDate());
         $cat = intval($this->filter->cat->getValue());
-        $where = "m.meta_name = 'GoodsIssue' AND s.snumber <> '' AND d.document_date BETWEEN '{$from}' AND '{$to}'";
+        $where = "m.meta_name = 'GoodsIssue' AND " . \App\SQS\SerialStock::unitSql() . " AND d.document_date BETWEEN '{$from}' AND '{$to}'";
         if ($cat > 0) {
             $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }

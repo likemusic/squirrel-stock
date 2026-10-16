@@ -43,6 +43,29 @@ class SerialStock
     }
 
     /**
+     * Условие SQL «позиция $i (items) ведется партиями» — Item::serialMode() 1 или 2, по XML в items.detail. Номер в
+     * store_stock.snumber у такой позиции — партия расходника, а не единица оборудования.
+     */
+    public static function batchSql(string $i = 'i'): string {
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        if ($common == 0) {
+            return '0=1';
+        }
+        $d = "COALESCE({$i}.detail, '')";   // NULL в условии дал бы NULL, и NOT батча выкинул бы единицу
+        $own = "{$d} REGEXP '<snmode>[123]</snmode>'";
+        return "({$d} LIKE '%<useserial>1</useserial>%' AND ({$d} REGEXP '<snmode>[12]</snmode>'"
+            . ($common == 1 || $common == 2 ? " OR NOT {$own}" : '') . '))';
+    }
+
+    /**
+     * Условие SQL «строка остатка $s (store_stock) с позицией $i — единица оборудования»: есть номер, и позиция ведется не
+     * партиями. Пока режимы позиций не заданы и общий режим — серийные номера, это прежнее «snumber <> ''».
+     */
+    public static function unitSql(string $s = 's', string $i = 'i'): string {
+        return "{$s}.snumber <> '' AND NOT " . self::batchSql($i);
+    }
+
+    /**
      * Проверка при проведении: номера не хватает — исключение. Именно исключение, а не false из Execute(): проведение
      * (Document::updateStatus) не смотрит, что вернул Execute(), и документ помечался проведенным без движений.
      */

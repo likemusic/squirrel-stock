@@ -4,7 +4,8 @@ namespace App\SQS;
 
 /**
  * SquirrelStock: единицы оборудования. Единица — товар с серийным номером Zippy (store_stock.snumber), номер — инвентарный.
- * Заводской номер хранится отдельно (таблица sqs_unit, schema.sql модуля): у Zippy у единицы один номер.
+ * Номер у позиции, которая ведется партиями (Item::serialMode() 1 или 2), — партия расходника, а не единица: условие
+ * SerialStock::unitSql(). Заводской номер хранится отдельно (таблица sqs_unit, schema.sql модуля): у Zippy у единицы один номер.
  * У единицы без инвентарного номера инвентарным считается заводской.
  */
 class Units
@@ -63,7 +64,7 @@ class Units
                 FROM store_stock s
                 JOIN items i ON i.item_id = s.item_id
                 LEFT JOIN sqs_unit u ON u.item_id = s.item_id AND u.snumber = s.snumber
-                WHERE s.store_id = " . intval($store_id) . " AND s.snumber <> '' AND " . self::searchWhere($text) . "
+                WHERE s.store_id = " . intval($store_id) . " AND " . SerialStock::unitSql() . " AND " . self::searchWhere($text) . "
                 GROUP BY s.item_id, s.snumber, i.itemname, u.factory_no
                 HAVING SUM(s.qty) > 0
                 ORDER BY CASE WHEN s.snumber = " . $conn->qstr(trim($text)) . " OR u.factory_no = " . $conn->qstr(trim($text)) . " THEN 0 ELSE 1 END, i.itemname, s.snumber
@@ -120,13 +121,14 @@ class Units
      */
     public static function current(string $where = '1=1'): array {
         $conn = \ZDB\DB::getConnect();
+        $unit = SerialStock::unitSql();   // номер у позиции, которая ведется партиями, — партия расходника, не единица
         $units = $conn->Execute("SELECT s.item_id, i.itemname, i.cat_id, s.snumber, SUM(s.qty) AS qty, MAX(u.factory_no) AS factory_no,
                                         GROUP_CONCAT(CASE WHEN s.qty > 0 THEN st.storename END SEPARATOR ', ') AS stores
                                  FROM store_stock s
                                  JOIN items i ON i.item_id = s.item_id
                                  JOIN stores st ON st.store_id = s.store_id
                                  LEFT JOIN sqs_unit u ON u.item_id = s.item_id AND u.snumber = s.snumber
-                                 WHERE s.snumber <> '' AND {$where}
+                                 WHERE {$unit} AND {$where}
                                  GROUP BY s.item_id, i.itemname, i.cat_id, s.snumber");
         $last = [];
         foreach ($conn->Execute("SELECT x.item_id, x.snumber, x.document_id, x.meta_name FROM (
@@ -137,7 +139,7 @@ class Units
                                      JOIN items i ON i.item_id = s.item_id
                                      JOIN documents d ON d.document_id = e.document_id
                                      JOIN metadata m ON m.meta_id = d.meta_id
-                                     WHERE s.snumber <> '' AND e.quantity < 0 AND {$where}) x WHERE x.rn = 1") as $r) {
+                                     WHERE {$unit} AND e.quantity < 0 AND {$where}) x WHERE x.rn = 1") as $r) {
             $last[self::key((int)$r['item_id'], $r['snumber'])] = $r;
         }
         $docs = self::docs(array_column($last, 'document_id'));
@@ -183,7 +185,8 @@ class Units
      */
     public static function smallOnHand(int $cat = 0, int $customer_id = 0): array {
         $conn = \ZDB\DB::getConnect();
-        $where = "s.snumber = '' AND m.meta_name IN ('GoodsIssue', 'ReturnIssue')";
+        // без номера или с номером партии (позиция ведется партиями, App\SQS\SerialStock::batchSql)
+        $where = "(s.snumber = '' OR " . SerialStock::batchSql() . ") AND m.meta_name IN ('GoodsIssue', 'ReturnIssue')";
         if ($cat > 0) {
             $where .= ' AND ' . Categories::sqlIn($cat);
         }
@@ -199,7 +202,7 @@ class Units
                                 JOIN metadata m ON m.meta_id = d.meta_id
                                 WHERE {$where}
                                 GROUP BY d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname
-                                ORDER BY d.document_date, d.document_id");
+                                ORDER BY d.document_date, d.document_id, s.item_id");
         $rows = [];
         $contractOf = [];   // выдача по договору: document_id => contract_id
         foreach ($docs as $d) {
