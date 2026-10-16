@@ -3949,5 +3949,6 @@
     "sqs.remote.status": "сервер відповів {code}",
     "sqs.import.images_failed": "Не завантажено зображень: {n} ({list})",
     "sqs.remote.not_image": "не зображення",
-    "sqs.file.too_big": "Файл «{name}» не збережено: більше {mb} МБ"
+    "sqs.file.too_big": "Файл «{name}» не збережено: більше {mb} МБ",
+    "sqs.serial_not_on_date": "Номера {snumber} ({itemname}) немає на складі на {date}: на цю дату його видано, ще не оприбутковано або видано пізніше"
 }
