@@ -11,6 +11,8 @@
         <!-- SquirrelStock: блоки модулей (напоминания и т. п.) — App\SQS\Hooks::emit('mainBlocks') -->
         {{{sqs_blocks}}}
         {{#dashboard}}
+        <!-- SquirrelStock: плитки и графики — не в профиле благотворительной организации (sqs_money) -->
+        {{#sqs_money}}
   
 
         <div class="row  "  >
@@ -113,6 +115,7 @@
                 </div>    
             </div>
         </div>     
+        {{/sqs_money}}
      
         {{/dashboard}}    
 
@@ -200,6 +203,7 @@
    
  
  
+     {{#sqs_money}}
      <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
       google.charts.setOnLoadCallback(drawChart);
@@ -365,6 +369,7 @@
         
       }
     </script>
+     {{/sqs_money}}
   
     </body>
 </html>
