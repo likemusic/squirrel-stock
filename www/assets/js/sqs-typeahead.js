@@ -8,6 +8,9 @@
  *  - Enter/Tab, нажатые, пока показан список не для текущего текста поля, откладываются и выбирают первый вариант,
  *    когда придет ответ на этот текст (если текст до того изменился — отложенный выбор отменяется); щелчок мышью
  *    по варианту выбирает его сразу.
+ * Еще: вариант списка вставляется как HTML (render → .html(highlighter(...))), а highlighter Zippy возвращает название
+ * из справочника как есть — разметка в названии позиции или получателя становилась элементами страницы. Результат
+ * highlighter экземпляра экранируется (у Zippy это просто текст, видимое название не меняется).
  * Подключается в templates/pages/base.html после бандла фреймворка.
  */
 (function ($) {
@@ -15,7 +18,7 @@
     if (!T) {
         return;
     }
-    var P = T.prototype, lookup = P.lookup, select = P.select, keyup = P.keyup;
+    var P = T.prototype, lookup = P.lookup, select = P.select, keyup = P.keyup, render = P.render;
     var text = function (t) { return t.$element.val() || t.$element.text() || ''; };
 
     P.lookup = function () {
@@ -43,6 +46,17 @@
             this.sqsWrapped = true;
         }
         return lookup.apply(this, arguments);
+    };
+
+    P.render = function () {
+        if (!this.sqsEscaped) {
+            var h = this.highlighter;
+            this.highlighter = function () {
+                return $('<div>').text(String(h.apply(this, arguments))).html();
+            };
+            this.sqsEscaped = true;
+        }
+        return render.apply(this, arguments);
     };
 
     // Enter/Tab: щелчок мышью по варианту не откладывается — пользователь выбрал то, что видит

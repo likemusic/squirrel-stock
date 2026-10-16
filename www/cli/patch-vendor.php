@@ -30,6 +30,51 @@ $patches = [
 ',
         ],
     ],
+    // Выпадающий список (DropDownChoice, MultipleChoice) собирается строкой HTML: названия из справочников (склады,
+    // договоры, получатели…) с разметкой становились элементами страницы. В названии экранируются угловые скобки
+    // (сущности вроде &nbsp; работают как раньше), в ключе (атрибут value) — еще & и кавычки
+    'leon-mbs/zippy/core/html/form/dropdownchoice.php' => [
+        [
+            '            $option = "<option value=\"{$key}\" ";
+
+            if ($key == $this->getValue()) {
+                $option .= " selected ";
+            }
+
+            $option .= ">{$value}</option>";
+',
+            '            $option = "<option value=\"" . htmlspecialchars((string)$key, ENT_QUOTES) . "\" ";   // SquirrelStock: cli/patch-vendor.php
+
+            if ($key == $this->getValue()) {
+                $option .= " selected ";
+            }
+
+            $option .= ">" . str_replace([\'<\', \'>\'], [\'&lt;\', \'&gt;\'], (string)$value) . "</option>";
+',
+        ],
+        [
+            '            $js .= "$(\'#{$this->id}\').append(\'<option value=\"{$key}\">{$value}</option>\');";
+        }
+        return $js;',
+            '            $js .= "$(\'#{$this->id}\').append(" . json_encode(\'<option value="\' . htmlspecialchars((string)$key, ENT_QUOTES) . \'">\' . str_replace([\'<\', \'>\'], [\'&lt;\', \'&gt;\'], (string)$value) . \'</option>\') . ");";   // SquirrelStock: cli/patch-vendor.php
+        }
+        return $js;',
+        ],
+    ],
+    'leon-mbs/zippy/core/html/form/multiplechoice.php' => [
+        [
+            '            $option = "<option value=\"{$key}\" ";
+',
+            '            $option = "<option value=\"" . htmlspecialchars((string)$key, ENT_QUOTES) . "\" ";   // SquirrelStock: cli/patch-vendor.php
+',
+        ],
+        [
+            '            $option .= ">{$value}</option>";
+            $this->getTag()->append($option);',
+            '            $option .= ">" . str_replace([\'<\', \'>\'], [\'&lt;\', \'&gt;\'], (string)$value) . "</option>";
+            $this->getTag()->append($option);',
+        ],
+    ],
 ];
 
 $failed = 0;
