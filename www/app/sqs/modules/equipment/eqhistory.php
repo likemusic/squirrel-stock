@@ -19,7 +19,7 @@ use App\Entity\Item;
  *
  * Правила (согласованы 15.10.2026): что однозначно — импортируется, что нет — в отчет с причиной: «ошибка» — строка
  * не импортирована, «заметка» — импортирована с допущением. Единица с инв. номером должна уже быть в базе (импорт ОСВ 01);
- * единица только с заводским номером создается товаром «по листу». Без номеров (мелочь) — пропуск со сводкой.
+ * единица только с заводским номером создается товаром «по листу». Без номеров (мелочь) — на руках количеством на позицию по соответствиям «написание → позиция» (EqItemMap), остальное — пропуск со сводкой.
  * Одна выдача в обеих таблицах склеивается по единице и дате. Документы: приход единицы, которой нет в базе (накануне
  * первой выдачи), выдача по договору, возврат, списание — проводятся в хронологическом порядке. Что уже импортировано
  * (таблица sqs_eqhistory), повторно не создается.
@@ -37,6 +37,8 @@ class EqHistory
     public array $plan = [];       // события для записи
     public array $stat = [];
     public array $onhand = [];    // мелочь без номеров, перенесенная на руки: [позиция => штук]
+    public array $unmapped = [];  // написания мелочи, которых нет в соответствиях (App\SQS\EqItemMap): [написание => строк]
+    public ?array $itemMap = null; // соответствия «написание → позиция»; null — из базы
     public int $blocked = 0;      // дата актуальности из настроек, если она позже первого документа импорта
 
     // ---------- чтение ----------
@@ -674,8 +676,9 @@ class EqHistory
             $rec['skip'] = true;
             return;
         }
-        $name = mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
+        // позиция — по соответствиям «написание → позиция», при составлении плана (после склейки дублей журнала и переписи)
         $rec['qty'] = true;
+        $rec['written'] = $name;
         $rec['unit'] = ['item_id' => 0, 'snumber' => '', 'itemname' => $name, 'new' => true, 'qty' => true];
     }
 
@@ -840,11 +843,21 @@ class EqHistory
         }
         $seen = [];
         $this->onhand = [];
+        $this->unmapped = [];
+        $map = $this->itemMap ?? EqItemMap::all();
         foreach ($qtyRecs as $r) {
             if ($r['src'] == 'journal' && isset($censusQty[$r['contract'] . '|' . date('Y-m-d', $r['idate'])])) {
                 $this->stat['qtymerged'] = ($this->stat['qtymerged'] ?? 0) + 1;
                 continue;
             }
+            // варианты написания одного вида — одна позиция; неизвестное написание не заводится, а идет в отчет
+            $item = EqItemMap::resolve($map, $r['written']);
+            if ($item === null) {
+                $this->unmapped[$r['written']] = ($this->unmapped[$r['written']] ?? 0) + 1;
+                $this->problem('error', $r['sheet'], $r['row'], $r['contract'], $r['written'], __('sqs.eqhist.not_in_map', ['value' => $r['written']]));
+                continue;
+            }
+            $r['unit']['itemname'] = $item;
             $base = $r['contract'] . '|' . self::ukey($r['unit']) . '|' . date('Y-m-d', $r['idate']);
             $n = $seen[$base] = ($seen[$base] ?? 0) + 1;   // одинаковые строки (две ванны по одному договору в один день) различаются номером
             $events[] = ['kind' => 'income', 'date' => $r['idate'] - 86400, 'unit' => $r['unit'], 'rec' => $r, 'keysuffix' => '#' . $n];
