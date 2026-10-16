@@ -38,7 +38,7 @@ sql() { dx mysql -uroot -N squirrelstock -e "$1"; }
 trap 'docker rm -f $NAME >/dev/null 2>&1 || true' EXIT
 docker rm -f $NAME >/dev/null 2>&1 || true
 docker run -d --name $NAME -p "127.0.0.1:$PORT:80" debian:12 sleep infinity >/dev/null
-git archive "$OLD" | dx sh -c 'mkdir -p /opt/old && tar -xf - -C /opt/old'
+git archive "$OLD" | docker exec -i $NAME sh -c 'mkdir -p /opt/old && tar -xf - -C /opt/old'
 git ls-files -co --exclude-standard | grep -v -e '^tests/node_modules' -e '^dist/' | tar -cf - -T - | docker exec -i $NAME sh -c 'mkdir -p /opt/sqs && tar -xf - -C /opt/sqs'
 [[ -z $ZIP ]] || docker cp -q "$ZIP" $NAME:/opt/new.zip
 
@@ -46,13 +46,15 @@ echo "--- старая версия $(git log -1 --format='%h %cd' --date=format
 out=$(dx bash /opt/old/tools/install/linux.sh --demo 2>&1) || { echo "$out" | tail -30; fail "установка старой версии"; }
 pass=$(echo "$out" | sed -n 's/^Вход: admin \/ //p')
 [[ -n $pass ]] || fail "старая версия: пароль не напечатан"
+# демо-база той версии собрана без таблиц входа (2FA): дополнения форка на существующую базу, как велела ее инструкция
+dx sh -c "mysql -uroot squirrelstock < /opt/old/db/squirrelstock.sql"
 admin=$(sql "select user_id from users where userlogin = 'admin'")
 sql "replace into sqs_2fa (user_id, secret, enabled, last_step, updated) values ($admin, '$SECRET', 1, 0, now())"
 dx mkdir -p /srv/cloud
 dx chown www-data:www-data /srv/cloud
-sql "replace into keyval (keyd, vald) values ('sqs_backup', '{\"cloud\":\":local:/srv/cloud\",\"keep\":30}')"
+sql "replace into keyval (keyd, vald) values ('sqs_backup', '{\"cloud\":\":local:/srv/cloud\",\"password\":\"Пароль-копии-001\",\"keep\":30}')"
 dx sh -c "printf 'GIF89a' > $SITE/upload/test-update.gif && chown www-data:www-data $SITE/upload/test-update.gif"
-dx runuser -u www-data -- php $SITE/cli/backup.php >/dev/null || fail "старая версия: копия"
+out=$(dx runuser -u www-data -- php $SITE/cli/backup.php 2>&1) || { echo "$out" | tail -10; sql "select place, ok, message from sqs_backuplog order by id desc limit 3"; fail "старая версия: копия"; }
 [[ $(dx sh -c 'ls /srv/cloud | wc -l') -ge 1 ]] && ok "старая версия: копия в папку и в облако" || fail "старая версия: копии в облаке нет"
 # состав данных старой версии: столбцы таблиц на момент установки — после обновления те же значения. Без того, что
 # меняет сам вход (время входа, настройки пользователя, последний шаг 2FA) и сама программа (keyval: версия, сверка
@@ -72,7 +74,7 @@ digest() {
   for t in $TABLES; do
     cols=$(cat "$tmp/$t"); where=
     [[ $t == keyval ]] && where="where keyd not like 'sqs\\_schema%' and keyd not like 'sqs\\_modules%' and keyd not like 'sqs\\_version%'"
-    q+="select '$t', count(*), md5(group_concat(concat_ws(char(31), $cols) order by $cols separator char(30))) from $t $where;"
+    q+="select '$t', count(*), md5(group_concat(concat_ws(char(31), $cols) order by $cols separator '#~#')) from $t $where;"
   done
   sql "$q"
 }
@@ -104,8 +106,11 @@ else
 fi
 
 # вход (пароль + код 2FA), страницы, версия; hosting — удаление остатков на странице «Обновление программы»
+# первый запрос к сайту (на хостинге — первое открытие после распаковки): таблицы и пункты меню новой версии
+curl -s -o /dev/null "http://127.0.0.1:$PORT/" || true
 reports=$(sql "select group_concat(meta_name) from metadata where meta_type = 2 and disabled = 0")
 services=$(sql "select group_concat(meta_name) from metadata where meta_type = 5 and disabled = 0 and meta_name in ('Backup', 'AppUpdate', 'Import1C', 'EquipmentIssue', 'ConsumablesIssue', 'ImportEquipmentHistory')")
+[[ ,$services, == *,AppUpdate,* ]] && ok "пункт меню «Обновление программы» добавлен" || fail "нет пункта меню AppUpdate ($services)"
 (cd tests && SQS_URL="http://127.0.0.1:$PORT" SQS_PASS="$pass" SQS_SECRET="$SECRET" SQS_VER="$newver" SQS_REPORTS="$reports" SQS_SERVICES="$services" SQS_CLEAN=$([[ $MODE == hosting ]] && echo 1 || echo 0) node -e '
   const { chromium } = require("@playwright/test");
   const crypto = require("crypto");
@@ -126,7 +131,7 @@ services=$(sql "select group_concat(meta_name) from metadata where meta_type = 5
     say(/TwoFactorLogin/.test(p.url()), "после пароля — страница кода 2FA");
     await p.locator("input[autocomplete=one-time-code]").fill(totp(process.env.SQS_SECRET));
     await Promise.all([p.waitForLoadState("networkidle"), p.locator("button[type=submit], input[type=submit]").first().click()]);
-    say(await p.locator("#logout").count() > 0, "вход с кодом 2FA");
+    say(await p.locator("#logout").first().waitFor({ state: "attached", timeout: 15000 }).then(() => true, () => false), "вход с кодом 2FA");
     say((await p.locator("#sqs-version").innerText()).includes(process.env.SQS_VER), "версия внизу меню: " + process.env.SQS_VER);
     const bad = async () => { const t = await p.locator("body").innerText(); return /Fatal error|Uncaught|Невірний клас|Exception/.test(t) || /Pages\/Error/.test(p.url()) ? t.slice(0, 300) : ""; };
     const open = async (kind, list) => {
@@ -143,9 +148,11 @@ services=$(sql "select group_concat(meta_name) from metadata where meta_type = 5
       const n = Number(await p.locator("#appupdate-stale-n").innerText());
       say(n > 0, "страница «Обновление программы»: файлы старых версий — " + n);
       say(await p.locator("#appupdate-broken").count() == 0, "пакет распакован полностью (нет недостающих и измененных)");
-      p.once("dialog", d => d.accept());
+      let asked = false; p.once("dialog", d => { asked = true; d.accept(); });
       await Promise.all([p.waitForLoadState("networkidle"), p.locator("input[name=clean], #clean").first().click()]);
-      say(await p.locator("#appupdate-ok").count() == 1, "после удаления: файлы совпадают с пакетом");
+      const okNow = await p.locator("#appupdate-ok").waitFor({ state: "attached", timeout: 30000 }).then(() => true, () => false);
+      say(okNow, "после удаления: файлы совпадают с пакетом" + (okNow ? "" : ": " + (await p.locator(".main").innerText()).slice(0, 1500)));
+      say(asked, "перед удалением — подтверждение");
       await open("Report", process.env.SQS_REPORTS);
       await open("Service", process.env.SQS_SERVICES);
     }
@@ -170,6 +177,6 @@ done
 [[ $(sql "select vald from keyval where keyd = 'sqs_version'") == "$newver" ]] && ok "версия в базе: $newver" || fail "версия в базе"
 dx test -f $SITE/upload/test-update.gif && ok "upload/ на месте" || fail "upload/"
 n0=$(dx sh -c 'ls /srv/cloud | wc -l')
-dx runuser -u www-data -- php $SITE/cli/backup.php >/dev/null && ok "cli/backup.php новой версии: код 0" || fail "cli/backup.php"
+out=$(dx runuser -u www-data -- php $SITE/cli/backup.php 2>&1) && ok "cli/backup.php новой версии: код 0" || { echo "$out" | tail -10; sql "select place, ok, message from sqs_backuplog order by id desc limit 3"; fail "cli/backup.php"; }
 [[ $(dx sh -c 'ls /srv/cloud | wc -l') -gt $n0 ]] && ok "копия в облаке (настройка старой версии)" || fail "копии в облаке нет"
 echo "--- все проверки пройдены ($MODE, $OLD -> $newver)"

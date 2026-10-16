@@ -36,8 +36,12 @@
                 <p class="text-muted">{{stale_more}}</p>
                 {{/stale_n}}
                 <form zippy="cform">
-                    <input zippy="clean" type="submit" class="btn btn-warning" value="{{#t}}service.appupdate.clean{{/t}}" onclick="return confirm(this.dataset.confirm)" data-confirm="{{#t}}service.appupdate.clean_confirm{{/t}}">
+                    <input zippy="clean" type="submit" class="btn btn-warning" value="{{#t}}service.appupdate.clean{{/t}}" data-confirm="{{#t}}service.appupdate.clean_confirm{{/t}}">
                 </form>
+                <script>
+                    // подтверждение перед удалением (beforeZippy вызывает check_<id> из onclick кнопки Zippy)
+                    function check_clean(ele) { return confirm(document.getElementById('clean').dataset.confirm); }
+                </script>
 
                 {{#foreign_n}}
                 <details class="mt-4" id="appupdate-foreign">
