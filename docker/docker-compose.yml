@@ -3,13 +3,14 @@ name: squirrelstock
 
 services:
   db:
-    image: mariadb:10.11
+    image: mariadb:${SQS_MARIADB:-11.4}   # версия MariaDB (LTS); откат на 10.11 — эта строка или SQS_MARIADB=10.11, но только с новой базой или из резервной копии: обновлённую базу 10.11 не открывает
     restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: rootpass
       MARIADB_DATABASE: zstore
       MARIADB_USER: zstore
       MARIADB_PASSWORD: zstore
+      MARIADB_AUTO_UPGRADE: "1"   # база прежней версии MariaDB (10.11) обновляется при запуске новой
     command: ["--character-set-server=utf8mb3", "--collation-server=utf8mb3_general_ci"]
     volumes:
       - dbdata:/var/lib/mysql

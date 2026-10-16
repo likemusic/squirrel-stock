@@ -1,7 +1,9 @@
 # Стенд SquirrelStock для разработки и тестов. Исходники берутся из www/ этого репозитория как есть, без заплаток:
 # все исправления делаются коммитами в коде. Исправления в vendor/ накладывает www/cli/patch-vendor.php при composer dump-autoload
 # (composer.json, scripts): если правка не легла, сборка останавливается.
-FROM php:8.2-apache
+# версия PHP: откат — одна строка (или docker build --build-arg PHP_VERSION=8.2)
+ARG PHP_VERSION=8.4
+FROM php:${PHP_VERSION}-apache
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libzip-dev libgmp-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev unzip git \
