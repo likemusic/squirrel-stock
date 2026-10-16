@@ -15,6 +15,7 @@ try {
         $user = \App\SQS\Remember::check((string)$_COOKIE['remember']);   // SquirrelStock: токен из sqs_remember
 
         if ($user instanceof \App\Entity\User) {
+            session_regenerate_id(true);   // SquirrelStock: после входа — новый идентификатор сессии
             \App\Session::getSession()->clean();
 
             \App\System::setUser($user);
@@ -39,6 +40,7 @@ try {
 
     $app = new \App\Application();
     \App\SQS\PageGuard::check($app);   // SquirrelStock: страница выключенного пункта меню — «нет права доступа»
+    \App\SQS\RequestOrigin::check($app);   // SquirrelStock: действие — только со страниц самой программы
     $modules = \App\System::getOptions('modules');
 
     if (($modules['shop'] ??0)== 1 && \App\System::getOption('shop', 'usemainpage')==1) {
