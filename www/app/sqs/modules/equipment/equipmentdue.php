@@ -17,6 +17,7 @@ class EquipmentDue
         $today = strtotime(date('Y-m-d'));
         $rows = [];
         $customers = [];
+        $canExtend = \App\ACL::checkShowSer('EquipmentIssue', false);   // продлить срок (App\Pages\Service\EquipmentExtend)
         foreach (Units::dueSoon(self::DAYS) as $u) {
             $c = $customers[$u['customer_id']] ??= \App\Entity\Customer::load($u['customer_id']);
             $days = intval(round(($u['enddate'] - $today) / 86400));
@@ -25,6 +26,7 @@ class EquipmentDue
                 'phone'    => $c->phone ?? '',
                 'unit'     => Units::label($u['itemname'], $u['snumber'], $u['factory_no']),
                 'contract' => $u['contract_number'],
+                'extend'   => $canExtend ? '/index.php?p=App/Pages/Service/EquipmentExtend&arg=' . intval($u['contract_id']) : '',
                 'enddate'  => H::fd($u['enddate']),
                 'overdue'  => $days < 0,
                 'days'     => $days < 0 ? __('sqs.due.overdue', ['days' => -$days]) : ($days == 0 ? __('sqs.due.today') : __('sqs.due.left', ['days' => $days])),

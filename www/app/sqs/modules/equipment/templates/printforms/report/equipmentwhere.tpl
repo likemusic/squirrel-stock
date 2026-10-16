@@ -46,7 +46,7 @@
         <td style="border: solid black 1px;">{{address}}</td>
         <td style="border: solid black 1px;" data-type="s">{{contract}}</td>
         <td style="border: solid black 1px;">{{date}}</td>
-        <td style="border: solid black 1px;{{#overdue}} color: red; font-weight: bolder;{{/overdue}}">{{term}}</td>
+        <td style="border: solid black 1px;{{#overdue}} color: red; font-weight: bolder;{{/overdue}}">{{term}}{{#extend}} <a class="sqs-extend" href="{{extend}}" title="{{#t}}sqs.extend.link{{/t}}" aria-label="{{#t}}sqs.extend.link{{/t}}"><i class="fa fa-calendar-plus"></i></a>{{/extend}}</td>
         <td style="border: solid black 1px;">{{sent}}</td>
         <td style="border: solid black 1px;">{{document}}</td>
     </tr>
@@ -78,7 +78,7 @@
         <td style="border: solid black 1px; text-align: right;">{{qty}}</td>
         <td style="border: solid black 1px;" data-type="s">{{contract}}</td>
         <td style="border: solid black 1px;">{{date}}</td>
-        <td style="border: solid black 1px;{{#overdue}} color: red; font-weight: bolder;{{/overdue}}">{{term}}</td>
+        <td style="border: solid black 1px;{{#overdue}} color: red; font-weight: bolder;{{/overdue}}">{{term}}{{#extend}} <a class="sqs-extend" href="{{extend}}" title="{{#t}}sqs.extend.link{{/t}}" aria-label="{{#t}}sqs.extend.link{{/t}}"><i class="fa fa-calendar-plus"></i></a>{{/extend}}</td>
         <td style="border: solid black 1px;">{{sent}}</td>
         <td style="border: solid black 1px;">{{document}}</td>
     </tr>

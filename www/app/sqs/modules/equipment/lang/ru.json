@@ -170,5 +170,12 @@
     "sqs.units.title": "Единицы оборудования",
     "sqs.units.until": "до",
     "sqs.units.where": "Где сейчас",
-    "sqs.units.written_off": "списана"
+    "sqs.units.written_off": "списана",
+    "sqs.extend.title": "Продлить срок пользования",
+    "sqs.extend.current": "Срок сейчас",
+    "sqs.extend.help": "Меняется только срок договора: статус «В работе» и остальное остаются. В комментариях договора запишется, кто и когда изменил срок.",
+    "sqs.extend.save": "Продлить",
+    "sqs.extend.link": "Продлить",
+    "sqs.extend.note": "Срок пользования изменен: {from} → {to}",
+    "sqs.extend.done": "Договор {number}: срок {term}"
 }
