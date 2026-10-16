@@ -46,9 +46,11 @@ test('фильтры со своими обычными значениями о�
 
   // Журнал документов: тип, автор, склад, затем контрагент (фильтр журнала запоминается между отправками)
   await page.goto('/index.php?p=App/Pages/Register/DocList');
+  await clickWait(page, '#filter #erase');   // фильтр журнала хранится в сессии, а она у тестов общая: сбросить оставленный другими
   await submitFilter(page, '#filter', { texts: { from: `${Y}-03-01`, to: `${Y}-03-30` }, selects: { doctype: metaInc, author: admin, store: 1 } });
   await check('DocList, оприходование', [inc.number], [gi.number]);
   await page.goto('/index.php?p=App/Pages/Register/DocList');
+  await clickWait(page, '#filter #erase');   // фильтр журнала хранится в сессии, а она у тестов общая: сбросить оставленный другими
   await submitFilter(page, '#filter', { texts: { from: `${Y}-03-01`, to: `${Y}-03-30` }, selects: { doctype: metaGI, author: admin, store: 1 }, autos: { searchcust: r } });
   await check('DocList, выдача', [gi.number], [inc.number]);
 
