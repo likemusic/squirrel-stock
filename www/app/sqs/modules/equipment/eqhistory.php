@@ -952,8 +952,9 @@ class EqHistory
             $owner[$r['contract_number']] = $who((string)$r['customer_name']);
         }
         $drop = [];
+        $done = self::doneKeys();   // записанное прошлым импортом не проверяется: оно уже в базе (при повторе склейка строк бывает другой)
         foreach ($events as $e) {
-            if ($e['kind'] != 'issue' || $e['rec']['contract'] === '') {
+            if ($e['kind'] != 'issue' || $e['rec']['contract'] === '' || isset($done[self::eventKey($e)])) {
                 continue;
             }
             $c = $e['rec']['contract'];

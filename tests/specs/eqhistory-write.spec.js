@@ -70,9 +70,16 @@ test('импорт истории: пересечения, договор с д�
 
     // запись частями по 2 события: страница продолжает сама, ход виден
     query("delete from keyval where keyd = 'sqs_eqh_chunk'; insert into keyval (keyd, vald) values ('sqs_eqh_chunk', '2')");
+    // части идут быстрее, чем видно глазу: ход считается по ответам сервера
+    const parts = [];
+    page.on('response', async r => {
+      if (!r.request().isNavigationRequest()) return;
+      const m = (await r.text().catch(() => '')).match(/id="eqh-progress"[^>]*>Запис: (\d+) з (\d+)/);
+      if (m) parts.push(m[1] + '/' + m[2]);
+    });
     await clickWait(page, '#iform #write');
-    await expect(page.locator('#eqh-progress')).toContainText(/Запис: [246] з 7 подій/);
     await expect(page.locator('#eqh-summary tr[data-stat=failed]')).toBeVisible({ timeout: 60_000 });
+    expect(parts).toEqual(['2/7', '4/7', '6/7']);
     await expect(page.locator('#eqh-progress')).toHaveCount(0);
     expect(await stat('issue')).toBe(4);
     expect(await stat('return')).toBe(1);
@@ -93,6 +100,16 @@ test('импорт истории: пересечения, договор с д�
     expect(Number(value(`select extractvalue(details, '//enddate') from contracts where contract_number = '${cn(6, '25')}'`))).toBe(Date.parse(future + 'T00:00:00+03:00') / 1000);
     // временный файл разбора удален после записи (в таблицах персональные данные)
     expect(execFileSync('docker', ['exec', WEB, 'sh', '-c', `grep -l '${uniq}' /tmp/sqs-eqh-* 2>/dev/null || true`]).toString().trim()).toBe('');
+    // ФИО получателя поправили в программе; повторная проверка тех же таблиц: записанное — «уже импортировано»,
+    // а не «договор с другим получателем» (иначе отпал бы и возврат, вписанный в таблицу потом)
+    query(`update customers set customer_name = '${who(3)} испр.' where customer_name = '${who(3)}'`);
+    await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
+    await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
+    await clickWait(page, '#iform #check');
+    expect((await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n')).not.toContain(`Договір ${cn(3, '25')}`);
+    expect(await stat('done')).toBe(5);    // 4 выдачи и возврат
+    expect(await stat('issue')).toBe(1);   // незаписанная выдача строки 9 — снова в плане, с возвратом
+    expect(await stat('return')).toBe(1);
   } finally {
     query("delete from keyval where keyd = 'sqs_eqh_chunk'");
     await setActual(actual);
