@@ -7,7 +7,7 @@
  * Меняется только значение, совпадающее с украинским по умолчанию: то, что переименовал пользователь, не трогается.
  * Повторный запуск безопасен.
  *
- * php cli/localize-db.php ru          (в docker-стенде: docker exec squirrelstock-web-1 php cli/localize-db.php ru)
+ * php cli/localize-db.php ru          (в docker-стенде: docker exec -u www-data squirrelstock-web-1 php cli/localize-db.php ru)
  * php cli/localize-db.php ru --back   вернуть украинские значения
  */
 

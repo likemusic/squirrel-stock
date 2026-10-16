@@ -3,7 +3,7 @@
 // Запускать на ЧИСТОЙ базе стенда:
 //   cd docker && docker compose down -v && SQS_LANG=ru docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 //   cd ../tests && node tools/seed-demo.js
-// Затем «Сервис → Резервная копия» дает zip для демо-сервера.
+// Затем «Сервисные страницы → Резервная копия» дает zip для демо-сервера.
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -41,7 +41,7 @@ const TUBES = ['Зонд гастростомический 14 Fr', 'Зонд г
 
 const codeOf = name => value(`select item_code from items where itemname = '${esc(name)}'`);
 
-// выдача расходников короткой формой «Сервис → Выдача расходников»; возвращает номер созданной накладной
+// выдача расходников короткой формой «Сервисные страницы → Выдача расходников»; возвращает номер созданной накладной
 async function consumablesIssue(page, { date, customer, notes, rows }) {
   await page.goto('/index.php?p=App/Pages/Service/ConsumablesIssue');
   await pickAuto(page, '#cform #customer', customer, customer);   // существующий получатель — из подсказки
