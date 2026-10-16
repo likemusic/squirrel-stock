@@ -21,7 +21,7 @@ test('отбор по родительской категории включае
 
   const period = { from: '2026-09-01', to: '2026-09-30' };
   const reports = [
-    ['IssueAct', { selects: { year: 2026, month: 9, cat: parent } }, item],
+    ['IssueAct', { selects: { year: 2026, month: 9, kind: 0, cat: parent } }, item],   // kind 0 — «всё вместе»: позиция с инв. номером в акте — оборудование, а по умолчанию акт по расходникам
     ['ItemTurnover', { ...period, selects: { cat: parent } }, item],
     ['RecipientMonths', { ...period, selects: { cat: parent } }, r],
     ['EquipmentWhere', { selects: { cat: parent } }, item],
