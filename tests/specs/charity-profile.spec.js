@@ -1,9 +1,9 @@
 // Профиль для благотворительной организации (cli/charity-profile.php): в меню нужное для выдачи расходников
 // и оборудования, лишнее (продажи, касса, производство, кафе) выключено; --back возвращает меню. ZIPPY_GAPS п. 22.
 const { test, expect } = require('../fixtures');
-const { blockExternal, login, createItem, createCustomer, createDoc, printForm } = require('../helpers/zippy');
+const { blockExternal, login, clickWait, messages, createItem, createCustomer, createDoc, printForm } = require('../helpers/zippy');
 const { webPhp } = require('../helpers/stand');
-const { value, esc } = require('../helpers/db');
+const { query, value, esc } = require('../helpers/db');
 
 // новая сессия: меню и настройки (в том числе флаг профиля) кэшируются в сессии
 async function freshPage(browser) {
@@ -93,4 +93,102 @@ test('расходная накладная в профиле: «Видав / О
   expect(text).toMatch(/Покупець/);
   expect(text).toMatch(/Продавець/);
   await p.context().close();
+});
+
+// выдача и возврат вымышленному получателю: id выдачи и возврата
+async function issueAndReturn(page, uniq) {
+  const code = 'CR-' + uniq, recipient = 'Получатель ' + uniq;
+  await createItem(page, { name: 'Позиция ' + code, code });
+  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) });
+  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
+  const { number } = await createDoc(page, 'GoodsIssue', { date: '2026-10-02', customer: recipient, payment: 0, rows: [{ code, qty: 2, price: 0 }] });
+  const issueId = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + issueId);
+  await page.locator('#document_date').fill('2026-10-03');
+  await page.locator('#docform #notes').fill('Возврат ' + uniq);   // вместо «Підстава …»: i18n-ru ищет украинский текст в журналах
+  await clickWait(page, '#execdoc');
+  expect(await page.locator('#docform #execdoc:visible').count(), (await messages(page)).join(' ')).toBe(0);
+  const returnId = value(`select max(d.document_id) from documents d join metadata m on m.meta_id = d.meta_id where m.meta_name = 'ReturnIssue' and d.parent_id = ${issueId}`);
+  return { code, recipient, number, issueId, returnId };
+}
+
+test('возврат в профиле: «Повернув / Прийняв», без цен', async ({ browser, page, uniq }) => {
+  const { code, recipient, returnId } = await issueAndReturn(page, uniq);
+  expect(returnId).toBeTruthy();
+
+  webPhp('cli/charity-profile.php');
+  let p = await freshPage(browser);
+  let text = await printForm(p, returnId);
+  expect(text).toContain('Повернув ' + recipient);
+  expect(text).toContain('Повернув ___');
+  expect(text).toContain('Прийняв ___');
+  expect(text).toContain('Позиция ' + code);
+  expect(text).not.toMatch(/Покупець|Ціна|Сума|Оплачено|До сплати/);
+  await p.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');   // без профиля — форма ядра
+  p = await freshPage(browser);
+  text = await printForm(p, returnId);
+  expect(text).toMatch(/Покупець/);
+  expect(text).toMatch(/Оплачено/);
+  await p.context().close();
+});
+
+test('журнал выдач в профиле: без доставки, ТТН и гарантийного талона, «Повернення» есть', async ({ browser, page, uniq }) => {
+  const { number } = await issueAndReturn(page, uniq);
+  const open = async p => {
+    await p.goto('/index.php?p=App/Pages/Register/GIList');
+    await p.locator('#filter #searchnumber').fill(number);   // поиск по номеру — без отбора по статусу
+    await clickWait(p, '#filter input[type=submit]');
+    await clickWait(p, `[id^=number_]:text-is("${number}")`);
+    await expect(p.locator('#statusform #bret')).toBeVisible();
+  };
+
+  webPhp('cli/charity-profile.php');
+  let p = await freshPage(browser);
+  await open(p);
+  for (const b of ['bsend', 'bdevivered', 'bttn', 'bgar', 'bnp', 'bdecl', 'ship_number']) {
+    await expect(p.locator('#statusform #' + b), b).toBeHidden();
+  }
+  await expect(p.locator('a[href$="Doc/Invoice"]:visible, a[href$="Doc/TTN"]:visible')).toHaveCount(0);   // «Створити РФ / ТТН»
+  await expect(p.locator('#filter #salesource')).toBeHidden();   // «Джерело продажів»
+  await expect(p.locator('a.btn[href$="Doc/GoodsIssue"]')).toBeVisible();
+  await p.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');
+  p = await freshPage(browser);
+  await open(p);
+  for (const b of ['bsend', 'bttn', 'bgar']) {
+    await expect(p.locator('#statusform #' + b), b).toBeVisible();
+  }
+  await expect(p.locator('#filter #salesource')).toBeVisible();
+  await p.context().close();
+});
+
+test('названия в профиле: «Видача», «Надходження», «Видача (накладна)»; переименованное вручную не меняется', async ({ browser }) => {
+  const names = () => value(`select group_concat(concat(meta_name, '=', description, '/', menugroup) order by meta_name separator ';') from metadata
+                             where meta_type = 1 and meta_name in ('GoodsIssue', 'ReturnIssue', 'GoodsReceipt', 'RetCustIssue')`);
+  const before = 'GoodsIssue=Видаткова накладна/Продажі;GoodsReceipt=Прибуткова накладна/Закупівлі;RetCustIssue=Повернення постачальнику/Закупівлі;ReturnIssue=Повернення від покупця/Продажі';
+  expect(names()).toBe(before);
+
+  webPhp('cli/charity-profile.php');
+  expect(names()).toBe('GoodsIssue=Видача (накладна)/Видача;GoodsReceipt=Прибуткова накладна/Надходження;RetCustIssue=Повернення постачальнику/Надходження;ReturnIssue=Повернення від отримувача/Видача');
+  const p = await freshPage(browser);
+  await p.goto('/');
+  await expect(p.locator('a[href$="Doc/GoodsIssue"]').first()).toHaveText('Видача (накладна)');
+  await expect(p.locator('a[href$="Doc/ReturnIssue"]').first()).toHaveText('Повернення від отримувача');
+  await p.context().close();
+  webPhp('cli/charity-profile.php', '--back');
+  expect(names()).toBe(before);
+
+  // название, измененное вручную, профиль и --back оставляют как есть
+  query(`update metadata set description = 'Повернення (своє)' where meta_type = 1 and meta_name = 'ReturnIssue'`);
+  try {
+    webPhp('cli/charity-profile.php');
+    expect(value(`select description from metadata where meta_type = 1 and meta_name = 'ReturnIssue'`)).toBe('Повернення (своє)');
+    webPhp('cli/charity-profile.php', '--back');
+    expect(value(`select description from metadata where meta_type = 1 and meta_name = 'ReturnIssue'`)).toBe('Повернення (своє)');
+  } finally {
+    query(`update metadata set description = 'Повернення від покупця' where meta_type = 1 and meta_name = 'ReturnIssue'`);
+  }
 });
