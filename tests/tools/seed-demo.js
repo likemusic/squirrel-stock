@@ -35,6 +35,8 @@ const CONSUMABLES = ['Подгузники для взрослых размер 
   'Катетер аспирационный CH 10', 'Катетер аспирационный CH 12', 'Крем защитный под подгузник 200 мл', 'Пена очищающая для кожи 400 мл',
   'Канюля носовая кислородная', 'Фильтр для ИВЛ тепловлагообменный'];
 const GASTRO_ITEMS = ['Зонд гастростомический 14 Fr', 'Удлинитель для гастростомы', 'Питание энтеральное 500 мл', 'Шприц Жане 150 мл'];
+const SMALL_EQ = ['Ходунки детские', 'Ванна для купания детская', 'Стул для купания'];   // мелкое оборудование без номеров, количеством
+const TUBES = ['Зонд гастростомический 14 Fr', 'Зонд гастростомический 16 Fr'];   // интервал выдачи — раз в 90 дней
 
 const codeOf = name => value(`select item_code from items where itemname = '${esc(name)}'`);
 
@@ -107,7 +109,16 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
     await clickWait(page, '#iform #import');
     log((await messages(page)).join(' | '));
   }
-  query(`update items set cat_id = ${catId('Гастростомы')} where itemname in (${GASTRO_ITEMS.map(n => `'${esc(n)}'`).join(',')})`);
+  const inList = names => names.map(n => `'${esc(n)}'`).join(',');
+  query(`update items set cat_id = ${catId('Гастростомы')} where itemname in (${inList(GASTRO_ITEMS)})`);
+  query(`update items set cat_id = ${catId('Оборудование')} where itemname in (${inList(SMALL_EQ)})`);
+  // интервал выдачи (справочник «Интервалы выдачи»): гастростомическая трубка одному получателю — не чаще раза в 90 дней
+  query(`insert into sqs_issue_interval (kind, ref_id, days) select 'item', item_id, 90 from items where itemname in (${inList(TUBES)})`);
+  // минимальный остаток (карточка позиции «Мин. количество»): трех позиций к концу выдач меньше минимума — «Ниже минимального остатка»
+  for (const [name, min] of [['Подгузники детские размер 5, 44 шт', 50], ['Зонд гастростомический 14 Fr', 12], ['Перчатки нитриловые нестерильные L, 100 шт', 40],
+    ['Шприц 5 мл одноразовый', 300], ['Пеленки впитывающие 60х90, 30 шт', 100]]) {
+    query(`update items set minqty = ${min} where itemname = '${esc(name)}'`);
+  }
   // артикулы для подсказки при вводе: у импортированных позиций их нет
   query("update items set item_code = concat('П-', lpad(item_id, 4, '0')) where item_code is null or item_code = ''");
 
@@ -137,6 +148,23 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
     }
     log('выдачи', month);
   }
+
+  // три получателя с полной историей за июль — октябрь: ежемесячные расходники, у Подопечного 003 еще питание и трубки.
+  // Вторая трубка выдана через 49 дней — раньше 90-дневного интервала (повредилась): форма предупреждает, выдать можно;
+  // на показе новая выдача трубки Подопечному 003 тоже даст предупреждение.
+  const regular = { 'Подопечный 002': ['Подгузники для взрослых размер L, 30 шт', 'Пеленки впитывающие 60х90, 30 шт'],
+    'Подопечный 003': ['Подгузники детские размер 5, 44 шт', 'Питание энтеральное 500 мл', 'Шприц Жане 150 мл'],
+    'Подопечный 009': ['Подгузники детские размер 4, 50 шт', 'Салфетки влажные для ухода, 80 шт'] };
+  for (const month of ['07', '08', '09', '10']) {
+    for (const [k, [who, names]] of Object.entries(regular).entries()) {
+      await consumablesIssue(page, { date: `2026-${month}-${String(2 + k * 3).padStart(2, '0')}`, customer: who,
+        rows: names.map(n => ({ code: codeOf(n), qty: n.startsWith('Питание') ? 30 : 2 })) });
+    }
+  }
+  for (const [date, notes] of [['2026-07-06', ''], ['2026-08-24', 'Трубка повредилась — выдана раньше срока']]) {
+    await consumablesIssue(page, { date, customer: 'Подопечный 003', notes, rows: [{ code: codeOf(TUBES[0]), qty: 1 }] });
+  }
+  log('история трех получателей');
 
   // две позиции 1С с одним названием и разными ценами: в акте за сентябрь — одна строка с названием из 1С
   const gloves = query(`select item_code from items where itemname = 'Перчатки нитриловые нестерильные M, 100 шт' order by item_id`).map(r => r[0]);
@@ -204,6 +232,23 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
   await page.locator('#document_date').fill('2026-10-01');
   await page.locator('#notes').fill('Возврат оборудования: снят с опеки');
   await clickWait(page, '#execdoc');
+  // мелкое оборудование без номеров — количеством, расходной накладной по договору получателя (как его заводит импорт истории);
+  // в «Оборудование: где сейчас» — блок «Мелкое оборудование на руках». Ванну Подопечный 005 вернул — на руках ее нет.
+  const small = [['Подопечный 002', '101/26', '2026-07-20', [[SMALL_EQ[1], 1], [SMALL_EQ[2], 1]]], ['Подопечный 009', '106/26', '2026-09-02', [[SMALL_EQ[0], 1]]],
+    ['Подопечный 005', '103/26', day(-60), [[SMALL_EQ[1], 1]]], ['Подопечный 005', '103/26', day(-60), [[SMALL_EQ[0], 1]]]];
+  const smallDocs = [];
+  for (const [who, contract, date, rows] of small) {
+    const r = await createDoc(page, 'GoodsIssue', { date, customer: who, payment: 0, contract, notes: 'Выдача мелкого оборудования по договору',
+      rows: rows.map(([n, qty]) => ({ code: codeOf(n), qty, price: 0 })) });
+    smallDocs.push(r.number);
+  }
+  const bathId = value(`select document_id from documents where document_number = '${esc(smallDocs[2])}' order by document_id desc limit 1`);
+  await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + bathId);
+  await page.locator('#document_date').fill(day(-12));
+  await page.locator('#notes').fill('Возврат: ванна больше не нужна');
+  await clickWait(page, '#execdoc');
+  log('мелкое оборудование', smallDocs.length);
+
   // единица в ремонт
   for (const [name, store, note] of [['Отсасыватель медицинский В-40', 'Ремонт', 'Не работает мотор']]) {
     const [, sn] = units(name)[0];
