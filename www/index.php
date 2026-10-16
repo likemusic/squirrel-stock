@@ -15,6 +15,7 @@ try {
         $user = \App\SQS\Remember::check((string)$_COOKIE['remember']);   // SquirrelStock: токен из sqs_remember
 
         if ($user instanceof \App\Entity\User) {
+            session_regenerate_id(true);   // SquirrelStock: после входа — новый идентификатор сессии
             \App\Session::getSession()->clean();
 
             \App\System::setUser($user);

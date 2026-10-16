@@ -1,6 +1,7 @@
 // Источник запроса для действий (App\SQS\RequestOrigin, index.php): событие (?q=...) и POST выполняются, только если запрос
 // пришел со страниц самой программы — Sec-Fetch-Site same-origin/none, а без него (обычный HTTP в локальной сети)
 // Origin или Referer того же адреса (host:port). Иначе действие не выполняется, в журнал — адрес и источник.
+// Новый идентификатор сессии после входа: пароль, «Запомнить», второй шаг двухфакторного входа.
 // Проверка — обычными запросами к своему стенду с разными заголовками; адреса действий у Zippy постоянные.
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
@@ -44,6 +45,8 @@ async function loggedIn(context) {
   await page.close();
   return n > 0;
 }
+
+const sid = async context => ((await context.cookies()).find(c => c.name === 'PHPSESSID') || {}).value;
 
 test('действие с чужого источника не выполняется, со своего — выполняется', async ({ browser, uniq }) => {
   test.setTimeout(240_000);
@@ -122,6 +125,50 @@ test('форма входа (POST) с чужого источника не вх�
   expect(await post({ origin: BASE, referer: BASE + '/' }), 'со своей страницы без Sec-Fetch-Site').toBe(true);
 });
 
+test('после входа — новый идентификатор сессии: пароль, «Запомнить», двухфакторный вход', async ({ browser, uniq }) => {
+  const user = 'rs' + uniq.toLowerCase(), pass = 'Пароль-' + uniq;
+  createUser(user, pass);
+
+  // пароль, с «Запомнить»
+  let context = await newContext(browser);
+  const page = await context.newPage();
+  await page.goto('/');
+  const before = await sid(context);
+  await page.close();
+  await login(context, user, pass, true);
+  expect(await loggedIn(context), 'вход по паролю').toBe(true);
+  expect(before).toBeTruthy();
+  expect(await sid(context), 'пароль: новый идентификатор').not.toBe(before);
+  const remember = (await context.cookies()).find(c => c.name === 'remember');
+  expect(remember, 'cookie «Запомнить»').toBeTruthy();
+  await context.close();
+
+  // «Запомнить»: сессия без пользователя + cookie remember
+  context = await newContext(browser);
+  const anon = await context.newPage();
+  await anon.goto('/');
+  const anonSid = await sid(context);
+  await anon.close();
+  await context.addCookies([{ name: 'remember', value: remember.value, domain: remember.domain, path: '/' }]);
+  expect(await loggedIn(context), 'вход по «Запомнить»').toBe(true);
+  expect(await sid(context), '«Запомнить»: новый идентификатор').not.toBe(anonSid);
+  await context.close();
+
+  // двухфакторный вход: после второго шага
+  const secret = 'JBSWY3DPEHPK3PXP';
+  query(`insert into sqs_2fa (user_id, secret, enabled, last_step, updated) select user_id, '${secret}', 1, 0, now() from users where userlogin = '${esc(user)}'`);
+  context = await newContext(browser);
+  const p = await login(context, user, pass);
+  await expect(p.locator('#codeform')).toHaveCount(1);
+  const pending = await sid(context);
+  await p.locator('#codeform #code').fill(totp(secret));
+  await p.locator('#codeform button[type=submit]').click();
+  await p.locator('#logout, .alert-danger:visible').first().waitFor({ state: 'attached', timeout: 15000 });
+  expect(await p.locator('#logout').count(), 'пароль + код').toBe(1);
+  expect(await sid(context), 'двухфакторный вход: новый идентификатор').not.toBe(pending);
+  await context.close();
+});
+
 // Обычный HTTP по имени компьютера (не localhost): браузер не шлет Sec-Fetch-Site, остаются Origin и Referer.
 // Имя sqs-lan.test браузер направляет на стенд (--host-resolver-rules), Host в запросе — это имя.
 test('обычный HTTP по имени компьютера: вход, документ, печать и Excel работают без Sec-Fetch-Site', async ({ playwright, uniq }) => {
@@ -172,3 +219,15 @@ test('обычный HTTP по имени компьютера: вход, док
   expect(sent.filter(s => s), 'браузер не шлет Sec-Fetch-Site по обычному HTTP').toEqual([]);
   await browser.close();
 });
+
+const B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function totp(secret, at = Date.now() / 1000) {
+  let bits = '';
+  for (const c of secret) bits += B32.indexOf(c).toString(2).padStart(5, '0');
+  const key = Buffer.from(bits.match(/.{8}/g).map(b => parseInt(b, 2)));
+  const msg = Buffer.alloc(8);
+  msg.writeBigUInt64BE(BigInt(Math.floor(at / 30)));
+  const h = crypto.createHmac('sha1', key).update(msg).digest();
+  const o = h[19] & 0x0f;
+  return String(((h.readUInt32BE(o) & 0x7fffffff) % 1000000)).padStart(6, '0');
+}

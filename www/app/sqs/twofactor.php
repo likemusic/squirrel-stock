@@ -114,6 +114,7 @@ class TwoFactor
      */
     public static function completeLogin(User $user, bool $remember): void {
         self::clearPending();
+        session_regenerate_id(true);   // после входа — новый идентификатор сессии
         \App\Session::getSession()->clean();
         $user->lastactive = time();
         $user->save();

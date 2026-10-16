@@ -121,6 +121,7 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function successLogin() {
+        session_regenerate_id(true);   // SquirrelStock: после входа — новый идентификатор сессии
         \App\Session::getSession()->clean();
         $this->_user->lastactive = time();
         $this->_user->save();
