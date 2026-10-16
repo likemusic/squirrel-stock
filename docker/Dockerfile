@@ -26,3 +26,4 @@ RUN composer dump-autoload --no-dev --optimize \
  && chown -R www-data:www-data /var/www/html /var/www/squirrelstock-backup
 
 COPY docker/php.ini /usr/local/etc/php/conf.d/squirrelstock.ini
+COPY docker/apache-upload.conf /etc/apache2/conf-enabled/squirrelstock-upload.conf

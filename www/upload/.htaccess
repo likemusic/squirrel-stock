@@ -1,5 +1,20 @@
 Require all denied
 
-<FilesMatch "(?i)\.(jpe?g|png|gif|webp|svg)$">
+<FilesMatch "(?i)\.(jpe?g|png|gif|webp)$">
     Require all granted
 </FilesMatch>
+
+# SquirrelStock: svg не отдается (в нем может быть скрипт); имя вида x.php.png — тоже: хостинг с AddHandler выполнил бы его
+<FilesMatch "(?i)\.(php\d*|pht|phtml|phar|cgi|pl|py|sh|shtml)\.">
+    Require all denied
+</FilesMatch>
+
+# PHP в этой папке не выполняется: обработчики mod_mime сняты, у mod_php выключен движок
+RemoveHandler .php .php5 .php7 .php8 .pht .phtml .phar
+RemoveType .php .php5 .php7 .php8 .pht .phtml .phar
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>

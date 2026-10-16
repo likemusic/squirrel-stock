@@ -69,6 +69,8 @@ else
 fi
 rm -f "$DIR/script_examples.zip"   # примеры скриптов автора Zippy на сайте не нужны
 mkdir -p "$DIR/upload" "$DIR/logs" "$BACKUP"
+# upload/ выше исключена из копирования (там файлы пользователей), но ее .htaccess — часть программы
+cp "$([[ -n $ZIP ]] && echo "$stage" || echo "$REPO/www")/upload/.htaccess" "$DIR/upload/.htaccess"
 
 say "база"
 CONF=$DIR/config/config.php
@@ -130,6 +132,20 @@ cat > /etc/apache2/sites-available/squirrelstock.conf <<CONF
     <DirectoryMatch "^$DIR/(config|logs|cli)">
         Require all denied
     </DirectoryMatch>
+    # загруженные файлы: только картинки, PHP не выполняется (правила здесь — восстановление из копии пишет в upload/)
+    <Directory $DIR/upload>
+        AllowOverride None
+        Require all denied
+        <FilesMatch "(?i)\.(jpe?g|png|gif|webp)\$">
+            Require all granted
+        </FilesMatch>
+        <FilesMatch "(?i)\.(php\d*|pht|phtml|phar|cgi|pl|py|sh|shtml)\.">
+            Require all denied
+        </FilesMatch>
+        <IfModule php_module>
+            php_admin_flag engine off
+        </IfModule>
+    </Directory>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "SAMEORIGIN"
     ErrorLog \${APACHE_LOG_DIR}/squirrelstock-error.log
