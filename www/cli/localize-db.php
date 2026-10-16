@@ -70,7 +70,7 @@ function localizeOption(mysqli $conn, string $optname, array $fields): int {
     $stmt->bind_param('s', $optname);
     $stmt->execute();
     $raw = $stmt->get_result()->fetch_row()[0] ?? null;
-    $data = $raw === null ? false : @unserialize(base64_decode($raw));
+    $data = $raw === null ? false : @unserialize(base64_decode($raw), ['allowed_classes' => false]);   // объекты (App\DataItem) сохраняются как есть
     if (!is_array($data)) {
         return 0;
     }
