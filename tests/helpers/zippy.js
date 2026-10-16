@@ -26,8 +26,16 @@ async function messages(page) {
   return (await page.locator('.toast-message, .alert-danger, .alert-warning, .alert-success').allInnerTexts()).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
 }
 
+// Щелчок и ожидание результата. Если щелчок начал переход страницы (отправка формы, кнопка-ссылка Zippy), ждать загрузки
+// новой страницы. waitForLoadState('networkidle') — это состояние: пока переход не начался, оно уже «выполнено», и на
+// медленной машине код дальше работал со старой страницей (флак «строк 0, ожидалось 1»: строки считались на странице,
+// где таблица строк скрыта формой строки, хотя на сервере строка была).
 async function clickWait(page, sel) {
-  await Promise.all([page.waitForLoadState('networkidle'), page.locator(sel).first().click()]);
+  const nav = page.waitForEvent('request', { predicate: r => r.isNavigationRequest() && r.frame() === page.mainFrame(), timeout: 1500 }).catch(() => null);
+  const loaded = page.waitForEvent('load', { timeout: 60000 }).catch(() => null);
+  await page.locator(sel).first().click();
+  if (await nav) await loaded;
+  await page.waitForLoadState('networkidle');
   await page.waitForTimeout(300);
 }
 
