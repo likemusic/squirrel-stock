@@ -110,7 +110,9 @@ async function createDoc(page, type, d) {
   if (d.customer) await pickAuto(page, '#docform #customer', d.customer, d.customer);
   if (d.payment !== undefined && await page.locator('#docform #payment').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
   if (d.contract) {   // договор выбирается по номеру; список появляется после выбора контрагента
-    const value = await page.locator('#docform #contract option').evaluateAll((os, n) => (os.find(o => o.textContent.trim().startsWith(n + ' ')) || {}).value, d.contract);
+    const find = () => page.locator('#docform #contract option').evaluateAll((os, n) => (os.find(o => o.textContent.trim().startsWith(n + ' ')) || {}).value, d.contract);
+    let value = await find();
+    for (let i = 0; i < 50 && !value; i++) { await page.waitForTimeout(200); value = await find(); }   // список приходит AJAX-ом после выбора контрагента
     if (!value) throw new Error(`договор ${d.contract} не найден в накладной`);
     await page.locator('#docform #contract').selectOption(value);
   }
