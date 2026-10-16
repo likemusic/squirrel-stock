@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>{{#t}}sqs.extend.title{{/t}}</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6">
+                <h3>{{#t}}sqs.extend.title{{/t}}</h3>
+                <dl class="row" id="extend-info">
+                    <dt class="col-sm-4">{{#t}}sqs.due.contract{{/t}}</dt>
+                    <dd class="col-sm-8">{{contract}}</dd>
+                    <dt class="col-sm-4">{{#t}}sqs.due.customer{{/t}}</dt>
+                    <dd class="col-sm-8">{{customer}}</dd>
+                    <dt class="col-sm-4">{{#t}}sqs.due.unit{{/t}}</dt>
+                    <dd class="col-sm-8">{{#units}}<div>{{label}}</div>{{/units}}</dd>
+                    <dt class="col-sm-4">{{#t}}sqs.extend.current{{/t}}</dt>
+                    <dd class="col-sm-8">{{term}}</dd>
+                </dl>
+                <form zippy="eform">
+                    <div class="row">
+                        <div class="col-sm-6 mb-2">
+                            <label class="form-label" for="enddate">{{#t}}sqs.eqissue.enddate{{/t}}</label>
+                            <input zippy="enddate" class="form-control" type="text">
+                        </div>
+                        <div class="col-sm-6 mb-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input zippy="ondemand" class="form-check-input" type="checkbox">
+                                <label class="form-check-label" for="ondemand">{{#t}}sqs.eqissue.ondemand{{/t}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted small">{{#t}}sqs.extend.help{{/t}}</p>
+                    <button zippy="save" type="submit" class="btn btn-primary">{{#t}}sqs.extend.save{{/t}}</button>
+                    <a class="btn btn-outline-secondary ms-2" href="{{backurl}}">{{#t}}common.skasuvaty{{/t}}</a>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -34,7 +34,7 @@ test('оборудование: выдано по договору, на скл�
 
   let r = await run(uniq, 'all');
   expect(r[1]).toMatchObject({ 'Де': 'видано', 'Отримувач': r1, 'Строк': 'до запитання', 'Ким направлено': 'Врач Тестовый', 'З дати': '02.10.2026' });
-  expect(r[1]['Договір']).toContain('Д' + uniq);
+  expect(r[1]['Договір']).toBe(`Д${uniq} від 01.10.2026`);
   expect(r[2]['Де']).toContain('Основний склад');
   expect(r[3]['Де']).toBe('списано');
 
@@ -136,7 +136,7 @@ test('мелкое оборудование на руках количество
   let rows = await run(uniq);
   expect(rows).toHaveLength(1);
   expect(rows[0]).toMatchObject({ 'Найменування': name, 'Отримувач': r1, 'На руках': '3', 'Остання видача': '15.09.2026', 'Строк': 'до запитання', 'Ким направлено': 'Врач Тестовый' });
-  expect(rows[0]['Договір']).toContain('М1-' + uniq);
+  expect(rows[0]['Договір']).toBe(`М1-${uniq} від 02.09.2026`);
   expect(await page.locator('#preview table.sqs-small tr').first().innerText()).toContain('штук: 3');
   expect((await run(r1, 'all')).map(r => r['Отримувач']), 'поиск по получателю').toEqual([r1]);
   expect(await run(r2, 'all'), 'все вернул').toEqual([]);

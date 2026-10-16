@@ -20,7 +20,7 @@
                         <td>{{unit}}</td>
                         <td>{{contract}}</td>
                         <td>{{enddate}}</td>
-                        <td class="{{#overdue}}text-danger fw-bold{{/overdue}}">{{days}}</td>
+                        <td class="{{#overdue}}text-danger fw-bold{{/overdue}}">{{days}}{{#extend}} <a class="sqs-extend btn btn-sm btn-outline-primary ms-2" href="{{extend}}">{{#t}}sqs.extend.link{{/t}}</a>{{/extend}}</td>
                     </tr>
                     {{/sqs_due}}
                 </table>

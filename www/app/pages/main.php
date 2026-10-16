@@ -104,7 +104,10 @@ class Main extends Base
     
      
         
-        if($this->_tvars['dashboard'] != true){
+        // SquirrelStock: профиль благотворительной организации — без денежных плиток и графиков доходов (App\SQS\Profile)
+        $this->_tvars['sqs_money'] = !\App\SQS\Profile::charity();
+
+        if($this->_tvars['dashboard'] != true || !$this->_tvars['sqs_money']){
             return;
         }
         

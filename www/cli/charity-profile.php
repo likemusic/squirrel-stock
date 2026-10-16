@@ -7,11 +7,13 @@
  *    остальное (касса, продажи, производство, кафе, зарплата и т.д.) выключается — включить обратно можно
  *    в «Налаштування меню» или этим скриптом с --back;
  *  - настройки: учет по серийным номерам (оборудование по инвентарным номерам), без минусовых остатков,
- *    закупки без учета денег, цена выдачи по умолчанию 0, копейки.
+ *    закупки без учета денег, цена выдачи по умолчанию 0, копейки;
+ *  - флаг профиля (App\SQS\Profile): на главной нет денежных плиток и графиков, журнал выдач открывается со статусом «Все»,
+ *    расходная накладная печатается формой «Выдал / Получатель»; журнал «Продажи» называется «Выдачи».
  * Повторный запуск безопасен. Настройки кэшируются в сессии: изменения видны после повторного входа.
  *
  * php cli/charity-profile.php          (в docker-стенде: docker exec squirrelstock-web-1 php cli/charity-profile.php)
- * php cli/charity-profile.php --back   включить в меню все выключенные профилем пункты
+ * php cli/charity-profile.php --back   включить в меню все выключенные профилем пункты, снять флаг профиля, вернуть название журнала
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -27,7 +29,9 @@ const KEEP = [
     4 => ['CategoryList', 'ItemList', 'StoreList', 'CustomerList', 'ContractList'],
     5 => ['Import', 'Export'],
 ];
-const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1'];
+const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1', 'sqs_charity' => 1];
+// название и группа журнала расходных накладных (metadata GIList): язык по умолчанию => профиль; меняется только непереименованное
+const RENAME = ['Продажі' => 'Видачі', 'Продажи' => 'Выдачи'];
 
 $_config = [];
 require __DIR__ . '/../config/config.php';
@@ -59,6 +63,8 @@ if (in_array('--back', $argv, true)) {
         $conn->query('UPDATE metadata SET disabled = 0 WHERE meta_id IN (' . implode(',', $ids) . ')');
     }
     $conn->query("DELETE FROM keyval WHERE keyd = 'sqs_profile_disabled'");
+    renameJournal($conn, array_flip(RENAME));
+    setCommon($conn, fn(array $c) => array_diff_key($c, ['sqs_charity' => 1]));
     echo 'Включено пунктов меню: ' . count($ids) . "\n";
     exit;
 }
@@ -74,15 +80,24 @@ if ($ids) {
 }
 $conn->query("UPDATE metadata SET disabled = 0 WHERE {$inKeep}");
 
-$raw = $conn->query("SELECT optvalue FROM options WHERE optname = 'common'")->fetch_row()[0] ?? '';
-$common = @unserialize(base64_decode($raw));
-$common = is_array($common) ? $common : [];
-foreach (OPTIONS as $k => $v) {
-    $common[$k] = $v;
-}
-$value = base64_encode(serialize($common));
-$stmt = $conn->prepare("UPDATE options SET optvalue = ? WHERE optname = 'common'");
-$stmt->bind_param('s', $value);
-$stmt->execute();
+renameJournal($conn, RENAME);
+setCommon($conn, fn(array $c) => array_merge($c, OPTIONS));
 
 echo 'Выключено пунктов меню: ' . count($ids) . ", настройки обновлены. Изменения видны после повторного входа в программу\n";
+
+function renameJournal(mysqli $conn, array $pairs): void {
+    $stmt = $conn->prepare("UPDATE metadata SET description = IF(description = ?, ?, description), menugroup = IF(menugroup = ?, ?, menugroup) WHERE meta_type = 3 AND meta_name = 'GIList'");
+    foreach ($pairs as $from => $to) {
+        $stmt->bind_param('ssss', $from, $to, $from, $to);
+        $stmt->execute();
+    }
+}
+
+function setCommon(mysqli $conn, callable $change): void {
+    $raw = $conn->query("SELECT optvalue FROM options WHERE optname = 'common'")->fetch_row()[0] ?? '';
+    $common = @unserialize(base64_decode($raw));
+    $value = base64_encode(serialize($change(is_array($common) ? $common : [])));
+    $stmt = $conn->prepare("UPDATE options SET optvalue = ? WHERE optname = 'common'");
+    $stmt->bind_param('s', $value);
+    $stmt->execute();
+}

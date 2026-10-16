@@ -7,6 +7,7 @@
     "report.equipmentwhere.col_issued": "Видано",
     "report.equipmentwhere.col_off": "Списано",
     "report.equipmentwhere.col_total": "Всього",
+    "report.equipmentwhere.contract_of": "{number} від {date}",
     "report.equipmentwhere.inv": "Інв. №",
     "report.equipmentwhere.issued": "видано",
     "report.equipmentwhere.model": "Модель",
@@ -169,5 +170,12 @@
     "sqs.units.title": "Одиниці обладнання",
     "sqs.units.until": "до",
     "sqs.units.where": "Де зараз",
-    "sqs.units.written_off": "списана"
+    "sqs.units.written_off": "списана",
+    "sqs.extend.title": "Подовжити строк користування",
+    "sqs.extend.current": "Строк зараз",
+    "sqs.extend.help": "Змінюється лише строк договору: статус «В роботі» та решта залишаються. У коментарях договору запишеться, хто і коли змінив строк.",
+    "sqs.extend.save": "Подовжити",
+    "sqs.extend.link": "Подовжити",
+    "sqs.extend.note": "Строк користування змінено: {from} → {to}",
+    "sqs.extend.done": "Договір {number}: строк {term}"
 }

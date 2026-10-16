@@ -20,11 +20,14 @@ namespace App\SQS;
  * модуль ронял бы программу (штатный автозагрузчик завершает работу, если файла класса нет).
  * Выключить модуль — удалить папку или переименовать с точкой в начале (.имя): его пункты меню выключаются (disabled = 1).
  * Загрузка — из init.php на каждый запрос (и в консольных скриптах): обход папок; база читается один раз за сессию и при
- * смене набора модулей (пункты меню, схемы); metadata и таблицы меняются только при смене. Подробно — docs/MODULES.md.
+ * смене набора модулей (пункты меню, схемы); metadata и таблицы меняются только при смене. Так же применяются таблицы
+ * платформы (app/sqs/schema.sql): копия старой версии после восстановления и обновление программы не требуют ручного шага.
+ * Подробно — docs/MODULES.md.
  */
 class Modules
 {
     public const DIR = 'app/sqs/modules';
+    public const PLATFORM_SCHEMA = 'app/sqs/schema.sql';   // таблицы платформы — досоздаются так же, как таблицы модулей
 
     private static ?array $modules = null;   // имя => ['dir' => путь, 'def' => массив module.php]
     private static ?array $dirs = null;      // имя => путь: включенные модули, без чтения module.php
@@ -140,16 +143,12 @@ class Modules
     }
 
     /**
-     * Пункты меню и таблицы модулей. В этой сессии набор уже сверен с базой — обычный запрос обходится без обращения к ней.
+     * Таблицы платформы и модулей, пункты меню модулей. В этой сессии набор уже сверен с базой — обычный запрос
+     * обходится без обращения к ней.
      */
     private static function sync(): void {
         $items = self::menuItems();
-        $schemas = [];
-        foreach (self::$modules as $name => $m) {
-            if (is_file($m['dir'] . '/schema.sql')) {
-                $schemas[$name] = md5_file($m['dir'] . '/schema.sql');
-            }
-        }
+        $schemas = self::schemas();
         $fp = md5(implode(',', array_keys($items)) . '|' . json_encode($schemas));
         if (session_status() == PHP_SESSION_ACTIVE) {
             if (($_SESSION['sqs_modules_fp'] ?? null) === $fp) {
@@ -159,20 +158,47 @@ class Modules
             \App\Session::getSession()->menu = [];
             $_SESSION['sqs_modules_fp'] = $fp;
         }
-        foreach ($schemas as $name => $hash) {
-            self::applySchema($name, $hash);
+        foreach ($schemas as $key => [$file, $hash]) {
+            self::applySchema($key, $file, $hash);
         }
         self::syncMenu($items);
     }
 
-    // таблицы модуля: schema.sql выполняется, когда файл изменился (CREATE TABLE IF NOT EXISTS — повторно безопасно)
-    private static function applySchema(string $name, string $hash): void {
-        $key = 'sqs_schema_' . $name;
+    /**
+     * Схемы заново после замены базы (восстановление из копии): отметки о примененных схемах приходят из копии и могут
+     * не соответствовать ее таблицам, поэтому сбрасываются, и все схемы выполняются сразу.
+     */
+    public static function reapply(): void {
+        \ZDB\DB::getConnect()->Execute("DELETE FROM keyval WHERE keyd = 'sqs_schema' OR keyd LIKE 'sqs\\_schema\\_%'");
+        unset($_SESSION['sqs_modules_fp']);
+        if (self::$modules !== null) {
+            self::sync();
+        }
+    }
+
+    // [ключ в keyval => [файл, md5]]: сначала таблицы платформы (вход, журнал правок, названия из 1С), потом модулей
+    private static function schemas(): array {
+        $schemas = [];
+        if (is_file(_ROOT . self::PLATFORM_SCHEMA)) {
+            $schemas['sqs_schema'] = [_ROOT . self::PLATFORM_SCHEMA, md5_file(_ROOT . self::PLATFORM_SCHEMA)];
+        }
+        foreach (self::$modules as $name => $m) {
+            if (is_file($m['dir'] . '/schema.sql')) {
+                $schemas['sqs_schema_' . $name] = [$m['dir'] . '/schema.sql', md5_file($m['dir'] . '/schema.sql')];
+            }
+        }
+        return $schemas;
+    }
+
+    // таблицы: schema.sql выполняется, когда файл изменился (CREATE TABLE IF NOT EXISTS — повторно безопасно)
+    private static function applySchema(string $key, string $file, string $hash): void {
         if (\App\Helper::getKeyVal($key) === $hash) {
             return;
         }
+        global $logger;
+        $label = $key == 'sqs_schema' ? 'platform' : 'module ' . substr($key, strlen('sqs_schema_'));
         $conn = \ZDB\DB::getConnect();
-        $sql = preg_replace('/^\s*--.*$/m', '', (string)file_get_contents(self::$modules[$name]['dir'] . '/schema.sql'));
+        $sql = preg_replace('/^\s*--.*$/m', '', (string)file_get_contents($file));
         try {
             foreach (preg_split('/;\s*(\n|$)/', $sql) as $stmt) {
                 if (trim($stmt) !== '') {
@@ -180,11 +206,14 @@ class Modules
                 }
             }
             \App\Helper::setKeyVal($key, $hash);
+            // из консоли не пишется: скрипт от root создал бы журнал дня, в который веб-сервер потом не может писать
+            if ($logger && PHP_SAPI !== 'cli') {
+                $logger->info("SquirrelStock schema {$label} applied");
+            }
         } catch (\Throwable $e) {
-            // нет права CREATE у пользователя базы и т. п.: модуль работать не будет — в журнал; попытка повторится
-            global $logger;
+            // нет права CREATE у пользователя базы и т. п.: таблиц не будет — в журнал; попытка повторится в новой сессии
             if ($logger) {
-                $logger->error("SquirrelStock module {$name}: schema.sql: " . $e->getMessage());
+                $logger->error("SquirrelStock schema {$label}: " . $e->getMessage());
             }
         }
     }

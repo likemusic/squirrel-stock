@@ -91,23 +91,22 @@ if [[ $(mysql -uroot -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE
   if [[ $DEMO == 1 ]]; then
     unzip -p "$REPO/db/demo/squirrelstock-demo.zip" database.sql | mysql -uroot "$DB"
   else
-    cat "$REPO/db/db.sql" "$REPO/db/squirrelstock.sql" | mysql -uroot "$DB"
+    cat "$REPO/db/db.sql" "$REPO/www/app/sqs/schema.sql" | mysql -uroot "$DB"
   fi
   # вместо admin / admin — случайный пароль и случайная «соль», как в пакете tools/release/build.sh
   ADMINPASS=$(openssl rand -base64 12 | tr -d '/+=' | cut -c1-14)
   HASH=$(printf '%s' "$ADMINPASS" | php -r 'echo password_hash(stream_get_contents(STDIN), PASSWORD_DEFAULT);')
   SALT=$(openssl rand -hex 32)
   mysql -uroot "$DB" -e "UPDATE users SET userpass = '$HASH' WHERE userlogin = 'admin'; REPLACE INTO keyval (keyd, vald) VALUES ('salt', '$SALT');"
-  # таблицы и пункты меню модулей (app/sqs/modules) — до профиля и перевода, чтобы те их видели
+  # таблицы платформы и модулей, пункты меню модулей — до профиля и перевода, чтобы те их видели
   php "$DIR/cli/modules.php" >/dev/null
   if [[ $DEMO == 0 && $PROFILE == 1 ]]; then
     php "$DIR/cli/charity-profile.php" >/dev/null
     php "$DIR/cli/localize-db.php" ru >/dev/null
   fi
 else
-  # дополнения форка — безопасно повторять (новые таблицы и пункты меню после обновления кода)
-  mysql -uroot "$DB" < "$REPO/db/squirrelstock.sql"
-  php "$DIR/cli/modules.php" >/dev/null   # новые таблицы и пункты меню модулей
+  # новые таблицы платформы (app/sqs/schema.sql) и модулей, пункты меню модулей после обновления кода
+  php "$DIR/cli/modules.php" >/dev/null
 fi
 chown -R www-data:www-data "$DIR" "$BACKUP"
 chmod 640 "$CONF"
