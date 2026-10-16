@@ -67,6 +67,50 @@ class BackupJob
         return $ret;
     }
 
+    /**
+     * Команда для системного планировщика этой системы: запуск каждый час, копия — если последней больше 20 часов.
+     * ['os' => подпись системы, 'cmd' => команда]. $env подменяет окружение (тест): family, docker, root, binary, ini, bindir, exists.
+     */
+    public static function scheduleCommand(array $env = []): array {
+        $env += ['family' => PHP_OS_FAMILY, 'docker' => file_exists('/.dockerenv'), 'root' => _ROOT, 'binary' => PHP_BINARY,
+                 'ini' => (string)php_ini_loaded_file(), 'bindir' => PHP_BINDIR, 'exists' => 'is_file'];
+        if ($env['docker']) {
+            return ['os' => 'Docker (cron)', 'cmd' => '17 * * * * docker exec -u www-data <web-container> php cli/backup.php --if-older=20'];
+        }
+        $win = $env['family'] == 'Windows';
+        $root = rtrim($env['root'], '/\\');
+        $php = self::phpCli($env, $win);
+        if ($win) {
+            return ['os' => 'Windows', 'cmd' => 'schtasks /Create /TN "SquirrelStock backup" /SC HOURLY /TR "\"' . $php . '\" \"' . $root . '\cli\backup.php\" --if-older=20"'];
+        }
+        return ['os' => 'Linux (cron)', 'cmd' => '17 * * * * ' . $php . ' ' . $root . '/cli/backup.php --if-older=20'];
+    }
+
+    /**
+     * Консольный PHP для планировщика. Под Apache с mod_php PHP_BINARY — не php (на Windows — httpd.exe), тогда php рядом
+     * с загруженным php.ini (на Windows PHPIniDir — папка PHP) или в PHP_BINDIR; не нашелся — php из PATH.
+     * Пути разбираются вручную: на Windows разделитель \, а тест идет на Linux, где dirname() его не понимает.
+     */
+    private static function phpCli(array $env, bool $win): string {
+        $exe = $win ? 'php.exe' : 'php';
+        if (preg_match('/(^|[\\\\\/])php[\d.]*(\.exe)?$/i', $env['binary'])) {
+            return $env['binary'];
+        }
+        $sep = $win ? '\\' : '/';
+        $dirs = [];
+        if ($env['ini'] !== '') {
+            $dirs[] = preg_replace('/[\\\\\/][^\\\\\/]*$/', '', $env['ini']);
+        }
+        $dirs[] = $env['bindir'];
+        foreach ($dirs as $d) {
+            $p = rtrim($d, '/\\') . $sep . $exe;
+            if ($d !== '' && ($env['exists'])($p)) {
+                return $p;
+            }
+        }
+        return $exe;
+    }
+
     // подпись места для людей: «Папка на этом компьютере», «Облако (rclone) yandex:squirrelstock»
     public static function label(string $key): string {
         [$place, $remote] = array_pad(explode(':', $key, 2), 2, '');

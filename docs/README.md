@@ -15,6 +15,7 @@
 
 - [INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md) — Debian 12 и Ubuntu 24.04 одним скриптом: отдельный компьютер на складе или VPS.
 - [INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md) — хостинг с Apache (ISPmanager): пакет, база, файлы, защита, проверка сайта `check-site.sh`.
+- [INSTALL_WINDOWS.ru.md](INSTALL_WINDOWS.ru.md) — Windows 10 и 11 на складе: Apache, PHP и MariaDB службами Windows, копия через Планировщик, доступ с телефонов, проверка `check-windows.ps1`.
 - [UPDATE.ru.md](UPDATE.ru.md) — обновление программы до новой версии.
 
 ## Разработчику (на английском)

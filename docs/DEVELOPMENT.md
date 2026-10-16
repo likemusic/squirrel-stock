@@ -46,5 +46,5 @@ Tools in `tools/i18n/`: `convert.php` replaces Ukrainian strings with keys (used
 
 - `www/` — the site root (Zippy code plus SquirrelStock); `www/app/sqs/` — SquirrelStock platform code, `www/app/sqs/modules/` — modules ([MODULES.md](MODULES.md)), `www/cli/` — console scripts.
 - Every change to files inherited from Zippy is a separate commit listed in [CORE_CHANGES.md](CORE_CHANGES.md), together with its test.
-- `tools/install/` — Linux installer and its container test ([INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md)); `tools/release/` — release package `build.sh` ([INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md)) and site check `check-site.sh`. Links between documents: `python3 tools/release/check-doc-links.py`.
+- `tools/install/` — Linux installer and its container test ([INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md)), Windows installation check `check-windows.ps1` (PowerShell 5.1, UTF-8 with BOM; [INSTALL_WINDOWS.ru.md](INSTALL_WINDOWS.ru.md)); `tools/release/` — release package `build.sh` ([INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md)) and site check `check-site.sh`. Links between documents: `python3 tools/release/check-doc-links.py`.
 - Upstream: remote `upstream` = `leon-mbs/zstore`, base commit `c74df59f4`. On an update take the author's code, run `tools/i18n/convert.php` and reapply the changes from [CORE_CHANGES.md](CORE_CHANGES.md).

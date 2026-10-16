@@ -45,10 +45,11 @@ SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход 
 
 - Linux (Debian 12, Ubuntu 24.04), отдельный компьютер или VPS, одним скриптом: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md).
 - Хостинг с Apache (ISPmanager и т. п.): [docs/INSTALL_HOSTING.ru.md](docs/INSTALL_HOSTING.ru.md).
+- Windows 10 и 11, компьютер на складе: Apache, PHP и MariaDB службами Windows, пошагово: [docs/INSTALL_WINDOWS.ru.md](docs/INSTALL_WINDOWS.ru.md) (на Windows целиком ещё не проходилась).
 - Обновление программы: [docs/UPDATE.ru.md](docs/UPDATE.ru.md).
 - Резервная копия по расписанию: [docs/BACKUP.ru.md](docs/BACKUP.ru.md).
 
-Установка на Windows пока не описана. Все документы и кому какой: [docs/README.md](docs/README.md).
+Все документы и кому какой: [docs/README.md](docs/README.md).
 
 ## Чем отличается от Zippy
 
