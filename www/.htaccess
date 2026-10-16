@@ -12,6 +12,11 @@ RewriteRule ^(lang|cli)(/|$) - [F,L]
 # из vendor/ — только статика, которую подключают страницы (css, js, картинки, шрифты)
 RewriteCond %{REQUEST_URI} !\.(css|js|png|gif|jpe?g|svg|ico|woff2?|ttf|eot|map)$ [NC]
 RewriteRule ^vendor/ - [F,L]
+# из upload/ — только картинки (jpg, png, gif, webp; svg — нет: в нем может быть скрипт) и без «.php.» и подобного в имени:
+# хостинг с AddHandler выполнил бы x.php.png. Правило здесь, а не только в upload/.htaccess: папку upload/ тома Docker
+# и установка Linux создают пустой, а восстановление из копии пишет в нее файлы
+RewriteRule ^upload/(?!.*\.(php\d*|pht|phtml|phar|cgi|pl|py|sh|shtml|htaccess)(\.|/|$))[^?]*\.(jpe?g|png|gif|webp)$ - [NC,L]
+RewriteRule ^upload(/|$) - [F,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
  

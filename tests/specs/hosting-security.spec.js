@@ -41,3 +41,39 @@ test('cookie сессии: HttpOnly и SameSite', async ({ request }) => {
   expect(cookie).toMatch(/;\s*HttpOnly/i);
   expect(cookie).toMatch(/;\s*SameSite=Lax/i);
 });
+
+// Папка upload/: браузеру отдаются только картинки, остальное (скрипты PHP, svg, текст) — 403, и PHP в ней не выполняется
+// даже в имени вида x.php.png. Защита держится без upload/.htaccess (тома Docker и установка Linux создают папку пустой):
+// правило в корневом .htaccess и настройка Apache. Пробные файлы — безобидные: PHP печатает сумму, картинка 1×1.
+test('upload/: только картинки, PHP не выполняется', async ({ request }) => {
+  const { execFileSync } = require('child_process');
+  const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
+  const sh = cmd => execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'sh', '-c', cmd], { encoding: 'utf8' });
+  const p = 'sqs-probe-' + Date.now().toString(36);
+  const php = '<?php echo "probe-" . (40 + 2);';
+  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+  const files = { [p + '.php']: php, [p + '.phtml']: php, [p + '.php.png']: php, [p + '.txt']: 'text',
+    [p + '.svg']: '<svg xmlns="http://www.w3.org/2000/svg"><text>t</text></svg>', [p + '-dir/' + p + '.php']: php };
+  const hadHtaccess = sh('test -f upload/.htaccess && echo 1 || echo 0').trim() == '1';
+  try {
+    sh(`mkdir -p upload/${p}-dir`);
+    for (const [name, body] of Object.entries(files)) sh(`printf '%s' '${body.replace(/'/g, `'\\''`)}' > upload/${name}`);
+    sh(`echo ${png} | base64 -d > upload/${p}.png`);
+    for (const htaccess of [true, false]) {   // с upload/.htaccess и без него
+      if (!htaccess) sh('mv upload/.htaccess upload/.htaccess.off 2>/dev/null || true');
+      const bad = [];
+      for (const name of Object.keys(files)) {
+        const r = await request.get('/upload/' + name, { maxRedirects: 0 });
+        const body = await r.text();
+        if (body.includes('probe-42')) bad.push(`${name}: PHP выполнен`);
+        else if (r.status() != 403) bad.push(`${name}: ${r.status()}`);
+      }
+      const img = await request.get(`/upload/${p}.png`);
+      if (img.status() != 200 || !img.headers()['content-type'].startsWith('image/png')) bad.push(`${p}.png: ${img.status()} (картинка должна открываться)`);
+      expect(bad, htaccess ? 'с upload/.htaccess' : 'без upload/.htaccess').toEqual([]);
+    }
+  } finally {
+    sh(`rm -rf upload/${p}* ; [ -f upload/.htaccess.off ] && mv upload/.htaccess.off upload/.htaccess; true`);
+  }
+  expect(hadHtaccess, 'upload/.htaccess есть в образе').toBe(true);
+});

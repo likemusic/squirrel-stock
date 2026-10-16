@@ -259,7 +259,12 @@ class Import extends \App\Pages\Base
         
         
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -315,6 +320,7 @@ class Import extends \App\Pages\Base
 
         $cnt = 0;
         $newitems = array();
+        $imgfailed = [];
         foreach ($data as $row) {
 
             $price1 =   str_replace(',', '.', trim($row[$colprice1] ?? ''));
@@ -426,7 +432,9 @@ class Import extends \App\Pages\Base
        
              
             if (strlen($image) > 0) {
-                $item->saveImage($image);
+                if (!$item->saveImage($image, true, $imgerr)) {
+                    $imgfailed[] = $image . ' — ' . $imgerr;   // SquirrelStock: в сообщение об импорте
+                }
 
                 $item->save();
 
@@ -464,6 +472,9 @@ class Import extends \App\Pages\Base
         }
 
         $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt]));
+        if ($imgfailed) {
+            $this->setWarn(__('sqs.import.images_failed', ['n' => count($imgfailed), 'list' => implode('; ', array_slice($imgfailed, 0, 5)) . (count($imgfailed) > 5 ? '; …' : '')]));
+        }
     }
 
     public function onCImport($sender) {
@@ -494,7 +505,17 @@ class Import extends \App\Pages\Base
 
         $data = array();
 
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+
+            $this->setError($e->getMessage());
+
+            return;
+
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -630,7 +651,12 @@ class Import extends \App\Pages\Base
         H::setKeyVal('nimportcols',serialize($save)) ;
         
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -777,7 +803,12 @@ class Import extends \App\Pages\Base
         }
 
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();

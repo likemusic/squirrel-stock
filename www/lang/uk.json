@@ -3939,5 +3939,15 @@
     "widgets.docview.vidpovisty": "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={document_id}\">Відповісти</a> ",
     "widgets.docview.zminyv": "Змінив",
     "widgets.itemsel.mat_ta_kompl": "Мат. та компл.",
-    "widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat": "Зміни оновлять також довідник номенклатури"
+    "widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat": "Зміни оновлять також довідник номенклатури",
+    "sqs.import.bad_format": "Файл не прочитано: потрібна таблиця Excel (xlsx, xls), OpenDocument (ods) або CSV",
+    "sqs.remote.bad_scheme": "потрібна адреса http:// або https://",
+    "sqs.remote.not_found": "ім'я не знайдено: {host}",
+    "sqs.remote.not_public": "адреса не в інтернеті: {ip}",
+    "sqs.remote.too_big": "більше {mb} МБ",
+    "sqs.remote.failed": "не завантажено: {error}",
+    "sqs.remote.status": "сервер відповів {code}",
+    "sqs.import.images_failed": "Не завантажено зображень: {n} ({list})",
+    "sqs.remote.not_image": "не зображення",
+    "sqs.file.too_big": "Файл «{name}» не збережено: більше {mb} МБ"
 }

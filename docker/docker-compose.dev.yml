@@ -11,3 +11,6 @@ services:
       - ../www/init.php:/var/www/html/init.php
       - ../www/index.php:/var/www/html/index.php
       - ../www/.htaccess:/var/www/html/.htaccess
+      - ../www/loadfile.php:/var/www/html/loadfile.php
+      - ../www/loadimage.php:/var/www/html/loadimage.php
+      - ../www/loadshopimage.php:/var/www/html/loadshopimage.php

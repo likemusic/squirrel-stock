@@ -31,8 +31,18 @@ class Backup
      */
     public function create(string $uploadDir, string $password = ''): string {
         $sql = tempnam(sys_get_temp_dir(), 'sqs');
+        try {
+            return $this->createZip($sql, $uploadDir, $password);
+        } finally {
+            @unlink($sql);   // дамп с персональными данными не остается во временной папке и при ошибке
+        }
+    }
+
+    private function createZip(string $sql, string $uploadDir, string $password): string {
         $this->dump($sql);
-        $zipFile = tempnam(sys_get_temp_dir(), 'sqs') . '.zip';
+        $base = tempnam(sys_get_temp_dir(), 'sqs');
+        $zipFile = $base . '.zip';
+        @unlink($base);
         $zip = new \ZipArchive();
         $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile($sql, self::SQL_NAME);
@@ -48,9 +58,9 @@ class Backup
             }
         }
         if (!$zip->close()) {
+            @unlink($zipFile);
             throw new \Exception('Не удалось записать архив ' . $zipFile);
         }
-        unlink($sql);
 
         return $zipFile;
     }
@@ -127,52 +137,113 @@ class Backup
         fclose($out);
     }
 
+    // файлы, которые восстановление записывает в upload/: картинки и документы. Скрипты, .htaccess и прочие файлы
+    // настройки сервера из копии не пишутся — подмененная копия не должна выполнить код на сервере
+    public const RESTORE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'txt', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'odt', 'ods', 'rtf', 'zip'];
+    public const RESTORE_MAX_FILES = 50000;
+
+    /** Восстановить ли файл копии с этим именем (upload/…) */
+    public static function restorable(string $name): bool {
+        if (!str_starts_with($name, 'upload/') || str_ends_with($name, '/') || str_contains($name, '..') || str_contains($name, '\\')) {
+            return false;
+        }
+        foreach (explode('/', substr($name, 7)) as $part) {
+            // пустая часть, скрытый файл или папка (.htaccess), «x.php.png» — нет
+            if ($part === '' || $part[0] === '.' || preg_match('/\.(php\d*|pht|phtml|phar|cgi|pl|py|sh|shtml)(\.|$)/i', $part)) {
+                return false;
+            }
+        }
+        return in_array(strtolower(pathinfo($name, PATHINFO_EXTENSION)), self::RESTORE_EXT, true);
+    }
+
     /**
-     * Восстановить из zip (database.sql + upload/) или из .sql; возвращает число выполненных операторов.
-     * $password — для зашифрованного архива (копия в облаке).
+     * Восстановить из zip (database.sql + upload/) или из .sql; возвращает [число выполненных операторов, число пропущенных файлов].
+     * $password — для зашифрованного архива (копия в облаке): тогда все файлы архива должны быть зашифрованы, иначе это
+     * не та копия (ZipArchive читает незашифрованные файлы и без пароля). Проверки архива — до удаления текущих таблиц.
      */
-    public function restore(string $file, string $uploadDir, string $password = ''): int {
+    public function restore(string $file, string $uploadDir, string $password = ''): array {
         $sqlFile = $file;
+        $tmp = null;
         $zip = new \ZipArchive();
         $isZip = $zip->open($file) === true;
-        if ($isZip) {
-            if ($password !== '') {
-                $zip->setPassword($password);
+        try {
+            if ($isZip) {
+                if ($zip->locateName(self::SQL_NAME) === false) {
+                    throw new \Exception('В архиве нет ' . self::SQL_NAME);
+                }
+                $total = 0;
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $st = $zip->statIndex($i);
+                    if ($password !== '' && ($st['encryption_method'] ?? 0) == \ZipArchive::EM_NONE && !str_ends_with($st['name'], '/')) {
+                        throw new BackupException('service.backup.not_encrypted');
+                    }
+                    $total += $st['size'];
+                }
+                // распакованный размер — по заголовкам архива: не больше свободного места (дамп во временную папку, файлы в upload/)
+                $free = min(@disk_free_space(sys_get_temp_dir()) ?: PHP_INT_MAX, is_dir($uploadDir) ? (@disk_free_space($uploadDir) ?: PHP_INT_MAX) : PHP_INT_MAX);
+                if ($zip->numFiles > self::RESTORE_MAX_FILES || $total > $free) {
+                    throw new BackupException('service.backup.too_big', ['files' => $zip->numFiles, 'mb' => round($total / 1048576)]);
+                }
+                if ($password !== '') {
+                    $zip->setPassword($password);
+                }
+                // дамп — потоком во временный файл: целиком в памяти большая база не помещается
+                $tmp = tempnam(sys_get_temp_dir(), 'sqs');
+                $in = $zip->getStream(self::SQL_NAME);
+                $out = fopen($tmp, 'w');
+                $copied = $in ? stream_copy_to_stream($in, $out) : false;
+                fclose($out);
+                $in && fclose($in);
+                if ($copied === false || $copied != $zip->statName(self::SQL_NAME)['size']) {
+                    throw new \Exception(__('service.backup.bad_password'));
+                }
+                $sqlFile = $tmp;
             }
-            if ($zip->locateName(self::SQL_NAME) === false) {
-                throw new \Exception('В архиве нет ' . self::SQL_NAME);
+            // не копия (другой файл, пустой или нечитаемый) — до удаления текущих таблиц: иначе база осталась бы пустой
+            $head = @file_get_contents($sqlFile, false, null, 0, 65536);
+            if (!is_string($head) || !preg_match('/^\s*(CREATE TABLE|INSERT INTO|DROP TABLE)\b/mi', $head)) {
+                throw new BackupException('service.backup.not_backup');
             }
-            $sql = $zip->getFromName(self::SQL_NAME);
-            if ($sql === false) {
-                throw new \Exception(__('service.backup.bad_password'));
+            // текущие таблицы и представления удаляются: база становится такой, какой была в копии
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+            foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
+                if (in_array($name, self::LOCAL_TABLES, true)) {
+                    continue;
+                }
+                $this->db->query(($type == 'VIEW' ? 'DROP VIEW' : 'DROP TABLE') . " IF EXISTS `{$name}`");
             }
-            $sqlFile = tempnam(sys_get_temp_dir(), 'sqs');
-            file_put_contents($sqlFile, $sql);
-        }
-        // текущие таблицы и представления удаляются: база становится такой, какой была в копии
-        $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
-        foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
-            if (in_array($name, self::LOCAL_TABLES, true)) {
-                continue;
-            }
-            $this->db->query(($type == 'VIEW' ? 'DROP VIEW' : 'DROP TABLE') . " IF EXISTS `{$name}`");
-        }
-        $n = $this->execute($sqlFile);
-        if ($isZip) {
-            unlink($sqlFile);
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $name = $zip->getNameIndex($i);
-                if (str_starts_with($name, 'upload/') && !str_ends_with($name, '/') && !str_contains($name, '..')) {
+            $n = $this->execute($sqlFile);
+            $skipped = 0;
+            if ($isZip) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $name = $zip->getNameIndex($i);
+                    if (!str_starts_with($name, 'upload/') || str_ends_with($name, '/')) {
+                        continue;
+                    }
+                    if (!self::restorable($name)) {
+                        $skipped++;
+                        continue;
+                    }
                     $target = rtrim($uploadDir, '/\\') . '/' . substr($name, 7);
                     @mkdir(dirname($target), 0777, true);
-                    file_put_contents($target, $zip->getFromIndex($i));
+                    $in = $zip->getStream($name);
+                    $out = fopen($target, 'w');
+                    stream_copy_to_stream($in, $out);
+                    fclose($out);
+                    fclose($in);
                 }
             }
-            $zip->close();
+        } finally {
+            if ($tmp !== null) {
+                @unlink($tmp);
+            }
+            if ($isZip) {
+                $zip->close();
+            }
         }
         \App\SQS\Modules::reapply();   // копия могла быть сделана до появления таблиц платформы или модулей — досоздать
 
-        return $n;
+        return [$n, $skipped];
     }
 
     /**

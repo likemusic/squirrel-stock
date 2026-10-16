@@ -1,10 +1,14 @@
 <?php
 
 require_once 'init.php';
-$_REQUEST['id'] = intval($_REQUEST['id']);
+$_REQUEST['id'] = intval($_REQUEST['id'] ?? 0);
 
 if ( ($_REQUEST['id']??0) > 0) {
-
+    // SquirrelStock: без входа картинки отдаются только витрине магазина; модуль выключен — как loadimage.php, после входа
+    if ((\App\System::getOptions('modules')['shop'] ?? 0) != 1 && \App\System::getUser()->user_id == 0) {
+        http_response_code(403);
+        die;
+    }
 
     $image = \App\Entity\Image::load($_REQUEST['id']);
     if ($image instanceof \App\Entity\Image) {

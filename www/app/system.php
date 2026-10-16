@@ -92,14 +92,17 @@ class System
            return $rs; 
         }
         if (strlen($rs) > 0) {
+            // SquirrelStock: в настройках — массивы, строки, числа и App\DataItem (списки валют, доп. полей, источников).
+            // Другие классы не восстанавливаются: значение могло прийти из файла импорта настроек или из копии
+            $safe = ['allowed_classes' => [\App\DataItem::class]];
             if(strpos($rs,':')>0) {
-                $d =  @unserialize($rs);
+                $d =  @unserialize($rs, $safe);
                 $opp[$group]  = $d;
                 Session::getSession()->options = $opp;
                 return $d;
             }   
 
-            $d =    @unserialize(@base64_decode($rs));
+            $d =    @unserialize(@base64_decode($rs), $safe);
             $opp[$group]  = $d;
             Session::getSession()->options = $opp;
             return $d;

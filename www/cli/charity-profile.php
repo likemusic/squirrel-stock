@@ -107,7 +107,7 @@ function rename_items(mysqli $conn, bool $back): void {
 
 function setCommon(mysqli $conn, callable $change): void {
     $raw = $conn->query("SELECT optvalue FROM options WHERE optname = 'common'")->fetch_row()[0] ?? '';
-    $common = @unserialize(base64_decode($raw));
+    $common = @unserialize(base64_decode($raw), ['allowed_classes' => false]);   // объекты (App\DataItem) сохраняются как есть
     $value = base64_encode(serialize($change(is_array($common) ? $common : [])));
     $stmt = $conn->prepare("UPDATE options SET optvalue = ? WHERE optname = 'common'");
     $stmt->bind_param('s', $value);

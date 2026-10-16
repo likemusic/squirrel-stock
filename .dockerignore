@@ -4,3 +4,4 @@ tests
 www/vendor
 www/logs
 www/upload
+!www/upload/.htaccess

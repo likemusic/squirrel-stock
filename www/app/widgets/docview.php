@@ -254,6 +254,9 @@ class DocView extends \Zippy\Html\PageFragment
         $user = \App\System::getUser() ;
       
         $docid = (int) $arg[0] ;
+        if ($this->visibleDoc($docid) == null) {
+            return json_encode([]);
+        }
 
 
         $msglist = array();
@@ -272,8 +275,20 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-    public function delmsg($arg, $post) {
+    // SquirrelStock: документ, если текущий пользователь его видит (методы окна вызываются по адресу с любым номером)
+    private function visibleDoc($id): ?Document {
+        $doc = Document::load((int)$id);
+        return $doc != null && \App\ACL::checkShowDoc($doc, true, false) ? $doc : null;
+    }
 
+    public function delmsg($arg, $post) {
+        // SquirrelStock: комментарий этого документа, удаляет автор комментария или admins (как кнопка в окне)
+        $msg = \App\Entity\Message::load((int)$arg[0]);
+        $user = System::getUser();
+        if ($msg == null || $msg->item_type != \App\Entity\Message::TYPE_DOC || $this->visibleDoc($msg->item_id) == null
+            || ($msg->user_id != $user->user_id && $user->rolename != 'admins')) {
+            return;
+        }
 
         \App\Entity\Message::delete((int)$arg[0]);
 
@@ -285,7 +300,10 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $arg[0] = (int) $arg[0] ;
         $user = System::getUser();
-        $doc = Document::load($arg[0]);
+        $doc = $this->visibleDoc($arg[0]);
+        if ($doc == null) {
+            return;
+        }
 
         $msg = new \App\Entity\Message();
         $msg->message = $post['msgtext'];
@@ -328,7 +346,10 @@ class DocView extends \Zippy\Html\PageFragment
         $user = \App\System::getUser() ;
       
         $docid = (int) $arg[0] ;
-        $doc = Document::load($docid);
+        $doc = $this->visibleDoc($docid);
+        if ($doc == null) {
+            return json_encode([]);
+        }
 
 
         $filelist = array();
@@ -348,7 +369,7 @@ class DocView extends \Zippy\Html\PageFragment
             'filename'=>$f->filename,
             'title'=>$f->description,
 
-            'candel'=>($user->user_id == $doc->user_id || $user->rolename  =='admins')
+            'candel'=>\App\SQS\FileAccess::canDelete(['item_type' => \App\Entity\Message::TYPE_DOC, 'item_id' => $docid, 'user_id' => $f->user_id], $user)
             ) ;
         }
 
@@ -358,6 +379,11 @@ class DocView extends \Zippy\Html\PageFragment
     }
 
     public function delfile($arg, $post) {
+        // SquirrelStock: только файл этого документа и только тот, кому можно удалять (App\SQS\FileAccess)
+        $f = \App\SQS\FileAccess::file((int)$arg[0]);
+        if ($f == null || $f['item_type'] != \App\Entity\Message::TYPE_DOC || $f['item_id'] != (int)$arg[1] || !\App\SQS\FileAccess::canDelete($f)) {
+            return;
+        }
 
         H::deleteFile( (int) $arg[0]);
         $doc= Document::load( (int) $arg[1]) ;
@@ -377,8 +403,16 @@ class DocView extends \Zippy\Html\PageFragment
         if(strlen($file['tmp_name'] ??'')==0) {
             return;
         }
+        if ($this->visibleDoc($arg[0]) == null) {
+            return;
+        }
 
-        H::addFile($file, $arg[0], $post['adddescfile'], \App\Entity\Message::TYPE_DOC);
+        if (H::addFile($file, $arg[0], $post['adddescfile'], \App\Entity\Message::TYPE_DOC) == 0) {
+            // SquirrelStock: файл больше предела — сообщение в ответе (окно показывает его), а не при следующем переходе
+            $msg = System::getWarnMsg();
+            System::setWarnMsg('');
+            return json_encode(['error' => $msg], JSON_UNESCAPED_UNICODE);
+        }
 
     }
 
