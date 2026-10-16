@@ -37,7 +37,8 @@ class Hooks
     /**
      * Общие события — точки расширения не для документа. Обработчик получает аргументы emit() и может вернуть значение:
      *   'mainBlocks'  — () → HTML блока главной страницы (App\Pages\Main) или '';
-     *   'itemSaved'   — (Item $item, Page $page, string $oldname) → после сохранения карточки позиции (справочник).
+     *   'itemSaved'   — (Item $item, Page $page, string $oldname) → после сохранения карточки позиции (справочник);
+     *   'customerCardUrl' — (int $customer_id) → адрес карточки получателя или '' (имя в журнале выдач, значок в справочнике контрагентов).
      */
     public static function listen(string $event, callable $handler): void {
         self::$listeners[$event][] = $handler;
