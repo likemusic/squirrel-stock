@@ -81,6 +81,38 @@ class Units
     public const ON_DEMAND_YEAR = 2099;   // срок «до востребования» — договор без даты окончания или с датой в 2099 году и позже
 
     /**
+     * Поля документов одним запросом, без Document::load: загрузка разбирает весь документ, а приход из ведомости 1С —
+     * одна накладная на сотни единиц, и отчеты по единицам загружали ее заново на каждую единицу (17,8 с на объеме хосписа).
+     * [document_id => ['document_number', 'document_date' (метка времени), 'customer_id', 'contract_id' (из заголовка), 'notes']]
+     */
+    public static function docs(array $ids): array {
+        $ids = array_unique(array_filter(array_map('intval', $ids)));
+        if (count($ids) == 0) {
+            return [];
+        }
+        $list = [];
+        foreach (\ZDB\DB::getConnect()->Execute("SELECT document_id, document_number, document_date, customer_id, notes,
+                     CAST(REGEXP_SUBSTR(REGEXP_SUBSTR(SUBSTRING_INDEX(content, '</header>', 1), '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED) AS contract_id
+                     FROM documents WHERE document_id IN (" . implode(',', $ids) . ")") as $r) {
+            $list[(int)$r['document_id']] = ['document_number' => $r['document_number'], 'document_date' => strtotime($r['document_date']), 'customer_id' => (int)$r['customer_id'],
+                                             'contract_id' => (int)$r['contract_id'], 'notes' => (string)$r['notes']];
+        }
+        return $list;
+    }
+
+    // контрагенты одним запросом: [customer_id => Customer]
+    public static function customers(array $ids): array {
+        $ids = array_unique(array_filter(array_map('intval', $ids)));
+        return count($ids) ? \App\Entity\Customer::find('customer_id IN (' . implode(',', $ids) . ')') : [];
+    }
+
+    // договоры одним запросом: [contract_id => Contract]
+    public static function contracts(array $ids): array {
+        $ids = array_unique(array_filter(array_map('intval', $ids)));
+        return count($ids) ? \App\Entity\Contract::find('contract_id IN (' . implode(',', $ids) . ')') : [];
+    }
+
+    /**
      * Где сейчас каждая единица: [['item_id', 'itemname', 'cat_id', 'snumber', 'factory_no', 'kind' (store|out|off), 'stores',
      *   'document_id', 'document_number', 'date', 'customer_id', 'contract_id', 'contract_number', 'contract_date', 'enddate' (0 — до востребования), 'referrer'], ...]
      * На складе — есть остаток; иначе по последнему расходному документу (движение со знаком минус): списание (OutcomeItem) — списана,
@@ -108,23 +140,25 @@ class Units
                                      WHERE s.snumber <> '' AND e.quantity < 0 AND {$where}) x WHERE x.rn = 1") as $r) {
             $last[self::key((int)$r['item_id'], $r['snumber'])] = $r;
         }
+        $docs = self::docs(array_column($last, 'document_id'));
+        $contracts = self::contracts(array_column($docs, 'contract_id'));
         $list = [];
         foreach ($units as $u) {
             $row = ['item_id' => (int)$u['item_id'], 'itemname' => $u['itemname'], 'cat_id' => (int)$u['cat_id'], 'snumber' => $u['snumber'],
                     'factory_no' => (string)$u['factory_no'], 'kind' => 'store', 'stores' => (string)$u['stores'], 'document_id' => 0, 'document_number' => '',
                     'date' => 0, 'customer_id' => 0, 'contract_id' => 0, 'contract_number' => '', 'contract_date' => 0, 'enddate' => 0, 'referrer' => ''];
             $l = $last[self::key($row['item_id'], $row['snumber'])] ?? null;
-            $doc = $l ? \App\Entity\Doc\Document::load($l['document_id']) : null;
+            $doc = $l ? ($docs[(int)$l['document_id']] ?? null) : null;
             if ($doc) {
-                $row['document_id'] = (int)$doc->document_id;
-                $row['document_number'] = $doc->document_number;
-                $row['date'] = $doc->document_date;
+                $row['document_id'] = (int)$l['document_id'];
+                $row['document_number'] = $doc['document_number'];
+                $row['date'] = $doc['document_date'];
             }
             if ($u['qty'] <= 0) {
                 $row['kind'] = $l && $l['meta_name'] == 'OutcomeItem' ? 'off' : 'out';
                 if ($row['kind'] == 'out' && $doc) {
-                    $row['customer_id'] = (int)$doc->customer_id;
-                    $contract = intval($doc->headerdata['contract_id'] ?? 0) > 0 ? \App\Entity\Contract::load($doc->headerdata['contract_id']) : null;
+                    $row['customer_id'] = $doc['customer_id'];
+                    $contract = $contracts[$doc['contract_id']] ?? null;
                     if ($contract) {
                         $end = intval($contract->enddate);
                         $row['contract_id'] = (int)$contract->contract_id;

@@ -85,6 +85,11 @@ class EquipmentWhere extends \App\Pages\Base
             $last[$r['item_id'] . '|' . $r['snumber']] = $r;
         }
 
+        // документы, получатели и договоры — пакетно (App\SQS\Units::docs: без загрузки документа на каждую единицу)
+        $docs = \App\SQS\Units::docs(array_column($last, 'document_id'));
+        $customers = \App\SQS\Units::customers(array_column($docs, 'customer_id'));
+        $contracts = \App\SQS\Units::contracts(array_column($docs, 'contract_id'));
+
         $detail = [];
         $today = strtotime(date('Y-m-d'));
         $factory = \App\SQS\Units::factoryMap();   // заводские номера единиц (sqs_unit)
@@ -92,10 +97,10 @@ class EquipmentWhere extends \App\Pages\Base
             $row = ['itemname' => $u['itemname'], 'snumber' => $u['snumber'], 'factory' => $factory[\App\SQS\Units::key((int)$u['item_id'], $u['snumber'])] ?? '', 'where' => '', 'customer' => '', 'phone' => '', 'address' => '',
                     'contract' => '', 'date' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'document' => '', 'extend' => ''];
             $l = $last[$u['item_id'] . '|' . $u['snumber']] ?? null;
-            $doc = $l ? \App\Entity\Doc\Document::load($l['document_id']) : null;
+            $doc = $l ? ($docs[(int)$l['document_id']] ?? null) : null;
             if ($doc) {
-                $row['date'] = H::fd($doc->document_date);
-                $row['document'] = $doc->document_number;
+                $row['date'] = H::fd($doc['document_date']);
+                $row['document'] = $doc['document_number'];
             }
             if ($u['qty'] > 0) {
                 $kind = 'store';
@@ -106,13 +111,13 @@ class EquipmentWhere extends \App\Pages\Base
             } else {
                 $kind = 'out';
                 $row['where'] = __('report.equipmentwhere.issued');
-                if ($doc && $doc->customer_id > 0) {
-                    $c = \App\Entity\Customer::load($doc->customer_id);
+                if ($doc && $doc['customer_id'] > 0) {
+                    $c = $customers[$doc['customer_id']] ?? null;
                     $row['customer'] = $c->customer_name ?? '';
                     $row['phone'] = $c->phone ?? '';
                     $row['address'] = $c->address ?? '';
                 }
-                $contract = intval($doc->headerdata['contract_id'] ?? 0) > 0 ? \App\Entity\Contract::load($doc->headerdata['contract_id']) : null;
+                $contract = $doc ? ($contracts[$doc['contract_id']] ?? null) : null;
                 if ($contract) {
                     $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);
                     $row['sent'] = $contract->shortdesc;
@@ -186,17 +191,16 @@ class EquipmentWhere extends \App\Pages\Base
             $rows[$k] = $r;
         }
 
+        $rows = array_filter($rows, fn($r) => $r['qty'] > 0 && $r['last'] != null);
+        $customers = \App\SQS\Units::customers(array_column($rows, 'customer_id'));
+        $contracts = \App\SQS\Units::contracts(array_map(fn($r) => $r['last']['contract_id'], $rows));
         $out = [];
-        $customers = [];
         foreach ($rows as $r) {
-            if ($r['qty'] <= 0 || $r['last'] == null) {
-                continue;
-            }
-            $c = $customers[$r['customer_id']] ??= \App\Entity\Customer::load($r['customer_id']);
+            $c = $customers[$r['customer_id']] ?? null;
             $row = ['itemname' => $r['itemname'], 'customer' => $c->customer_name ?? '', 'phone' => $c->phone ?? '', 'address' => $c->address ?? '',
                     'qty' => H::fqty($r['qty']), 'date' => H::fd(strtotime($r['last']['document_date'])), 'document' => $r['last']['document_number'],
                     'contract' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'extend' => ''];
-            $contract = \App\Entity\Contract::load(intval($r['last']['contract_id']));
+            $contract = $contracts[intval($r['last']['contract_id'])] ?? null;
             if ($contract) {
                 $end = intval($contract->enddate);
                 $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);
