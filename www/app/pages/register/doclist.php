@@ -29,6 +29,7 @@ class DocList extends \App\Pages\Base
 {
     public $_doc;
     private $_favs=array();
+    private $_offtypes=array();   // SquirrelStock: типы, выключенные в меню профиля, — не предлагать «на основании»
 
     /**
      *
@@ -41,6 +42,9 @@ class DocList extends \App\Pages\Base
             App::RedirectHome() ;
         }
         $docid = intval($docid);
+        if (\App\SQS\Profile::charity()) {
+            $this->_offtypes = \ZDB\DB::getConnect()->GetCol("select meta_name from metadata where meta_type = 1 and disabled = 1");
+        }
         $user = System::getUser() ;
         $this->_favs = explode(',', $user->favs) ;
         if(is_array($this->_favs)==false) {
@@ -231,6 +235,7 @@ class DocList extends \App\Pages\Base
         //список документов   которые   могут  быть созданы  на  основании  текущего
         $row->add(new Panel('basedon'));
         $basedonlist = $doc->getRelationBased();
+        $basedonlist = array_diff_key($basedonlist, array_flip($this->_offtypes));
         if (count($basedonlist) == 0) {
             $row->basedon->setVisible(false);
         } else {

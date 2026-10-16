@@ -15,9 +15,15 @@ use Zippy\Html\Panel;
  * SquirrelStock: акт списания за месяц в формате бухгалтерии хосписа.
  * Строки — позиции, колонки — выдачи «Получатель дд.мм.гггг» (выдачи одному получателю в один день — одна колонка),
  * в ячейках количество по расходным накладным за вычетом возвратов, справа итог по позиции, внизу итог по выдаче.
+ * Акты на расходники и на оборудование — отдельные (ответ хосписа 3.1): оборудование — единицы с инвентарным номером и все,
+ * что выдано по договору (мелкое оборудование количеством), расходники — остальное.
  */
 class IssueAct extends \App\Pages\Base
 {
+    public const ALL = 0;
+    public const CONSUMABLES = 1;
+    public const EQUIPMENT = 2;
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('IssueAct')) {
@@ -28,7 +34,9 @@ class IssueAct extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('year', \App\Util::getYears(), intval(date('Y'))));
         $this->filter->add(new DropDownChoice('month', \App\Util::getMonth(), intval(date('n'))));
         $this->filter->add(new DropDownChoice('cat', [0 => __('common.vsi')] + \App\Entity\Category::getList(true), 0));
-        $this->filter->add(new TextInput('title', __('report.issueact.default_title')));
+        $this->filter->add(new DropDownChoice('kind', [self::CONSUMABLES => __('report.issueact.kind_consumables'), self::EQUIPMENT => __('report.issueact.kind_equipment'),
+                                                       self::ALL => __('report.issueact.kind_all')], self::CONSUMABLES));
+        $this->filter->add(new TextInput('title', self::defaultTitle(self::CONSUMABLES)));
         $this->filter->add(new CheckBox('allitems'));
         $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
 
@@ -36,7 +44,16 @@ class IssueAct extends \App\Pages\Base
         $this->detail->add(new Label('preview'));
     }
 
+    private static function defaultTitle(int $kind): string {
+        return __([self::ALL => 'report.issueact.default_title', self::CONSUMABLES => 'report.issueact.title_consumables', self::EQUIPMENT => 'report.issueact.title_equipment'][$kind] ?? 'report.issueact.default_title');
+    }
+
     public function OnSubmit($sender) {
+        // заголовок по умолчанию следует за выбором «расходники / оборудование», введенный вручную остается
+        $title = trim($this->filter->title->getText());
+        if ($title == '' || in_array($title, array_map([self::class, 'defaultTitle'], [self::ALL, self::CONSUMABLES, self::EQUIPMENT]), true)) {
+            $this->filter->title->setText(self::defaultTitle(intval($this->filter->kind->getValue())));
+        }
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
@@ -48,6 +65,7 @@ class IssueAct extends \App\Pages\Base
         $year = intval($this->filter->year->getValue());
         $month = intval($this->filter->month->getValue());
         $cat = intval($this->filter->cat->getValue());
+        $kind = intval($this->filter->kind->getValue());
         $from = sprintf('%04d-%02d-01', $year, $month);
         $to = date('Y-m-t', strtotime($from));
 
@@ -55,7 +73,12 @@ class IssueAct extends \App\Pages\Base
         if ($cat > 0) {
             $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
         }
-        // возврат относится к колонке выдачи, на основании которой создан
+        // возврат относится к колонке выдачи, на основании которой создан; договор — в заголовке выдачи или самого возврата
+        $contract = fn($t) => "CAST(REGEXP_SUBSTR(REGEXP_SUBSTR({$t}.content, '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED)";
+        if ($kind != self::ALL) {
+            $equipment = "(st.snumber <> '' OR COALESCE({$contract('d')}, 0) > 0 OR COALESCE({$contract('base')}, 0) > 0)";
+            $where .= ' AND ' . ($kind == self::EQUIPMENT ? $equipment : "NOT {$equipment}");
+        }
         $sql = "SELECT COALESCE(base.document_date, d.document_date) AS issue_date,
                        COALESCE(base.customer_id, d.customer_id) AS customer_id,
                        i.item_id, i.itemname, SUM(-e.quantity) AS qty
