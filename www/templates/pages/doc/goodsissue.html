@@ -1,13 +1,13 @@
 <html>
      <head>
-          <title> {{#t}}doc.goodsissue.vydatkova_nakladna{{/t}}</title>
+          <title> {{#sqs_charity}}{{#t}}sqs.charity.issue_doc{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}doc.goodsissue.vydatkova_nakladna{{/t}}{{/sqs_charity}}</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>{{#t}}doc.goodsissue.vydatkova_nakladna{{/t}} </h3>
+            <h3>{{#sqs_charity}}{{#t}}sqs.charity.issue_doc{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}doc.goodsissue.vydatkova_nakladna{{/t}}{{/sqs_charity}} </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="mb-2">
@@ -32,7 +32,7 @@
                     </div> 
                       {{/storeemp}}                    
                      <div class="mb-2">
-                        <label for="customer">{{#t}}common.pokupets{{/t}}</label>
+                        <label for="customer">{{#sqs_charity}}{{#t}}sqs.charity.recipient{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.pokupets{{/t}}{{/sqs_charity}}</label>
                          <div class="input-group  ">
                              <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}" class="form-control " zippy="customer"/>
                             
@@ -69,13 +69,13 @@
                         <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
-                    <div class="mb-2">
+                    <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="payment">{{#t}}common.kasa_rakhunok{{/t}}</label>
                         <select class="form-control" zippy="payment">
                             <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                         </select>
                     </div>
-          <div class="mb-2">
+          <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="pricetype">{{#t}}common.typ_tsiny{{/t}}</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
@@ -90,11 +90,11 @@
 
                 </div>
                 <div class="col-12 col-md-4  col-xl-3">
-                    <div class="mb-2">
+                    <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="order">{{#t}}common.zamovlennia{{/t}}</label>
                         <input readonly  class="form-control-plaintext" type="text" zippy="order">
                     </div>                    
-                     <div class="mb-2">
+                     <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="salesource">{{#t}}common.dzherelo_prodazh{{/t}}</label>
                         <select class="form-control" zippy="salesource">
                             <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
@@ -130,10 +130,10 @@
 
 
                             <th class="text-end">{{#t}}common.kil{{/t}}</th>
-                            <th class="text-end"><i class="fa fa-gift"></i>,%</th>
-                            <th class="text-end">{{#t}}common.tsina{{/t}}</th>
+                            <th class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}"><i class="fa fa-gift"></i>,%</th>
+                            <th class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}">{{#t}}common.tsina{{/t}}</th>
                           
-                            <th class="text-end">{{#t}}common.suma{{/t}}</th>
+                            <th class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}">{{#t}}common.suma{{/t}}</th>
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
@@ -146,16 +146,16 @@
 
 
                             <td zippy="quantity" class="text-end"></td>
-                            <td zippy="disc" class="text-end"></td>
-                            <td zippy="price" class="text-end"></td>
+                            <td zippy="disc" class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}"></td>
+                            <td zippy="price" class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}"></td>
                             
 
-                            <td zippy="amount" class="text-end"></td>
+                            <td zippy="amount" class="text-end{{#sqs_charity}} d-none{{/sqs_charity}}"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp; <a zippy="delete"><i
                                         class="fa fa-trash"></i></a></td>
 
                         </tr>
-                        <tr style="font-weight: bolder;" >
+                        <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;" >
 
                             <td></td>
                             <td></td>
@@ -176,7 +176,7 @@
                             <td></td>
                         </tr>
                          {{#usends}} 
-                         <tr style="font-weight: bolder;" >
+                         <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;" >
 
                             <td></td>
                             <td></td>
@@ -201,7 +201,7 @@
 
                
                         {{^usends}} 
-                         <tr style="font-weight: bolder;" >
+                         <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;" >
 
                             <td></td>
                             <td></td>
@@ -227,7 +227,7 @@
 
                
  
-                        <tr style="font-weight: bolder;">
+                        <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;">
 
                             <td colspan="8" class="text-end"><span data-label="payamount">{{#t}}common.do_splaty_2{{/t}}</span></td>
 
@@ -236,13 +236,13 @@
                             <td></td>
                         </tr>
                         {{#prepaid}}
-                       <tr style="font-weight: bolder;">
+                       <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;">
                             <td data-label="prepaid" colspan="8" class="text-end">{{#t}}common.peredplata_2{{/t}}</td>
                             <td zippy="prepaid" class="text-end">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}                        
-                        <tr style="font-weight: bolder;">
+                        <tr class="{{#sqs_charity}}d-none{{/sqs_charity}}" style="font-weight: bolder;">
 
                             <td colspan="8" class="text-end"><span data-label="payed">{{#t}}common.vneseno_oplatu{{/t}}</span></td>
 
@@ -327,9 +327,9 @@
                        <br>  {{#t}}common.na_skladi_2{{/t}} <span zippy="qtystock"></span>
                              {{#t}}doc.goodsissue.nbsp_na_inshykh_skladakh{{/t}} <span zippy="qtystockex"></span>
 
-                         {{^noshowpartion}}
+                         {{^noshowpartion}}{{^sqs_charity}}
                         <br>{{#t}}common.oblikova_tsina_2{{/t}} <span zippy="pricestock"></span>
-                         {{/noshowpartion}}
+                         {{/sqs_charity}}{{/noshowpartion}}
 
                     </div>
                     {{#usesnumber}}
@@ -347,7 +347,7 @@
 
                     </div>
 
-                    <div class="mb-2">
+                    <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="editprice">{{#t}}common.tsina{{/t}} </label>
                         <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.\s]+"
                                style="width: 100px;">
@@ -372,7 +372,7 @@
             </div>
         </div>
         <form zippy="editcust">
-            <h3>{{#t}}common.nbsp_novyi_pokupets{{/t}} </h3>
+            <h3>{{#sqs_charity}}{{#t}}sqs.charity.new_recipient{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.nbsp_novyi_pokupets{{/t}}{{/sqs_charity}} </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 

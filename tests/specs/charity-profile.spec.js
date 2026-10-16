@@ -81,6 +81,8 @@ test('расходная накладная в профиле: «Видав / О
   let p = await freshPage(browser);
   let text = await printForm(p, id);
   expect(text).toContain('Отримувач ' + recipient);
+  expect(text).toContain(`Видача № ${number} від `);
+  expect(text).not.toContain('Видаткова накладна');
   expect(text).toContain('Видав ___');
   expect(text).toContain('Позиция ' + code);
   expect(text).not.toMatch(/Продавець|Покупець|Списано з/);
@@ -92,6 +94,7 @@ test('расходная накладная в профиле: «Видав / О
   text = await printForm(p, id);
   expect(text).toMatch(/Покупець/);
   expect(text).toMatch(/Продавець/);
+  expect(text).toContain(`Видаткова накладна № ${number}`);
   await p.context().close();
 });
 
@@ -169,17 +172,25 @@ test('названия в профиле: «Видача», «Надходжен
   const names = () => value(`select group_concat(concat(meta_name, '=', description, '/', menugroup) order by meta_name separator ';') from metadata
                              where meta_type = 1 and meta_name in ('GoodsIssue', 'ReturnIssue', 'GoodsReceipt', 'RetCustIssue')`);
   const before = 'GoodsIssue=Видаткова накладна/Продажі;GoodsReceipt=Прибуткова накладна/Закупівлі;RetCustIssue=Повернення постачальнику/Закупівлі;ReturnIssue=Повернення від покупця/Продажі';
+  // отчеты: группа «Закупівлі» и отчет «Закупівлі» в ней
+  const reports = () => value(`select group_concat(concat(meta_name, '=', description, '/', menugroup) order by meta_name separator ';') from metadata
+                               where meta_type = 2 and meta_name in ('Income', 'CustOrder')`);
+  const reportsBefore = 'CustOrder=ТМЦ в дорозі/Закупівлі;Income=Закупівлі/Закупівлі';
   expect(names()).toBe(before);
+  expect(reports()).toBe(reportsBefore);
 
   webPhp('cli/charity-profile.php');
   expect(names()).toBe('GoodsIssue=Видача (накладна)/Видача;GoodsReceipt=Прибуткова накладна/Надходження;RetCustIssue=Повернення постачальнику/Надходження;ReturnIssue=Повернення від отримувача/Видача');
+  expect(reports()).toBe('CustOrder=ТМЦ в дорозі/Надходження;Income=Надходження/Надходження');
   const p = await freshPage(browser);
   await p.goto('/');
   await expect(p.locator('a[href$="Doc/GoodsIssue"]').first()).toHaveText('Видача (накладна)');
   await expect(p.locator('a[href$="Doc/ReturnIssue"]').first()).toHaveText('Повернення від отримувача');
+  await expect(p.locator('a[href$="Report/Income"]').first()).toHaveText('Надходження');
   await p.context().close();
   webPhp('cli/charity-profile.php', '--back');
   expect(names()).toBe(before);
+  expect(reports()).toBe(reportsBefore);
 
   // название, измененное вручную, профиль и --back оставляют как есть
   query(`update metadata set description = 'Повернення (своє)' where meta_type = 1 and meta_name = 'ReturnIssue'`);
@@ -191,4 +202,62 @@ test('названия в профиле: «Видача», «Надходжен
   } finally {
     query(`update metadata set description = 'Повернення від покупця' where meta_type = 1 and meta_name = 'ReturnIssue'`);
   }
+});
+
+// остаток позиции на складах
+const stockOf = code => Number(value(`select coalesce(sum(s.qty), 0) from store_stock s join items i on i.item_id = s.item_id where i.item_code = '${esc(code)}'`));
+// сумма, оплата, касса и статус документа; число платежей по нему
+const moneyOf = id => value(`select concat(amount, '|', payamount, '|', payed, '|', state, '|', (select count(*) from paylist p where p.document_id = d.document_id))
+                             from documents d where document_id = ${id}`);
+
+test('формы выдачи и возврата в профиле: «Отримувач», без каси, цін і оплати; ціна 0, залишки сходяться', async ({ browser, page, uniq }) => {
+  const code = 'CF-' + uniq, recipient = 'Получатель ' + uniq;
+  await createItem(page, { name: 'Позиция ' + code, code });
+  query(`update items set detail = replace(detail, '<price1></price1>', '<price1>15</price1>') where item_code = '${esc(code)}'`);   // у позиции есть цена продажи
+  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) });
+  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
+
+  webPhp('cli/charity-profile.php');
+  const p = await freshPage(browser);
+  await p.goto('/index.php?p=App/Pages/Doc/GoodsIssue');
+  await expect(p.locator('#docform h3')).toHaveText('Видача (накладна)');
+  await expect(p.locator('#docform label[for=customer]')).toHaveText('Отримувач');
+  for (const id of ['payment', 'pricetype', 'order', 'salesource', 'payamount', 'payed', 'total']) {
+    await expect(p.locator('#docform #' + id), id).toBeHidden();
+  }
+  await expect(p.locator('#docform th', { hasText: 'Ціна' })).toBeHidden();
+  await expect(p.locator('#docform th', { hasText: 'Сума' })).toBeHidden();
+  await clickWait(p, '#addrow');
+  await expect(p.locator('#editdetail #editprice')).toBeHidden();
+  const { number } = await createDoc(p, 'GoodsIssue', { date: '2026-10-02', customer: recipient, rows: [{ code, qty: 2 }] });
+  const issueId = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  expect(moneyOf(issueId), 'выдача бесплатная: сумма 0, без оплаты, проведена').toBe('0.00|0.00|0.00|5|0');
+  expect(stockOf(code)).toBe(3);
+
+  await p.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + issueId);
+  await expect(p.locator('#docform h3')).toHaveText('Повернення від отримувача');
+  await expect(p.locator('#docform label[for=customer]')).toHaveText('Отримувач');
+  for (const id of ['payment', 'payamount', 'payed', 'total']) {
+    await expect(p.locator('#docform #' + id), id).toBeHidden();
+  }
+  await expect(p.locator('#docform th', { hasText: 'Ціна' })).toBeHidden();
+  await p.locator('#document_date').fill('2026-10-03');
+  await p.locator('#docform #notes').fill('Возврат ' + uniq);
+  await clickWait(p, '#execdoc');
+  expect(await p.locator('#docform #execdoc:visible').count(), (await messages(p)).join(' ')).toBe(0);
+  const returnId = value(`select max(d.document_id) from documents d join metadata m on m.meta_id = d.meta_id where m.meta_name = 'ReturnIssue' and d.parent_id = ${issueId}`);
+  expect(moneyOf(returnId), 'возврат: без оплаты, проведен').toBe('0.00|0.00|0.00|5|0');
+  expect(stockOf(code)).toBe(5);
+  await p.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');   // без профиля — форма ядра
+  const q = await freshPage(browser);
+  await q.goto('/index.php?p=App/Pages/Doc/GoodsIssue');
+  await expect(q.locator('#docform label[for=customer]')).toHaveText('Покупець');
+  await expect(q.locator('#docform #payment')).toBeVisible();
+  await expect(q.locator('#docform th', { hasText: 'Ціна' })).toBeVisible();
+  await q.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=' + returnId);
+  await expect(q.locator('#docform label[for=customer]')).toHaveText('Покупець');
+  await expect(q.locator('#docform #payment')).toBeVisible();
+  await q.context().close();
 });
