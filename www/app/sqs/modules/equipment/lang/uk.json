@@ -170,5 +170,12 @@
     "sqs.units.title": "Одиниці обладнання",
     "sqs.units.until": "до",
     "sqs.units.where": "Де зараз",
-    "sqs.units.written_off": "списана"
+    "sqs.units.written_off": "списана",
+    "sqs.extend.title": "Подовжити строк користування",
+    "sqs.extend.current": "Строк зараз",
+    "sqs.extend.help": "Змінюється лише строк договору: статус «В роботі» та решта залишаються. У коментарях договору запишеться, хто і коли змінив строк.",
+    "sqs.extend.save": "Подовжити",
+    "sqs.extend.link": "Подовжити",
+    "sqs.extend.note": "Строк користування змінено: {from} → {to}",
+    "sqs.extend.done": "Договір {number}: строк {term}"
 }

@@ -43,8 +43,15 @@ class EquipmentWhere extends \App\Pages\Base
     public function OnSubmit($sender) {
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+        // кнопка «Продлить» — только на экране, не в печати и Excel
+        $export = preg_replace('#\s*<a class="sqs-extend[^"]*"[^>]*>.*?</a>#su', '', $html);
+        \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $export . "</body></html>");
         $this->detail->setVisible(true);
+    }
+
+    // продлить срок договора (App\Pages\Service\EquipmentExtend) — для выданного по договору
+    private static function extendUrl($contract_id): string {
+        return \App\ACL::checkShowSer('EquipmentIssue', false) ? '/index.php?p=App/Pages/Service/EquipmentExtend&arg=' . intval($contract_id) . '/where' : '';
     }
 
     private function generateReport() {
@@ -83,7 +90,7 @@ class EquipmentWhere extends \App\Pages\Base
         $factory = \App\SQS\Units::factoryMap();   // заводские номера единиц (sqs_unit)
         foreach ($units as $u) {
             $row = ['itemname' => $u['itemname'], 'snumber' => $u['snumber'], 'factory' => $factory[\App\SQS\Units::key((int)$u['item_id'], $u['snumber'])] ?? '', 'where' => '', 'customer' => '', 'phone' => '', 'address' => '',
-                    'contract' => '', 'date' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'document' => ''];
+                    'contract' => '', 'date' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'document' => '', 'extend' => ''];
             $l = $last[$u['item_id'] . '|' . $u['snumber']] ?? null;
             $doc = $l ? \App\Entity\Doc\Document::load($l['document_id']) : null;
             if ($doc) {
@@ -112,6 +119,7 @@ class EquipmentWhere extends \App\Pages\Base
                     $end = intval($contract->enddate);
                     $row['term'] = ($end == 0 || date('Y', $end) >= 2099) ? __('report.equipmentwhere.until_demand') : H::fd($end);
                     $row['overdue'] = $end > 0 && date('Y', $end) < 2099 && $end < $today;
+                    $row['extend'] = self::extendUrl($contract->contract_id);
                 }
             }
             if ($state == 'active' && $kind == 'off' || $state != 'active' && $state != 'all' && $state != $kind) {
@@ -187,7 +195,7 @@ class EquipmentWhere extends \App\Pages\Base
             $c = $customers[$r['customer_id']] ??= \App\Entity\Customer::load($r['customer_id']);
             $row = ['itemname' => $r['itemname'], 'customer' => $c->customer_name ?? '', 'phone' => $c->phone ?? '', 'address' => $c->address ?? '',
                     'qty' => H::fqty($r['qty']), 'date' => H::fd(strtotime($r['last']['document_date'])), 'document' => $r['last']['document_number'],
-                    'contract' => '', 'term' => '', 'sent' => '', 'overdue' => false];
+                    'contract' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'extend' => ''];
             $contract = \App\Entity\Contract::load(intval($r['last']['contract_id']));
             if ($contract) {
                 $end = intval($contract->enddate);
@@ -195,6 +203,7 @@ class EquipmentWhere extends \App\Pages\Base
                 $row['sent'] = $contract->shortdesc;
                 $row['term'] = ($end == 0 || date('Y', $end) >= 2099) ? __('report.equipmentwhere.until_demand') : H::fd($end);
                 $row['overdue'] = $end > 0 && date('Y', $end) < 2099 && $end < strtotime(date('Y-m-d'));
+                $row['extend'] = self::extendUrl($contract->contract_id);
             }
             // поиск тот же, что у единиц: позиция или получатель
             if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['customer']), $text)) {

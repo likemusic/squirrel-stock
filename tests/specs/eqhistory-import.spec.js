@@ -156,8 +156,8 @@ test('импорт истории оборудования: проверка, з
   expect(value(`select concat(detail like '%<useserial>1</useserial>%', '|', coalesce((select sum(qty) from store_stock s where s.item_id = items.item_id), 0)) from items where itemname = 'Мешки Амбу'`)).toMatch(/^0\|/);
   expect(qty(inv(6))).toBe(0);
   expect(lastDoc(inv(6))).toBe('OutcomeItem');
-  expect(value(`select i.itemname from store_stock s join items i on i.item_id = s.item_id where s.snumber = 'KR-${uniq}'`)).toBe('кровати');
-  expect(qty(`KR-${uniq}`)).toBe(0);
+  expect(value(`select i.itemname from store_stock s join items i on i.item_id = s.item_id where s.snumber = 'KR1-${uniq}'`)).toBe('кровати');
+  expect(qty(`KR1-${uniq}`)).toBe(0);
   expect(value(`select phone from customers where customer_name = '${who(1)}'`)).toBe('375291110001');
   // документы — в хронологическом порядке: выдача единицы 3 (2024) раньше ее возврата (2025)
   expect(value(`select date(d.document_date) from documents d join entrylist e on e.document_id = d.document_id join store_stock s on s.stock_id = e.stock_id
