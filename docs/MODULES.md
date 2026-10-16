@@ -62,8 +62,9 @@ class Hello extends \App\Pages\Base
 | `import1c` | 1C trial balance import page | `import-1c`, `import-1c-same-name`, `import-1c-date` |
 | `backup` | backup page, scheduled backup to several places (`cli/backup.php` is a wrapper), main page warning (table `sqs_backuplog`) | `backup`, `backup-auto`, `backup-main-warning` |
 | `equipment` | equipment issue by contract, units, where now, issue journal, history import, main page reminder (tables `sqs_unit`, `sqs_eqhistory`) | `equipment-issue`, `equipment-due`, `report-equipment-where`, `report-equipment-journal`, `eqhistory-import`, `eqhistory-write` |
+| `update` | "Service pages → Program update": version, update history, package file check, removal of files left by old versions (`App\SQS\Release`, docs/UPDATE.ru.md) | `app-update`, `tools/install/test-update.sh` |
 
-Platform code outside modules (`www/app/sqs/`): `Hooks`, `Modules`, `Categories`, login security (`Remember`, `LoginGuard`, `Totp`, `TwoFactor` and its pages), the document audit log (`DocAudit`), 1C names (`Item1C`, used by the issue act and the import), serial number stock on the document date (`SerialStock`, called from goods issue and write-off). Its tables are in `www/app/sqs/schema.sql`; like module schemas, the file is applied automatically when it changes (and after restoring a backup).
+Platform code outside modules (`www/app/sqs/`): `Hooks`, `Modules`, `Categories`, login security (`Remember`, `LoginGuard`, `Totp`, `TwoFactor` and its pages), the document audit log (`DocAudit`), 1C names (`Item1C`, used by the issue act and the import), serial number stock on the document date (`SerialStock`, called from goods issue, write-off, move, return to supplier and stocktaking), program version and package file list (`Release`: `config/version.txt`, `config/manifest.txt` from the release build; version change noted by `Modules`). Its tables are in `www/app/sqs/schema.sql`; like module schemas, the file is applied automatically when it changes (and after restoring a backup).
 
 ## Document hooks
 

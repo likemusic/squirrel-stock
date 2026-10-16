@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # Сборка SquirrelStock для установки без Docker (хостинг с Apache, свой сервер):
-#   dist/squirrel-stock-<версия>.zip       — содержимое корня сайта: код из git (HEAD) + vendor + config.php для заполнения
+#   dist/squirrel-stock-<версия>.zip       — содержимое корня сайта: код из git (HEAD) + vendor + config/config.example.php
+#                                            для заполнения (не config.php: распаковка нового пакета поверх не затирает настройки),
+#                                            config/version.txt (версия) и config/manifest.txt (файлы пакета с md5 — по нему
+#                                            «Сервис → Обновление программы» находит остатки старых версий и недораспакованное)
 #   dist/squirrel-stock-<версия>-empty.sql — пустая база: db/db.sql + www/app/sqs/schema.sql
 #   dist/squirrel-stock-<версия>-demo.sql  — демо-база с вымышленными данными (db/demo/squirrelstock-demo.zip), вход admin / admin
 # Нужны git, docker, python3. Зависимости composer берутся из образа docker/Dockerfile.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-ver=$(git describe --always --dirty)
+# версия: дата коммита и его номер — по ней видно, что новее (2026.10.16-d2489fb22)
+ver=$(git log -1 --format=%cd --date=format:%Y.%m.%d HEAD)-$(git rev-parse --short=9 HEAD)
+[[ -z $(git status --porcelain --untracked-files=no) ]] || ver=$ver-dirty
 [[ $ver == *-dirty ]] && echo "внимание: в рабочей копии есть незакоммиченные изменения, в архив идёт HEAD" >&2
 out=dist
 stage=$(mktemp -d)
@@ -17,7 +22,11 @@ git archive HEAD www | tar -x -C "$stage"
 rm -f "$stage/www/script_examples.zip"   # примеры скриптов автора Zippy на сайте не нужны
 docker create --name sqs-release squirrelstock-web:release >/dev/null
 docker cp -q sqs-release:/var/www/html/vendor "$stage/www/vendor"
-cp tools/release/config.php "$stage/www/config/config.php"
+rm -f "$stage/www/config/config.php"   # настройки стенда Docker
+cp tools/release/config.php "$stage/www/config/config.example.php"
+echo "${ver%-dirty}" > "$stage/www/config/version.txt"   # в архиве HEAD — без «-dirty»
+(cd "$stage/www" && find . -type f ! -path ./config/manifest.txt -printf '%P\n' | LC_ALL=C sort | xargs -d '\n' md5sum > "$stage/manifest.txt")
+mv "$stage/manifest.txt" "$stage/www/config/manifest.txt"
 
 mkdir -p "$out"
 rm -f "$out/squirrel-stock-$ver.zip"
