@@ -68,12 +68,17 @@ class EquipmentJournal extends \App\Pages\Base
                 WHERE {$where} AND e.quantity < 0
                 ORDER BY d.document_date, d.document_id, i.itemname, s.snumber";
 
+        // документы, получатели и договоры — пакетно (App\SQS\Units::docs)
+        $rows = $conn->GetAll($sql);
+        $docs = \App\SQS\Units::docs(array_column($rows, 'document_id'));
+        $customers = \App\SQS\Units::customers(array_column($docs, 'customer_id'));
+        $contracts = \App\SQS\Units::contracts(array_column($docs, 'contract_id'));
         $detail = [];
         $n = 1;
-        foreach ($conn->Execute($sql) as $r) {
-            $doc = \App\Entity\Doc\Document::load($r['document_id']);
-            $c = $doc->customer_id > 0 ? \App\Entity\Customer::load($doc->customer_id) : null;
-            $contract = intval($doc->headerdata['contract_id'] ?? 0) > 0 ? \App\Entity\Contract::load($doc->headerdata['contract_id']) : null;
+        foreach ($rows as $r) {
+            $doc = $docs[(int)$r['document_id']];
+            $c = $customers[$doc['customer_id']] ?? null;
+            $contract = $contracts[$doc['contract_id']] ?? null;
             $term = '';
             if ($contract) {
                 $end = intval($contract->enddate);
@@ -92,7 +97,7 @@ class EquipmentJournal extends \App\Pages\Base
                 'date'          => H::fd(strtotime($r['document_date'])),
                 'term'          => $term,
                 'returned'      => $r['returned'] ? H::fd(strtotime($r['returned'])) : '',
-                'notes'         => $doc->notes,
+                'notes'         => $doc['notes'],
             ];
         }
 

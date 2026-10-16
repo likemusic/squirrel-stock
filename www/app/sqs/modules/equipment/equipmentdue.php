@@ -16,10 +16,11 @@ class EquipmentDue
     public static function tvars(): array {
         $today = strtotime(date('Y-m-d'));
         $rows = [];
-        $customers = [];
         $canExtend = \App\ACL::checkShowSer('EquipmentIssue', false);   // продлить срок (App\Pages\Service\EquipmentExtend)
-        foreach (Units::dueSoon(self::DAYS) as $u) {
-            $c = $customers[$u['customer_id']] ??= \App\Entity\Customer::load($u['customer_id']);
+        $due = Units::dueSoon(self::DAYS);
+        $customers = Units::customers(array_column($due, 'customer_id'));
+        foreach ($due as $u) {
+            $c = $customers[$u['customer_id']] ?? null;
             $days = intval(round(($u['enddate'] - $today) / 86400));
             $rows[] = [
                 'customer' => $c->customer_name ?? '',
