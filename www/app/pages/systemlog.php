@@ -103,7 +103,7 @@ class SystemLog extends \App\Pages\Base
     public function OnRow($row) {
         $notify = $row->getDataItem();
 
-        $row->add(new Label("msg"))->setText($notify->message, true);
+        $row->add(new Label("msg"))->setText($notify->messageHtml(), true);   // SquirrelStock: разметка из данных — текстом
 
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);

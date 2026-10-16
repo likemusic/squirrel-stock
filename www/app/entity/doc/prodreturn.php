@@ -44,7 +44,7 @@ class ProdReturn extends Document
                         "pareaname"       => $this->headerdata["pareaname"],
                         "storename"       => $this->headerdata["storename"],
                         "document_number" => $this->document_number,
-                        "notes"           => nl2br($this->notes)
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes))
         );
 
         $report = new \App\Report('doc/prodreturn.tpl');

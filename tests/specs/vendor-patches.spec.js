@@ -24,3 +24,11 @@ test('Zippy HttpRequest: ссылка с параметром r принимае
   await expect(page.locator('#filter #onreport')).toHaveCount(0);
   expect(await page.locator('body').innerText()).not.toMatch(/Fatal|Warning|Exception/);
 });
+
+test('Zippy: правки вывода данных наложены (выпадающий список, скобки шаблона в данных)', async () => {
+  const src = f => execFileSync('docker', ['exec', WEB, 'cat', 'vendor/leon-mbs/zippy/core/' + f], { encoding: 'utf8' });
+  for (const f of ['html/form/dropdownchoice.php', 'html/form/multiplechoice.php', 'webapplication.php', 'html/pagefragment.php']) {
+    expect(src(f), f).toContain('SquirrelStock: cli/patch-vendor.php');
+  }
+  expect(src('webapplication.php'), 'прежний возврат %7B%7B убран').not.toContain('str_replace("%7B%7B", "{{"');
+});

@@ -82,7 +82,7 @@ class GoodsIssue extends Document
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 || strlen($mf->bank) > 0),
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
 
                         "iban"      => strlen($iban) > 0 ? $iban : false,
                         "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,

@@ -133,7 +133,7 @@ class EQ extends Document
             'invnumber'          => $eq->invnumber,
             'opname'          => $this->headerdata['optypename'],
             'amount'          => $this->amount,
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_date"      => H::fd($this->document_date),
             "document_number" => $this->document_number,
             "store_name" => $this->headerdata['store_name'] ??'',

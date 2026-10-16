@@ -73,7 +73,7 @@ class Order extends \App\Entity\Doc\Document
                         "paytypename"     => $this->getHD("paytypename",'') ,
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                         "outnumber"       => $this->headerdata["outnumber"]??'',
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
                         "document_number" => $this->document_number,
@@ -498,7 +498,7 @@ class Order extends \App\Entity\Doc\Document
                       
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
-                        "notes"           => nl2br($this->notes),
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
                         "outnumber"       => $this->headerdata["outnumber"]??'',
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
                         "document_number" => $this->document_number,

@@ -46,7 +46,7 @@ class ProdMove extends Document
                         "toname"       => $this->headerdata["pstoname"],
                         "emp"             => false,
                        "document_number" => $this->document_number,
-                        "notes"           => nl2br($this->notes)
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes))
         );
         if ($this->headerdata["emp"] > 0  ) {
             $header['emp'] = $this->headerdata["empname"];

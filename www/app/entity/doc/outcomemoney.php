@@ -52,7 +52,7 @@ class OutcomeMoney extends Document
             'amount'          => H::fa($this->amount),
             'totalstr'        => \App\Util::money2str($this->amount),
             'date'            => H::fd($this->document_date),
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
             "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"] : false,
             "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,

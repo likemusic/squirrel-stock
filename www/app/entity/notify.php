@@ -48,6 +48,20 @@ class Notify extends \ZCL\DB\Entity
         }
     }
 
+    /**
+     * SquirrelStock: текст уведомления для вывода как HTML (NotifyList, SystemLog). В уведомлениях — сообщения
+     * пользователей друг другу и системные с номерами документов, именами, примечаниями; разметка из этих данных
+     * становилась элементами страницы. Экранируется все; в системных (не от пользователя) <b>, </b> и <br> остаются —
+     * ими оформлены сообщения программы.
+     */
+    public function messageHtml(): string {
+        $h = nl2br(htmlspecialchars((string)$this->message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+        if ($this->sender_id > 0) {
+            return $h;
+        }
+        return str_replace(['&lt;b&gt;', '&lt;/b&gt;', '&lt;br&gt;', '&lt;br/&gt;', '&lt;br /&gt;'], ['<b>', '</b>', '<br>', '<br>', '<br>'], $h);
+    }
+
     //количество непрочитанных уведомлений
     public static function isNotify($user_id) {
         $conn = \ZCL\DB\DB::getConnect();

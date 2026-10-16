@@ -53,7 +53,7 @@ class MovePart extends Document
             "from"            => $this->headerdata["fromstockname"],
             "to"              => $this->headerdata["tostockname"],
             "qty"             => H::fqty($this->headerdata["qty"]),
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/movepart.tpl');

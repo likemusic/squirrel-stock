@@ -85,7 +85,7 @@
     {{#_detail}}
     <tr>
         <td align="right" valign="top">{{no}}</td>
-        <td colspan="2">{{{tovar_name}}}</td>
+        <td colspan="2">{{tovar_name}}</td>
         <td colspan="2" valign="top" data-type="s">{{tovar_code}}</td>
         <td valign="top">{{msr}}</td>
         <td valign="top">{{desc}}</td>

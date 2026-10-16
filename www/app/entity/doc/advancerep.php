@@ -109,7 +109,7 @@ class AdvanceRep extends Document
             "to"              => $this->headerdata["storename"],
             "emp"             => $this->headerdata["empname"],
             "storeemp"             => false,
-            "notes"           => nl2br($this->notes),
+            "notes"           => nl2br(htmlspecialchars((string)$this->notes)),
             "document_number" => $this->document_number
         );
         $header['spentamount'] = false;

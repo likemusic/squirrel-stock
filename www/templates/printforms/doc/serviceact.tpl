@@ -109,10 +109,10 @@
         </td>
     </tr>
     <tr>
-        <td colspan="7"  ><small>{{{devdesc}}}</small></td>
+        <td colspan="7"  ><small>{{devdesc}}</small></td>
     </tr>
     <tr>
-        <td colspan="7"><small>{{{notes}}}</small></td>
+        <td colspan="7"><small>{{notes}}</small></td>
     </tr>
        {{#payamount}}
    

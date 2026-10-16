@@ -45,7 +45,7 @@ class ProdIssue extends Document
                         "storename"       => $this->headerdata["storename"],
                         "document_number" => $this->document_number,
                         "emp"             => false,
-                        "notes"           => nl2br($this->notes)
+                        "notes"           => nl2br(htmlspecialchars((string)$this->notes))
         );
         if ($this->headerdata["emp"] > 0  ) {
             $header['emp'] = $this->headerdata["empname"];
