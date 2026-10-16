@@ -68,3 +68,29 @@ test('журнал выдач в профиле: статус «Все», наз
   await expect(page.locator('h3').first()).toHaveText('Журнал продажів');
   await page.context().close();
 });
+
+test('расходная накладная в профиле: «Видав / Отримувач», адреса один раз', async ({ browser, page, uniq }) => {
+  const code = 'CP-' + uniq, recipient = 'Получатель ' + uniq;
+  await createItem(page, { name: 'Позиция ' + code, code });
+  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7), address: 'г. Вымышленный, ул. Тестовая, 1' });
+  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
+  const { number } = await createDoc(page, 'GoodsIssue', { date: '2026-10-02', customer: recipient, payment: 0, rows: [{ code, qty: 2, price: 0 }] });
+  const id = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+
+  webPhp('cli/charity-profile.php');
+  let p = await freshPage(browser);
+  let text = await printForm(p, id);
+  expect(text).toContain('Отримувач ' + recipient);
+  expect(text).toContain('Видав ___');
+  expect(text).toContain('Позиция ' + code);
+  expect(text).not.toMatch(/Продавець|Покупець|Списано з/);
+  expect(text.match(/Адреса/g) || []).toHaveLength(1);
+  await p.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');   // без профиля — форма ядра
+  p = await freshPage(browser);
+  text = await printForm(p, id);
+  expect(text).toMatch(/Покупець/);
+  expect(text).toMatch(/Продавець/);
+  await p.context().close();
+});
