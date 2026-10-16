@@ -75,6 +75,41 @@ class IssueInterval
     }
 
     /**
+     * Когда получателю можно следующую выдачу по каждому правилу, по которому он что-то получал (карточка получателя):
+     * [['what' => позиция или категория, 'days', 'last' => дата последней выдачи, 'lastitem' => что выдали, 'next' => дата, с которой можно], ...]
+     * Считается так же, как предупреждение warning(): правило позиции — эта позиция, правило категории — любая позиция категории и подкатегорий.
+     */
+    public static function nextIssues(int $customer_id): array {
+        $conn = \ZDB\DB::getConnect();
+        $out = [];
+        foreach ($conn->Execute("SELECT kind, ref_id, days FROM sqs_issue_interval WHERE days > 0") as $r) {
+            $ref = intval($r['ref_id']);
+            if ($r['kind'] == 'item') {
+                $what = "st.item_id = {$ref}";
+                $name = (string)$conn->GetOne("SELECT itemname FROM items WHERE item_id = {$ref}");
+            } else {
+                $what = 'i.cat_id IN (' . implode(',', Categories::withChildren($ref) ?: [0]) . ')';
+                $name = (string)$conn->GetOne("SELECT cat_name FROM item_cat WHERE cat_id = {$ref}");
+            }
+            $last = $conn->GetRow("SELECT d.document_date, i.itemname FROM entrylist e
+                                   JOIN documents d ON d.document_id = e.document_id
+                                   JOIN metadata m ON m.meta_id = d.meta_id
+                                   JOIN store_stock st ON st.stock_id = e.stock_id
+                                   JOIN items i ON i.item_id = st.item_id
+                                   WHERE m.meta_name = 'GoodsIssue' AND e.quantity < 0 AND d.customer_id = " . intval($customer_id) . " AND {$what}
+                                   ORDER BY d.document_date DESC, d.document_id DESC LIMIT 1");
+            if (!$last) {
+                continue;
+            }
+            $date = strtotime(date('Y-m-d', strtotime($last['document_date'])));
+            $out[] = ['what' => $name, 'kind' => $r['kind'], 'days' => intval($r['days']), 'last' => $date, 'lastitem' => $last['itemname'],
+                      'next' => strtotime(date('Y-m-d', $date) . ' +' . intval($r['days']) . ' days')];
+        }
+        usort($out, fn($a, $b) => [$a['next'], $a['what']] <=> [$b['next'], $b['what']]);
+        return $out;
+    }
+
+    /**
      * Обработчик afterExecute расходной накладной (App\SQS\Hooks): предупреждение после проведения — запретить нельзя,
      * трубку выдают раньше срока, если она повредилась. Форма «Выдача расходников» предупреждает сама и ставит sqs_interval_checked.
      */

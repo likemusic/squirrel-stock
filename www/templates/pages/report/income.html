@@ -1,12 +1,12 @@
 <html>
    <head>
-        <title> {{#t}}report.income.zvit_po_zakupkakh{{/t}}   </title>
+        <title> {{#sqs_charity}}{{#t}}sqs.charity.income_report{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}report.income.zvit_po_zakupkakh{{/t}}{{/sqs_charity}}   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   col-xl-10">
-                <h3>{{#t}}report.income.zvit_po_zakupkakh{{/t}}</h3>
+                <h3>{{#sqs_charity}}{{#t}}sqs.charity.income_report{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}report.income.zvit_po_zakupkakh{{/t}}{{/sqs_charity}}</h3>
                 <div class="navbar">
                     <form zippy="filter"  >
                       <div class="row  ">

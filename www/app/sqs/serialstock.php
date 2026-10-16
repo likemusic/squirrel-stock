@@ -7,7 +7,8 @@ use App\Entity\Item;
 /**
  * SquirrelStock: остаток единицы с серийным (инвентарным) номером на дату документа. Ядро при запрете минуса сверяет
  * только общий остаток позиции на сегодня, поэтому у модели с несколькими единицами выдавался уже выданный номер, а
- * документ задним числом уводил номер в минус на прошлые даты. Вызывается из проведения расходной накладной и списания.
+ * документ задним числом уводил номер в минус на прошлые даты. Вызывается из проведения документов, которые списывают
+ * со склада: расходная накладная, списание, перемещение, возврат поставщику, недостача по инвентаризации.
  */
 class SerialStock
 {
@@ -39,5 +40,15 @@ class SerialStock
         }
         $min = $min ?? $run;
         return max(0.0, round($qty - $min, 4));
+    }
+
+    /**
+     * Проверка при проведении: номера не хватает — исключение. Именно исключение, а не false из Execute(): проведение
+     * (Document::updateStatus) не смотрит, что вернул Execute(), и документ помечался проведенным без движений.
+     */
+    public static function check(Item $item, float $qty, int $store_id, \App\Entity\Doc\Document $doc): void {
+        if (self::shortage($item, $qty, $store_id, intval($doc->document_date), intval($doc->document_id)) > 0) {
+            throw new \Exception(__('sqs.serial_not_on_date', ['snumber' => $item->snumber, 'itemname' => $item->itemname, 'date' => date('d.m.Y', $doc->document_date)]));
+        }
     }
 }

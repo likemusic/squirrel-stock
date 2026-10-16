@@ -12,7 +12,7 @@ const { query, value, esc } = require('../helpers/db');
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
 
 test('одноименные позиции 1С: повторный импорт по цене, неоднозначные — в отчет; акт — по названию из 1С', async ({ page, uniq }, testInfo) => {
-  test.setTimeout(3 * 60_000);
+  test.setTimeout(6 * 60_000);
   const band = `Повязка тестовая ${uniq}`;
   const dir = testInfo.outputPath('osv');
   const tmp = `/tmp/i1c-${uniq}`;
@@ -20,7 +20,7 @@ test('одноименные позиции 1С: повторный импорт
   execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'make-1c-same.php'), `${WEB}:${tmp}/make.php`]);
   execFileSync('docker', ['exec', WEB, 'php', `${tmp}/make.php`, tmp, uniq]);
   fs.mkdirSync(dir, { recursive: true });
-  for (const f of ['v1', 'v2', 'v3', 'v4']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}.xls`, path.join(dir, f + '.xls')]);
+  for (const f of ['v1', 'v2', 'v3', 'v4', 'v5']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}.xls`, path.join(dir, f + '.xls')]);
   execFileSync('docker', ['exec', WEB, 'rm', '-rf', tmp]);
 
   // позиции с этим названием из 1С и остаток каждой: [[item_id, price1c, qty], ...] по возрастанию прошлой цены
@@ -84,4 +84,13 @@ test('одноименные позиции 1С: повторный импорт
   expect(await rows.first().innerText()).not.toContain('переименована');
   const cells = await rows.first().locator('td').allInnerTexts();
   expect(cells[cells.length - 1].trim()).toBe('5');
+
+  // кавычки в названии: программа сохраняет их как `, это не переименование; повторный импорт — те же позиции
+  const quoted = [`Мазь \`Тестовая\` ${uniq}`, `Крем \`Тестовый\` ${uniq}`];
+  for (let i = 0; i < 2; i++) {
+    await importFile('v5.xls');
+    expect(await page.locator('#i1c-notes').count() ? await page.locator('#i1c-notes').innerText() : '').not.toMatch(/перейменовано/i);
+    for (const q of quoted) expect(value(`select count(*) from items where itemname = '${esc(q)}'`), q).toBe('1');
+  }
+  expect(Number(value(`select sum(qty) from store_stock s join items i on i.item_id = s.item_id where i.itemname = '${esc(quoted[0])}'`))).toBe(8);
 });

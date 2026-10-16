@@ -10,7 +10,7 @@
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            {{#t}}print.income.zakupivli_po_tovaram{{/t}} <br><br>
+            {{#sqs_charity}}{{#t}}sqs.charity.income_by_items{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}print.income.zakupivli_po_tovaram{{/t}}{{/sqs_charity}} <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -43,7 +43,7 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        {{#t}}print.income.zakupivli_po_postachalnykam{{/t}} <br> <br>
+        {{#sqs_charity}}{{#t}}sqs.charity.income_by_suppliers{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}print.income.zakupivli_po_postachalnykam{{/t}}{{/sqs_charity}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -72,7 +72,7 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        {{#t}}print.income.zakupivli_po_datam{{/t}} <br> <br>
+        {{#sqs_charity}}{{#t}}sqs.charity.income_by_dates{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}print.income.zakupivli_po_datam{{/t}}{{/sqs_charity}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -136,7 +136,7 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        {{#t}}print.income.zakupivli_po_katehoriiam{{/t}} <br> <br>
+        {{#sqs_charity}}{{#t}}sqs.charity.income_by_categories{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}print.income.zakupivli_po_katehoriiam{{/t}}{{/sqs_charity}} <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
