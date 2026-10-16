@@ -175,6 +175,63 @@ class Units
     }
 
     /**
+     * Мелкое оборудование на руках (ответ хосписа 1.13): позиции без серийного номера, выданные расходной накладной по договору
+     * (так их заводит импорт истории, App\SQS\EqHistory). На руках = выдано по договорам минус возвращено (возврат по такой
+     * выдаче или с договором), по получателю и позиции; в списке строки, где осталось больше нуля:
+     * [['customer_id', 'item_id', 'itemname', 'qty', 'document_id', 'document_number', 'date', 'contract_id'], ...] — документ и договор последней выдачи.
+     * $customer_id > 0 — только этот получатель (карточка получателя).
+     */
+    public static function smallOnHand(int $cat = 0, int $customer_id = 0): array {
+        $conn = \ZDB\DB::getConnect();
+        $where = "s.snumber = '' AND m.meta_name IN ('GoodsIssue', 'ReturnIssue')";
+        if ($cat > 0) {
+            $where .= ' AND ' . Categories::sqlIn($cat);
+        }
+        $where .= $customer_id > 0 ? ' AND d.customer_id = ' . intval($customer_id) : ' AND d.customer_id > 0';
+        // договор — из заголовка документа (<contract_id>N</contract_id>), чтобы не загружать каждую выдачу расходников
+        $docs = $conn->Execute("SELECT d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname,
+                                       SUM(e.quantity) AS qty,
+                                       CAST(REGEXP_SUBSTR(REGEXP_SUBSTR(d.content, '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED) AS contract_id
+                                FROM entrylist e
+                                JOIN store_stock s ON s.stock_id = e.stock_id
+                                JOIN items i ON i.item_id = s.item_id
+                                JOIN documents d ON d.document_id = e.document_id
+                                JOIN metadata m ON m.meta_id = d.meta_id
+                                WHERE {$where}
+                                GROUP BY d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname
+                                ORDER BY d.document_date, d.document_id");
+        $rows = [];
+        $contractOf = [];   // выдача по договору: document_id => contract_id
+        foreach ($docs as $d) {
+            if ($d['meta_name'] == 'GoodsIssue') {
+                if (intval($d['contract_id']) <= 0) {
+                    continue;   // выдача расходников
+                }
+                $contractOf[$d['document_id']] = intval($d['contract_id']);
+            } elseif (intval($d['contract_id']) <= 0 && !isset($contractOf[$d['parent_id']])) {
+                continue;   // возврат не по договору
+            }
+            $k = $d['customer_id'] . '|' . $d['item_id'];
+            $r = $rows[$k] ?? ['customer_id' => intval($d['customer_id']), 'item_id' => intval($d['item_id']), 'itemname' => $d['itemname'], 'qty' => 0, 'last' => null];
+            $r['qty'] -= floatval($d['qty']);   // выдача — минус по складу, возврат — плюс
+            if ($d['meta_name'] == 'GoodsIssue') {
+                $r['last'] = $d;
+            }
+            $rows[$k] = $r;
+        }
+        $out = [];
+        foreach ($rows as $r) {
+            if ($r['qty'] <= 0 || $r['last'] == null) {
+                continue;
+            }
+            $out[] = ['customer_id' => $r['customer_id'], 'item_id' => $r['item_id'], 'itemname' => $r['itemname'], 'qty' => $r['qty'],
+                      'document_id' => intval($r['last']['document_id']), 'document_number' => $r['last']['document_number'],
+                      'date' => strtotime($r['last']['document_date']), 'contract_id' => intval($r['last']['contract_id'])];
+        }
+        return $out;
+    }
+
+    /**
      * Выданные единицы со сроком, который истек или истекает в ближайшие $days дней, — для напоминаний; сначала самые просроченные
      */
     public static function dueSoon(int $days = 14): array {

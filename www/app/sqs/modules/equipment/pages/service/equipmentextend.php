@@ -14,14 +14,15 @@ use Zippy\Html\Form\SubmitButton;
  * SquirrelStock: продлить срок пользования оборудованием — новая дата окончания договора («Срок до» или «до востребования»).
  * Штатно договор «В работе» не редактируется (Справочники → Договоры): пришлось бы переводить его в «Новый» и обратно.
  * Здесь меняется только дата окончания, статус остается; в комментарии договора — было → стало, кто и когда.
- * Открывается кнопкой «Продлить» из напоминания на главной (App\SQS\EquipmentDue) и из отчета «Оборудование: где сейчас»;
+ * Открывается кнопкой «Продлить» из напоминания на главной (App\SQS\EquipmentDue), из отчета «Оборудование: где сейчас» и из карточки получателя;
  * в меню нет. Право — как у «Выдачи оборудования по договору».
- * Адрес: Service/EquipmentExtend&arg=<contract_id>[/where] — после сохранения возврат на главную или в отчет (where).
+ * Адрес: Service/EquipmentExtend&arg=<contract_id>[/where|/card] — после сохранения возврат на главную, в отчет (where) или в карточку получателя договора (card).
  */
 class EquipmentExtend extends \App\Pages\Base
 {
     private int $contract_id = 0;
     private string $back = '';
+    private int $customer_id = 0;
 
     public function __construct($contract_id = 0, $back = '') {
         parent::__construct();
@@ -34,7 +35,8 @@ class EquipmentExtend extends \App\Pages\Base
             return;
         }
         $this->contract_id = intval($contract->contract_id);
-        $this->back = $back === 'where' ? 'where' : '';
+        $this->back = in_array($back, ['where', 'card'], true) ? $back : '';
+        $this->customer_id = intval($contract->customer_id);
 
         $end = intval($contract->enddate);
         $ondemand = self::onDemand($end);
@@ -61,6 +63,9 @@ class EquipmentExtend extends \App\Pages\Base
     }
 
     private function backUrl(): string {
+        if ($this->back == 'card') {
+            return '/index.php?p=App/Pages/Report/RecipientCard&arg=' . $this->customer_id;
+        }
         return $this->back == 'where' ? '/index.php?p=App/Pages/Report/EquipmentWhere' : '/index.php?p=App/Pages/Main';
     }
 
@@ -89,6 +94,10 @@ class EquipmentExtend extends \App\Pages\Base
             $msg->save();
         }
         \App\System::setSuccessMsg(__('sqs.extend.done', ['number' => $contract->contract_number, 'term' => self::termText($new)]));
+        if ($this->back == 'card') {
+            \App\Application::Redirect('\\App\\Pages\\Report\\RecipientCard', $this->customer_id);
+            return;
+        }
         \App\Application::Redirect($this->back == 'where' ? '\\App\\Pages\\Report\\EquipmentWhere' : '\\App\\Pages\\Main');
     }
 }

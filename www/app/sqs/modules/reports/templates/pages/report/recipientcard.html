@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>{{#t}}report.recipientcard.title{{/t}}</title>
+    </head>
+    <body>
+        <style>
+            /* SquirrelStock: первая колонка (позиция) остается на месте при прокрутке широкой таблицы по месяцам — на телефоне */
+            .sqs-sticky table.sqs-card-months tr > :first-child:not([colspan]) { position: sticky; left: 0; background: var(--bs-body-bg, #fff); z-index: 1; }
+            .sqs-sticky table { margin-bottom: 0.5rem; }
+        </style>
+        <div class="row">
+            <div class="col-12">
+                <h3>{{#t}}report.recipientcard.title{{/t}}</h3>
+                <div class="navbar">
+                    <form zippy="filter">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-auto">
+                                <label class="form-label" for="cust">{{#t}}report.recipientcard.customer{{/t}}</label>
+                                <input zippy="cust" class="form-control" type="text" style="min-width: 280px;" placeholder="{{#t}}report.recipientcard.search{{/t}}">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="from">{{#t}}common.z{{/t}}</label>
+                                <input zippy="from" class="form-control" type="text">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label" for="to">{{#t}}common.po_2{{/t}}</label>
+                                <input zippy="to" class="form-control" type="text">
+                            </div>
+                            <div class="col-auto">
+                                <input zippy="onreport" class="btn btn-primary" type="submit" value="{{#t}}common.ok{{/t}}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="{{#t}}common.druk{{/t}}"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/recipientcard" target="_blank" title="{{#t}}common.eksport_v_excel{{/t}}"><i class="fa fa-file-excel me-2"></i></a>
+                    </div>
+                    <div class="table-responsive mt-2 sqs-sticky" zippy="preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
