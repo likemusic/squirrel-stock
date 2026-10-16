@@ -85,3 +85,33 @@ test('выдача оборудования раньше даты прихода
   await expect(page.locator('tr', { hasText: inv }).locator('td').nth(3)).toContainText(/склад/i);
   expect(value(`select count(*) from customers where customer_name = '${esc(who)}'`)).toBe('0');
 });
+
+test('«кем направлен» подставляется из последнего договора получателя, поле можно поправить', async ({ page, uniq }) => {
+  const who = 'Получатель ' + uniq, other = 'Новый получатель ' + uniq;
+  const cust = value(`insert into customers (customer_name, detail, phone, status) values ('${esc(who)}', '<detail><type>0</type></detail>', '029${uniq.replace(/\D/g, '').slice(-7)}', 0); select last_insert_id()`);
+  const contract = (num, ref, day) => value(`insert into contracts (customer_id, createdon, contract_number, state, details)
+    values (${cust}, '2026-${day}', '${esc(num)}', 6, '<details><shortdesc><![CDATA[${ref}]]></shortdesc><desc><![CDATA[]]></desc></details>')`);
+  contract('A-' + uniq, 'Врач Прежний', '09-01');
+  contract('B-' + uniq, 'Врач Последний', '10-01');
+  contract('C-' + uniq, '', '10-02');   // договор без «кем направлен» не затирает прежнее значение
+  try {
+    await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
+    const ref = page.locator('#iform #referrer');
+    await pickAuto(page, '#iform #customer', who, who);
+    await expect(ref, 'из последнего договора с заполненным полем').toHaveValue('Врач Последний');
+
+    await ref.fill('Врач Поправленный');
+    await pickAuto(page, '#iform #customer', who, who);
+    await expect(ref, 'поправленное вручную не перезаписывается').toHaveValue('Врач Поправленный');
+
+    await ref.fill('');
+    await pickAuto(page, '#iform #customer', who, who);
+    await expect(ref).toHaveValue('Врач Последний');
+    await page.locator('#iform #customer').fill(other);   // новый получатель — подсказки нет, поле не трогается
+    await page.locator('#iform #customer').blur();
+    await expect(ref).toHaveValue('Врач Последний');
+  } finally {
+    value(`delete from contracts where customer_id = ${cust}`);
+    value(`delete from customers where customer_id = ${cust}`);
+  }
+});
