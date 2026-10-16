@@ -36,6 +36,7 @@ class EqHistory
     public array $rowsRead = [];   // [файл => число строк с данными]
     public array $plan = [];       // события для записи
     public array $stat = [];
+    public array $onhand = [];    // мелочь без номеров, перенесенная на руки: [позиция => штук]
     public int $blocked = 0;      // дата актуальности из настроек, если она позже первого документа импорта
 
     // ---------- чтение ----------
@@ -506,21 +507,21 @@ class EqHistory
                     $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.recipient_state', ['value' => $w]));
                     break;
                 case 'gift':
-                    $rec['notes'][] = $w;
-                    $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.gift', ['value' => $w]));
+                    $rec['notes'][] = $w;   // подаренное хоспису: выдается как обычное (ответ 1.10), слово — в примечание
                     break;
                 default:
                     $rec['notes'][] = $w;
             }
         }
+        // без даты (ответ 1.12): дата возврата выводится при составлении цепочки единицы, списание — датой импорта
         if (!empty($rec['returned']) && !$rec['ret']) {
-            $this->fail($rec, __('sqs.eqhist.returned_no_date'));
+            $rec['retunknown'] = true;
         }
         if (!empty($rec['offword'])) {
             if ($rec['ret']) {
                 $rec['off'] = $rec['ret'];
             } else {
-                $this->fail($rec, __('sqs.eqhist.off_no_date'));
+                $rec['offunknown'] = true;
             }
         }
         $rec['notes'] = array_values(array_unique($rec['notes']));
@@ -578,8 +579,7 @@ class EqHistory
                 continue;
             }
             if ($rec['inv'] === '' && $rec['factory'] === '') {
-                $this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] = ($this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] ?? 0) + 1;
-                $rec['skip'] = true;
+                $this->noNumber($rec);
                 continue;
             }
             if ($rec['inv'] !== '') {
@@ -621,8 +621,7 @@ class EqHistory
             }
             $nums = $rec['src'] == 'journal' ? ($rec['number'] === '' ? [] : [self::num($rec['number'])]) : $rec['nums'];
             if ($rec['src'] == 'journal' && count($nums) == 0) {
-                $this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] = ($this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] ?? 0) + 1;
-                $rec['skip'] = true;
+                $this->noNumber($rec);
                 continue;
             }
             $found = [];
@@ -663,6 +662,23 @@ class EqHistory
         unset($rec);
     }
 
+    /**
+     * Выдача без номеров единицы (мелкое оборудование, ответ 1.13): на руках — переносится количеством на позицию без
+     * серийного учета, одну на лист (на листе «разное» и в журнале — по наименованию); возвращенное и списанное — пропуск
+     */
+    private function noNumber(array &$rec): void {
+        $name = $rec['src'] == 'census' && mb_strtolower($rec['sheet']) != 'разное' ? $rec['sheet'] : $rec['itemtext'];
+        $name = trim(preg_replace('/\s+/u', ' ', $name));
+        if ($rec['ret'] || !empty($rec['retunknown']) || $rec['off'] || !empty($rec['offunknown']) || $name === '') {
+            $this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] = ($this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] ?? 0) + 1;
+            $rec['skip'] = true;
+            return;
+        }
+        $name = mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
+        $rec['qty'] = true;
+        $rec['unit'] = ['item_id' => 0, 'snumber' => '', 'itemname' => $name, 'new' => true, 'qty' => true];
+    }
+
     // ---------- склейка и план ----------
 
     // ключ единицы: название товара и номер — одинаков до и после создания новой единицы (повторный импорт)
@@ -678,8 +694,13 @@ class EqHistory
 
         // выдачи: одна выдача из обеих таблиц (или с двух листов) — по единице и дате
         $issues = [];
+        $qtyRecs = [];
         foreach ($this->records as $rec) {
             if ($rec['error'] || !empty($rec['skip']) || $rec['src'] == 'writeoff') {
+                continue;
+            }
+            if (!empty($rec['qty'])) {
+                $qtyRecs[] = $rec;
                 continue;
             }
             $key = self::ukey($rec['unit']) . '|' . date('Y-m-d', $rec['idate']);
@@ -707,6 +728,7 @@ class EqHistory
         }
 
         // цепочки событий по единицам в хронологическом порядке
+        $today = strtotime(date('Y-m-d'));   // дата импорта — для возвратов и списаний без даты (ответ 1.12)
         $byUnit = [];
         foreach ($issues as $is) {
             $byUnit[self::ukey($is['unit'])][] = $is;
@@ -716,7 +738,8 @@ class EqHistory
             if ($rec['src'] == 'writeoff' && !$rec['error']) {
                 $d = array_values(array_filter($rec['dates'], [self::class, 'yearOk']));
                 if (count($d) == 0) {
-                    $this->fail($rec, __('sqs.eqhist.off_no_date'));
+                    $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.off_unknown', ['date' => date('d.m.Y', $today)]));
+                    $offs[self::ukey($rec['unit'])][] = ['date' => $today, 'nodate' => true, 'rec' => $rec];
                     continue;
                 }
                 $offs[self::ukey($rec['unit'])][] = ['date' => max($d), 'rec' => $rec];
@@ -727,9 +750,13 @@ class EqHistory
         foreach ($byUnit as $uk => $list) {
             usort($list, fn($a, $b) => $a['idate'] <=> $b['idate']);
             $out = false;
-            $lastRet = 0;
             $first = true;
-            foreach ($list as $is) {
+            $offToday = null;   // «списан» без даты — списание датой импорта в конце цепочки
+            foreach ($list as $k => $is) {
+                if ($out === null) {
+                    $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_after_off'));
+                    continue;
+                }
                 if ($out) {
                     $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_twice'));
                     continue;
@@ -744,40 +771,97 @@ class EqHistory
                 $first = false;
                 $events[] = ['kind' => 'issue', 'date' => $is['idate'], 'unit' => $is['unit'], 'rec' => $is];
                 $out = true;
-                if ($is['ret']) {
-                    $events[] = ['kind' => 'return', 'date' => $is['ret'], 'unit' => $is['unit'], 'rec' => $is];
+                $ret = $is['ret'];
+                $retExtra = '';
+                $retNodate = false;
+                if (!$ret && (!empty($is['retunknown']) || !empty($is['offunknown']))) {
+                    // возврат без даты: накануне следующей выдачи этой единицы, иначе датой импорта
+                    $next = $list[$k + 1] ?? null;
+                    if ($next) {
+                        $ret = max($is['idate'], $next['idate'] - 86400);
+                        $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_before_next', ['date' => date('d.m.Y', $ret)]));
+                    } else {
+                        $ret = $today;
+                        $retNodate = true;
+                        $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_unknown', ['date' => date('d.m.Y', $ret)]));
+                    }
+                    $retExtra = __('sqs.eqhist.ret_unknown_doc');
+                }
+                if ($ret) {
+                    $events[] = ['kind' => 'return', 'date' => $ret, 'unit' => $is['unit'], 'rec' => $is, 'extra' => $retExtra, 'nodate' => $retNodate];
                     $out = false;
-                    $lastRet = $is['ret'];
                 }
                 if ($is['off']) {
                     $events[] = ['kind' => 'writeoff', 'date' => $is['off'], 'unit' => $is['unit'], 'rec' => $is];
                     $out = null;   // списана — дальше выдач быть не может
+                    continue;
                 }
+                if (!empty($is['offunknown'])) {
+                    $offToday = $is;
+                }
+            }
+            if ($offToday && $out !== null) {
+                $this->problem('note', $offToday['sheet'], $offToday['row'], $offToday['contract'], self::unitLabel($offToday), __('sqs.eqhist.off_unknown', ['date' => date('d.m.Y', $today)]));
+                if ($out) {
+                    $last = end($list);
+                    $events[] = ['kind' => 'return', 'date' => $today, 'unit' => $last['unit'], 'rec' => $last, 'extra' => __('sqs.eqhist.ret_unknown_doc'), 'nodate' => true];
+                }
+                $events[] = ['kind' => 'writeoff', 'date' => $today, 'unit' => $offToday['unit'], 'rec' => $offToday, 'extra' => __('sqs.eqhist.off_unknown_doc'), 'nodate' => true];
+                $out = null;
             }
             foreach ($offs[$uk] ?? [] as $o) {
                 if ($out === null) {
                     continue;   // уже списана по статусу в переписи
                 }
+                $nd = !empty($o['nodate']);
                 if ($out) {
                     $last = end($list);
-                    $events[] = ['kind' => 'return', 'date' => $o['date'], 'unit' => $last['unit'], 'rec' => $last];
+                    $events[] = ['kind' => 'return', 'date' => $o['date'], 'unit' => $last['unit'], 'rec' => $last, 'nodate' => $nd, 'extra' => $nd ? __('sqs.eqhist.ret_unknown_doc') : ''];
                 }
-                $events[] = ['kind' => 'writeoff', 'date' => $o['date'], 'unit' => $o['rec']['unit'], 'rec' => $o['rec']];
+                $events[] = ['kind' => 'writeoff', 'date' => $o['date'], 'unit' => $o['rec']['unit'], 'rec' => $o['rec'], 'nodate' => $nd, 'extra' => $nd ? __('sqs.eqhist.off_unknown_doc') : ''];
                 $out = null;
             }
             unset($offs[$uk]);
         }
         foreach ($offs as $list) {   // списанные единицы без выдач в таблицах
             foreach ($list as $o) {
-                $events[] = ['kind' => 'writeoff', 'date' => $o['date'], 'unit' => $o['rec']['unit'], 'rec' => $o['rec']];
+                $nd = !empty($o['nodate']);
+                $events[] = ['kind' => 'writeoff', 'date' => $o['date'], 'unit' => $o['rec']['unit'], 'rec' => $o['rec'], 'nodate' => $nd, 'extra' => $nd ? __('sqs.eqhist.off_unknown_doc') : ''];
             }
         }
-        $order = ['income' => 0, 'return' => 1, 'writeoff' => 2, 'issue' => 3];
-        usort($events, fn($a, $b) => [$a['date'], $order[$a['kind']]] <=> [$b['date'], $order[$b['kind']]]);
+
+        // мелочь без номеров на руках: приход количеством накануне выдачи и выдача по договору. Одна выдача из обеих таблиц:
+        // строка журнала пропускается, если в переписи есть выдача без номеров по тому же договору и дате
+        $censusQty = [];
+        foreach ($qtyRecs as $r) {
+            if ($r['src'] == 'census') {
+                $censusQty[$r['contract'] . '|' . date('Y-m-d', $r['idate'])] = 1;
+            }
+        }
+        $seen = [];
+        $this->onhand = [];
+        foreach ($qtyRecs as $r) {
+            if ($r['src'] == 'journal' && isset($censusQty[$r['contract'] . '|' . date('Y-m-d', $r['idate'])])) {
+                $this->stat['qtymerged'] = ($this->stat['qtymerged'] ?? 0) + 1;
+                continue;
+            }
+            $base = $r['contract'] . '|' . self::ukey($r['unit']) . '|' . date('Y-m-d', $r['idate']);
+            $n = $seen[$base] = ($seen[$base] ?? 0) + 1;   // одинаковые строки (две ванны по одному договору в один день) различаются номером
+            $events[] = ['kind' => 'income', 'date' => $r['idate'] - 86400, 'unit' => $r['unit'], 'rec' => $r, 'keysuffix' => '#' . $n];
+            $events[] = ['kind' => 'issue', 'date' => $r['idate'], 'unit' => $r['unit'], 'rec' => $r, 'keysuffix' => '#' . $n];
+            $this->onhand[$r['unit']['itemname']] = ($this->onhand[$r['unit']['itemname']] ?? 0) + 1;
+        }
+        // по дате, в один день — в порядке составления: внутри цепочки единицы он верный (выдача, затем ее возврат,
+        // возврат прежней выдачи — перед новой), а единицы между собой независимы
+        foreach ($events as $i => &$ev) {
+            $ev['seq'] = $i;
+        }
+        unset($ev);
+        usort($events, fn($a, $b) => [$a['date'], $a['seq']] <=> [$b['date'], $b['seq']]);
 
         // уже импортированное
         $done = self::doneKeys();
-        $this->stat = ['records' => count($this->records), 'issues' => count($issues), 'merged' => 0, 'errors' => 0, 'notes' => 0,
+        $this->stat = ['records' => count($this->records), 'issues' => count($issues), 'merged' => $this->stat['qtymerged'] ?? 0, 'errors' => 0, 'notes' => 0,
                        'income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'done' => 0, 'customers' => 0, 'contracts' => 0];
         $this->plan = [];
         $newCustomers = [];
@@ -813,7 +897,7 @@ class EqHistory
         }
         $this->stat['customers'] = count($newCustomers);
         $this->stat['contracts'] = count($newContracts);
-        $this->stat['merged'] = count(array_filter($this->records, fn($r) => !$r['error'] && empty($r['skip']) && $r['src'] != 'writeoff')) - count($issues);
+        $this->stat['merged'] += count(array_filter($this->records, fn($r) => !$r['error'] && empty($r['skip']) && empty($r['qty']) && $r['src'] != 'writeoff')) - count($issues);
         foreach ($this->problems as $p) {
             $this->stat[$p['level'] == 'error' ? 'errors' : 'notes']++;
         }
@@ -836,6 +920,11 @@ class EqHistory
             $this->problem('note', $b['sheet'], $b['row'], $a['contract'], self::unitLabel($b), __('sqs.eqhist.return_differs', ['date' => date('d.m.Y', $a['ret'])]));
         }
         $a['ret'] = $a['ret'] ?: $b['ret'];
+        foreach (['retunknown', 'offunknown'] as $f) {
+            if (!empty($b[$f])) {
+                $a[$f] = true;
+            }
+        }
         $a['off'] = $a['off'] ?: $b['off'];
         if ($a['enddate'] === null) {
             $a['enddate'] = $b['enddate'];
@@ -845,9 +934,10 @@ class EqHistory
         return $a;
     }
 
+    // ключ события для повторного импорта; дата импорта (возврат, списание без даты) в ключ не входит — завтра она другая
     private static function eventKey(array $e): string {
-        $contract = in_array($e['kind'], ['issue', 'return']) ? $e['rec']['contract'] : '';
-        return $e['kind'] . '|' . $contract . '|' . self::ukey($e['unit']) . '|' . date('Y-m-d', $e['date']);
+        $contract = in_array($e['kind'], ['issue', 'return']) || !empty($e['unit']['qty']) ? $e['rec']['contract'] : '';
+        return $e['kind'] . '|' . $contract . '|' . self::ukey($e['unit']) . '|' . (!empty($e['nodate']) ? 'nodate' : date('Y-m-d', $e['date'])) . ($e['keysuffix'] ?? '');
     }
 
     private static function doneKeys(): array {
@@ -914,7 +1004,7 @@ class EqHistory
         $issueDoc = [];      // ukey|contract => document_id выдачи (для возврата)
         $contractUnits = []; // contract_id => [ukey => выдана ли сейчас]
         foreach ($this->plan as $e) {
-            $uk = self::ukey($e['unit']);
+            $uk = empty($e['unit']['qty']) ? self::ukey($e['unit']) : $e['key'];   // мелочь: строки независимы
             if (isset($broken[$uk])) {
                 continue;
             }
@@ -950,17 +1040,24 @@ class EqHistory
         return $res;
     }
 
-    // товар новой единицы — один на лист, с учетом по серийным номерам
+    // товар новой единицы — один на лист, с учетом по серийным номерам; мелочи без номеров — без серийного учета
+    // (если такое название уже занято товаром с серийным учетом — с пометкой «количеством»)
     private function unitItem(array &$unit): Item {
         if ($unit['item_id'] > 0) {
             return Item::load($unit['item_id']);
         }
-        $item = Item::getFirst('itemname = ' . Item::qstr($unit['itemname']) . ' and disabled <> 1');
+        $serial = empty($unit['qty']) ? 1 : 0;
+        $name = $unit['itemname'];
+        $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');
+        if ($item != null && !$serial && $item->useserial == 1) {
+            $name .= ' ' . __('sqs.eqhist.qty_item_suffix');
+            $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');
+        }
         if ($item == null) {
             $item = new Item();
-            $item->itemname = $unit['itemname'];
+            $item->itemname = $name;
             $item->msr = __('app.item.sht');
-            $item->useserial = 1;
+            $item->useserial = $serial;
             $item->save();
         }
         return $item;
@@ -987,10 +1084,13 @@ class EqHistory
         return (int)$doc->document_id;
     }
 
-    private function notes(array $rec): string {
+    private function notes(array $rec, string $extra = ''): string {
         $n = __('sqs.eqhist.doc_notes', ['sheet' => $rec['sheet'], 'row' => $rec['row']]);
         if (count($rec['notes'])) {
             $n .= '. ' . implode('; ', $rec['notes']);
+        }
+        if ($extra !== '') {
+            $n .= '. ' . $extra;
         }
         return $n;
     }
@@ -1009,7 +1109,9 @@ class EqHistory
         $doc->payamount = 0;
         $doc->headerdata['payed'] = 0;
         $id = $this->execute($doc);
-        Units::setFactoryNo((int)$item->item_id, $unit['snumber'], $unit['snumber']);
+        if ($unit['snumber'] !== '') {
+            Units::setFactoryNo((int)$item->item_id, $unit['snumber'], $unit['snumber']);
+        }
         return $id;
     }
 
@@ -1027,6 +1129,10 @@ class EqHistory
         if ($rec['address'] !== '' && trim((string)$customer->address) === '') {
             $customer->address = $rec['address'];
         }
+        // без телефона — пустая строка, не NULL: подсказка контрагента показывает concat(customer_name, ' ', phone),
+        // и с NULL получатель виден в ней пустой строкой
+        $customer->phone = (string)$customer->phone;
+        $customer->address = (string)$customer->address;
         $customer->save();
 
         $contract = Contract::getFirst('contract_number = ' . Contract::qstr($rec['contract']));
@@ -1084,7 +1190,7 @@ class EqHistory
         $doc->document_date = $e['date'];
         $doc->customer_id = $parent->customer_id;
         $doc->parent_id = $parent->document_id;
-        $doc->notes = $this->notes($e['rec']);
+        $doc->notes = $this->notes($e['rec'], $e['extra'] ?? '');
         $doc->headerdata['store'] = $store;
         $doc->headerdata['payment'] = 0;
         $doc->headerdata['payed'] = 0;
@@ -1105,6 +1211,7 @@ class EqHistory
         $issue = $e;
         $issue['kind'] = 'issue';
         $issue['date'] = $e['rec']['idate'];
+        unset($issue['nodate']);   // у возврата датой импорта дата выдачи известна
         $id = $conn->GetOne("SELECT document_id FROM sqs_eqhistory WHERE eventkey = " . $conn->qstr(self::eventKey($issue)));
         $doc = $id ? Document::load($id) : null;
         return $doc ? ['doc' => (int)$doc->document_id, 'contract' => intval($doc->headerdata['contract_id'] ?? 0), 'customer' => (int)$doc->customer_id] : null;
@@ -1114,7 +1221,7 @@ class EqHistory
         $doc = Document::create('OutcomeItem');
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = $e['date'];
-        $doc->notes = $this->notes($e['rec']);
+        $doc->notes = $this->notes($e['rec'], $e['extra'] ?? '');
         $doc->headerdata['store'] = $store;
         $doc->packDetails('detaildata', [1 => $this->line($e['unit'], 1)]);
         $doc->amount = 0;
