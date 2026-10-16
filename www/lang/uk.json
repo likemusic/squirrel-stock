@@ -3903,6 +3903,7 @@
     "sqs.2fa.title": "Двофакторний вхід",
     "sqs.charity.accepted_by": "Прийняв",
     "sqs.charity.gilist_title": "Журнал видач",
+    "sqs.charity.issue_title": "Видача № {{document_number}} від {{date}}",
     "sqs.charity.issued_by": "Видав",
     "sqs.charity.recipient": "Отримувач",
     "sqs.charity.returned_by": "Повернув",

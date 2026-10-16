@@ -39,7 +39,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            {{#t}}print.goodsissue.vydatkova_nakladna_vid{{/t}} <br>
+            {{#t}}sqs.charity.issue_title{{/t}} <br>
         </td>
     </tr>
 

@@ -81,6 +81,8 @@ test('расходная накладная в профиле: «Видав / О
   let p = await freshPage(browser);
   let text = await printForm(p, id);
   expect(text).toContain('Отримувач ' + recipient);
+  expect(text).toContain(`Видача № ${number} від `);
+  expect(text).not.toContain('Видаткова накладна');
   expect(text).toContain('Видав ___');
   expect(text).toContain('Позиция ' + code);
   expect(text).not.toMatch(/Продавець|Покупець|Списано з/);
@@ -92,6 +94,7 @@ test('расходная накладная в профиле: «Видав / О
   text = await printForm(p, id);
   expect(text).toMatch(/Покупець/);
   expect(text).toMatch(/Продавець/);
+  expect(text).toContain(`Видаткова накладна № ${number}`);
   await p.context().close();
 });
 
@@ -169,17 +172,25 @@ test('названия в профиле: «Видача», «Надходжен
   const names = () => value(`select group_concat(concat(meta_name, '=', description, '/', menugroup) order by meta_name separator ';') from metadata
                              where meta_type = 1 and meta_name in ('GoodsIssue', 'ReturnIssue', 'GoodsReceipt', 'RetCustIssue')`);
   const before = 'GoodsIssue=Видаткова накладна/Продажі;GoodsReceipt=Прибуткова накладна/Закупівлі;RetCustIssue=Повернення постачальнику/Закупівлі;ReturnIssue=Повернення від покупця/Продажі';
+  // отчеты: группа «Закупівлі» и отчет «Закупівлі» в ней
+  const reports = () => value(`select group_concat(concat(meta_name, '=', description, '/', menugroup) order by meta_name separator ';') from metadata
+                               where meta_type = 2 and meta_name in ('Income', 'CustOrder')`);
+  const reportsBefore = 'CustOrder=ТМЦ в дорозі/Закупівлі;Income=Закупівлі/Закупівлі';
   expect(names()).toBe(before);
+  expect(reports()).toBe(reportsBefore);
 
   webPhp('cli/charity-profile.php');
   expect(names()).toBe('GoodsIssue=Видача (накладна)/Видача;GoodsReceipt=Прибуткова накладна/Надходження;RetCustIssue=Повернення постачальнику/Надходження;ReturnIssue=Повернення від отримувача/Видача');
+  expect(reports()).toBe('CustOrder=ТМЦ в дорозі/Надходження;Income=Надходження/Надходження');
   const p = await freshPage(browser);
   await p.goto('/');
   await expect(p.locator('a[href$="Doc/GoodsIssue"]').first()).toHaveText('Видача (накладна)');
   await expect(p.locator('a[href$="Doc/ReturnIssue"]').first()).toHaveText('Повернення від отримувача');
+  await expect(p.locator('a[href$="Report/Income"]').first()).toHaveText('Надходження');
   await p.context().close();
   webPhp('cli/charity-profile.php', '--back');
   expect(names()).toBe(before);
+  expect(reports()).toBe(reportsBefore);
 
   // название, измененное вручную, профиль и --back оставляют как есть
   query(`update metadata set description = 'Повернення (своє)' where meta_type = 1 and meta_name = 'ReturnIssue'`);
