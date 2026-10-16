@@ -278,3 +278,66 @@ test('отчет «Надходження» в профиле: заголово�
   webPhp('cli/charity-profile.php', '--back');   // без профиля — названия ядра
   await check('Звіт по закупках', 'Закупівлі по товарам');
 });
+
+// ответ хосписа 2.1: признаков получателя три — подопечный, по запросу, снят с опеки (тег контрагента, выбирается списком);
+// ответ 2.2: данных хватает (ФИО, адрес, телефон) — торговые поля формы контрагента в профиле скрыты
+test('справочник контрагентов в профиле: признак получателя списком, без торговых полей', async ({ browser, uniq }) => {
+  const name = 'Подопечный ' + uniq + ' признак';
+  const tags = () => query(`select tag_name from taglist t join customers c on c.customer_id = t.item_id where t.tag_type = 1 and c.customer_name = '${esc(name)}' order by tag_name`).map(r => r[0]);
+  // теги — на языке тестов (украинском): после теста убираются, иначе i18n-ru найдет их в списках тегов
+  try {
+    webPhp('cli/charity-profile.php');
+    let p = await freshPage(browser);
+    await p.goto('/index.php?p=App/Pages/Reference/CustomerList');
+    await expect(p.locator('#chleads')).toBeHidden();
+    await clickWait(p, '#addnew');
+    for (const hidden of ['#editviber', '#editedrpou', '#editpricetype', '#editholding', '#editisholding', '#editnosubs', '#editaddressdel', '#editjurid']) {
+      await expect(p.locator(hidden), hidden).toBeHidden();
+    }
+    await expect(p.locator('#edittype')).toHaveValue('1');
+    expect(await p.locator('#edittype option[value="1"]').innerText()).toBe('Отримувач');
+    expect(await p.locator('#editsqsmark option').allInnerTexts()).toEqual(['Не вказано', 'підопічний', 'за запитом', 'знятий з опіки']);
+    await p.locator('#editcustomername').fill(name);
+    await p.locator('#editaddress').fill('г. Вымышленный, ул. Тестовая, 2');
+    await p.locator('#editsqsmark').selectOption('підопічний');
+    await clickWait(p, '#customerdetail #save');
+    expect(tags()).toEqual(['підопічний']);
+    // свой тег (не признак) — как если бы его ввели в поле тегов
+    query(`insert into taglist (tag_type, item_id, tag_name) select 1, customer_id, 'алергія' from customers where customer_name = '${esc(name)}'`);
+
+    // в списке признак рядом с именем; смена признака заменяет прежний, остальные теги остаются
+    await p.locator('#filter #searchkey').fill(name);
+    await clickWait(p, '#filter input[type=submit]');
+    const row = p.locator('tr', { hasText: name });
+    await expect(row.locator('.badge', { hasText: 'підопічний' })).toBeVisible();
+    await clickWait(p, `tr:has-text("${name}") >> a >> nth=0`);
+    await expect(p.locator('#editsqsmark')).toHaveValue('підопічний');
+    expect(await p.locator('#edittags_tags').inputValue()).toBe('алергія');
+    await p.locator('#editsqsmark').selectOption('знятий з опіки');
+    await clickWait(p, '#customerdetail #save');
+    expect(tags()).toEqual(['алергія', 'знятий з опіки']);
+
+    // до списка признаки вписывали тегами, бывает два сразу: «знятий з опіки» важнее «підопічний», сохранение оставляет один
+    query(`insert into taglist (tag_type, item_id, tag_name) select 1, customer_id, 'підопічний' from customers where customer_name = '${esc(name)}'`);
+    await p.goto('/index.php?p=App/Pages/Reference/CustomerList');
+    await p.locator('#filter #searchkey').fill(name);
+    await clickWait(p, '#filter input[type=submit]');
+    await expect(p.locator('tr', { hasText: name }).locator('.badge')).toHaveText('знятий з опіки');
+    await clickWait(p, `tr:has-text("${name}") >> a >> nth=0`);
+    await expect(p.locator('#editsqsmark')).toHaveValue('знятий з опіки');
+    await clickWait(p, '#customerdetail #save');
+    expect(tags()).toEqual(['алергія', 'знятий з опіки']);
+    await p.context().close();
+
+    // без профиля — форма ядра: торговые поля на месте, списка признака нет, теги как есть
+    webPhp('cli/charity-profile.php', '--back');
+    p = await freshPage(browser);
+    await p.goto('/index.php?p=App/Pages/Reference/CustomerList');
+    await clickWait(p, '#addnew');
+    await expect(p.locator('#editedrpou')).toBeVisible();
+    await expect(p.locator('#editsqsmark')).toBeHidden();
+    await p.context().close();
+  } finally {
+    query(`delete t from taglist t join customers c on c.customer_id = t.item_id where t.tag_type = 1 and c.customer_name = '${esc(name)}'`);
+  }
+});
