@@ -6,7 +6,7 @@ use App\Helper as H;
 
 /**
  * SquirrelStock: напоминания на главной странице — выданное оборудование, у которого срок пользования истек
- * или истекает в ближайшие DAYS дней (ответ хосписа 1.4), и администратору — давно не было резервной копии.
+ * или истекает в ближайшие DAYS дней (ответ хосписа 1.4; мелкое оборудование — по сроку договора), и администратору — давно не было резервной копии.
  * Только переменные шаблона, без компонентов страницы.
  */
 class EquipmentDue
@@ -25,7 +25,7 @@ class EquipmentDue
             $rows[] = [
                 'customer' => $c->customer_name ?? '',
                 'phone'    => $c->phone ?? '',
-                'unit'     => Units::label($u['itemname'], $u['snumber'], $u['factory_no']),
+                'unit'     => isset($u['qty']) ? $u['itemname'] . ', ' . __('report.equipmentwhere.small_pieces') . ': ' . H::fqty($u['qty']) : Units::label($u['itemname'], $u['snumber'], $u['factory_no']),
                 'contract' => $u['contract_number'],
                 'extend'   => $canExtend ? '/index.php?p=App/Pages/Service/EquipmentExtend&arg=' . intval($u['contract_id']) : '',
                 'enddate'  => H::fd($u['enddate']),
