@@ -20,6 +20,8 @@ class MoveItem extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             //списываем  со склада
+            // SquirrelStock: единица с серийным номером — на складе-отправителе на дату документа и не уходит с него позже
+            \App\SQS\SerialStock::check($item, $item->quantity, intval($this->headerdata['store']), $this);
 
             $listst = Stock::pickup($this->headerdata['store'], $item, $this->headerdata["storeemp"] );
             if (count($listst) == 0) {

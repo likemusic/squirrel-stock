@@ -89,7 +89,8 @@ class RetCustIssue extends Document
         $conn = \ZDB\DB::getConnect();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+            // SquirrelStock: единица с серийным номером — на складе на дату документа и не выдана позже
+            \App\SQS\SerialStock::check($item, $item->quantity, intval($this->headerdata['store']), $this);
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
