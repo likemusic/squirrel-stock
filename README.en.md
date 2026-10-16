@@ -25,7 +25,7 @@ git clone https://github.com/likemusic/squirrel-stock.git && cd squirrel-stock/d
 SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, login admin / admin
 ```
 
-Demo data (fictional): restore `db/demo/squirrelstock-demo.zip` on the backup page. Installation on Linux and on hosting: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md), [docs/INSTALL_HOSTING.ru.md](docs/INSTALL_HOSTING.ru.md) (Russian).
+Demo data (fictional): restore `db/demo/squirrelstock-demo.zip` on the backup page. Installation on Linux, on hosting and on Windows: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md), [docs/INSTALL_HOSTING.ru.md](docs/INSTALL_HOSTING.ru.md), [docs/INSTALL_WINDOWS.ru.md](docs/INSTALL_WINDOWS.ru.md) (Russian).
 
 ## Differences from Zippy
 

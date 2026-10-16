@@ -49,9 +49,11 @@ php cli/backup.php --if-older=20       пропуск, если копия мо�
 schtasks /Create /TN "SquirrelStock backup" /SC HOURLY /TR "\"C:\php\php.exe\" \"C:\SquirrelStock\www\cli\backup.php\" --if-older=20"
 ```
 
-Пути к `php.exe` и к программе — свои. Проверить: `schtasks /Run /TN "SquirrelStock backup"`, затем обновить страницу «Резервная копия».
+Пути к `php.exe` и к программе — свои; страница «Резервная копия» показывает команду с путями этого компьютера (`php.exe` ищется рядом с `php.ini`, который загрузил Apache). Проверить: `schtasks /Run /TN "SquirrelStock backup"`, затем обновить страницу «Резервная копия».
 
 Сетевая папка указывается как `\\server\share\squirrelstock`, а не буквой диска: подключённые буквы планировщику не видны.
+
+Задача без вошедшего пользователя (от SYSTEM), отдельный пользователь для сетевой папки и файл настроек rclone — [INSTALL_WINDOWS.ru.md](INSTALL_WINDOWS.ru.md), раздел 7.
 
 ### Linux: cron [проверено как команда; запуск из cron не проверялся]
 
