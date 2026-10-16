@@ -64,7 +64,10 @@ test('справочник единиц: заводской номер зада�
   expect(value(`select factory_no from sqs_unit where item_id = ${item} and snumber = '${esc(inv)}'`)).toBe(factory);
 });
 
-test('где сейчас: выдача раньше даты прихода (ОСВ 01 загружена после истории)', async ({ page, uniq }) => {
+// Раньше выдача задним числом до прихода проходила (ОСВ 01 загружали после истории, датой ведомости), и единица в отчетах
+// на прошлые даты числилась выданной раньше, чем появилась. С 16.10.2026 ядро не выдает номер, которого нет на складе на дату
+// документа (App\SQS\SerialStock); при переносе ОСВ 01 приходуется датой раньше первой выдачи (поле «Дата оприходования»).
+test('выдача оборудования раньше даты прихода — отказ с понятной причиной', async ({ page, uniq }) => {
   const code = 'EL-' + uniq, inv = 'INV-' + uniq, who = 'Получатель ' + uniq;
   await createItem(page, { name: 'Ингалятор ' + uniq, code, serial: true });
   await createDoc(page, 'IncomeItem', { date: '2026-10-10', rows: [{ code, qty: 1, price: 0, sn: inv }] });
@@ -73,9 +76,12 @@ test('где сейчас: выдача раньше даты прихода (О
   await page.locator('#iform #date').fill('2026-09-01');
   await pickAuto(page, '#iform #unit', inv, inv);
   await clickWait(page, '#iform #issue');
+  expect((await messages(page)).join(' ')).toContain(`${inv}`);
+  expect((await messages(page)).join(' ')).toContain('немає на складі на 01.09.2026');
 
   await page.goto('/index.php?p=App/Pages/Reference/EquipmentUnits');
   await page.locator('#filter #searchtext').fill(inv);
   await clickWait(page, '#filter input[type=submit]');
-  await expect(page.locator('tr', { hasText: inv }).locator('td').nth(3)).toContainText(who);
+  await expect(page.locator('tr', { hasText: inv }).locator('td').nth(3)).toContainText(/склад/i);
+  expect(value(`select count(*) from customers where customer_name = '${esc(who)}'`)).toBe('0');
 });

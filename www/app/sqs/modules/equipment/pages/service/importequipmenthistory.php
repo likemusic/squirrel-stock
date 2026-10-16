@@ -16,13 +16,19 @@ use Zippy\Html\Label;
 /**
  * SquirrelStock: импорт истории выдачи оборудования из Google-таблиц (перепись и журнал, .xlsx), разбор — App\SQS\EqHistory.
  * «Проверить» только разбирает и показывает отчет: что будет создано, ошибки (строка не импортируется) и заметки
- * (импортируется с допущением). «Записать» доступна после проверки и разбирает те же файлы заново перед записью.
+ * (импортируется с допущением). «Записать» доступна после проверки и пишет разобранное проверкой (если соответствия
+ * с тех пор поменяли — разбирает заново) частями по ~20 секунд: после каждой части страница сама продолжает запись
+ * (на хостинге запрос обрывается через 30–60 с). После обрыва — «Проверить» и «Записать» снова: записанное не дублируется.
  * Соответствия «написание → позиция» для мелочи без номеров (App\SQS\EqItemMap) правятся тут же и сохраняются
  * при проверке и записи; написания, которых в них нет, — в отчете с кнопкой «добавить в соответствия».
  */
 class ImportEquipmentHistory extends \App\Pages\Base
 {
     public array $_files = [];   // [имя файла => путь к копии во временной папке]
+    public string $_state = '';  // разбор проверки и ход записи (App\SQS\EqHistory) — файл во временной папке: в таблицах ПДн
+    public string $_mapText = ''; // соответствия, с которыми сделан разбор
+    public bool $_lift = false;
+    public int $_store = 0;
 
     public function __construct() {
         parent::__construct();
@@ -39,6 +45,9 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $form->add(new SubmitButton('check'))->onClick($this, 'onCheck');
         $form->add(new SubmitButton('write'))->onClick($this, 'onWrite');
         $form->write->setVisible(false);
+        $form->add(new SubmitButton('next'))->onClick($this, 'onNext');   // следующая часть записи (нажимается скриптом)
+        $form->next->setVisible(false);
+        $this->add(new Label('progress', '', true));
         $this->add(new Label('report', '', true));
     }
 
@@ -68,6 +77,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         }
         $eh = $this->analyze();
         if ($eh) {
+            $this->saveState($eh);
             $this->report->setText($this->reportHtml($eh, null), true);
             $this->iform->write->setVisible(count($eh->plan) > 0);
         }
@@ -82,20 +92,69 @@ class ImportEquipmentHistory extends \App\Pages\Base
         if (!$this->saveMap()) {
             return;
         }
-        $eh = $this->analyze();
+        // разбор проверки, если соответствия с тех пор не меняли; иначе — заново
+        $eh = $this->_mapText === $this->iform->itemmap->getText() ? $this->loadState() : null;
+        $eh = $eh ?? $this->analyze();
         if (!$eh) {
             return;
         }
+        $this->_store = $store;
+        $this->_lift = $this->iform->liftperiod->isChecked();
+        $this->writePart($eh);
+    }
+
+    public function onNext($sender) {
+        $eh = $this->loadState();
+        if (!$eh) {
+            $this->iform->next->setVisible(false);
+            $this->progress->setText('');
+            $this->setError(__('sqs.eqhist.state_lost'));
+            return;
+        }
+        $this->writePart($eh);
+    }
+
+    // часть записи; если осталось — на странице ход и скрипт, который нажимает «дальше»
+    private function writePart(EqHistory $eh): void {
+        $limit = \App\Helper::getKeyValInt('sqs_eqh_chunk');   // событий за часть (0 — без ограничения, только по времени); для тестов
         try {
-            $res = $eh->apply($store, $this->iform->liftperiod->isChecked());
+            $res = $eh->apply($this->_store, $this->_lift, 20, $limit);
         } catch (\Throwable $e) {
+            $this->iform->next->setVisible(false);
+            $this->progress->setText('');
             $this->setError($e->getMessage());
             return;
         }
-        $this->report->setText($this->reportHtml($eh, $res), true);
         $this->iform->write->setVisible(false);
+        if ($res['left'] > 0) {
+            $this->saveState($eh);
+            $this->iform->next->setVisible(true);
+            $this->progress->setText('<div class="alert alert-info" id="eqh-progress">' . self::e(__('sqs.eqhist.progress', ['done' => $res['total'] - $res['left'], 'total' => $res['total']]))
+                . '</div><script>setTimeout(function () { document.getElementById("next").click(); }, 200);</script>', true);
+            $this->report->setText('');
+            return;
+        }
+        $this->iform->next->setVisible(false);
+        $this->progress->setText('');
+        $this->report->setText($this->reportHtml($eh, $res), true);
         $this->dropFiles();
         $this->setSuccess(__('sqs.eqhist.written', $res));
+    }
+
+    private function saveState(EqHistory $eh): void {
+        if ($this->_state === '') {
+            $this->_state = tempnam(sys_get_temp_dir(), 'sqs-eqh-');
+        }
+        file_put_contents($this->_state, serialize($eh));
+        $this->_mapText = $this->iform->itemmap->getText();
+    }
+
+    private function loadState(): ?EqHistory {
+        if ($this->_state === '' || !is_file($this->_state)) {
+            return null;
+        }
+        $eh = @unserialize(file_get_contents($this->_state), ['allowed_classes' => [EqHistory::class]]);
+        return $eh instanceof EqHistory ? $eh : null;
     }
 
     private function analyze(): ?EqHistory {
@@ -129,6 +188,10 @@ class ImportEquipmentHistory extends \App\Pages\Base
             @unlink($path);
         }
         $this->_files = [];
+        if ($this->_state !== '') {
+            @unlink($this->_state);
+            $this->_state = '';
+        }
     }
 
     private static function e($s): string {
@@ -147,7 +210,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
                  'income' => $s['income'], 'issue' => $s['issue'], 'return' => $s['return'], 'writeoff' => $s['writeoff'],
                  'done' => $s['done'], 'noinv' => $s['noinv'], 'errors' => $s['errors'], 'notes' => $s['notes']];
         if ($res !== null) {
-            $rows = ['income' => $res['income'], 'issue' => $res['issue'], 'return' => $res['return'], 'writeoff' => $res['writeoff'], 'failed' => $res['failed'],
+            $rows = ['income' => $res['income'], 'issue' => $res['issue'], 'return' => $res['return'], 'writeoff' => $res['writeoff'], 'failed' => $res['failed'], 'skipped' => $res['skipped'],
                      'done' => $s['done'], 'errors' => count(array_filter($eh->problems, fn($p) => $p['level'] == 'error')), 'notes' => $s['notes']];
         }
         foreach ($rows as $k => $v) {

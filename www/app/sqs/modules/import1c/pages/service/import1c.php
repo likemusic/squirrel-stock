@@ -17,7 +17,9 @@ use Zippy\Html\Form\SubmitButton;
  *    Позиция ищется по точному названию, иначе создается; остаток приходуется по цене сумма / количество.
  *  - Счет 01 (основные средства): строка на единицу «Название, инв.№: номер». Товар создается с учетом
  *    по серийным номерам, единица приходуется с инвентарным номером. Номер, который уже есть на складе, пропускается.
- * Приход — один документ «Оприбуткування ТМЦ» на дату из формы, сразу проведенный. Названия остаются как в 1С.
+ * Приход — один документ «Оприбуткування ТМЦ», сразу проведенный, на «дату оприходования» из формы; пусто — на дату
+ * ведомости (конец ее периода). При первом переносе с историей выдачи — дата раньше первой выдачи; если она раньше начала
+ * актуального периода, администратор отмечает «снять ограничение на время записи». Названия остаются как в 1С.
  */
 class Import1C extends \App\Pages\Base
 {
@@ -30,7 +32,8 @@ class Import1C extends \App\Pages\Base
         $form = $this->add(new Form('iform'));
         $form->add(new \Zippy\Html\Form\File('filename'));
         $form->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
-        $form->add(new Date('date', time()));
+        $form->add(new Date('date'));   // дата оприходования; пусто — дата ведомости
+        $form->add(new \Zippy\Html\Form\CheckBox('liftperiod', false))->setVisible(\App\System::getUser()->rolename == 'admins');
         $form->add(new DropDownChoice('cat', [0 => __('common.ne_vybrano')] + \App\Entity\Category::getList(true), 0));
         $form->add(new SubmitButton('import'))->onClick($this, 'onImport');
         $this->add(new \Zippy\Html\Label('report', '', true));
@@ -64,18 +67,86 @@ class Import1C extends \App\Pages\Base
             $this->setError(__('service.import1c.not_osv'));
             return;
         }
+        $date = trim($this->iform->date->getText()) === '' ? self::osvDate($rows) : $this->iform->date->getDate();
+        if (!$date) {
+            $this->setError(__('service.import1c.no_date'));
+            return;
+        }
+        $this->_date = $date;
+        // начало актуального периода (закрытый период): документ раньше него ядро не сохранит
+        $common = \App\System::getOptions('common', true);
+        $actual = intval($common['actualdate'] ?? 0);
+        $lift = $actual > $date;
+        if ($lift && !($this->iform->liftperiod->isChecked() && \App\System::getUser()->rolename == 'admins')) {
+            $this->setError(__('service.import1c.before_actual', ['date' => date('d.m.Y', $date), 'actual' => date('d.m.Y', $actual)]));
+            return;
+        }
+        if ($lift) {
+            $common['actualdate'] = strtotime(date('Y-m-d', $date));
+            \App\System::setOptions('common', $common);
+        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
             $msg = $account == '01' ? $this->importFixed($rows, $store, basename($file['name'])) : $this->importMaterials($rows, $store, basename($file['name']));
             $conn->CommitTrans();
-            $this->setSuccess($msg);
+            $this->setSuccess($msg . ', ' . __('service.import1c.dated', ['date' => date('d.m.Y', $date)]));
             $this->report->setText($this->reportHtml(), true);
         } catch (\Throwable $e) {
             $conn->RollbackTrans();
             $this->setError($e->getMessage());
+        } finally {
+            if ($lift) {   // начало периода — как было, даже если импорт прервался
+                $common = \App\System::getOptions('common', true);
+                $common['actualdate'] = $actual;
+                \App\System::setOptions('common', $common);
+                $msg = __('service.import1c.period_log', ['actual' => date('d.m.Y', $actual), 'date' => date('d.m.Y', $date)]);
+                \App\Helper::log($msg);
+                $this->setWarn($msg);
+            }
         }
+    }
+
+    public int $_date = 0;
+
+    /**
+     * Дата ведомости — конец ее периода из заголовка (в строке с названием или отдельной строкой): «за 26.05.26 - 31.05.26», «за 01.01.24», «за Сентябрь 2026 г.»,
+     * «за 1 квартал 2026 г.», «за 2026 г.»; null — не нашлась
+     */
+    public static function osvDate(array $rows): ?int {
+        $months = ['январ' => 1, 'феврал' => 2, 'март' => 3, 'апрел' => 4, 'ма' => 5, 'июн' => 6, 'июл' => 7, 'август' => 8, 'сентябр' => 9, 'октябр' => 10, 'ноябр' => 11, 'декабр' => 12];
+        foreach (array_slice($rows, 0, 12) as $r) {
+            $a = trim((string)($r[0] ?? ''));
+            if (!preg_match('/(^|\s)за\s+(.+)$/u', $a, $m)) {
+                continue;
+            }
+            $p = mb_strtolower($m[2]);
+            if (preg_match_all('/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/', $p, $all, PREG_SET_ORDER)) {
+                [, $d, $mo, $y] = end($all);
+                $y = strlen($y) == 2 ? 2000 + intval($y) : intval($y);
+                return checkdate(intval($mo), intval($d), $y) ? strtotime(sprintf('%04d-%02d-%02d', $y, $mo, $d)) : null;
+            }
+            if (!preg_match('/(\d{4})/', $p, $ym)) {
+                continue;
+            }
+            $y = intval($ym[1]);
+            $mo = 12;
+            if (preg_match('/([1-4])\s*квартал/u', $p, $q)) {
+                $mo = intval($q[1]) * 3;
+            } elseif (preg_match('/([1-2])\s*полугоди/u', $p, $q)) {
+                $mo = intval($q[1]) * 6;
+            } else {
+                foreach ($months as $stem => $n) {
+                    if (preg_match('/(^|\s)' . $stem . '[а-я]*\s+\d{4}/u', $p)) {
+                        $mo = $n;
+                        break;
+                    }
+                }
+            }
+            return strtotime(date('Y-m-t', strtotime(sprintf('%04d-%02d-01', $y, $mo))));
+        }
+        return null;
     }
 
     private static function num($v): ?float {
@@ -249,7 +320,7 @@ class Import1C extends \App\Pages\Base
         if (strlen($doc->document_number) == 0) {
             $doc->document_number = 'ОТ-00001';
         }
-        $doc->document_date = $this->iform->date->getDate();
+        $doc->document_date = $this->_date;
         $doc->headerdata['store'] = $store;
         $doc->notes = __('service.import1c.doc_notes', ['file' => $filename]);
         $amount = 0;
