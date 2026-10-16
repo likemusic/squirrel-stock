@@ -1,8 +1,8 @@
 // Оборудование: где сейчас каждая единица (инвентарный номер = серийный номер, режим хосписа usesnumber = 3).
 // Выдача — по договору (номер, дата, срок, «кем направлен» в кратком описании договора). ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, createContract, clickWait } = require('../helpers/zippy');
-const { query, value } = require('../helpers/db');
+const { createItem, createCustomer, createDoc, createContract, clickWait, messages } = require('../helpers/zippy');
+const { query, value, esc } = require('../helpers/db');
 const { xlsxText } = require('../helpers/xlsx');
 
 test('оборудование: выдано по договору, на складе, списано', async ({ page, uniq }) => {
@@ -88,4 +88,59 @@ test('оборудование: выдано по договору, на скл�
   const resp = await page.context().request.get('/index.php?p=App/Pages/ShowReport&arg=xls/equipmentwhere');   // две таблицы — один лист Excel
   expect(resp.status()).toBe(200);
   expect(resp.headers()['content-type']).toContain('spreadsheetml');
+});
+
+// Мелкое оборудование без инвентарных номеров (ответ хосписа 1.13): выдано по договору количеством — отдельный блок
+// «на руках»: выдано минус возвращено по получателю и позиции; выдача расходников без договора сюда не попадает.
+test('мелкое оборудование на руках количеством', async ({ page, uniq }) => {
+  const code = 'SM-' + uniq, name = 'Ходунки ' + uniq, code2 = 'SC-' + uniq, name2 = 'Пеленки ' + uniq;
+  const r1 = 'Получатель ' + uniq + ' один', r2 = 'Получатель ' + uniq + ' два';
+  await createItem(page, { name, code });
+  await createItem(page, { name: name2, code: code2 });
+  await createCustomer(page, { name: r1, type: 1 });
+  await createCustomer(page, { name: r2, type: 1 });
+  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 10, price: 0 }, { code: code2, qty: 10, price: 0 }] });
+  await createContract(page, { number: 'М1-' + uniq, customer: r1, from: '2026-09-02', to: '2099-12-31', note: 'Врач Тестовый' });
+  await createContract(page, { number: 'М2-' + uniq, customer: r2, from: '2026-09-02', to: '2026-09-30', note: 'Отделение 2' });
+  const issue = async (date, customer, contract, rows) => {
+    const { number } = await createDoc(page, 'GoodsIssue', { date, customer, payment: 0, contract, rows });
+    return value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  };
+  const giveBack = async (id, date) => {
+    await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + id);
+    await page.locator('#document_date').fill(date);
+    await clickWait(page, '#execdoc');
+    expect(await page.locator('#docform #execdoc:visible').count(), (await messages(page)).join(' ')).toBe(0);
+  };
+  await issue('2026-09-03', r1, 'М1-' + uniq, [{ code, qty: 2, price: 0 }]);
+  await giveBack(await issue('2026-09-10', r1, 'М1-' + uniq, [{ code, qty: 1, price: 0 }]), '2026-09-12');
+  await issue('2026-09-15', r1, 'М1-' + uniq, [{ code, qty: 1, price: 0 }]);
+  await giveBack(await issue('2026-09-04', r2, 'М2-' + uniq, [{ code, qty: 1, price: 0 }]), '2026-09-20');   // вернули всё
+  await issue('2026-09-05', r1, null, [{ code: code2, qty: 3, price: 0 }]);   // расходники без договора
+
+  const run = async (search, state) => {
+    await page.goto('/index.php?p=App/Pages/Report/EquipmentWhere');
+    await page.locator('#filter #searchtext').fill(search);
+    if (state) await page.locator('#filter #state').selectOption(state);
+    await clickWait(page, '#filter #onreport');
+    const table = page.locator('#preview table.sqs-small');
+    if (!(await table.count())) return [];
+    const head = (await table.locator('tr').nth(1).locator('th').allInnerTexts()).map(s => s.trim());
+    const out = [];
+    for (const tr of await table.locator('tr').all()) {
+      const td = (await tr.locator('td').allInnerTexts()).map(s => s.trim());
+      if (td.length == head.length) out.push(Object.fromEntries(head.map((h, i) => [h, td[i]])));
+    }
+    return out;
+  };
+  let rows = await run(uniq);
+  expect(rows).toHaveLength(1);
+  expect(rows[0]).toMatchObject({ 'Найменування': name, 'Отримувач': r1, 'На руках': '3', 'Остання видача': '15.09.2026', 'Строк': 'до запитання', 'Ким направлено': 'Врач Тестовый' });
+  expect(rows[0]['Договір']).toContain('М1-' + uniq);
+  expect(await page.locator('#preview table.sqs-small tr').first().innerText()).toContain('штук: 3');
+  expect((await run(r1, 'all')).map(r => r['Отримувач']), 'поиск по получателю').toEqual([r1]);
+  expect(await run(r2, 'all'), 'все вернул').toEqual([]);
+  expect(await run(uniq, 'store'), 'только склады — без блока').toEqual([]);
+  await run(uniq);
+  expect(await xlsxText(page.context().request, '/index.php?p=App/Pages/ShowReport&arg=xls/equipmentwhere'), 'в Excel').toContain(name);
 });
