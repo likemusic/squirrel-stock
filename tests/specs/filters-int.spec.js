@@ -16,8 +16,10 @@ async function submitFilter(page, form, { selects = {}, texts = {}, autos = {}, 
   await page.waitForTimeout(400);
 }
 
-// Даты — ноябрь 2025: этот месяц не используют другие тесты; журнал постраничный, и на базе стенда, где тесты гоняются много раз,
+// Даты — март текущего года: этот месяц не используют другие тесты, и он не раньше закрытого периода (на чистом стенде — до 1 января текущего года); журнал постраничный, и на базе стенда, где тесты гоняются много раз,
 // документы общего месяца вытесняют нужный номер со страницы
+const Y = new Date().getFullYear();
+
 test('фильтры со своими обычными значениями отбирают как раньше', async ({ page, uniq }) => {
   test.setTimeout(300_000);
   query(`insert into item_cat (cat_name, parent_id) values ('Категория A ${uniq}', 0)`);
@@ -30,8 +32,8 @@ test('фильтры со своими обычными значениями о�
   query(`update items set cat_id = ${catA} where item_code = '${codeA}'`);
   query(`update items set cat_id = ${catB} where item_code = '${codeB}'`);
   await createCustomer(page, { name: r, type: 1 });
-  const inc = await createDoc(page, 'IncomeItem', { date: '2025-11-01', rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }, { code: codeB, qty: 1, price: 0, sn: 'SB-' + uniq }] });
-  const gi = await createDoc(page, 'GoodsIssue', { date: '2025-11-02', customer: r, payment: 0, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }] });
+  const inc = await createDoc(page, 'IncomeItem', { date: `${Y}-03-01`, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }, { code: codeB, qty: 1, price: 0, sn: 'SB-' + uniq }] });
+  const gi = await createDoc(page, 'GoodsIssue', { date: `${Y}-03-02`, customer: r, payment: 0, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }] });
   const metaGI = value(`select meta_id from metadata where meta_name = 'GoodsIssue'`);
   const metaInc = value(`select meta_id from metadata where meta_name = 'IncomeItem'`);
   const admin = value(`select user_id from users where userlogin = 'admin'`);
@@ -44,10 +46,10 @@ test('фильтры со своими обычными значениями о�
 
   // Журнал документов: тип, автор, склад, затем контрагент (фильтр журнала запоминается между отправками)
   await page.goto('/index.php?p=App/Pages/Register/DocList');
-  await submitFilter(page, '#filter', { texts: { from: '2025-11-01', to: '2025-11-30' }, selects: { doctype: metaInc, author: admin, store: 1 } });
+  await submitFilter(page, '#filter', { texts: { from: `${Y}-03-01`, to: `${Y}-03-30` }, selects: { doctype: metaInc, author: admin, store: 1 } });
   await check('DocList, оприходование', [inc.number], [gi.number]);
   await page.goto('/index.php?p=App/Pages/Register/DocList');
-  await submitFilter(page, '#filter', { texts: { from: '2025-11-01', to: '2025-11-30' }, selects: { doctype: metaGI, author: admin, store: 1 }, autos: { searchcust: r } });
+  await submitFilter(page, '#filter', { texts: { from: `${Y}-03-01`, to: `${Y}-03-30` }, selects: { doctype: metaGI, author: admin, store: 1 }, autos: { searchcust: r } });
   await check('DocList, выдача', [gi.number], [inc.number]);
 
   // Журнал выдач: контрагент и склад
@@ -67,12 +69,12 @@ test('фильтры со своими обычными значениями о�
 
   // Движение товара: склад и категория
   await page.goto('/index.php?p=App/Pages/Report/ItemActivity');
-  await submitFilter(page, '#filter', { texts: { from: '2025-11-01', to: '2025-11-30' }, selects: { store: 1, searchcat: catA }, submit: '#onreport' });
+  await submitFilter(page, '#filter', { texts: { from: `${Y}-03-01`, to: `${Y}-03-30` }, selects: { store: 1, searchcat: catA }, submit: '#onreport' });
   await check('Report/ItemActivity', [itemA], [itemB]);
 
   // Экспорт: просмотр документов по типу
   await page.goto('/index.php?p=App/Pages/Service/Export');
-  await submitFilter(page, '#dform', { selects: { dtype: 'GoodsIssue' }, texts: { dfrom: '2025-11-01', dto: '2025-11-30' } });
+  await submitFilter(page, '#dform', { selects: { dtype: 'GoodsIssue' }, texts: { dfrom: `${Y}-03-01`, dto: `${Y}-03-30` } });
   await check('Service/Export', [gi.number]);
 
   // Инвентаризация: «загрузить все» (позиции с остатком) по складу и категории

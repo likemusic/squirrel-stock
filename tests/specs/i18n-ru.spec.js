@@ -44,6 +44,9 @@ test('страницы меню на русском без украинског�
       const html = (await page.content())
         .replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '')   // комментарии пользователь не видит
         .split(/\n/).map(l => l.replace(/(^|\s)\/\/.*$/, ''))
+        // значок примечания в журнале документов: в подсказке — примечание документа (данные; «Підстава …» программа пишет
+        // на языке того, кто создал документ — здесь другие тесты на украинском)
+        .map(l => l.replace(/(<i zippy="hasnotes[^>]*title=")[^"]*"/, '$1"'))
         .filter(l => UKRAINIAN.test(l) && !ALLOWED.some(a => l.includes(a)));
       for (const l of html) found.push(`${href}: [html] ${l.trim().slice(0, 100)}`);
     }
@@ -132,6 +135,9 @@ test('страницы модулей на русском без украинс�
       const html = (await page.content())
         .replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '')
         .split(/\n/).map(l => l.replace(/(^|\s)\/\/.*$/, ''))
+        // значок примечания в журнале документов: в подсказке — примечание документа (данные; «Підстава …» программа пишет
+        // на языке того, кто создал документ — здесь другие тесты на украинском)
+        .map(l => l.replace(/(<i zippy="hasnotes[^>]*title=")[^"]*"/, '$1"'))
         .filter(l => UKRAINIAN.test(l) && !ALLOWED.some(a => l.includes(a)));
       for (const l of html) found.push(`${href}: [html] ${l.trim().slice(0, 100)}`);
     }
