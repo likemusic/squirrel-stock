@@ -148,59 +148,19 @@ class EquipmentWhere extends \App\Pages\Base
     }
 
     /**
-     * Мелкое оборудование на руках (ответ хосписа 1.13): позиции без серийного номера, выданные расходной накладной по договору
-     * (так их заводит импорт истории, App\SQS\EqHistory). На руках = выдано по договорам минус возвращено (возврат по такой
-     * выдаче или с договором), по получателю и позиции; показываются строки, где осталось больше нуля.
-     * Договор, срок и «кем направлен» — по последней выдаче.
+     * Мелкое оборудование на руках (App\SQS\Units::smallOnHand) — строки отчета; договор, срок и «кем направлен» — по последней выдаче
      */
     private function smallOnHand(int $cat, string $text): array {
-        $conn = \ZDB\DB::getConnect();
-        $where = "s.snumber = '' AND m.meta_name IN ('GoodsIssue', 'ReturnIssue')";
-        if ($cat > 0) {
-            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
-        }
-        // договор — из заголовка документа (<contract_id>N</contract_id>), чтобы не загружать каждую выдачу расходников
-        $docs = $conn->Execute("SELECT d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname,
-                                       SUM(e.quantity) AS qty,
-                                       CAST(REGEXP_SUBSTR(REGEXP_SUBSTR(d.content, '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED) AS contract_id
-                                FROM entrylist e
-                                JOIN store_stock s ON s.stock_id = e.stock_id
-                                JOIN items i ON i.item_id = s.item_id
-                                JOIN documents d ON d.document_id = e.document_id
-                                JOIN metadata m ON m.meta_id = d.meta_id
-                                WHERE {$where} AND d.customer_id > 0
-                                GROUP BY d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname
-                                ORDER BY d.document_date, d.document_id");
-        $rows = [];
-        $contractOf = [];   // выдача по договору: document_id => contract_id
-        foreach ($docs as $d) {
-            if ($d['meta_name'] == 'GoodsIssue') {
-                if (intval($d['contract_id']) <= 0) {
-                    continue;   // выдача расходников
-                }
-                $contractOf[$d['document_id']] = intval($d['contract_id']);
-            } elseif (intval($d['contract_id']) <= 0 && !isset($contractOf[$d['parent_id']])) {
-                continue;   // возврат не по договору
-            }
-            $k = $d['customer_id'] . '|' . $d['item_id'];
-            $r = $rows[$k] ?? ['customer_id' => intval($d['customer_id']), 'itemname' => $d['itemname'], 'qty' => 0, 'last' => null];
-            $r['qty'] -= floatval($d['qty']);   // выдача — минус по складу, возврат — плюс
-            if ($d['meta_name'] == 'GoodsIssue') {
-                $r['last'] = $d;
-            }
-            $rows[$k] = $r;
-        }
-
-        $rows = array_filter($rows, fn($r) => $r['qty'] > 0 && $r['last'] != null);
+        $rows = \App\SQS\Units::smallOnHand($cat);
         $customers = \App\SQS\Units::customers(array_column($rows, 'customer_id'));
-        $contracts = \App\SQS\Units::contracts(array_map(fn($r) => $r['last']['contract_id'], $rows));
+        $contracts = \App\SQS\Units::contracts(array_column($rows, 'contract_id'));
         $out = [];
         foreach ($rows as $r) {
             $c = $customers[$r['customer_id']] ?? null;
             $row = ['itemname' => $r['itemname'], 'customer' => $c->customer_name ?? '', 'phone' => $c->phone ?? '', 'address' => $c->address ?? '',
-                    'qty' => H::fqty($r['qty']), 'date' => H::fd(strtotime($r['last']['document_date'])), 'document' => $r['last']['document_number'],
+                    'qty' => H::fqty($r['qty']), 'date' => H::fd($r['date']), 'document' => $r['document_number'],
                     'contract' => '', 'term' => '', 'sent' => '', 'overdue' => false, 'extend' => ''];
-            $contract = $contracts[intval($r['last']['contract_id'])] ?? null;
+            $contract = $contracts[$r['contract_id']] ?? null;
             if ($contract) {
                 $end = intval($contract->enddate);
                 $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);

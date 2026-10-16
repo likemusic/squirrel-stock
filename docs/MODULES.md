@@ -57,7 +57,7 @@ class Hello extends \App\Pages\Base
 
 | Module | What | Tests |
 |---|---|---|
-| `reports` | issue act, recipients by month, turnover by item, below minimum | `report-issue-act`, `report-recipient-months`, `report-item-turnover`, `report-below-minimum`, `report-subcategories` |
+| `reports` | issue act, recipients by month, turnover by item, below minimum, recipient card | `report-issue-act`, `report-recipient-months`, `report-item-turnover`, `report-below-minimum`, `report-subcategories`, `report-recipient-card` |
 | `consumables` | consumables issue, issue intervals (table `sqs_issue_interval`) | `consumables-issue`, `issue-interval` |
 | `import1c` | 1C trial balance import page | `import-1c`, `import-1c-same-name`, `import-1c-date` |
 | `backup` | backup page, scheduled backup to several places (`cli/backup.php` is a wrapper), main page warning (table `sqs_backuplog`) | `backup`, `backup-auto`, `backup-main-warning` |
@@ -89,6 +89,7 @@ The audit log of document edits (`App\SQS\DocAudit`) is a built-in `beforeSave`/
 |---|---|---|---|
 | `mainBlocks` | — | HTML of a block for the main page, or `''` | `App\Pages\Main` (placeholder `{{{sqs_blocks}}}` in `main.html`) |
 | `itemSaved` | `Item $item`, the page, `string $oldname` | — | item card saved (`Reference\ItemList`) |
+| `customerCardUrl` | `int $customer_id` | address of the recipient card or `''` (first result is used) | recipient name in the issue journal (`Register\GIList`), card icon in the customer list (`Reference\CustomerList`) |
 
 A block is usually rendered from the module's print form folder: `(new \App\Report('blocks/hello.tpl'))->generate($data, false)`.
 

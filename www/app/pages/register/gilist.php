@@ -161,6 +161,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
         $row->add(new Label('order', $doc->headerdata['order'] ?? ''));
         $row->add(new Label('customer', $doc->customer_name));
+        $row->customer->setAttribute('href', (\App\SQS\Hooks::emit('customerCardUrl', $doc->customer_id)[0] ?? '') ?: null);   // SquirrelStock: имя — ссылка на карточку получателя (модуль reports)
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
  

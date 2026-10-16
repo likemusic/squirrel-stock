@@ -246,6 +246,13 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
+        // SquirrelStock: карточка получателя (модуль reports) — выдачи, возвраты, оборудование на руках
+        $card = \App\SQS\Hooks::emit('customerCardUrl', $item->customer_id)[0] ?? '';
+        $row->add(new Label('card', '<i class="fa fa-id-card"></i>', true))->setVisible($card !== '');
+        if ($card !== '') {
+            $row->card->setAttribute('href', $card);
+            $row->card->setAttribute('title', __('report.recipientcard.card_link'));
+        }
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
   
