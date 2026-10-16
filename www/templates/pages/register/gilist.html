@@ -47,7 +47,7 @@
                                  
                                 </div>
                                </div>
-                         <div class="col-12">
+                         <div class="col-12{{#sqs_charity}} d-none{{/sqs_charity}}">
                            <div class="input-group">
                                
                                 <label     for="salesource">{{#t}}common.dzherelo_prodazh{{/t}}</label>
@@ -77,8 +77,10 @@
                             </form>
                          
                         <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_vn{{/t}}</a>&nbsp;
+                        {{^sqs_charity}}
                         <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_rf{{/t}}</a>
                         <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_ttn{{/t}}</a>
+                        {{/sqs_charity}}
 
                         <br> <a zippy="csv">{{#t}}common.eksport_u_excel{{/t}}</a>
 

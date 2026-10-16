@@ -24,6 +24,7 @@ const pick = a => a[rnd(a.length)];
 
 const WARDS = Array.from({ length: 16 }, (_, i) => `Подопечный ${String(i + 1).padStart(3, '0')}`);
 const ON_REQUEST = ['Семья по запросу 01', 'Семья по запросу 02'];
+const FIRM = 'Благотворительная организация (демо)';   // своя организация (выдает и принимает)
 const ORG = 'Пансионат (демо)';   // получает «по запросу»
 const GASTRO = new Set(['Подопечный 003', 'Подопечный 007', 'Подопечный 011', 'Подопечный 014']);   // получают питание для гастростомы
 const LEFT_CARE = new Set(['Подопечный 015', 'Подопечный 016']);
@@ -79,6 +80,11 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
   await page.goto('/index.php?p=App/Pages/Options');
   await page.locator('#common #money2str').selectOption('ru');
   await clickWait(page, '#common button[type=submit]');
+  // организация: в печатной форме выдачи строка «Выдал», возврата — «Принял» (название пишется в документ при создании)
+  await page.goto('/index.php?p=App/Pages/Firm');
+  await page.locator('#firmform #firm_name').fill(FIRM);
+  await clickWait(page, '#firmform #save');
+  if (value(`select from_base64(optvalue) like '%${esc(FIRM)}%' from options where optname = 'firm'`) !== '1') throw new Error('название организации не сохранено');
 
   // 2. Склады-состояния оборудования и категории
   for (const name of ['Ремонт', 'К списанию']) {   // «К списанию» — пустой, для показа
