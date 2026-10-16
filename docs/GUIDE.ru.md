@@ -9,7 +9,7 @@ git clone https://github.com/likemusic/squirrel-stock.git && cd squirrel-stock/d
 SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход admin / admin
 ```
 
-При первом запуске база создаётся из `db/db.sql` (база Zippy) и `db/squirrelstock.sql` (отчёты и страницы SquirrelStock в меню). На уже существующей базе `db/squirrelstock.sql` выполняется вручную, повторный запуск безопасен.
+При первом запуске база создаётся из `db/db.sql` (база Zippy). Таблицы и пункты меню SquirrelStock программа создаёт сама: при первом запросе, после обновления программы и после восстановления резервной копии, сделанной более старой версией.
 
 Сразу после входа смените пароль администратора в профиле.
 
