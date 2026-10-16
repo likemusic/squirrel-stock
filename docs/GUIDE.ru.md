@@ -13,7 +13,7 @@ SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход 
 
 Сразу после входа смените пароль администратора в профиле.
 
-Без Docker: на Debian 12 / Ubuntu 24.04 одним скриптом — [INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md); на хостинг с Apache — [INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md); обновление программы — [UPDATE.ru.md](UPDATE.ru.md). Какой документ кому — [README.md](README.md).
+Без Docker: на Debian 13, Debian 12 или Ubuntu 24.04 одним скриптом — [INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md); на хостинг с Apache — [INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md); обновление программы — [UPDATE.ru.md](UPDATE.ru.md). Какой документ кому — [README.md](README.md).
 
 ## Начальная настройка
 

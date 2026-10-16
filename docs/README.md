@@ -13,7 +13,7 @@
 
 ## Администратору: установка и обновление
 
-- [INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md) — Debian 12 и Ubuntu 24.04 одним скриптом: отдельный компьютер на складе или VPS.
+- [INSTALL_LINUX.ru.md](INSTALL_LINUX.ru.md) — Debian 13, Debian 12 и Ubuntu 24.04 одним скриптом: отдельный компьютер на складе или VPS.
 - [INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md) — хостинг с Apache (ISPmanager): пакет, база, файлы, защита, проверка сайта `check-site.sh`.
 - [UPDATE.ru.md](UPDATE.ru.md) — обновление программы до новой версии.
 

@@ -19,12 +19,12 @@
 | `squirrel-stock-<версия>-empty.sql` | пустая база (Zippy + страницы SquirrelStock). Вход `admin` с тем же паролем из сборки |
 | `squirrel-stock-<версия>.sha256` | контрольные суммы |
 
-Требования: PHP 8.1 или новее (проверено на 8.2), MySQL 5.7+ или MariaDB (проверено на 10.11), расширения mysqli, zip, gmp, gd, mbstring, curl, fileinfo, openssl, xml, dom, iconv, json. Чаще всего на хостинге не включены **gmp**, иногда **zip** и **gd**.
+Требования: PHP 8.2–8.4 (полный набор автотестов пройден на 8.2 с MariaDB 10.11 и на 8.4 с MariaDB 11.4; лучше 8.4: поддержка 8.2 у разработчиков PHP заканчивается 31.12.2026, 8.4 — 31.12.2028; 8.1 не проверялась), MySQL 5.7+ или MariaDB (проверено на 10.11 и 11.4), расширения mysqli, zip, gmp, gd, mbstring, curl, fileinfo, openssl, xml, dom, iconv, json. Чаще всего на хостинге не включены **gmp**, иногда **zip** и **gd**.
 
 ## 2. Поддомен и сайт [не проверено]
 
 1. A-запись поддомена: если DNS обслуживает этот же сервер, ISPmanager создаст её сам; иначе добавьте A-запись у регистратора или в Cloudflare с IP сервера.
-2. ISPmanager → **Сайты** → **Создать сайт**: имя `stock.example.org`; обработчик — «PHP как модуль Apache» или «FastCGI (Apache)»; версия PHP 8.2; **SSL** — Let's Encrypt и «Перенаправлять HTTP-запросы в HTTPS».
+2. ISPmanager → **Сайты** → **Создать сайт**: имя `stock.example.org`; обработчик — «PHP как модуль Apache» или «FastCGI (Apache)»; версия PHP 8.4 (если её нет в списке — 8.3 или 8.2); **SSL** — Let's Encrypt и «Перенаправлять HTTP-запросы в HTTPS».
 3. Настройки PHP сайта: `memory_limit = 512M`, `max_execution_time = 300`, `date.timezone = Europe/Minsk`, `upload_max_filesize` и `post_max_size` — не меньше 64M (импорт Excel, восстановление из копии).
 
 ## 3. База данных

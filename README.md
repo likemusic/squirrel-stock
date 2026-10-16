@@ -43,7 +43,7 @@ SQS_LANG=ru docker compose up -d --build      # http://127.0.0.1:8083, вход 
 
 ## Установка
 
-- Linux (Debian 12, Ubuntu 24.04), отдельный компьютер или VPS, одним скриптом: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md).
+- Linux (Debian 13, Debian 12, Ubuntu 24.04), отдельный компьютер или VPS, одним скриптом: [docs/INSTALL_LINUX.ru.md](docs/INSTALL_LINUX.ru.md).
 - Хостинг с Apache (ISPmanager и т. п.): [docs/INSTALL_HOSTING.ru.md](docs/INSTALL_HOSTING.ru.md).
 - Обновление программы: [docs/UPDATE.ru.md](docs/UPDATE.ru.md).
 - Резервная копия по расписанию: [docs/BACKUP.ru.md](docs/BACKUP.ru.md).
