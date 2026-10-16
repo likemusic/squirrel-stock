@@ -34,8 +34,11 @@ async function clickWait(page, sel) {
   const nav = page.waitForEvent('request', { predicate: r => r.isNavigationRequest() && r.frame() === page.mainFrame(), timeout: 1500 }).catch(() => null);
   const loaded = page.waitForEvent('load', { timeout: 60000 }).catch(() => null);
   await page.locator(sel).first().click();
-  if (await nav) await loaded;
-  await page.waitForLoadState('networkidle');
+  if (await nav) {
+    await loaded;   // новая страница загружена; ждать простоя сети после нее нельзя: на некоторых страницах он не наступает
+  } else {
+    await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});   // без перехода — ответ AJAX
+  }
   await page.waitForTimeout(300);
 }
 
