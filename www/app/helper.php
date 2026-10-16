@@ -471,7 +471,11 @@ class Helper
         $conn = \ZDB\DB::getConnect();
         $groups = array();
 
-        $rs = $conn->Execute('SELECT description,meta_id FROM   metadata where meta_type = 1 order by description');
+        $where = 'meta_type = 1';
+        if (\App\SQS\Profile::charity()) {   // SquirrelStock: в профиле — типы из меню и те, по которым есть документы (без кассы, зарплаты, кафе)
+            $where .= ' and (disabled <> 1 or exists (select 1 from documents d where d.meta_id = metadata.meta_id))';
+        }
+        $rs = $conn->Execute("SELECT description,meta_id FROM   metadata where {$where} order by description");
         foreach($rs as $row) {
             $groups[$row['meta_id']] = $row['description'];
         }
