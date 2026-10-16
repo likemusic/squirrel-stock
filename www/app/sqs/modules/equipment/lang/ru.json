@@ -7,6 +7,7 @@
     "report.equipmentwhere.col_issued": "Выдано",
     "report.equipmentwhere.col_off": "Списано",
     "report.equipmentwhere.col_total": "Всего",
+    "report.equipmentwhere.contract_of": "{number} от {date}",
     "report.equipmentwhere.inv": "Инв. №",
     "report.equipmentwhere.issued": "выдано",
     "report.equipmentwhere.model": "Модель",
