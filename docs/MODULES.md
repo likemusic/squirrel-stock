@@ -62,7 +62,7 @@ class Hello extends \App\Pages\Base
 | `backup` | backup page, scheduled backup to several places (`cli/backup.php` is a wrapper), main page warning (table `sqs_backuplog`) | `backup`, `backup-auto`, `backup-main-warning` |
 | `equipment` | equipment issue by contract, units, where now, issue journal, history import, main page reminder (tables `sqs_unit`, `sqs_eqhistory`) | `equipment-issue`, `equipment-due`, `report-equipment-where`, `report-equipment-journal`, `eqhistory-import` |
 
-Platform code outside modules (`www/app/sqs/`): `Hooks`, `Modules`, `Categories`, login security (`Remember`, `LoginGuard`, `Totp`, `TwoFactor` and its pages), the document audit log (`DocAudit`), 1C names (`Item1C`, used by the issue act and the import). Its tables are in `db/squirrelstock.sql`.
+Platform code outside modules (`www/app/sqs/`): `Hooks`, `Modules`, `Categories`, login security (`Remember`, `LoginGuard`, `Totp`, `TwoFactor` and its pages), the document audit log (`DocAudit`), 1C names (`Item1C`, used by the issue act and the import). Its tables are in `www/app/sqs/schema.sql`; like module schemas, the file is applied automatically when it changes (and after restoring a backup).
 
 ## Document hooks
 
