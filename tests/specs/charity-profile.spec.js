@@ -341,3 +341,45 @@ test('справочник контрагентов в профиле: приз�
     query(`delete t from taglist t join customers c on c.customer_id = t.item_id where t.tag_type = 1 and c.customer_name = '${esc(name)}'`);
   }
 });
+
+test('журнал документов в профиле: в отборе «Тип» только документы из меню и те, по которым есть документы', async ({ browser, uniq }) => {
+  const options = async (p, path) => {
+    await p.goto(`/index.php?p=App/Pages/${path}`);
+    return p.locator('select[name="doctype"] option').evaluateAll(os => os.map(o => o.textContent.trim()));
+  };
+  const meta = (name) => value(`select description from metadata where meta_type = 1 and meta_name = '${name}'`);
+  // документ выключенного типа, оставшийся в базе (например, из импорта): его тип в отборе остается
+  const number = `ТЕСТ-${uniq}`;
+  const issue = `ТЕСТ-В-${uniq}`;
+  const based = async (p) => {
+    await p.goto('/index.php?p=App/Pages/Register/DocList');
+    await p.locator('input[name="searchnumber"]').fill(issue);
+    await clickWait(p, '#filter input[type="submit"]');
+    return p.locator(`tr:has-text("${issue}") .dropdown-menu a`).evaluateAll(as => as.map(a => a.getAttribute('href').replace(/.*Pages\/Doc\/|&.*/g, '')));
+  };
+  query(`insert into documents (document_number, document_date, meta_id, state, content) select '${number}', curdate(), meta_id, 1, '<doc></doc>' from metadata where meta_type = 1 and meta_name = 'OutcomeMoney'`);
+  query(`insert into documents (document_number, document_date, meta_id, state, content) select '${issue}', curdate(), meta_id, 5, '<doc></doc>' from metadata where meta_type = 1 and meta_name = 'GoodsIssue'`);
+  try {
+    webPhp('cli/charity-profile.php');
+    let p = await freshPage(browser);
+    for (const path of ['Register/DocList', 'SystemLog']) {
+      const types = await options(p, path);
+      for (const keep of ['GoodsIssue', 'ReturnIssue', 'OutcomeItem', 'OutcomeMoney']) expect(types, `${path}: ${keep}`).toContain(meta(keep));
+      for (const off of ['IncomeMoney', 'CalcSalary', 'OutSalary', 'POSCheck', 'OrderFood']) expect(types, `${path}: ${off}`).not.toContain(meta(off));
+    }
+    // «Создать на основании»: только типы из меню
+    const docs = await based(p);
+    expect(docs).toContain('ReturnIssue');
+    for (const off of ['TTN', 'Warranty', 'Invoice']) expect(docs, off).not.toContain(off);
+    await p.context().close();
+
+    webPhp('cli/charity-profile.php', '--back');
+    p = await freshPage(browser);
+    const types = await options(p, 'Register/DocList');
+    for (const all of ['IncomeMoney', 'CalcSalary', 'POSCheck']) expect(types, all).toContain(meta(all));
+    expect(await based(p)).toEqual(expect.arrayContaining(['ReturnIssue', 'TTN', 'Warranty', 'Invoice']));
+    await p.context().close();
+  } finally {
+    query(`delete from documents where document_number in ('${esc(number)}', '${esc(issue)}')`);
+  }
+});

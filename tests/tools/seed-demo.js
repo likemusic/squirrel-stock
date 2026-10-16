@@ -132,8 +132,7 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
   const tag = (name, t) => query(`insert into taglist (tag_name, tag_type, item_id) select '${esc(t)}', 1, customer_id from customers where customer_name = '${esc(name)}'`);
   for (const [i, name] of [...WARDS, ...ON_REQUEST, ORG].entries()) {
     await createCustomer(page, { name, type: 1, phone: `029${String(1000000 + i * 7919).slice(-7)}`, address: `г. Минск, ул. Демонстрационная, ${i + 1}` });
-    tag(name, WARDS.includes(name) ? 'подопечный' : 'по запросу');
-    if (LEFT_CARE.has(name)) tag(name, 'снят с опеки');
+    tag(name, LEFT_CARE.has(name) ? 'снят с опеки' : WARDS.includes(name) ? 'подопечный' : 'по запросу');   // одна метка на получателя
   }
   query("delete from taglist where tag_name = ''");   // форма контрагента сохраняет пустую метку
   log('получатели', WARDS.length + ON_REQUEST.length + 1);
