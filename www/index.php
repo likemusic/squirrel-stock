@@ -39,6 +39,7 @@ try {
 
     $app = new \App\Application();
     \App\SQS\PageGuard::check($app);   // SquirrelStock: страница выключенного пункта меню — «нет права доступа»
+    \App\SQS\RequestOrigin::check($app);   // SquirrelStock: действие — только со страниц самой программы
     $modules = \App\System::getOptions('modules');
 
     if (($modules['shop'] ??0)== 1 && \App\System::getOption('shop', 'usemainpage')==1) {
