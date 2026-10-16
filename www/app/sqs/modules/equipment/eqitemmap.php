@@ -8,7 +8,9 @@ namespace App\SQS;
  * детский»); исходные таблицы не правятся, варианты сводятся к одной позиции здесь. Написание, которого нет
  * в соответствиях, не импортируется — в отчет, чтобы позиция не завелась дублем молча. Написание, совпадающее
  * с позицией из соответствий, известно и без своей строки.
- * Правится на странице импорта текстом: строка «написание = позиция».
+ * Правится на странице импорта текстом: строка «написание = позиция». Позиция со «*» в конце — оборудование
+ * с инвентарными номерами (кровати, концентраторы): строка такой позиции без номера не заводится мелочью количеством,
+ * а идет в список «без инвентарного номера» для ручного ввода номера. Отметка хранится в позиции (в базе — «позиция *»).
  */
 class EqItemMap
 {
@@ -23,13 +25,19 @@ class EqItemMap
         return trim(preg_replace('/\s+/u', ' ', $s));
     }
 
+    // позиция и отметка «с инвентарными номерами» из текста «позиция *»
+    private static function entry(string $w, string $item): array {
+        $serial = str_ends_with($item, '*');
+        return ['written' => $w, 'item' => self::clean(rtrim($item, '* ')), 'serial' => $serial];
+    }
+
     /**
-     * Соответствия из базы: [ключ написания => ['written' => написание, 'item' => позиция]], в порядке ввода
+     * Соответствия из базы: [ключ написания => ['written' => написание, 'item' => позиция, 'serial' => с инв. номерами]], в порядке ввода
      */
     public static function all(): array {
         $map = [];
         foreach (\ZDB\DB::getConnect()->Execute("SELECT written, itemname FROM sqs_eqitemmap ORDER BY id") as $r) {
-            $map[self::key($r['written'])] = ['written' => $r['written'], 'item' => $r['itemname']];
+            $map[self::key($r['written'])] = self::entry($r['written'], $r['itemname']);
         }
         return $map;
     }
@@ -54,6 +62,18 @@ class EqItemMap
     }
 
     /**
+     * Позиция ведется по инвентарным номерам: отмечена «*» хотя бы в одной строке
+     */
+    public static function serial(array $map, string $item): bool {
+        foreach ($map as $m) {
+            if (!empty($m['serial']) && self::key($m['item']) === self::key($item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Разобрать текст «написание = позиция» по строкам. Возвращает ['map' => [...как all()], 'errors' => [номер строки => текст]].
      * Пустые строки и строки с «#» в начале пропускаются; одно написание дважды с разными позициями — ошибка
      */
@@ -66,7 +86,8 @@ class EqItemMap
             }
             $parts = explode('=', $line, 2);
             $w = self::clean($parts[0]);
-            $item = self::clean($parts[1] ?? '');
+            $e = self::entry($w, self::clean($parts[1] ?? ''));
+            $item = $e['item'];
             if ($w === '' || $item === '') {
                 $res['errors'][$i + 1] = $line;
                 continue;
@@ -76,14 +97,14 @@ class EqItemMap
                 $res['errors'][$i + 1] = $line;
                 continue;
             }
-            $res['map'][$k] = ['written' => $w, 'item' => $item];
+            $res['map'][$k] = $e;
         }
         return $res;
     }
 
     // текст для поля на странице импорта
     public static function toText(array $map): string {
-        return implode("\n", array_map(fn($m) => $m['written'] . ' = ' . $m['item'], $map));
+        return implode("\n", array_map(fn($m) => $m['written'] . ' = ' . $m['item'] . (!empty($m['serial']) ? ' *' : ''), $map));
     }
 
     // заменить соответствия в базе
@@ -92,7 +113,7 @@ class EqItemMap
         $conn->StartTrans();
         $conn->Execute("DELETE FROM sqs_eqitemmap");
         foreach ($map as $m) {
-            $conn->Execute("INSERT INTO sqs_eqitemmap (written, itemname) VALUES (" . $conn->qstr($m['written']) . ", " . $conn->qstr($m['item']) . ")");
+            $conn->Execute("INSERT INTO sqs_eqitemmap (written, itemname) VALUES (" . $conn->qstr($m['written']) . ", " . $conn->qstr($m['item'] . (!empty($m['serial']) ? ' *' : '')) . ")");
         }
         $conn->CompleteTrans();
     }

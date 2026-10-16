@@ -20,6 +20,8 @@ use App\Entity\Item;
  * Правила (согласованы 15.10.2026): что однозначно — импортируется, что нет — в отчет с причиной: «ошибка» — строка
  * не импортирована, «заметка» — импортирована с допущением. Единица с инв. номером должна уже быть в базе (импорт ОСВ 01);
  * единица только с заводским номером создается товаром «по листу». Без номеров (мелочь) — на руках количеством на позицию по соответствиям «написание → позиция» (EqItemMap), остальное — пропуск со сводкой.
+ * Позиция с инвентарными номерами (отметка «*» в соответствиях или товар с серийным учетом) без номера мелочью не заводится:
+ * такие выдачи — списком «без инвентарного номера» для ручного ввода номера (ответ хосписа 5.12).
  * Одна выдача в обеих таблицах склеивается по единице и дате. Документы: приход единицы, которой нет в базе (накануне
  * первой выдачи), выдача по договору, возврат, списание — проводятся в хронологическом порядке. Что уже импортировано
  * (таблица sqs_eqhistory), повторно не создается.
@@ -38,6 +40,7 @@ class EqHistory
     public array $stat = [];
     public array $onhand = [];    // мелочь без номеров, перенесенная на руки: [позиция => штук]
     public array $unmapped = [];  // написания мелочи, которых нет в соответствиях (App\SQS\EqItemMap): [написание => строк]
+    public array $noInv = [];     // выдачи на руках позиций с инвентарными номерами, где номера нет: [sheet, row, contract, date, name, written, item]
     public ?array $itemMap = null; // соответствия «написание → позиция»; null — из базы
     public int $blocked = 0;      // дата актуальности из настроек, если она позже первого документа импорта
 
@@ -666,10 +669,11 @@ class EqHistory
 
     /**
      * Выдача без номеров единицы (мелкое оборудование, ответ 1.13): на руках — переносится количеством на позицию без
-     * серийного учета, одну на лист (на листе «разное» и в журнале — по наименованию); возвращенное и списанное — пропуск
+     * серийного учета по наименованию в строке (пустое — по листу переписи); возвращенное и списанное — пропуск
      */
     private function noNumber(array &$rec): void {
-        $name = $rec['src'] == 'census' && mb_strtolower($rec['sheet']) != 'разное' ? $rec['sheet'] : $rec['itemtext'];
+        // наименование из строки (на листе кроватей без номеров — и матрасы, у мешков Амбу — объем); пустое — по листу
+        $name = $rec['itemtext'] === '' && $rec['src'] == 'census' && mb_strtolower($rec['sheet']) != 'разное' ? $rec['sheet'] : $rec['itemtext'];
         $name = trim(preg_replace('/\s+/u', ' ', $name));
         if ($rec['ret'] || !empty($rec['retunknown']) || $rec['off'] || !empty($rec['offunknown']) || $name === '') {
             $this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] = ($this->skipped[$rec['sheet']][$rec['itemtext'] ?: '-'] ?? 0) + 1;
@@ -844,6 +848,7 @@ class EqHistory
         $seen = [];
         $this->onhand = [];
         $this->unmapped = [];
+        $this->noInv = [];
         $map = $this->itemMap ?? EqItemMap::all();
         foreach ($qtyRecs as $r) {
             if ($r['src'] == 'journal' && isset($censusQty[$r['contract'] . '|' . date('Y-m-d', $r['idate'])])) {
@@ -855,6 +860,12 @@ class EqHistory
             if ($item === null) {
                 $this->unmapped[$r['written']] = ($this->unmapped[$r['written']] ?? 0) + 1;
                 $this->problem('error', $r['sheet'], $r['row'], $r['contract'], $r['written'], __('sqs.eqhist.not_in_map', ['value' => $r['written']]));
+                continue;
+            }
+            // кровати, концентраторы без номера — не мелочь: номер вписывается вручную, потом импорт повторяется
+            if (EqItemMap::serial($map, $item) || self::serialItem($item)) {
+                $this->noInv[] = ['sheet' => $r['sheet'], 'row' => $r['row'], 'contract' => $r['contract'], 'date' => $r['idate'], 'name' => $r['name'], 'written' => $r['written'], 'item' => $item];
+                $this->problem('error', $r['sheet'], $r['row'], $r['contract'], $r['written'], __('sqs.eqhist.no_inv_number', ['item' => $item]));
                 continue;
             }
             $r['unit']['itemname'] = $item;
@@ -875,7 +886,7 @@ class EqHistory
         // уже импортированное
         $done = self::doneKeys();
         $this->stat = ['records' => count($this->records), 'issues' => count($issues), 'merged' => $this->stat['qtymerged'] ?? 0, 'errors' => 0, 'notes' => 0,
-                       'income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'done' => 0, 'customers' => 0, 'contracts' => 0];
+                       'income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'done' => 0, 'customers' => 0, 'contracts' => 0, 'noinv' => count($this->noInv)];
         $this->plan = [];
         $newCustomers = [];
         $newContracts = [];
@@ -914,6 +925,12 @@ class EqHistory
         foreach ($this->problems as $p) {
             $this->stat[$p['level'] == 'error' ? 'errors' : 'notes']++;
         }
+    }
+
+    // товар с этим названием ведется по серийным (инвентарным) номерам
+    private static function serialItem(string $name): bool {
+        $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');   // признак — в detail (XML), не колонка
+        return $item != null && $item->useserial == 1;
     }
 
     // одна выдача из двух источников: номер договора — из переписи, кем направлен — из журнала, остальное дополняется

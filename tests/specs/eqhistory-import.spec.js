@@ -2,7 +2,8 @@
 // Таблицы вымышленные, той же раскладки (tests/fixtures/make-eqhistory.php), номера — свои на каждый прогон.
 // Проверяется: «Проверить» ничего не пишет и показывает ошибки с причиной; «Записать» создает выдачи, возвраты, списания
 // и приход единицы только с заводским номером; одна выдача из двух таблиц склеивается; повторный импорт не дублирует;
-// мелочь без номеров — на позицию по соответствиям «написание → позиция», неизвестное написание — ошибка без записи.
+// мелочь без номеров — на позицию по соответствиям «написание → позиция», неизвестное написание — ошибка без записи;
+// оборудование с инвентарными номерами без номера (ответ хосписа 5.12) — не мелочь, а список для ручного ввода номера.
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
@@ -70,21 +71,26 @@ test('импорт истории оборудования: проверка, з
   await setActual('2025-01-01');
 
   // соответствия наименований мелочи: строка не в виде «написание = позиция» — не сохраняются, файлы не разбираются
-  await run('check', 'мешки Амбу = Мешки Амбу\nпросто текст');
+  await run('check', 'Амбу 680 мл. = Мешок Амбу 680 мл\nпросто текст');
   await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/рядки 2 /);
   await expect(page.locator('#eqh-summary')).toHaveCount(0);
 
-  // проверка: ничего не записано, план и ошибки с причиной. Соответствия: лист «мешки Амбу» — позиция «Мешки Амбу»;
-  // «Ингалят.детский» — «Ингалятор детский», а «ингалятор детский» совпадает с позицией и своей строки не требует
-  await run('check', 'мешки Амбу = Мешки Амбу\n# комментарий\nингалят . детский = Ингалятор детский');
-  expect(query('select written, itemname from sqs_eqitemmap order by id')).toEqual([['мешки Амбу', 'Мешки Амбу'], ['ингалят . детский', 'Ингалятор детский']]);
-  // выдачи: единицы 1, 2, 3, 5 (дважды), 8, 9, кровать с заводским номером; без номеров — мешок Амбу и два ингалятора
-  expect(await stat('issue')).toBe(11);
+  // проверка: ничего не записано, план и ошибки с причиной. Соответствия: «Амбу 680 мл.» (наименование в строке листа
+  // «мешки Амбу») — «Мешок Амбу 680 мл»; «Ингалят.детский» — «Ингалятор детский», а «ингалятор детский» совпадает
+  // с позицией и своей строки не требует; «кровати» (строка листа без наименования) — позиция со «*», по номерам
+  await run('check', 'Амбу 680 мл. = Мешок Амбу 680 мл\n# комментарий\nингалят . детский = Ингалятор детский\nматрас к кровати = Матрас медицинский'
+    + '\nкровати = Кровать функциональная *\nконцентратор = Концентратор кислорода ЭИ тестовый');
+  expect(query('select written, itemname from sqs_eqitemmap order by id')).toEqual([['Амбу 680 мл.', 'Мешок Амбу 680 мл'], ['ингалят . детский', 'Ингалятор детский'],
+    ['матрас к кровати', 'Матрас медицинский'], ['кровати', 'Кровать функциональная *'], ['концентратор', 'Концентратор кислорода ЭИ тестовый']]);
+  await expect(page.locator('#iform #itemmap')).toHaveValue(/\nкровати = Кровать функциональная \*\n/);
+  // выдачи: единицы 1, 2, 3, 5 (дважды), 8, 9, кровать с заводским номером; без номеров — мешок Амбу, два ингалятора, матрас
+  expect(await stat('issue')).toBe(12);
   expect(await stat('merged')).toBe(2);      // единица 1 и мешок Амбу — в переписи и в журнале
-  expect(await stat('income')).toBe(4);      // кровать (только заводской номер), мешок Амбу и ингаляторы (количеством)
+  expect(await stat('income')).toBe(5);      // кровать (только заводской номер), мешок Амбу, ингаляторы и матрас (количеством)
   expect(await stat('return')).toBe(5);      // 1; 3 перед списанием; 5 накануне новой выдачи; 8 и 9 — датой импорта
   expect(await stat('writeoff')).toBe(4);    // 3 «списан» с датой; 9 «списан» без даты; 6 и 10 — лист «СПИСАНО»
-  expect(await stat('errors')).toBe(6);      // 4 по строкам + аспиратор (нет в соответствиях) + закрытый период
+  expect(await stat('noinv')).toBe(3);       // кровать в переписи и в журнале, концентратор в журнале
+  expect(await stat('errors')).toBe(9);      // 4 по строкам + аспиратор (нет в соответствиях) + 3 без инв. номера + закрытый период
   const problems = (await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n');
   expect(problems).toMatch(/до початку актуального періоду .*01\.01\.2025.* від 05\.05\.2024/);
   expect(problems).toMatch(/Дату не розпізнано: весна/);
@@ -93,9 +99,17 @@ test('импорт истории оборудования: проверка, з
   expect(problems).toContain(`Номера XX-${uniq} немає ні в базі, ні в переписі`);
   expect(problems).toContain('Немає у відповідностях найменувань: «аспиратор тестовый»');
   expect(await page.locator('#eqh-unmapped').innerText()).toMatch(/^аспиратор тестовый\s+1$/);
+  // без инвентарного номера: кому, что, когда, договор — для ручного ввода номера
+  const noinv = page.locator('#eqh-noinv tr');
+  await expect(noinv).toHaveCount(4);
+  const cells = async k => (await noinv.filter({ hasText: who(k) }).locator('td').allInnerTexts()).map(t => t.trim());
+  expect(await cells(22)).toEqual(['кровати', expect.any(String), cn(22, '25'), '10.06.2025', who(22), 'кровати', 'Кровать функциональная']);
+  expect((await cells(24)).slice(3)).toEqual(['12.06.2025', who(24), 'кровать функциональная', 'Кровать функциональная']);
+  expect((await cells(25)).slice(5)).toEqual(['концентратор', 'Концентратор кислорода ЭИ тестовый']);
+  expect(problems).toContain('Немає інвентарного номера, а позиція «Кровать функциональная» обліковується за номерами');
   // кнопка дописывает неизвестное написание в поле соответствий (сохранится при следующей проверке)
   await page.locator('#eqh-unmapped-add').click();
-  expect(await page.locator('#iform #itemmap').inputValue()).toMatch(/ингалят \. детский = Ингалятор детский\nаспиратор тестовый = аспиратор тестовый$/);
+  expect(await page.locator('#iform #itemmap').inputValue()).toMatch(/концентратор = Концентратор кислорода ЭИ тестовый\nаспиратор тестовый = аспиратор тестовый$/);
   const notes = (await page.locator('#eqh-problems tr.note').allInnerTexts()).join('\n');
   expect(notes).toMatch(/Стан отримувача «умер»/);
   expect(notes).toMatch(/Дата видачі = дата договору/);
@@ -109,7 +123,9 @@ test('импорт истории оборудования: проверка, з
   expect(await page.locator('#eqh-missing').innerText()).toContain(inv(99));
   expect(await page.locator('#eqh-skipped').innerText()).toMatch(/мешки Амбу\s+мешок Амбу\s+1/);   // возвращенный — пропуск
   const onhand = await page.locator('#eqh-onhand').innerText();
-  expect(onhand).toMatch(/Мешки Амбу\s+1/);
+  expect(onhand).toMatch(/Мешок Амбу 680 мл\s+1/);
+  expect(onhand).toMatch(/Матрас медицинский\s+1/);
+  expect(onhand).not.toMatch(/Кровать|Концентратор/);
   expect(onhand).toMatch(/Ингалятор детский\s+2/);
   expect(onhand).not.toMatch(/Ингалят\.|аспиратор/i);
   expect(await page.locator('#eqh-unitonly').innerText()).toMatch(/кровати\s+1/);
@@ -153,7 +169,10 @@ test('импорт истории оборудования: проверка, з
   // подаренное — обычная выдача, слово в примечании документа
   expect(value(`select d.notes like '%подарили%' from documents d join customers c on c.customer_id = d.customer_id where c.customer_name = '${who(1)}' and d.meta_id = (select meta_id from metadata where meta_name = 'GoodsIssue')`)).toBe('1');
   // мелочь без номеров — у получателя количеством, позиция без серийного учета
-  expect(value(`select concat(detail like '%<useserial>1</useserial>%', '|', coalesce((select sum(qty) from store_stock s where s.item_id = items.item_id), 0)) from items where itemname = 'Мешки Амбу'`)).toMatch(/^0\|/);
+  expect(value(`select concat(detail like '%<useserial>1</useserial>%', '|', coalesce((select sum(qty) from store_stock s where s.item_id = items.item_id), 0)) from items where itemname = 'Мешок Амбу 680 мл'`)).toMatch(/^0\|/);
+  // без инвентарного номера ничего не заведено: ни позиции «количеством», ни получателей
+  expect(value("select count(*) from items where itemname like 'Кровать функциональная%' or itemname like 'Концентратор кислорода ЭИ тестовый (%'")).toBe('0');
+  expect(value(`select count(*) from customers where customer_name in ('${who(22)}', '${who(24)}', '${who(25)}')`)).toBe('0');
   expect(qty(inv(6))).toBe(0);
   expect(lastDoc(inv(6))).toBe('OutcomeItem');
   expect(value(`select i.itemname from store_stock s join items i on i.item_id = s.item_id where s.snumber = 'KR1-${uniq}'`)).toBe('кровати');
@@ -166,7 +185,7 @@ test('импорт истории оборудования: проверка, з
   // повторный запуск: все уже импортировано
   await run('check');
   for (const k of ['income', 'issue', 'return', 'writeoff']) expect(await stat(k)).toBe(0);
-  expect(await stat('done')).toBe(23);   // все события, кроме прихода кровати — она уже в базе; события «датой импорта» — тоже
+  expect(await stat('done')).toBe(25);   // все события, кроме прихода кровати — она уже в базе; события «датой импорта» — тоже
   await expect(page.locator('#iform #write')).toHaveCount(0);
 
   // мелочь на руках видна в «Обороте по позициям» по получателю
@@ -174,7 +193,7 @@ test('импорт истории оборудования: проверка, з
   await page.locator('#filter #from').fill('2025-01-01');
   await pickAuto(page, '#filter #cust', who(16), who(16));
   await clickWait(page, '#filter #onreport');
-  expect((await page.locator('body').innerText()).replace(/\s+/g, ' ')).toMatch(/Мешки Амбу/);
+  expect((await page.locator('body').innerText()).replace(/\s+/g, ' ')).toMatch(/Мешок Амбу 680 мл/);
   // оба написания ингалятора — на одной позиции; аспиратор (нет в соответствиях) не записан: ни позиции, ни получателя
   expect(value(`select group_concat(distinct i.itemname) from documents d join customers c on c.customer_id = d.customer_id join entrylist e on e.document_id = d.document_id
                 join store_stock s on s.stock_id = e.stock_id join items i on i.item_id = s.item_id where c.customer_name in ('${who(19)}', '${who(20)}')`)).toBe('Ингалятор детский');

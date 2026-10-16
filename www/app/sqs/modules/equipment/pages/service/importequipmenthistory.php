@@ -145,7 +145,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $s = $eh->stat;
         $rows = ['issues' => $s['issues'], 'merged' => $s['merged'], 'customers' => $s['customers'], 'contracts' => $s['contracts'],
                  'income' => $s['income'], 'issue' => $s['issue'], 'return' => $s['return'], 'writeoff' => $s['writeoff'],
-                 'done' => $s['done'], 'errors' => $s['errors'], 'notes' => $s['notes']];
+                 'done' => $s['done'], 'noinv' => $s['noinv'], 'errors' => $s['errors'], 'notes' => $s['notes']];
         if ($res !== null) {
             $rows = ['income' => $res['income'], 'issue' => $res['issue'], 'return' => $res['return'], 'writeoff' => $res['writeoff'], 'failed' => $res['failed'],
                      'done' => $s['done'], 'errors' => count(array_filter($eh->problems, fn($p) => $p['level'] == 'error')), 'notes' => $s['notes']];
@@ -175,6 +175,18 @@ class ImportEquipmentHistory extends \App\Pages\Base
             $h .= '</table><button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="eqh-unmapped-add" data-lines="' . self::e($lines) . '"'
                 . ' onclick="var t=document.getElementById(\'itemmap\');t.value=(t.value.trim()?t.value.replace(/\\s+$/,\'\')+\'\\n\':\'\')+this.dataset.lines;t.focus();">'
                 . __('sqs.eqhist.unmapped_add') . '</button>';
+        }
+        if (count($eh->noInv)) {
+            // кровати, концентраторы без номера: кому, что, когда, договор — номер вписать в таблицу и проверить снова
+            $h .= '<h6>' . __('sqs.eqhist.noinv_title') . '</h6><table class="table table-sm w-auto" id="eqh-noinv"><tr><th>'
+                . __('sqs.eqhist.col_sheet') . '</th><th>' . __('sqs.eqhist.col_row') . '</th><th>' . __('sqs.eqhist.col_contract') . '</th><th>'
+                . __('sqs.eqhist.col_date') . '</th><th>' . __('sqs.eqhist.col_recipient') . '</th><th>' . __('sqs.eqhist.col_written') . '</th><th>'
+                . __('sqs.eqhist.col_item') . '</th></tr>';
+            foreach ($eh->noInv as $r) {
+                $h .= '<tr><td>' . self::e($r['sheet']) . '</td><td>' . $r['row'] . '</td><td>' . self::e($r['contract']) . '</td><td>' . date('d.m.Y', $r['date'])
+                    . '</td><td>' . self::e($r['name']) . '</td><td>' . self::e($r['written']) . '</td><td>' . self::e($r['item']) . '</td></tr>';
+            }
+            $h .= '</table>';
         }
         if (count($eh->onhand)) {
             $h .= '<h6>' . __('sqs.eqhist.onhand_title') . '</h6><table class="table table-sm w-auto" id="eqh-onhand">';
