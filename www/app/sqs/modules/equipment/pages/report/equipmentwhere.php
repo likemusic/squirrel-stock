@@ -127,8 +127,84 @@ class EquipmentWhere extends \App\Pages\Base
         // сначала выданное (у кого что), затем склады, затем списанное
         usort($detail, fn($a, $b) => [$a['order'], $a['where'], $a['customer'], $a['itemname'], $a['snumber']] <=> [$b['order'], $b['where'], $b['customer'], $b['itemname'], $b['snumber']]);
 
+        $small = in_array($state, ['active', 'out', 'all']) ? $this->smallOnHand($cat, $text) : [];
+
         $report = new \App\Report('report/equipmentwhere.tpl');
-        return $report->generate(['_detail' => $detail, 'cnt' => count($detail), 'date' => H::fd(time())] + $this->summary($detail));
+        return $report->generate(['_detail' => $detail, 'cnt' => count($detail), 'date' => H::fd(time()),
+                                  '_small' => $small, 'hassmall' => count($small) > 0, 'smallcnt' => H::fqty(array_sum(array_column($small, 'n')))] + $this->summary($detail));
+    }
+
+    /**
+     * Мелкое оборудование на руках (ответ хосписа 1.13): позиции без серийного номера, выданные расходной накладной по договору
+     * (так их заводит импорт истории, App\SQS\EqHistory). На руках = выдано по договорам минус возвращено (возврат по такой
+     * выдаче или с договором), по получателю и позиции; показываются строки, где осталось больше нуля.
+     * Договор, срок и «кем направлен» — по последней выдаче.
+     */
+    private function smallOnHand(int $cat, string $text): array {
+        $conn = \ZDB\DB::getConnect();
+        $where = "s.snumber = '' AND m.meta_name IN ('GoodsIssue', 'ReturnIssue')";
+        if ($cat > 0) {
+            $where .= ' AND ' . \App\SQS\Categories::sqlIn($cat);
+        }
+        // договор — из заголовка документа (<contract_id>N</contract_id>), чтобы не загружать каждую выдачу расходников
+        $docs = $conn->Execute("SELECT d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname,
+                                       SUM(e.quantity) AS qty,
+                                       CAST(REGEXP_SUBSTR(REGEXP_SUBSTR(d.content, '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED) AS contract_id
+                                FROM entrylist e
+                                JOIN store_stock s ON s.stock_id = e.stock_id
+                                JOIN items i ON i.item_id = s.item_id
+                                JOIN documents d ON d.document_id = e.document_id
+                                JOIN metadata m ON m.meta_id = d.meta_id
+                                WHERE {$where} AND d.customer_id > 0
+                                GROUP BY d.document_id, d.parent_id, d.customer_id, d.document_date, d.document_number, m.meta_name, s.item_id, i.itemname
+                                ORDER BY d.document_date, d.document_id");
+        $rows = [];
+        $contractOf = [];   // выдача по договору: document_id => contract_id
+        foreach ($docs as $d) {
+            if ($d['meta_name'] == 'GoodsIssue') {
+                if (intval($d['contract_id']) <= 0) {
+                    continue;   // выдача расходников
+                }
+                $contractOf[$d['document_id']] = intval($d['contract_id']);
+            } elseif (intval($d['contract_id']) <= 0 && !isset($contractOf[$d['parent_id']])) {
+                continue;   // возврат не по договору
+            }
+            $k = $d['customer_id'] . '|' . $d['item_id'];
+            $r = $rows[$k] ?? ['customer_id' => intval($d['customer_id']), 'itemname' => $d['itemname'], 'qty' => 0, 'last' => null];
+            $r['qty'] -= floatval($d['qty']);   // выдача — минус по складу, возврат — плюс
+            if ($d['meta_name'] == 'GoodsIssue') {
+                $r['last'] = $d;
+            }
+            $rows[$k] = $r;
+        }
+
+        $out = [];
+        $customers = [];
+        foreach ($rows as $r) {
+            if ($r['qty'] <= 0 || $r['last'] == null) {
+                continue;
+            }
+            $c = $customers[$r['customer_id']] ??= \App\Entity\Customer::load($r['customer_id']);
+            $row = ['itemname' => $r['itemname'], 'customer' => $c->customer_name ?? '', 'phone' => $c->phone ?? '', 'address' => $c->address ?? '',
+                    'qty' => H::fqty($r['qty']), 'date' => H::fd(strtotime($r['last']['document_date'])), 'document' => $r['last']['document_number'],
+                    'contract' => '', 'term' => '', 'sent' => '', 'overdue' => false];
+            $contract = \App\Entity\Contract::load(intval($r['last']['contract_id']));
+            if ($contract) {
+                $end = intval($contract->enddate);
+                $row['contract'] = $contract->contract_number . ' ' . __('common.vid_2', ['date' => H::fd($contract->createdon)]);
+                $row['sent'] = $contract->shortdesc;
+                $row['term'] = ($end == 0 || date('Y', $end) >= 2099) ? __('report.equipmentwhere.until_demand') : H::fd($end);
+                $row['overdue'] = $end > 0 && date('Y', $end) < 2099 && $end < strtotime(date('Y-m-d'));
+            }
+            // поиск тот же, что у единиц: позиция или получатель
+            if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['customer']), $text)) {
+                continue;
+            }
+            $row['n'] = $r['qty'];
+            $out[] = $row;
+        }
+        usort($out, fn($a, $b) => [$a['customer'], $a['itemname']] <=> [$b['customer'], $b['itemname']]);
+        return $out;
     }
 
     /**
