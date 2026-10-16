@@ -72,19 +72,9 @@ class Backup extends \App\Pages\Base
         $this->_tvars['stale'] = $stale ? __('service.backup.stale', ['places' => implode(', ', $stale), 'hours' => BackupJob::STALE_HOURS]) : '';
         $this->_tvars['haspassword'] = $s['password'] !== '';
         $this->_tvars['cloudnopass'] = $s['cloud'] !== '' && $s['password'] === '';
-        // команда для планировщика этой системы: запуск каждый час, копия — если последней больше 20 часов
-        $root = rtrim(_ROOT, '/\\');
-        $php = preg_match('/php(\.exe)?$/i', PHP_BINARY) ? PHP_BINARY : (PHP_OS_FAMILY == 'Windows' ? 'C:\php\php.exe' : 'php');
-        if (PHP_OS_FAMILY == 'Windows') {
-            $this->_tvars['schedule_os'] = 'Windows';
-            $this->_tvars['schedule_cmd'] = 'schtasks /Create /TN "SquirrelStock backup" /SC HOURLY /TR "\"' . $php . '\" \"' . $root . '\cli\backup.php\" --if-older=20"';
-        } elseif (file_exists('/.dockerenv')) {
-            $this->_tvars['schedule_os'] = 'Docker (cron)';
-            $this->_tvars['schedule_cmd'] = '17 * * * * docker exec -u www-data <web-container> php cli/backup.php --if-older=20';
-        } else {
-            $this->_tvars['schedule_os'] = 'Linux (cron)';
-            $this->_tvars['schedule_cmd'] = '17 * * * * ' . $php . ' ' . $root . '/cli/backup.php --if-older=20';
-        }
+        $sc = BackupJob::scheduleCommand();
+        $this->_tvars['schedule_os'] = $sc['os'];
+        $this->_tvars['schedule_cmd'] = $sc['cmd'];
     }
 
     public function onCreate($sender) {
