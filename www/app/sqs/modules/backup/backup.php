@@ -170,6 +170,7 @@ class Backup
             }
             $zip->close();
         }
+        \App\SQS\Modules::reapply();   // копия могла быть сделана до появления таблиц платформы или модулей — досоздать
 
         return $n;
     }

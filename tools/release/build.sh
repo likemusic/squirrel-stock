@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Сборка SquirrelStock для установки без Docker (хостинг с Apache, свой сервер):
 #   dist/squirrel-stock-<версия>.zip       — содержимое корня сайта: код из git (HEAD) + vendor + config.php для заполнения
-#   dist/squirrel-stock-<версия>-empty.sql — пустая база: db/db.sql + db/squirrelstock.sql
+#   dist/squirrel-stock-<версия>-empty.sql — пустая база: db/db.sql + www/app/sqs/schema.sql
 #   dist/squirrel-stock-<версия>-demo.sql  — демо-база с вымышленными данными (db/demo/squirrelstock-demo.zip), вход admin / admin
 # Нужны git, docker, python3. Зависимости composer берутся из образа docker/Dockerfile.
 set -euo pipefail
@@ -33,7 +33,7 @@ with zipfile.ZipFile(dst, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for f in sorted(files):
             z.write(os.path.join(d, f), os.path.normpath(os.path.join(rel, f)))
 PY
-cat db/db.sql db/squirrelstock.sql > "$out/squirrel-stock-$ver-empty.sql"
+cat db/db.sql www/app/sqs/schema.sql > "$out/squirrel-stock-$ver-empty.sql"
 unzip -p db/demo/squirrelstock-demo.zip database.sql > "$out/squirrel-stock-$ver-demo.sql"
 
 # пакет ставится в интернет: вместо admin / admin — случайный пароль (печатается один раз) и длинная случайная «соль»

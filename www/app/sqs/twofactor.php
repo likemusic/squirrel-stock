@@ -8,7 +8,7 @@ use App\Entity\User;
  * SquirrelStock: двухфакторный вход — после пароля код из приложения-аутентификатора (App\SQS\Totp) или резервный
  * одноразовый код. Включает сам пользователь (страница App\Pages\TwoFactor), сбрасывает администратор там же.
  * Таблицы sqs_2fa (ключ, последний принятый шаг — код не принимается дважды) и sqs_2fa_backup (хеши резервных кодов) —
- * db/squirrelstock.sql. Второй шаг входа — App\Pages\TwoFactorLogin; неверные коды считает App\SQS\LoginGuard.
+ * app/sqs/schema.sql. Второй шаг входа — App\Pages\TwoFactorLogin; неверные коды считает App\SQS\LoginGuard.
  * Двухфакторный вход OTP автора Zippy (код по почте, SMS, Telegram в профиле) — отдельный и здесь не используется.
  */
 class TwoFactor

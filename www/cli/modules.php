@@ -1,6 +1,7 @@
 <?php
 /**
- * SquirrelStock: загрузить модули (app/sqs/modules) — создать их таблицы (schema.sql) и пункты меню без веб-запроса.
+ * SquirrelStock: таблицы платформы (app/sqs/schema.sql) и модулей (app/sqs/modules/<имя>/schema.sql), пункты меню модулей —
+ * без веб-запроса; применяется только изменившееся (App\SQS\Modules).
  * Для установщика и обновления: после импорта базы, до cli/charity-profile.php и cli/localize-db.php.
  *
  * php cli/modules.php      печатает включенные модули
