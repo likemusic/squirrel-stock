@@ -211,6 +211,12 @@ class RecipientCard extends \App\Pages\Base
             $items[$id] = $it;
         }
         uasort($items, fn($a, $b) => strnatcasecmp($a['itemname'], $b['itemname']));
+        // месяцы — с первого, в котором была выдача: пустые в начале периода не растягивают таблицу
+        $used = array_merge(array_values($docs), ...array_map(fn($it) => array_keys(array_filter($it['m'], fn($v) => $v != 0)), array_values($items)));
+        if ($used) {
+            $first = min($used);
+            $months = array_filter($months, fn($ym) => $ym >= $first, ARRAY_FILTER_USE_KEY);
+        }
 
         $rows = [];
         $mrows = [];
