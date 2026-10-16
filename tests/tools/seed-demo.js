@@ -114,6 +114,11 @@ async function consumablesIssue(page, { date, customer, notes, rows }) {
   query(`update items set cat_id = ${catId('Оборудование')} where itemname in (${inList(SMALL_EQ)})`);
   // интервал выдачи (справочник «Интервалы выдачи»): гастростомическая трубка одному получателю — не чаще раза в 90 дней
   query(`insert into sqs_issue_interval (kind, ref_id, days) select 'item', item_id, 90 from items where itemname in (${inList(TUBES)})`);
+  // минимальный остаток (карточка позиции «Мин. количество»): трех позиций к концу выдач меньше минимума — «Ниже минимального остатка»
+  for (const [name, min] of [['Подгузники детские размер 5, 44 шт', 50], ['Зонд гастростомический 14 Fr', 12], ['Перчатки нитриловые нестерильные L, 100 шт', 40],
+    ['Шприц 5 мл одноразовый', 300], ['Пеленки впитывающие 60х90, 30 шт', 100]]) {
+    query(`update items set minqty = ${min} where itemname = '${esc(name)}'`);
+  }
   // артикулы для подсказки при вводе: у импортированных позиций их нет
   query("update items set item_code = concat('П-', lpad(item_id, 4, '0')) where item_code is null or item_code = ''");
 
