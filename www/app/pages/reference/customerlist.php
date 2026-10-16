@@ -48,6 +48,7 @@ class CustomerList extends \App\Pages\Base
         $this->_bonuses = Customer::getBonusAll()  ;
         $shop = System::getOptions("shop");
         $this->_customer = new Customer();
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();   // SquirrelStock: до первой загрузки списка (признак у имени)
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -101,7 +102,9 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
-        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => __('common.pokupets'), 2 => __('common.postachalnyk')), 0));
+        // SquirrelStock: в профиле благотворительной организации покупатель — «Получатель», признак получателя — списком (App\SQS\RecipientMark)
+        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => $this->_tvars['sqs_charity'] ? __('sqs.charity.recipient') : __('common.pokupets'), 2 => __('common.postachalnyk')), 0));
+        $this->customerdetail->add(new DropDownChoice('editsqsmark', \App\SQS\RecipientMark::options(), ''));
         $this->customerdetail->add(new DropDownChoice('editdf', array(1 => __('reference.customerlist.dropshypinh'), 2 => __('reference.customerlist.fulfilment')), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
@@ -228,6 +231,9 @@ class CustomerList extends \App\Pages\Base
 
 
         $row->add(new ClickLink('customername', $this, 'editOnClick'))->setValue($item->customer_name);
+        // SquirrelStock: признак получателя рядом с именем (профиль благотворительной организации)
+        $mark = $this->_tvars['sqs_charity'] ? \App\SQS\RecipientMark::split(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER, (int)$item->customer_id))[0] : '';
+        $row->add(new Label('sqsmark', $mark))->setVisible($mark !== '');
 
 
         $row->add(new Label('customerphone', $item->phone));
@@ -333,6 +339,12 @@ class CustomerList extends \App\Pages\Base
         
         $this->customerdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER,(int)$this->_customer->customer_id));
         $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_CUSTOMER));
+        if ($this->_tvars['sqs_charity']) {   // SquirrelStock: признак — в своем списке, не среди тегов
+            [$mark, $rest] = \App\SQS\RecipientMark::split(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER, (int)$this->_customer->customer_id));
+            $this->customerdetail->edittags->setTags($rest);
+            $this->customerdetail->edittags->setSuggestions(\App\SQS\RecipientMark::split(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_CUSTOMER))[1]);
+            $this->customerdetail->editsqsmark->setValue($mark);
+        }
         
     }
 
@@ -359,6 +371,11 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->clean();
         $this->customerdetail->edittags->setTags(array());
         $this->customerdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions( \App\Entity\Tag::TYPE_CUSTOMER) );
+        if ($this->_tvars['sqs_charity']) {   // SquirrelStock: новый контрагент в профиле — получатель
+            $this->customerdetail->edittags->setSuggestions(\App\SQS\RecipientMark::split(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_CUSTOMER))[1]);
+            $this->customerdetail->editsqsmark->setValue('');
+            $this->customerdetail->edittype->setValue(1);
+        }
  
         $this->contentview->setVisible(false);
 
@@ -466,6 +483,9 @@ class CustomerList extends \App\Pages\Base
         
          
         $tags = $this->customerdetail->edittags->getTags() ;
+        if ($this->_tvars['sqs_charity']) {   // SquirrelStock: признак получателя из списка — тегом
+            $tags = \App\SQS\RecipientMark::merge((string)$this->customerdetail->editsqsmark->getValue(), is_array($tags) ? $tags : []);
+        }
         
         \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_CUSTOMER,(int)$this->_customer->customer_id) ;
 

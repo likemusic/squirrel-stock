@@ -45,6 +45,12 @@ class EquipmentExtend extends \App\Pages\Base
         $this->_tvars['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);
         $this->_tvars['customer'] = $customer->customer_name ?? '';
         $this->_tvars['units'] = array_values(array_map(fn($u) => ['label' => Units::label($u['itemname'], $u['snumber'], $u['factory_no'])], $units));
+        // мелкое оборудование на руках по этому договору — количеством
+        foreach (Units::smallOnHand(0, intval($contract->customer_id)) as $r) {
+            if ($r['contract_id'] == $this->contract_id) {
+                $this->_tvars['units'][] = ['label' => $r['itemname'] . ', ' . __('report.equipmentwhere.small_pieces') . ': ' . H::fqty($r['qty'])];
+            }
+        }
         $this->_tvars['term'] = self::termText($end);
 
         $f = $this->add(new Form('eform'));
