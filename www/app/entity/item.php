@@ -62,6 +62,7 @@ class Item extends \ZCL\DB\Entity
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
+        $this->snmode = (int)$xml->snmode[0];   // SquirrelStock: режим серий позиции, 0 — как в настройках (serialMode())
         $this->image_id = (int)$xml->image_id[0];
         $this->ffpartner = (int)$xml->ffpartner[0];
         $this->imageurl = (string)$xml->imageurl[0];
@@ -191,6 +192,9 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
         $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
+        if (intval($this->snmode ?? 0) > 0) {   // SquirrelStock: без режима detail прежний
+            $this->detail .= "<snmode>" . intval($this->snmode) . "</snmode>";
+        }
 
         $this->detail .= "<uktz>{$this->uktz}</uktz>";
         $this->detail .= "<cell>{$this->cell}</cell>";
@@ -808,6 +812,20 @@ class Item extends \ZCL\DB\Entity
 
         return doubleval($qty) >= doubleval($testqty);
 
+    }
+
+    /**
+     * SquirrelStock: режим серий позиции — 0 без серий (нет флажка useserial или серии выключены в настройках), 1 — партии,
+     * 2 — партии со сроком годности, 3 — серийные номера. Режим позиции (snmode) задается в справочнике, без него — общий
+     * из настроек (usesnumber), так что в базе можно одновременно вести расходники партиями и оборудование по номерам.
+     */
+    public function serialMode(): int {
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        if ($this->useserial != 1 || $common == 0) {
+            return 0;
+        }
+        $mode = intval($this->snmode ?? 0);
+        return $mode >= 1 && $mode <= 3 ? $mode : $common;
     }
 
     /**

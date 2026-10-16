@@ -978,10 +978,10 @@ class EqHistory
         return $e['rec']['file'] . '|' . $e['rec']['sheet'] . '|' . $e['rec']['row'] . ($e['keysuffix'] ?? '');
     }
 
-    // товар с этим названием ведется по серийным (инвентарным) номерам
+    // товар с этим названием ведется по серийным (инвентарным) номерам, а не партиями
     private static function serialItem(string $name): bool {
         $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');   // признак — в detail (XML), не колонка
-        return $item != null && $item->useserial == 1;
+        return $item != null && $item->serialMode() == 3;
     }
 
     // одна выдача из двух источников: номер договора — из переписи, кем направлен — из журнала, остальное дополняется
@@ -1170,6 +1170,9 @@ class EqHistory
             $item->itemname = $name;
             $item->msr = __('app.item.sht');
             $item->useserial = $serial;
+            if ($serial && $item->serialMode() != 3) {
+                $item->snmode = 3;   // общий режим — партии: единице оборудования режим серийных номеров задается явно
+            }
             $item->save();
         }
         return $item;

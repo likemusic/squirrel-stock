@@ -184,7 +184,8 @@ class RecipientCard extends \App\Pages\Base
                 LEFT JOIN documents base ON m.meta_name = 'ReturnIssue' AND base.document_id = d.parent_id
                 JOIN store_stock st ON st.stock_id = e.stock_id
                 JOIN items i ON i.item_id = st.item_id
-                WHERE m.meta_name IN ('GoodsIssue', 'ReturnIssue') AND d.customer_id = {$cid} AND st.snumber = ''
+                WHERE m.meta_name IN ('GoodsIssue', 'ReturnIssue') AND d.customer_id = {$cid}
+                  AND (st.snumber = '' OR " . \App\SQS\SerialStock::batchSql() . ")
                   AND d.document_date BETWEEN '{$from}' AND '{$to}'
                 GROUP BY d.document_id, m.meta_name, i.item_id, i.itemname, i.msr, ym, contract_id, base_contract";
 
