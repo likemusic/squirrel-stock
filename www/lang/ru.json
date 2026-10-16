@@ -3938,5 +3938,13 @@
     "widgets.docview.zminyv": "Изменил",
     "widgets.itemsel.mat_ta_kompl": "Мат. и компл.",
     "widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat": "Изменения обновят также справочник номенклатуры",
-    "sqs.import.bad_format": "Файл не прочитан: нужна таблица Excel (xlsx, xls), OpenDocument (ods) или CSV"
+    "sqs.import.bad_format": "Файл не прочитан: нужна таблица Excel (xlsx, xls), OpenDocument (ods) или CSV",
+    "sqs.remote.bad_scheme": "нужен адрес http:// или https://",
+    "sqs.remote.not_found": "имя не найдено: {host}",
+    "sqs.remote.not_public": "адрес не в интернете: {ip}",
+    "sqs.remote.too_big": "больше {mb} МБ",
+    "sqs.remote.failed": "не загружено: {error}",
+    "sqs.remote.status": "сервер ответил {code}",
+    "sqs.import.images_failed": "Не загружено изображений: {n} ({list})",
+    "sqs.remote.not_image": "не изображение"
 }

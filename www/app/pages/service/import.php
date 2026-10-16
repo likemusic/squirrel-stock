@@ -320,6 +320,7 @@ class Import extends \App\Pages\Base
 
         $cnt = 0;
         $newitems = array();
+        $imgfailed = [];
         foreach ($data as $row) {
 
             $price1 =   str_replace(',', '.', trim($row[$colprice1] ?? ''));
@@ -431,7 +432,9 @@ class Import extends \App\Pages\Base
        
              
             if (strlen($image) > 0) {
-                $item->saveImage($image);
+                if (!$item->saveImage($image, true, $imgerr)) {
+                    $imgfailed[] = $image . ' — ' . $imgerr;   // SquirrelStock: в сообщение об импорте
+                }
 
                 $item->save();
 
@@ -469,6 +472,9 @@ class Import extends \App\Pages\Base
         }
 
         $this->setSuccess(__('common.importovano_tmts', ['cnt' => $cnt]));
+        if ($imgfailed) {
+            $this->setWarn(__('sqs.import.images_failed', ['n' => count($imgfailed), 'list' => implode('; ', array_slice($imgfailed, 0, 5)) . (count($imgfailed) > 5 ? '; …' : '')]));
+        }
     }
 
     public function onCImport($sender) {

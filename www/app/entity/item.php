@@ -1186,20 +1186,28 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $url
     * @param mixed $dothumb
     */
-    public   function saveImage($url,$dothumb=true) {
-        $file = file_get_contents($url) ;
-        if(strlen($file)==0) {
-           return 0  ;
+    public   function saveImage($url,$dothumb=true, &$error = null) {
+        // SquirrelStock: адрес — из файла импорта; только http(s) к публичному адресу, до 1 МБ (App\SQS\RemoteFile),
+        // а не file_get_contents() с любым путем. Причина отказа — в $error, временный файл удаляется
+        try {
+            $file = \App\SQS\RemoteFile::fetch((string)$url, 1024*1024);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            return 0;
         }
         $tmp = tempnam(sys_get_temp_dir(), "import") ;
         file_put_contents($tmp, $file) ;
-        if (filesize($tmp) > 1024*1024) {
-             
-             return 0;
+        try {
+            return $this->saveImageFile($tmp, $dothumb, $error);
+        } finally {
+            @unlink($tmp);
         }
-            
+    }
+
+    private function saveImageFile($tmp, $dothumb, &$error) {
         $imagedata = getimagesize($tmp);
         if ($imagedata== false) {
+            $error = __('sqs.remote.not_image');
             return 0  ;
 
         }
