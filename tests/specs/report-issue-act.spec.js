@@ -1,7 +1,7 @@
 // Акт списания за месяц в формате бухгалтерии хосписа: строки — позиции, колонки — выдачи «Получатель дд.мм.гггг»,
 // в ячейках количество за вычетом возвратов, итог по позиции и по выдаче; выгрузка в Excel. ZIPPY_GAPS п. 14.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, clickWait, messages } = require('../helpers/zippy');
+const { createItem, createCustomer, createDoc, createContract, clickWait, messages } = require('../helpers/zippy');
 const { value, esc } = require('../helpers/db');
 
 test('акт списания: матрица позиции × выдачи с итогами', async ({ page, uniq }) => {
@@ -49,4 +49,45 @@ test('акт списания: матрица позиции × выдачи с 
   expect(resp.status()).toBe(200);
   expect(resp.headers()['content-type']).toContain('spreadsheetml');
   expect((await resp.body()).length).toBeGreaterThan(1000);
+});
+
+// ответ хосписа 3.1: отдельные акты на расходники и на оборудование (единица с инвентарным номером, мелочь по договору)
+test('акт списания: отдельно расходники и оборудование', async ({ page, uniq }) => {
+  const r = 'Получатель ' + uniq + ' акт';
+  const eq = 'AE-' + uniq, small = 'AS-' + uniq, a = 'AC-' + uniq, inv = 'INV-A' + uniq;
+  await createItem(page, { name: 'Концентратор ' + eq, code: eq, serial: true });
+  await createItem(page, { name: 'Ходунки ' + small, code: small });
+  await createItem(page, { name: 'Шприц ' + a, code: a });
+  await createCustomer(page, { name: r, type: 1 });
+  await createDoc(page, 'IncomeItem', { date: '2026-08-01', rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 5, price: 0 }, { code: a, qty: 50, price: 0 }] });
+  await createContract(page, { number: 'КА' + uniq, customer: r, from: '2026-08-03', to: '2026-12-31', note: 'Врач Вымышленный' });
+  await createDoc(page, 'GoodsIssue', { date: '2026-08-03', customer: r, payment: 0, contract: 'КА' + uniq, rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 1, price: 0 }] });
+  await createDoc(page, 'GoodsIssue', { date: '2026-08-05', customer: r, payment: 0, rows: [{ code: a, qty: 4, price: 0 }] });
+
+  const act = async kind => {
+    await page.goto('/index.php?p=App/Pages/Report/IssueAct');
+    await page.locator('#filter #year').selectOption('2026');
+    await page.locator('#filter #month').selectOption('8');
+    if (kind !== undefined) await page.locator('#filter #kind').selectOption(kind);
+    await clickWait(page, '#filter #onreport');
+    return page.locator('#preview').innerText();
+  };
+  // по умолчанию — расходники
+  let text = await act();
+  expect(text).toContain('Шприц ' + a);
+  expect(text).not.toContain('Концентратор ' + eq);
+  expect(text).not.toContain('Ходунки ' + small);
+  expect(text).not.toContain(`${r} 03.08.2026`);
+  expect(text).toContain('Списання витратних матеріалів');
+
+  text = await act('2');
+  expect(text).toContain('Концентратор ' + eq);
+  expect(text).toContain('Ходунки ' + small);
+  expect(text).not.toContain('Шприц ' + a);
+  expect(text).not.toContain(`${r} 05.08.2026`);
+  expect(text).toContain('Списання обладнання');
+
+  text = await act('0');
+  expect(text).toContain('Шприц ' + a);
+  expect(text).toContain('Концентратор ' + eq);
 });
