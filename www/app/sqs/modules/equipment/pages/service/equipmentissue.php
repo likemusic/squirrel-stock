@@ -26,12 +26,14 @@ use Zippy\Html\Link\ClickLink;
  * При оформлении создаются штатные сущности Zippy: договор в состоянии «В работе» (срок — дата окончания,
  * «до востребования» — 31.12.2099, «кем направлен» — краткое описание) и проведенная расходная накладная
  * по этому договору с ценой 0. Новый получатель создается контрагентом; телефон и адрес, если указаны, обновляются.
+ * При выборе получателя подставляются его телефон, адрес и «кем направлен» из последнего договора.
  */
 class EquipmentIssue extends \App\Pages\Base
 {
     public const ON_DEMAND = '2099-12-31';
 
     public array $_units = [];   // ['item_id|snumber' => DataItem(item_id, snumber, label)]
+    public string $_autoref = '';   // «кем направлен», подставленный из договора: его можно заменить при смене получателя
 
     public function __construct() {
         parent::__construct();
@@ -79,7 +81,24 @@ class EquipmentIssue extends \App\Pages\Base
             $this->iform->phone->setText($c->phone);
             $this->iform->address->setText($c->address);
             $this->addAjaxResponse("$('#phone').val(" . json_encode((string)$c->phone) . "); $('#address').val(" . json_encode((string)$c->address) . ");");
+            // «кем направлен» — из последнего договора получателя; вписанное вручную не перезаписывается
+            $ref = self::lastReferrer((int)$c->customer_id);
+            $now = trim($this->iform->referrer->getText());
+            if ($now === '' || $now === $this->_autoref) {
+                $this->iform->referrer->setText($ref);
+            }
+            $this->_autoref = $ref;
         }
+    }
+
+    // «кем направлен» (краткое описание) последнего договора получателя, где оно заполнено; '' — нет
+    public static function lastReferrer(int $customer_id): string {
+        foreach (Contract::find("customer_id = {$customer_id}", 'createdon desc, contract_id desc') as $contract) {
+            if (trim((string)$contract->shortdesc) !== '') {
+                return trim((string)$contract->shortdesc);
+            }
+        }
+        return '';
     }
 
     public function onAutoUnit($sender) {
@@ -212,6 +231,7 @@ class EquipmentIssue extends \App\Pages\Base
         $f->phone->setText('');
         $f->address->setText('');
         $f->referrer->setText('');
+        $this->_autoref = '';
         $f->notes->setText('');
         $f->contract_number->setText(self::nextContractNumber());
     }
