@@ -5,6 +5,9 @@ const path = require('path');
 const { test, expect } = require('../fixtures');
 const { clickWait, messages } = require('../helpers/zippy');
 const { value } = require('../helpers/db');
+const { execFileSync } = require('child_process');
+
+const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
 
 const lastImportDate = () => value(`select concat(document_id, '|', date(document_date)) from documents where notes like 'Імпорт відомості 1С%' order by document_id desc limit 1`);
 
@@ -46,4 +49,14 @@ test('импорт ведомости 1С: дата оприходования �
   } finally {
     await setActual(actual);
   }
+});
+
+test('импорт ведомости 1С: дата ведомости из заголовка', async () => {
+  // период — в строке с названием или отдельной строкой («за Сентябрь 2026 г.» в своей ячейке, как в выгрузке хосписа)
+  // от www-data: init.php от root создал бы журнал дня, который сайт потом не может писать
+  const out = execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'php', '-r', `$_SERVER['HTTP_HOST'] = 'localhost'; $_SERVER['SERVER_PORT'] = 80; require '/var/www/html/init.php';
+    foreach ([[['Ведомость'], ['за Сентябрь 2026 г.']], [['Оборотно-сальдовая ведомость по счету 01.1 за 26.05.26']], [['x за 1 квартал 2026 г.']],
+              [['x за 01.05.26 - 31.05.26']], [['x за Май 2026 г.']], [['x за 2025 г.']], [['нет периода']]] as $r) {
+      $d = \\App\\Pages\\Service\\Import1C::osvDate($r); echo ($d ? date('Y-m-d', $d) : 'null'), ' '; }`], { encoding: 'utf8' });
+  expect(out.trim()).toBe('2026-09-30 2026-05-26 2026-03-31 2026-05-31 2026-05-31 2025-12-31 null');
 });
