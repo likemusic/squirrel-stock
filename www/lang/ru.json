@@ -3946,5 +3946,6 @@
     "sqs.remote.failed": "не загружено: {error}",
     "sqs.remote.status": "сервер ответил {code}",
     "sqs.import.images_failed": "Не загружено изображений: {n} ({list})",
-    "sqs.remote.not_image": "не изображение"
+    "sqs.remote.not_image": "не изображение",
+    "sqs.file.too_big": "Файл «{name}» не сохранен: больше {mb} МБ"
 }

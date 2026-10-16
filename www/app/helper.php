@@ -388,7 +388,8 @@ class Helper
         $data = file_get_contents($file['tmp_name']);
        
         if(strlen($data) > (1024*1024*4) ) {
-           // throw new \Exception('Розмір файлу більше 4M');
+           // SquirrelStock: файл не сохраняется — сказать об этом (сообщение в сессии: показывается и после перехода)
+           \App\System::setWarnMsg(__('sqs.file.too_big', ['name' => (string)$filename, 'mb' => 4]));
            return 0;
         }        
         $user=\App\System::getUser() ;

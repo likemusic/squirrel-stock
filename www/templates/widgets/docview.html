@@ -550,6 +550,7 @@
                     
                    callPageMethod(this.path +'::addfile',[  this.docid], f,(data)=> 
                    {
+                        try { var r = JSON.parse(data); if (r && r.error) toastr.error($('<div>').text(r.error).html()); } catch (e) {}   // SquirrelStock: файл не сохранен
                         this.loadfiles() 
                    });                    
                    el.reset();
