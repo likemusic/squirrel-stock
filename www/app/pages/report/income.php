@@ -22,6 +22,7 @@ class Income extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('Income')) {
             return;
         }
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();   // SquirrelStock: в профиле — «Отчет по поступлению»
 
 
         $this->add(new Form('filter')) ;
@@ -256,6 +257,7 @@ class Income extends \App\Pages\Base
             $header['_type5'] = true;
         }
 
+        $header['sqs_charity'] = \App\SQS\Profile::charity();
         $report = new \App\Report('report/income.tpl');
 
         $html = $report->generate($header);
