@@ -329,6 +329,18 @@ class Base extends \Zippy\Html\WebPage
         return $state >= self::STATE_EXECUTED;
     }    
     
+    /**
+     * SquirrelStock: вызов toastr для сообщения. toastr выводит текст как HTML, а сообщения содержат названия позиций,
+     * имена получателей, номера документов; при отрисовке страницы вызов к тому же стоит во встроенном <script>.
+     * Текст экранируется (переносы <br> из сообщений ядра остаются переносами) и передается строкой JSON, в которой
+     * < > & ' " закодированы — из скрипта и из строки не выйти.
+     */
+    public static function toastJs(string $type, $msg, ?int $timeout = null): string {
+        $html = str_replace(['&lt;br&gt;', '&lt;br/&gt;', '&lt;br /&gt;'], '<br>', htmlspecialchars((string)$msg, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+        $json = json_encode($html, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        return "toastr.{$type}({$json}" . ($timeout ? ",'',{timeOut:{$timeout}}" : '') . ")";
+    }
+
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg,$log=false ) {
@@ -342,7 +354,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\r", " ", $msg) ;
      
         if($msg != "" && $this->isAjaxRequest()   ) {
-           $this->addAjaxResponse("toastr.error('" . $msg . "','',{timeOut:8000})        ", true);
+           $this->addAjaxResponse(self::toastJs('error', $msg, 8000), true);
            return;
         }       
         System::setErrorMsg($msg);
@@ -368,7 +380,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\r", " ", $msg) ;
  
         if($msg != "" && $this->isAjaxRequest()   ) {
-           $this->addAjaxResponse("toastr.success('" . $msg . "','',{timeOut:2000})        ", true);
+           $this->addAjaxResponse(self::toastJs('success', $msg, 2000), true);
            return;
         }
         System::setSuccessMsg($msg);
@@ -380,7 +392,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\n", " ", $msg) ;
         $msg = str_replace("\r", " ", $msg) ;
          if($msg != "" && $this->isAjaxRequest()  ) {
-           $this->addAjaxResponse("toastr.warning('" . $msg . "','',{timeOut:4000})        ", true);
+           $this->addAjaxResponse(self::toastJs('warning', $msg, 4000), true);
            return;
         }
         System::setWarnMsg($msg);
@@ -392,7 +404,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\n", " ", $msg) ;
         $msg = str_replace("\r", " ", $msg) ;
         if($msg != "" && $this->isAjaxRequest()   ) {
-           $this->addAjaxResponse("toastr.info('" . $msg . "','',{timeOut:3000})        ", true);
+           $this->addAjaxResponse(self::toastJs('info', $msg, 3000), true);
            return;
         }
         System::setInfoMsg($msg);
@@ -454,16 +466,16 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
            
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:8000})        ", true);
+            $this->addJavaScript(self::toastJs('error', System::getErrorMsg(), 8000), true);
         }
         if (strlen(System::getWarnMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{timeOut:4000})        ", true);
+            $this->addJavaScript(self::toastJs('warning', System::getWarnMsg(), 4000), true);
         }
         if (strlen(System::getSuccesMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{timeOut:2000})        ", true);
+            $this->addJavaScript(self::toastJs('success', System::getSuccesMsg(), 2000), true);
         }
         if (strlen(System::getInfoMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{timeOut:3000})        ", true);
+            $this->addJavaScript(self::toastJs('info', System::getInfoMsg(), 3000), true);
         }
       
         
@@ -954,7 +966,7 @@ class Base extends \Zippy\Html\WebPage
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;
             $message = str_replace("'", "`", $message)  ;
-            $this->addJavaScript(" toastr.error( '{$message}' )         ");
+            $this->addJavaScript(self::toastJs('error', $message));
 
         }               
     }

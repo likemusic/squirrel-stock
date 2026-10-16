@@ -262,7 +262,7 @@ class UserProfile extends \App\Pages\Base
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+            $this->addAjaxResponse(self::toastJs('error', $message));
 
         }
 
@@ -320,7 +320,7 @@ class UserProfile extends \App\Pages\Base
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+            $this->addAjaxResponse(self::toastJs('error', $message));
 
         }
 
