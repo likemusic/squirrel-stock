@@ -13,7 +13,7 @@
                     <h2>{{#t}}reference.customerlist.dovidnyk_kontrahentiv{{/t}} </h2>
                     
                     <div class="navbar ">
-                       <form zippy="leadf" class="row"  >
+                       <form zippy="leadf" class="row{{#sqs_charity}} d-none{{/sqs_charity}}"  >
                           <div class="col-auto pt-2 ">
                             <div class="form-check ">
                               <input   zippy="chleads" type="checkbox"> 
@@ -41,9 +41,9 @@
                             
                               <select zippy="searchtype" class="form-select  ">
                                 <option value="0">{{#t}}reference.customerlist.vsi_aktyvni{{/t}}</option>
-                                <option value="1">{{#t}}common.pokuptsi{{/t}}</option>
+                                <option value="1">{{#sqs_charity}}{{#t}}sqs.charity.recipients{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.pokuptsi{{/t}}{{/sqs_charity}}</option>
                                 <option value="2">{{#t}}common.postachalnyky{{/t}}</option>
-                                <option value="5">{{#t}}reference.customerlist.kholdynhy{{/t}}</option>
+                                {{^sqs_charity}}<option value="5">{{#t}}reference.customerlist.kholdynhy{{/t}}</option>{{/sqs_charity}}
                                 {{#df}}
                                 <option value="7">{{#t}}reference.customerlist.dropshypinh{{/t}}</option>
                                 <option value="8">{{#t}}reference.customerlist.fulfilment{{/t}}</option>
@@ -53,7 +53,7 @@
                              </select>
                             </div> 
                             </div> 
-                         <div class="col-12">
+                         <div class="col-12{{#sqs_charity}} d-none{{/sqs_charity}}">
                            <div class="input-group">
                             <label   for="searchholding">{{#t}}reference.customerlist.dochirnii_dlia{{/t}}</label>
                           
@@ -113,7 +113,7 @@
                          <div class="col-auto  ">
                       
                      <details class="mb-2 ms-2">
-                        <summary >{{#t}}common.tehy{{/t}}</summary>
+                        <summary >{{#sqs_charity}}{{#t}}sqs.charity.marks_and_tags{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.tehy{{/t}}{{/sqs_charity}}</summary>
                         <small zippy="taglist"></small>
                      </details>
                      </div>   </div>  
@@ -132,7 +132,7 @@
                                 <th ><a zippy="sortname">{{#t}}common.imia{{/t}}</a> </th>
                                 <th >{{#t}}common.tel_2{{/t}}</th>
                                 <th >E-Mail</th>
-                                <th >{{#t}}common.iedrpou{{/t}}</th>
+                                <th class="{{#sqs_charity}}d-none{{/sqs_charity}}">{{#t}}common.iedrpou{{/t}}</th>
                                 {{^leadmode}}        <th  ><a zippy="sortdoc">{{#t}}print.outcome.dok{{/t}}</a> </th>    {{/leadmode}}
                                 {{#leadmode}}     <th><a zippy="sortleadstatus">{{#t}}reference.customerlist.stan_lida{{/t}}</a> </th>     {{/leadmode}} 
                                 {{#leadmode}}     <th><a zippy="sortleaddate">{{#t}}common.data{{/t}}</a> </th>     {{/leadmode}} 
@@ -149,10 +149,10 @@
                             <tr zippy="customerlist">
                                 <td><input class="seldel" zippy="seldel"  type="checkbox"></td>
 
-                                <td   ><a zippy="customername"></a></td>
+                                <td   ><a zippy="customername"></a> <span zippy="sqsmark" class="badge text-bg-light border fw-normal"></span></td>
                                 <td zippy="customerphone" class="text-nowrap"></td>
                                 <td zippy="customeremail" class="text-nowrap"></td>
-                                <td zippy="customeredrpou" class="text-nowrap"></td>
+                                <td zippy="customeredrpou" class="text-nowrap{{#sqs_charity}} d-none{{/sqs_charity}}"></td>
                                 {{^leadmode}}    <td class="text-end" > <span zippy="docs" class="badge text-bg-secondary rounded-pill"></span> </td>  {{/leadmode}}
                                 {{#leadmode}}  
                                 <td zippy="leadstatus">  </td>  
@@ -212,11 +212,11 @@
                     <label for="editphone">{{#t}}common.telefon{{/t}}</label>
                     <input pattern="[0-9()\+\s]+" class="form-control" zippy="editphone"/>
                 </div>
-                <div class="mb-2">
+                <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <label for="editviber">Viber</label>
                     <input class="form-control" zippy="editviber"/>
                 </div>
-                <div class="mb-2">
+                <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <label for="edittelega">{{#t}}common.telehram{{/t}}</label>
                     <input class="form-control" zippy="edittelega"/>
                 </div>
@@ -245,6 +245,10 @@
                         <option value="0">{{#t}}common.ne_vkazano{{/t}}</option>
                     </select>
                 </div>
+                <div class="mb-2{{^sqs_charity}} d-none{{/sqs_charity}}">
+                    <label for="editsqsmark">{{#t}}sqs.mark.label{{/t}}</label>
+                    <select zippy="editsqsmark" class="form-select"></select>
+                </div>
                  {{#df}}
                 <div class="mb-2">
                     <label for="editdf">{{#t}}reference.customerlist.partner{{/t}}</label>
@@ -254,19 +258,19 @@
                     </select>
                 </div>
                  {{/df}}         
-                <div class="form-check">
+                <div class="form-check{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editisholding">{{#t}}common.kholdynh{{/t}}</label>
                     <br><small>{{#t}}reference.customerlist.kompaniia_abo_prosto_umovna_nazva{{/t}}  </small>
                 </div>
-                <div class="mb-2">
+                <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <label for="editholding">{{#t}}reference.customerlist.dochirnia_dlia_kholdynhu{{/t}}</label>
                     <select zippy="editholding" class="form-select">
                         <option value="0">{{#t}}common.ne_obrano{{/t}}</option>
                     </select>
                 </div>
             
-                <div class="form-check">
+                <div class="form-check{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editnosubs">{{#t}}reference.customerlist.ne_vrakhovuvaty_v_pidpyskakh{{/t}}</label>
                 </div>
@@ -293,24 +297,24 @@
                 <div class="mb-2">
                     <label for="editaddress">{{#t}}reference.customerlist.povna_adresa{{/t}}</label>
                     <input class="form-control" zippy="editaddress"/>
-                    <small>{{#t}}reference.customerlist.dlia_nakladnykh_i_rakhunkiv_faktur{{/t}}</small>
+                    {{^sqs_charity}}<small>{{#t}}reference.customerlist.dlia_nakladnykh_i_rakhunkiv_faktur{{/t}}</small>{{/sqs_charity}}
                 </div>
-                <div class="mb-2">
+                <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <label for="editaddressdel">{{#t}}common.adresa_dostavky{{/t}}</label>
                     <input class="form-control" zippy="editaddressdel"/>
                 </div>
 
-                <div class="mb-2">
+                <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <label for="editedrpou">{{#t}}common.iedrpou{{/t}}</label>
                     <input value="0" class="form-control"   zippy="editedrpou">
                 </div>
 
-                <div class="form-check">
+                <div class="form-check{{#sqs_charity}} d-none{{/sqs_charity}}">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editjurid">{{#t}}reference.customerlist.iur_osoba{{/t}}</label>
                 </div>
                 
-           <div class="mb-2">
+           <div class="mb-2{{#sqs_charity}} d-none{{/sqs_charity}}">
                         <label for="editpricetype">{{#t}}common.typ_tsiny{{/t}}</label>
                         <select class="form-select" zippy="editpricetype">
                          <option value="none">{{#t}}common.ne_obrano{{/t}}</option>                         </select>

@@ -3959,5 +3959,11 @@
     "sqs.import.images_failed": "Не загружено изображений: {n} ({list})",
     "sqs.remote.not_image": "не изображение",
     "sqs.file.too_big": "Файл «{name}» не сохранен: больше {mb} МБ",
-    "sqs.serial_not_on_date": "Номера {snumber} ({itemname}) нет на складе на {date}: на эту дату он выдан, еще не оприходован или выдан позже"
+    "sqs.serial_not_on_date": "Номера {snumber} ({itemname}) нет на складе на {date}: на эту дату он выдан, еще не оприходован или выдан позже",
+    "sqs.mark.label": "Признак получателя",
+    "sqs.mark.ward": "подопечный",
+    "sqs.mark.on_request": "по запросу",
+    "sqs.mark.off_care": "снят с опеки",
+    "sqs.charity.recipients": "Получатели",
+    "sqs.charity.marks_and_tags": "Признаки и теги"
 }

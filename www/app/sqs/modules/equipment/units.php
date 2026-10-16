@@ -235,11 +235,23 @@ class Units
     }
 
     /**
-     * Выданные единицы со сроком, который истек или истекает в ближайшие $days дней, — для напоминаний; сначала самые просроченные
+     * Выданные единицы со сроком, который истек или истекает в ближайшие $days дней, — для напоминаний; сначала самые просроченные.
+     * Мелкое оборудование на руках (smallOnHand) — по сроку договора последней выдачи, строкой с количеством ('qty'; у единиц его нет).
      */
     public static function dueSoon(int $days = 14): array {
         $limit = strtotime(date('Y-m-d')) + $days * 86400;
         $list = array_values(array_filter(self::current(), fn($u) => $u['kind'] == 'out' && $u['enddate'] > 0 && $u['enddate'] < $limit));
+        $small = self::smallOnHand();
+        $contracts = self::contracts(array_column($small, 'contract_id'));
+        foreach ($small as $r) {
+            $c = $contracts[$r['contract_id']] ?? null;
+            $end = $c ? intval($c->enddate) : 0;
+            if ($end <= 0 || date('Y', $end) >= self::ON_DEMAND_YEAR || $end >= $limit) {
+                continue;
+            }
+            $list[] = ['item_id' => $r['item_id'], 'itemname' => $r['itemname'], 'snumber' => '', 'factory_no' => '', 'qty' => $r['qty'],
+                       'customer_id' => $r['customer_id'], 'contract_id' => (int)$c->contract_id, 'contract_number' => $c->contract_number, 'enddate' => $end];
+        }
         usort($list, fn($a, $b) => $a['enddate'] <=> $b['enddate']);
         return $list;
     }
