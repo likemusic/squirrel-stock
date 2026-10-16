@@ -165,6 +165,11 @@ if [[ $MODE == hosting ]]; then
   left=0; for f in "${oldonly[@]}"; do dx test -e "$SITE/$f" && left=$((left + 1)); done
   [[ $left == 0 ]] && ok "остатков старой версии нет (${#oldonly[@]} файлов удалены кнопкой)" || fail "остатки старой версии: $left"
   dx sh -c "grep -h 'SquirrelStock version' $SITE/logs/*.txt" | grep -q -- "-> $newver" && ok "журнал программы: смена версии" || fail "в журнале нет смены версии"
+  # без config.php (удалили по ошибке, первая установка) — понятное сообщение, а не пустая страница
+  dx mv $SITE/config/config.php /root/config.php
+  msg=$(curl -s -w ' %{http_code}' "http://127.0.0.1:$PORT/" || true)
+  dx mv /root/config.php $SITE/config/config.php
+  [[ $msg == *"config.example.php"*" 503" ]] && ok "без config/config.php: сообщение и код 503" || fail "без config.php: $msg"
 fi
 after=$(digest)
 [[ $before == "$after" ]] && ok "данные старой версии те же (документы, договоры, единицы, остатки, пользователи, 2FA, настройки)" || { diff <(echo "$before") <(echo "$after") || true; echo "keyval (ключи с другим значением):"; diff <(cat "$tmp/keyval-before") <(sql "select keyd, md5(vald) from keyval order by keyd") | grep '^[<>]' || true; fail "данные изменились"; }
