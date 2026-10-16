@@ -74,6 +74,22 @@ test('партии расходника — не оборудование; вы�
   expect(text).toContain(inv(2));
   expect(text).not.toContain(batch(1));
 
+  // акт выдачи за октябрь: раствор — в акте расходников, концентратор — в акте оборудования
+  const act = async kind => {
+    await page.goto('/index.php?p=App/Pages/Report/IssueAct');
+    await page.locator('#filter #year').selectOption('2026');
+    await page.locator('#filter #month').selectOption('10');
+    await page.locator('#filter #kind').selectOption(String(kind));
+    await clickWait(page, '#filter #onreport');
+    return page.locator('#preview').innerText();
+  };
+  text = await act(1);
+  expect(text).toContain('Раствор ' + cons);
+  expect(text).not.toContain('Концентратор ' + eq);
+  text = await act(2);
+  expect(text).toContain('Концентратор ' + eq);
+  expect(text).not.toContain('Раствор ' + cons);
+
   // карточка получателя: концентратор — на руках, раствор — в расходниках (7 шт), не в оборудовании
   const cid = value(`select customer_id from customers where customer_name = '${esc(who)}'`);
   await page.goto(`/index.php?p=App/Pages/Report/RecipientCard&arg=${cid}`);
