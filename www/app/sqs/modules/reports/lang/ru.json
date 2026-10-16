@@ -79,5 +79,15 @@
     "report.recipientmonths.recipient": "Получатель",
     "report.recipientmonths.recipients_in_month": "Получателей в месяце",
     "report.recipientmonths.tag": "Тег получателя",
-    "report.recipientmonths.title": "Получатели по месяцам"
+    "report.recipientmonths.title": "Получатели по месяцам",
+    "report.writeoffs.docs": "документов",
+    "report.writeoffs.document": "Документ",
+    "report.writeoffs.hint": "Документы «Списание ТМЦ» за период; причина — примечание документа.",
+    "report.writeoffs.inv": "Инв. номер",
+    "report.writeoffs.made": "Сформирован",
+    "report.writeoffs.none": "За период списаний нет.",
+    "report.writeoffs.reason": "Причина (примечание)",
+    "report.writeoffs.reason_filter": "Причина содержит",
+    "report.writeoffs.title": "Списания с причинами",
+    "report.writeoffs.total": "Итого"
 }
