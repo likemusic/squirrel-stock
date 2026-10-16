@@ -62,7 +62,7 @@ class DocView extends \Zippy\Html\PageFragment
         $user = \App\System::getUser() ;
         $common = \App\System::getOptions('common') ;
 
-        $doc = Document::load($docid);
+        $doc = $this->visibleDoc($docid);
         if($doc== null){
            return json_encode([], JSON_UNESCAPED_UNICODE);
         
@@ -170,7 +170,7 @@ class DocView extends \Zippy\Html\PageFragment
         if($doc->parent_id >0){
             $p = Document::load($doc->parent_id);
             if($p instanceof Document) {
-                if ( \App\ACL::checkShowDoc($p)) {
+                if ( \App\ACL::checkShowDoc($p, true, false)) {
                    $ret['pdoc_id'] = $doc->parent_id;
                    $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number. ' ' . $p->getStateName($p->state);
                 }
@@ -197,13 +197,13 @@ class DocView extends \Zippy\Html\PageFragment
 
         $docid = (int) $arg[0] ;
 
-        $doc = Document::load($docid);
+        $doc = $this->visibleDoc($docid);
 
 
         $docs = array();
         foreach(( $doc==null ? [] :  $doc->getChildren() ) as $d) {
             
-            if(\App\ACL::checkShowDoc($d) ==false) return;
+            if(\App\ACL::checkShowDoc($d, true, false) ==false) continue;   // SquirrelStock: было return — список обрывался
             
             $docs[]=array('id'=>$d->document_id,
                           'name'=>$d->meta_desc . ' ' . $d->document_number,
@@ -220,6 +220,12 @@ class DocView extends \Zippy\Html\PageFragment
     public function delchilddoc($arg, $post) {
 
         $chid = (int) $arg[0] ;
+        // SquirrelStock: отвязывает автор связанного документа или admins (как кнопка в окне), если видит документ
+        $child = $this->visibleDoc($chid);
+        $user = System::getUser();
+        if ($child == null || ($child->user_id != $user->user_id && $user->rolename != 'admins')) {
+            return;
+        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("update documents set parent_id=0 where  document_id=" . $chid);
@@ -229,8 +235,9 @@ class DocView extends \Zippy\Html\PageFragment
     public function addchilddoc($arg, $post) {
 
 
-        $child = Document::load((int)$arg[0]);
-        if ($child instanceof Document) {
+        // SquirrelStock: оба документа видны пользователю, документ не привязывается к самому себе
+        $child = $this->visibleDoc($arg[0]);
+        if ($child instanceof Document && (int)$arg[1] != $child->document_id && $this->visibleDoc($arg[1]) != null) {
             $child->parent_id =(int) $arg[1];
             $child->save();
         }
@@ -423,7 +430,11 @@ class DocView extends \Zippy\Html\PageFragment
 
         try {
 
-            $doc = Document::Load($arg[0])->cast();
+            $doc = $this->visibleDoc($arg[0]);
+            if ($doc == null) {
+                return json_encode(array("error"=>__('app.acl.nemaie_prava_perehliadu_dokumenta')));
+            }
+            $doc = $doc->cast();
             $xml = $doc->generatePosReport(true);
             $pr = new \App\Printer() ;
 
