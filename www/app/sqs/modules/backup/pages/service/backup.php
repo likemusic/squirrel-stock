@@ -163,11 +163,11 @@ class Backup extends \App\Pages\Base
             return;
         }
         try {
-            $n = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText());
+            [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText());
         } catch (\Throwable $e) {
             $this->setError($e->getMessage());
             return;
         }
-        $this->setSuccess(__('service.backup.restored', ['n' => $n]));
+        $this->setSuccess(__('service.backup.restored', ['n' => $n]) . ($skipped ? '. ' . __('service.backup.skipped', ['n' => $skipped]) : ''));
     }
 }
