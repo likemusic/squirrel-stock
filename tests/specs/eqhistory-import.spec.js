@@ -171,7 +171,8 @@ test('импорт истории оборудования: проверка, з
   // мелочь без номеров — у получателя количеством, позиция без серийного учета
   expect(value(`select concat(detail like '%<useserial>1</useserial>%', '|', coalesce((select sum(qty) from store_stock s where s.item_id = items.item_id), 0)) from items where itemname = 'Мешок Амбу 680 мл'`)).toMatch(/^0\|/);
   // без инвентарного номера ничего не заведено: ни позиции «количеством», ни получателей
-  expect(value("select count(*) from items where itemname like 'Кровать функциональная%' or itemname like 'Концентратор кислорода ЭИ тестовый (%'")).toBe('0');
+  // (позиции с учетом по номерам с такими названиями на стенде бывают от других тестов — считаются только «количеством»)
+  expect(value("select count(*) from items where (itemname like 'Кровать функциональная%' or itemname like 'Концентратор кислорода ЭИ тестовый (%') and detail not like '%<useserial>1</useserial>%'")).toBe('0');
   expect(value(`select count(*) from customers where customer_name in ('${who(22)}', '${who(24)}', '${who(25)}')`)).toBe('0');
   expect(qty(inv(6))).toBe(0);
   expect(lastDoc(inv(6))).toBe('OutcomeItem');
