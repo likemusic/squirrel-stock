@@ -55,16 +55,16 @@ class EquipmentUnits extends \App\Pages\Base
     public function onSearch($sender) {
         $text = mb_strtolower(trim($this->filter->searchtext->getText()));
         $kind = $this->filter->kind->getValue();
-        $customers = [];
+        $units = Units::current();
+        $customers = Units::customers(array_column($units, 'customer_id'));
         $list = [];
-        foreach (Units::current() as $u) {
+        foreach ($units as $u) {
             if ($kind == 'active' && $u['kind'] == 'off' || !in_array($kind, ['active', 'all']) && $u['kind'] != $kind) {
                 continue;
             }
             $u['customer'] = '';
             if ($u['customer_id'] > 0) {
-                $customers[$u['customer_id']] ??= (\App\Entity\Customer::load($u['customer_id'])->customer_name ?? '');
-                $u['customer'] = $customers[$u['customer_id']];
+                $u['customer'] = $customers[$u['customer_id']]->customer_name ?? '';
             }
             if ($text !== '' && !str_contains(mb_strtolower($u['itemname'] . ' ' . $u['snumber'] . ' ' . $u['factory_no'] . ' ' . $u['customer']), $text)) {
                 continue;
