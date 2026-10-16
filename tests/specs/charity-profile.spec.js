@@ -49,3 +49,22 @@ test('главная в профиле: без денежных плиток и 
   await expect(page.locator('#paystructure')).toHaveCount(1);
   await page.context().close();
 });
+
+test('журнал выдач в профиле: статус «Все», название «Видачі»', async ({ browser }) => {
+  webPhp('cli/charity-profile.php');
+  expect(value("select concat(description, '|', menugroup) from metadata where meta_type = 3 and meta_name = 'GIList'")).toBe('Видачі|Видачі');
+  let page = await freshPage(browser);
+  await page.goto('/index.php?p=App/Pages/Register/GIList');
+  await expect(page.locator('#filter #status')).toHaveValue('3');
+  await expect(page.locator('h3').first()).toHaveText('Журнал видач');
+  await expect(page.locator('a[href$="Register/GIList"]').first()).toHaveText('Видачі');
+  await page.context().close();
+
+  webPhp('cli/charity-profile.php', '--back');
+  expect(value("select concat(description, '|', menugroup) from metadata where meta_type = 3 and meta_name = 'GIList'")).toBe('Продажі|Продажі');
+  page = await freshPage(browser);
+  await page.goto('/index.php?p=App/Pages/Register/GIList');
+  await expect(page.locator('#filter #status')).toHaveValue('0');
+  await expect(page.locator('h3').first()).toHaveText('Журнал продажів');
+  await page.context().close();
+});

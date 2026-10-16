@@ -47,7 +47,8 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.gilist.vidpravleni'), 5 => __('register.gilist.hotovi_do_vidpravky'), 3 => __('common.vsi')), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.gilist.vidpravleni'), 5 => __('register.gilist.hotovi_do_vidpravky'), 3 => __('common.vsi')), \App\SQS\Profile::charity() ? 3 : 0));   // SquirrelStock: в профиле благотворительной организации — «Все»: проведенные выдачи (возврат делается отсюда)
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();
 
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));

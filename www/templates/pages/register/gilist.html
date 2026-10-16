@@ -1,6 +1,6 @@
 <html>
      <head>
-        <title> {{#t}}register.gilist.zhurnal_prodazhiv{{/t}}  </title>
+        <title> {{#sqs_charity}}{{#t}}sqs.charity.gilist_title{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}register.gilist.zhurnal_prodazhiv{{/t}}{{/sqs_charity}}  </title>
 
     </head>
   <body>
@@ -8,7 +8,7 @@
             <div class="col-12 col-xl-11">
               
                     <div class="card-body">
-                        <h3>{{#t}}register.gilist.zhurnal_prodazhiv{{/t}} </h3>
+                        <h3>{{#sqs_charity}}{{#t}}sqs.charity.gilist_title{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}register.gilist.zhurnal_prodazhiv{{/t}}{{/sqs_charity}} </h3>
 
 
                          
