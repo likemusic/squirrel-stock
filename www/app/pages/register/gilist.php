@@ -349,6 +349,13 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
         }        
+
+        // SquirrelStock: в профиле благотворительной организации — без доставки, ТТН и гарантийного талона; «Возврат» остается
+        if (\App\SQS\Profile::charity()) {
+            foreach (['bsend', 'bdevivered', 'bttn', 'bgar', 'bnp', 'bdecl', 'ship_number'] as $b) {
+                $this->statuspan->statusform->{$b}->setVisible(false);
+            }
+        }
     }
 
     //просмотр

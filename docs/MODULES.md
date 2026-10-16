@@ -98,7 +98,7 @@ A block is usually rendered from the module's print form folder: `(new \App\Repo
 - `lang/<language>.json` keys are merged into the main dictionaries (the main dictionary wins on the same key).
 - Menu titles and groups may be given per language: `[2, 'Hello', ['uk' => 'Привіт', 'ru' => 'Привет'], ['uk' => 'Склад', 'ru' => 'Склад']]`; the installation language (`$_config['common']['lang']`) is written to `metadata`, `cli/localize-db.php` switches them like the other menu titles.
 - The charity profile (`cli/charity-profile.php`) keeps menu items of enabled modules: an enabled module is a wanted one.
-- The charity profile sets the flag `App\SQS\Profile::charity()`. With it `App\Report` looks for `printforms/charity/<template>` first — in modules, then in `www/templates/printforms/charity/` (the platform's own: the goods issue form "issued by / recipient" without prices).
+- The charity profile sets the flag `App\SQS\Profile::charity()`. With it `App\Report` looks for `printforms/charity/<template>` first — in modules, then in `www/templates/printforms/charity/` (the platform's own: the goods issue form "issued by / recipient" and the return form "returned by / accepted by", both without prices).
 
 ## Menu
 

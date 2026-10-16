@@ -9,11 +9,14 @@
  *  - настройки: учет по серийным номерам (оборудование по инвентарным номерам), без минусовых остатков,
  *    закупки без учета денег, цена выдачи по умолчанию 0, копейки;
  *  - флаг профиля (App\SQS\Profile): на главной нет денежных плиток и графиков, журнал выдач открывается со статусом «Все»,
- *    расходная накладная печатается формой «Выдал / Получатель»; журнал «Продажи» называется «Выдачи».
+ *    расходная накладная и возврат печатаются формами «Выдал / Получатель» и «Вернул / Принял», в журнале выдач нет кнопок доставки,
+ *    ТТН и гарантийного талона;
+ *  - названия (RENAME): журнал «Продажи» — «Выдачи», группы документов «Продажи» — «Выдача», «Закупки» — «Поступление»,
+ *    «Расходная накладная» — «Выдача (накладная)», «Возврат от покупателя» — «Возврат от получателя».
  * Повторный запуск безопасен. Настройки кэшируются в сессии: изменения видны после повторного входа.
  *
  * php cli/charity-profile.php          (в docker-стенде: docker exec squirrelstock-web-1 php cli/charity-profile.php)
- * php cli/charity-profile.php --back   включить в меню все выключенные профилем пункты, снять флаг профиля, вернуть название журнала
+ * php cli/charity-profile.php --back   включить в меню все выключенные профилем пункты, снять флаг профиля, вернуть названия
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -30,8 +33,15 @@ const KEEP = [
     5 => ['Import', 'Export'],
 ];
 const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1', 'sqs_charity' => 1];
-// название и группа журнала расходных накладных (metadata GIList): язык по умолчанию => профиль; меняется только непереименованное
-const RENAME = ['Продажі' => 'Видачі', 'Продажи' => 'Выдачи'];
+// названия в metadata: [тип, meta_name ('' — все пункты типа), поле, [язык по умолчанию => профиль]] для uk и ru (cli/localize-db.php
+// переводит и профильные названия). Меняется только название по умолчанию: переименованное вручную остается; --back — обратно
+const RENAME = [
+    [3, 'GIList', 'description', ['Продажі' => 'Видачі', 'Продажи' => 'Выдачи']],
+    [3, 'GIList', 'menugroup', ['Продажі' => 'Видачі', 'Продажи' => 'Выдачи']],
+    [1, '', 'menugroup', ['Продажі' => 'Видача', 'Продажи' => 'Выдача', 'Закупівлі' => 'Надходження', 'Закупки' => 'Поступление']],
+    [1, 'GoodsIssue', 'description', ['Видаткова накладна' => 'Видача (накладна)', 'Расходная накладная' => 'Выдача (накладная)']],
+    [1, 'ReturnIssue', 'description', ['Повернення від покупця' => 'Повернення від отримувача', 'Возврат от покупателя' => 'Возврат от получателя']],
+];
 
 $_config = [];
 require __DIR__ . '/../config/config.php';
@@ -63,7 +73,7 @@ if (in_array('--back', $argv, true)) {
         $conn->query('UPDATE metadata SET disabled = 0 WHERE meta_id IN (' . implode(',', $ids) . ')');
     }
     $conn->query("DELETE FROM keyval WHERE keyd = 'sqs_profile_disabled'");
-    renameJournal($conn, array_flip(RENAME));
+    rename_items($conn, true);
     setCommon($conn, fn(array $c) => array_diff_key($c, ['sqs_charity' => 1]));
     echo 'Включено пунктов меню: ' . count($ids) . "\n";
     exit;
@@ -80,16 +90,18 @@ if ($ids) {
 }
 $conn->query("UPDATE metadata SET disabled = 0 WHERE {$inKeep}");
 
-renameJournal($conn, RENAME);
+rename_items($conn, false);
 setCommon($conn, fn(array $c) => array_merge($c, OPTIONS));
 
 echo 'Выключено пунктов меню: ' . count($ids) . ", настройки обновлены. Изменения видны после повторного входа в программу\n";
 
-function renameJournal(mysqli $conn, array $pairs): void {
-    $stmt = $conn->prepare("UPDATE metadata SET description = IF(description = ?, ?, description), menugroup = IF(menugroup = ?, ?, menugroup) WHERE meta_type = 3 AND meta_name = 'GIList'");
-    foreach ($pairs as $from => $to) {
-        $stmt->bind_param('ssss', $from, $to, $from, $to);
-        $stmt->execute();
+function rename_items(mysqli $conn, bool $back): void {
+    foreach (RENAME as [$type, $name, $field, $pairs]) {
+        $stmt = $conn->prepare("UPDATE metadata SET {$field} = ? WHERE meta_type = {$type} AND {$field} = ?" . ($name === '' ? '' : ' AND meta_name = ?'));
+        foreach ($back ? array_flip($pairs) : $pairs as $from => $to) {
+            $name === '' ? $stmt->bind_param('ss', $to, $from) : $stmt->bind_param('sss', $to, $from, $name);
+            $stmt->execute();
+        }
     }
 }
 
