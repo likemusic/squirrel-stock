@@ -343,7 +343,12 @@ class PayList extends \App\Pages\Base
                
         
         $this->_importlist = [];
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
         $this->_importlist =[];
 

@@ -3937,5 +3937,6 @@
     "widgets.docview.vidpovisty": "<br> <a href=\"/index.php?p=App/Pages/Register/DocList&arg={document_id}\">Ответить</a> ",
     "widgets.docview.zminyv": "Изменил",
     "widgets.itemsel.mat_ta_kompl": "Мат. и компл.",
-    "widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat": "Изменения обновят также справочник номенклатуры"
+    "widgets.itemsel.zminy_onovliat_takozh_dovidnyk_nomenklat": "Изменения обновят также справочник номенклатуры",
+    "sqs.import.bad_format": "Файл не прочитан: нужна таблица Excel (xlsx, xls), OpenDocument (ods) или CSV"
 }

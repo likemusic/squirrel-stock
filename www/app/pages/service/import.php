@@ -259,7 +259,12 @@ class Import extends \App\Pages\Base
         
         
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -494,7 +499,17 @@ class Import extends \App\Pages\Base
 
         $data = array();
 
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+
+            $this->setError($e->getMessage());
+
+            return;
+
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -630,7 +645,12 @@ class Import extends \App\Pages\Base
         H::setKeyVal('nimportcols',serialize($save)) ;
         
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
@@ -777,7 +797,12 @@ class Import extends \App\Pages\Base
         }
 
         $data = array();
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+        try {
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+            $this->setError($e->getMessage());
+            return;
+        }
 
 
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();

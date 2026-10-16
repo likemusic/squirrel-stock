@@ -48,7 +48,7 @@ class Import1C extends \App\Pages\Base
             return;
         }
         try {
-            $rows = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name'])->getActiveSheet()->toArray(null, true, false, false);
+            $rows = \App\SQS\SpreadsheetFile::load($file['tmp_name'])->getActiveSheet()->toArray(null, true, false, false);
         } catch (\Throwable $e) {
             $this->setError(__('service.import1c.bad_file'));
             return;

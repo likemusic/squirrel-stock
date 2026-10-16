@@ -50,7 +50,7 @@ class EqHistory
      * Прочитать файл .xlsx: распознать формат и разобрать строки
      */
     public function readFile(string $path, string $filename): void {
-        $book = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+        $book = \App\SQS\SpreadsheetFile::load($path);
         $titles = array_map(fn($s) => mb_strtolower(trim($s->getTitle())), $book->getAllSheets());
         $journal = in_array('обычные', $titles, true);
         $this->rowsRead[$filename] = 0;

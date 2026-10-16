@@ -359,7 +359,17 @@ class CustItems extends \App\Pages\Base
         }
         $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
 
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
+        try {
+
+            $oSpreadsheet = \App\SQS\SpreadsheetFile::load($file['tmp_name']);
+
+        } catch (\Throwable $e) {   // не таблица — сообщение на странице, а не страница ошибки
+
+            $this->setError($e->getMessage());
+
+            return;
+
+        }
 
         $data = array();
 
