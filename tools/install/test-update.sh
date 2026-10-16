@@ -58,7 +58,7 @@ out=$(dx runuser -u www-data -- php $SITE/cli/backup.php 2>&1) || { echo "$out" 
 [[ $(dx sh -c 'ls /srv/cloud | wc -l') -ge 1 ]] && ok "старая версия: копия в папку и в облако" || fail "старая версия: копии в облаке нет"
 # состав данных старой версии: столбцы таблиц на момент установки — после обновления те же значения. Без того, что
 # меняет сам вход (время входа, настройки пользователя, последний шаг 2FA) и сама программа (keyval: версия, сверка
-# модулей и схем)
+# модулей и схем, время запуска встроенного планировщика Zippy lastcron*)
 tmp=$(mktemp -d); trap 'docker rm -f $NAME >/dev/null 2>&1 || true; rm -rf "$tmp"' EXIT
 TABLES="documents contracts customers items store_stock sqs_unit users sqs_2fa keyval"
 for t in $TABLES; do
@@ -73,12 +73,13 @@ digest() {
   local q="set session group_concat_max_len = 1000000000;" t cols where
   for t in $TABLES; do
     cols=$(cat "$tmp/$t"); where=
-    [[ $t == keyval ]] && where="where keyd not like 'sqs\\_schema%' and keyd not like 'sqs\\_modules%' and keyd not like 'sqs\\_version%'"
+    [[ $t == keyval ]] && where="where keyd not like 'sqs\\_schema%' and keyd not like 'sqs\\_modules%' and keyd not like 'sqs\\_version%' and keyd not like 'lastcron%'"
     q+="select '$t', count(*), md5(group_concat(concat_ws(char(31), $cols) order by $cols separator '#~#')) from $t $where;"
   done
   sql "$q"
 }
 before=$(digest)
+sql "select keyd, md5(vald) from keyval order by keyd" > "$tmp/keyval-before"
 echo "$before" | awk '{print "     " $1 ": " $2}' | tr '\n' ' '; echo
 conf_md5=$(dx md5sum $SITE/config/config.php | cut -c1-32)
 mapfile -t oldonly < <(comm -23 <(git ls-tree -r --name-only "$OLD" www | sed 's|^www/||' | sort) <(git ls-tree -r --name-only HEAD www | sed 's|^www/||' | sort))
@@ -166,7 +167,7 @@ if [[ $MODE == hosting ]]; then
   dx sh -c "grep -h 'SquirrelStock version' $SITE/logs/*.txt" | grep -q -- "-> $newver" && ok "журнал программы: смена версии" || fail "в журнале нет смены версии"
 fi
 after=$(digest)
-[[ $before == "$after" ]] && ok "данные старой версии те же (документы, договоры, единицы, остатки, пользователи, 2FA, настройки)" || { diff <(echo "$before") <(echo "$after"); fail "данные изменились"; }
+[[ $before == "$after" ]] && ok "данные старой версии те же (документы, договоры, единицы, остатки, пользователи, 2FA, настройки)" || { diff <(echo "$before") <(echo "$after") || true; echo "keyval (ключи с другим значением):"; diff <(cat "$tmp/keyval-before") <(sql "select keyd, md5(vald) from keyval order by keyd") | grep '^[<>]' || true; fail "данные изменились"; }
 missing=
 for f in $(dx sh -c "ls $SITE/app/sqs/schema.sql $SITE/app/sqs/modules/*/schema.sql"); do
   for t in $(dx sed -n 's/^CREATE TABLE IF NOT EXISTS \([a-z0-9_]*\).*/\1/p' "$f"); do
