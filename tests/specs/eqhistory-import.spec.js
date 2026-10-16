@@ -1,12 +1,13 @@
 // Импорт истории выдачи оборудования из Google-таблиц хосписа (перепись и журнал, .xlsx), ZIPPY_GAPS п. 28.
 // Таблицы вымышленные, той же раскладки (tests/fixtures/make-eqhistory.php), номера — свои на каждый прогон.
 // Проверяется: «Проверить» ничего не пишет и показывает ошибки с причиной; «Записать» создает выдачи, возвраты, списания
-// и приход единицы только с заводским номером; одна выдача из двух таблиц склеивается; повторный импорт не дублирует.
+// и приход единицы только с заводским номером; одна выдача из двух таблиц склеивается; повторный импорт не дублирует;
+// мелочь без номеров — на позицию по соответствиям «написание → позиция», неизвестное написание — ошибка без записи.
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
 const { clickWait, pickAuto } = require('../helpers/zippy');
-const { query, value } = require('../helpers/db');
+const { query, value, esc } = require('../helpers/db');
 const { webPhp } = require('../helpers/stand');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
@@ -45,6 +46,7 @@ test('импорт истории оборудования: проверка, з
     return was;
   };
   const actual = await setActual('2010-01-01');
+  const savedMap = query('select written, itemname from sqs_eqitemmap order by id');   // справочник общий — вернуть после теста
   try {
   // единицы с инвентарными номерами — в базе до импорта истории (ведомость 1С, счет 01)
   await page.goto('/index.php?p=App/Pages/Service/Import1C');
@@ -54,9 +56,10 @@ test('импорт истории оборудования: проверка, з
   expect(qty(inv(1))).toBe(1);
 
   const stat = async k => Number((await page.locator(`#eqh-summary tr[data-stat=${k}] td`).last().innerText()).trim());
-  const run = async button => {
+  const run = async (button, map) => {
     const resp = await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
     expect(resp.status()).toBe(200);
+    if (map !== undefined) await page.locator('#iform #itemmap').fill(map);
     await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
     await page.locator('#iform #journal').setInputFiles(path.join(dir, 'zhurnal.xlsx'));
     await clickWait(page, '#iform #check');
@@ -66,21 +69,33 @@ test('импорт истории оборудования: проверка, з
   // актуальный период начинается позже первого документа импорта (как будет у хосписа: история старше)
   await setActual('2025-01-01');
 
-  // проверка: ничего не записано, план и ошибки с причиной
-  await run('check');
-  // выдачи: единицы 1, 2, 3, 5 (дважды), 8, 9, кровать с заводским номером; без номеров — мешок Амбу и ингалятор
-  expect(await stat('issue')).toBe(10);
+  // соответствия наименований мелочи: строка не в виде «написание = позиция» — не сохраняются, файлы не разбираются
+  await run('check', 'мешки Амбу = Мешки Амбу\nпросто текст');
+  await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/рядки 2 /);
+  await expect(page.locator('#eqh-summary')).toHaveCount(0);
+
+  // проверка: ничего не записано, план и ошибки с причиной. Соответствия: лист «мешки Амбу» — позиция «Мешки Амбу»;
+  // «Ингалят.детский» — «Ингалятор детский», а «ингалятор детский» совпадает с позицией и своей строки не требует
+  await run('check', 'мешки Амбу = Мешки Амбу\n# комментарий\nингалят . детский = Ингалятор детский');
+  expect(query('select written, itemname from sqs_eqitemmap order by id')).toEqual([['мешки Амбу', 'Мешки Амбу'], ['ингалят . детский', 'Ингалятор детский']]);
+  // выдачи: единицы 1, 2, 3, 5 (дважды), 8, 9, кровать с заводским номером; без номеров — мешок Амбу и два ингалятора
+  expect(await stat('issue')).toBe(11);
   expect(await stat('merged')).toBe(2);      // единица 1 и мешок Амбу — в переписи и в журнале
-  expect(await stat('income')).toBe(3);      // кровать (только заводской номер), мешок Амбу и ингалятор (количеством)
+  expect(await stat('income')).toBe(4);      // кровать (только заводской номер), мешок Амбу и ингаляторы (количеством)
   expect(await stat('return')).toBe(5);      // 1; 3 перед списанием; 5 накануне новой выдачи; 8 и 9 — датой импорта
   expect(await stat('writeoff')).toBe(4);    // 3 «списан» с датой; 9 «списан» без даты; 6 и 10 — лист «СПИСАНО»
-  expect(await stat('errors')).toBe(5);      // 4 по строкам + закрытый период
+  expect(await stat('errors')).toBe(6);      // 4 по строкам + аспиратор (нет в соответствиях) + закрытый период
   const problems = (await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n');
   expect(problems).toMatch(/до початку актуального періоду .*01\.01\.2025.* від 05\.05\.2024/);
   expect(problems).toMatch(/Дату не розпізнано: весна/);
   expect(problems).toContain(`Інвентарного номера ${inv(99)} немає в базі`);
   expect(problems).toMatch(/Кілька одиниць в одній клітинці/);
   expect(problems).toContain(`Номера XX-${uniq} немає ні в базі, ні в переписі`);
+  expect(problems).toContain('Немає у відповідностях найменувань: «аспиратор тестовый»');
+  expect(await page.locator('#eqh-unmapped').innerText()).toMatch(/^аспиратор тестовый\s+1$/);
+  // кнопка дописывает неизвестное написание в поле соответствий (сохранится при следующей проверке)
+  await page.locator('#eqh-unmapped-add').click();
+  expect(await page.locator('#iform #itemmap').inputValue()).toMatch(/ингалят \. детский = Ингалятор детский\nаспиратор тестовый = аспиратор тестовый$/);
   const notes = (await page.locator('#eqh-problems tr.note').allInnerTexts()).join('\n');
   expect(notes).toMatch(/Стан отримувача «умер»/);
   expect(notes).toMatch(/Дата видачі = дата договору/);
@@ -95,12 +110,15 @@ test('импорт истории оборудования: проверка, з
   expect(await page.locator('#eqh-skipped').innerText()).toMatch(/мешки Амбу\s+мешок Амбу\s+1/);   // возвращенный — пропуск
   const onhand = await page.locator('#eqh-onhand').innerText();
   expect(onhand).toMatch(/Мешки Амбу\s+1/);
-  expect(onhand).toMatch(/Ингалятор детский\s+1/);
+  expect(onhand).toMatch(/Ингалятор детский\s+2/);
+  expect(onhand).not.toMatch(/Ингалят\.|аспиратор/i);
   expect(await page.locator('#eqh-unitonly').innerText()).toMatch(/кровати\s+1/);
   expect(qty(inv(2))).toBe(1);
   expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
 
-  // запись без галочки: отказ из-за закрытого периода, ничего не записано
+  // запись без галочки: отказ из-за закрытого периода, ничего не записано. Сначала заново, без строки от кнопки:
+  // запись сохраняет поле соответствий, и аспиратор завелся бы позицией «как написано»
+  await run('check');
   await clickWait(page, '#iform #write');
   await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/до початку актуального періоду/);
   expect(value(`select count(*) from contracts where contract_number = '${cn(2, '25')}'`)).toBe('0');
@@ -148,7 +166,7 @@ test('импорт истории оборудования: проверка, з
   // повторный запуск: все уже импортировано
   await run('check');
   for (const k of ['income', 'issue', 'return', 'writeoff']) expect(await stat(k)).toBe(0);
-  expect(await stat('done')).toBe(21);   // все события, кроме прихода кровати — она уже в базе; события «датой импорта» — тоже
+  expect(await stat('done')).toBe(23);   // все события, кроме прихода кровати — она уже в базе; события «датой импорта» — тоже
   await expect(page.locator('#iform #write')).toHaveCount(0);
 
   // мелочь на руках видна в «Обороте по позициям» по получателю
@@ -157,7 +175,13 @@ test('импорт истории оборудования: проверка, з
   await pickAuto(page, '#filter #cust', who(16), who(16));
   await clickWait(page, '#filter #onreport');
   expect((await page.locator('body').innerText()).replace(/\s+/g, ' ')).toMatch(/Мешки Амбу/);
+  // оба написания ингалятора — на одной позиции; аспиратор (нет в соответствиях) не записан: ни позиции, ни получателя
+  expect(value(`select group_concat(distinct i.itemname) from documents d join customers c on c.customer_id = d.customer_id join entrylist e on e.document_id = d.document_id
+                join store_stock s on s.stock_id = e.stock_id join items i on i.item_id = s.item_id where c.customer_name in ('${who(19)}', '${who(20)}')`)).toBe('Ингалятор детский');
+  expect(value("select count(*) from items where itemname like 'Ингалят.%'")).toBe('0');
+  expect(value(`select count(*) from customers where customer_name = '${who(21)}'`)).toBe('0');
   } finally {
     await setActual(actual);
+    query('delete from sqs_eqitemmap' + savedMap.map(([w, i]) => `; insert into sqs_eqitemmap (written, itemname) values ('${esc(w)}', '${esc(i)}')`).join(''));
   }
 });

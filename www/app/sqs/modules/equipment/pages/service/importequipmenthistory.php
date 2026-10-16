@@ -4,17 +4,21 @@ namespace App\Pages\Service;
 
 use App\Helper as H;
 use App\SQS\EqHistory;
+use App\SQS\EqItemMap;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 
 /**
  * SquirrelStock: импорт истории выдачи оборудования из Google-таблиц (перепись и журнал, .xlsx), разбор — App\SQS\EqHistory.
  * «Проверить» только разбирает и показывает отчет: что будет создано, ошибки (строка не импортируется) и заметки
  * (импортируется с допущением). «Записать» доступна после проверки и разбирает те же файлы заново перед записью.
+ * Соответствия «написание → позиция» для мелочи без номеров (App\SQS\EqItemMap) правятся тут же и сохраняются
+ * при проверке и записи; написания, которых в них нет, — в отчете с кнопкой «добавить в соответствия».
  */
 class ImportEquipmentHistory extends \App\Pages\Base
 {
@@ -31,6 +35,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $form->add(new File('journal'));
         $form->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
         $form->add(new CheckBox('liftperiod', false));
+        $form->add(new TextArea('itemmap', EqItemMap::toText(EqItemMap::all())));
         $form->add(new SubmitButton('check'))->onClick($this, 'onCheck');
         $form->add(new SubmitButton('write'))->onClick($this, 'onWrite');
         $form->write->setVisible(false);
@@ -58,6 +63,9 @@ class ImportEquipmentHistory extends \App\Pages\Base
             $this->setError(__('common.ne_obrano_fail'));
             return;
         }
+        if (!$this->saveMap()) {
+            return;
+        }
         $eh = $this->analyze();
         if ($eh) {
             $this->report->setText($this->reportHtml($eh, null), true);
@@ -69,6 +77,9 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $store = intval($this->iform->store->getValue());
         if ($store == 0) {
             $this->setError(__('common.ne_obrano_sklad'));
+            return;
+        }
+        if (!$this->saveMap()) {
             return;
         }
         $eh = $this->analyze();
@@ -99,6 +110,18 @@ class ImportEquipmentHistory extends \App\Pages\Base
             return null;
         }
         return $eh;
+    }
+
+    // соответствия из поля: с ошибкой в строке — не сохранять и не разбирать файлы
+    private function saveMap(): bool {
+        $p = EqItemMap::parse($this->iform->itemmap->getText());
+        if (count($p['errors'])) {
+            $this->setError(__('sqs.eqhist.map_bad_lines', ['lines' => implode(', ', array_keys($p['errors']))]));
+            return false;
+        }
+        EqItemMap::save($p['map']);
+        $this->iform->itemmap->setText(EqItemMap::toText($p['map']));
+        return true;
     }
 
     private function dropFiles(): void {
@@ -141,6 +164,17 @@ class ImportEquipmentHistory extends \App\Pages\Base
                 $h .= '<tr><td>' . self::e($n) . '</td><td>' . self::e($item) . '</td><td>' . self::e($sheet) . '</td></tr>';
             }
             $h .= '</table>';
+        }
+        if (count($eh->unmapped)) {
+            // кнопка дописывает в поле соответствий строки «написание = написание» — остается поправить позицию справа
+            $lines = implode("\n", array_map(fn($w) => $w . ' = ' . $w, array_keys($eh->unmapped)));
+            $h .= '<h6>' . __('sqs.eqhist.unmapped_title') . '</h6><table class="table table-sm w-auto" id="eqh-unmapped">';
+            foreach ($eh->unmapped as $w => $n) {
+                $h .= '<tr><td>' . self::e($w) . '</td><td class="text-end">' . $n . '</td></tr>';
+            }
+            $h .= '</table><button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="eqh-unmapped-add" data-lines="' . self::e($lines) . '"'
+                . ' onclick="var t=document.getElementById(\'itemmap\');t.value=(t.value.trim()?t.value.replace(/\\s+$/,\'\')+\'\\n\':\'\')+this.dataset.lines;t.focus();">'
+                . __('sqs.eqhist.unmapped_add') . '</button>';
         }
         if (count($eh->onhand)) {
             $h .= '<h6>' . __('sqs.eqhist.onhand_title') . '</h6><table class="table table-sm w-auto" id="eqh-onhand">';

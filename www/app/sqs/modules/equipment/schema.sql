@@ -15,3 +15,12 @@ CREATE TABLE IF NOT EXISTS sqs_eqhistory (
   createdon datetime NOT NULL,
   PRIMARY KEY (eventkey)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Импорт истории: соответствия «написание → позиция» для мелочи без номеров (App\SQS\EqItemMap) — варианты написания
+-- одного вида в таблицах хосписа сводятся к одной позиции
+CREATE TABLE IF NOT EXISTS sqs_eqitemmap (
+  id int NOT NULL AUTO_INCREMENT,
+  written varchar(255) NOT NULL,
+  itemname varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
