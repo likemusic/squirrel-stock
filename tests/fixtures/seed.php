@@ -4,7 +4,7 @@
  * как это делают формы справочников и документов (savedocOnClick: save, STATE_NEW, STATE_EXECUTED в транзакции).
  * Для тестов, где эти данные — фон, а не предмет проверки. Совпадение с формами проверяет tests/specs/seed-parity.spec.js.
  *
- * Запуск в web-контейнере от www-data: php seed.php < data.json (helpers/seed.js)
+ * Запуск в web-контейнере от www-data: php -- '<JSON>' < seed.php (helpers/seed.js)
  * Вход (JSON):
  *   items:     [{ code, name, msr = 'шт', serial, snmode, minqty, cat_id }]
  *   customers: [{ name, type = 1 (1 — получатель, 2 — поставщик), phone, address }]
@@ -24,7 +24,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Store;
 
-$in = json_decode(stream_get_contents(STDIN), true);
+$in = json_decode($argv[1], true);
 $out = ['items' => [], 'customers' => [], 'contracts' => [], 'docs' => [], 'error' => null];
 \App\System::setUser(\App\Entity\User::getByLogin('admin'));
 $conn = \ZDB\DB::getConnect();

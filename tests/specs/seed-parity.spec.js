@@ -1,6 +1,7 @@
 // Подготовка данных без интерфейса (fixtures/seed.php, helpers/seed.js) дает то же, что формы: позиции, контрагенты,
 // договоры и документы всех пяти видов, которые создает seed, — одинаковые поля, шапка, строки, проводки и остатки.
 // Пока этот тест проходит, остальные тесты могут готовить фон через seed, а не через формы.
+const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
@@ -9,14 +10,8 @@ const { seed } = require('../helpers/seed');
 const { query, value, esc } = require('../helpers/db');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
-let dumpCopied = false;
-function dump(ids) {
-  if (!dumpCopied) {
-    execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'doc-dump.php'), `${WEB}:/tmp/sqs-doc-dump.php`]);
-    dumpCopied = true;
-  }
-  return JSON.parse(execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'php', '/tmp/sqs-doc-dump.php', ...ids.map(String)], { encoding: 'utf8' }).trim());
-}
+const DUMP = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'doc-dump.php'), 'utf8');
+const dump = ids => JSON.parse(execFileSync('docker', ['exec', '-i', '-u', 'www-data', WEB, 'php', '--', ...ids.map(String)], { input: DUMP, encoding: 'utf8' }).trim());
 
 // Значения, которые различаются по построению: id, номера, метки времени; имена и коды — с суффиксом набора (U… или S…)
 const VOLATILE = new Set(['document_number', 'hash', 'time', 'lastupdated', 'createdon', 'stock_id', 'entry_id']);

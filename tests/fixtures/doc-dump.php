@@ -1,7 +1,7 @@
 <?php
 /**
  * Документы в сравнимом виде (tests/specs/seed-parity.spec.js): поля документа, шапка, строки, проводки и остатки.
- * Запуск в web-контейнере от www-data: php doc-dump.php <document_id> [<document_id> ...]
+ * Запуск в web-контейнере от www-data: php -- <document_id> [<document_id> ...] < doc-dump.php
  * Вывод (JSON): [{ doc, header, rows, entries, stock }]
  */
 $_SERVER['HTTP_HOST'] = 'localhost';
