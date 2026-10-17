@@ -66,11 +66,12 @@ class LoginGuard
 
     /**
      * Неудачные попытки старше суток и просроченные токены «Запомнить»: раньше удалялись только при следующей неудаче
-     * (выдаче токена), без них — лежали в базе и в резервных копиях бессрочно
+     * (выдаче токена), без них — лежали в базе и в резервных копиях бессрочно. Заодно — временные файлы (App\SQS\TempFiles)
      */
     public static function purge(): void {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute('DELETE FROM sqs_loginfail WHERE createdon < ' . $conn->qstr(date('Y-m-d H:i:s', time() - 86400)));
         Remember::purge();
+        TempFiles::purge();
     }
 }

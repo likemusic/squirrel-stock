@@ -53,12 +53,9 @@ class ImportEquipmentHistory extends \App\Pages\Base
 
     public function onCheck($sender) {
         $this->dropFiles();
-        // копии файлов от проверок, после которых не было записи (в таблицах персональные данные): старше суток — удалить
-        foreach (glob(sys_get_temp_dir() . '/sqs-eqh-*') ?: [] as $old) {
-            if (filemtime($old) < time() - 86400) {
-                @unlink($old);
-            }
-        }
+        // копии файлов от проверок, после которых не было записи (в таблицах персональные данные): старше суток — удалить;
+        // то же при каждом входе (App\SQS\LoginGuard::purge), если импортом больше не пользуются
+        \App\SQS\TempFiles::purge();
         foreach (['census', 'journal'] as $f) {
             $file = $this->iform->{$f}->getFile();
             if (strlen($file['tmp_name'] ?? '') == 0) {

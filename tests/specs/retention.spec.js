@@ -56,3 +56,21 @@ test('удаление документа удаляет его журнал п�
     query(`delete from documents where document_id = ${id}; delete from sqs_doclog where document_id = ${id}`);
   }
 });
+
+// временные файлы программы (копии таблиц импорта истории оборудования, дампы копии) старше суток удаляет вход
+test('вход удаляет временные файлы программы старше суток', async ({ browser, uniq }) => {
+  const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
+  const sh = cmd => require('child_process').execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'sh', '-c', cmd], { encoding: 'utf8' });
+  const tmp = webPhp('-r', 'echo sys_get_temp_dir();').trim();
+  const old = [`sqs-eqh-O${uniq}`, `sqsO${uniq}`, `sqsZ${uniq}.zip`], keep = [`sqs-eqh-F${uniq}`, `sqsx-O${uniq}.txt`];
+  sh(`cd ${tmp} && touch ${[...old, ...keep].join(' ')} && touch -d '2 days ago' ${old.join(' ')} sqsx-O${uniq}.txt`);
+  try {
+    const ctx = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    await login(await ctx.newPage());
+    await ctx.close();
+    const left = sh(`cd ${tmp} && ls -1 | grep -F ${uniq} || true`).trim().split('\n').filter(Boolean).sort();
+    expect(left, 'старые удалены; свежий и чужой по имени остались').toEqual([...keep].sort());
+  } finally {
+    sh(`cd ${tmp} && rm -f ${[...old, ...keep].join(' ')}`);
+  }
+});
