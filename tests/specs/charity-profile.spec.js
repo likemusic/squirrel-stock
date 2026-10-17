@@ -14,7 +14,8 @@ async function freshPage(browser) {
   return page;
 }
 
-test.afterAll(() => webPhp('cli/charity-profile.php', '--back'));
+// после каждого теста, в том числе упавшего: иначе следующие тесты (и других файлов) идут с включенным профилем
+test.afterEach(() => webPhp('cli/charity-profile.php', '--back'));
 
 test('меню профиля для благотворительной организации', async ({ browser }) => {
   webPhp('cli/charity-profile.php');
