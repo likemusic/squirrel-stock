@@ -4,7 +4,8 @@
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc } = require('../helpers/zippy');
+const { createDoc } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value } = require('../helpers/db');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
@@ -15,10 +16,16 @@ test('расходная накладная: номера нет на склад
   test.setTimeout(5 * 60_000);
   const code = 'SD-' + uniq, a = 'SDA-' + uniq, b = 'SDB-' + uniq;
   const one = 'Получатель ' + uniq + '-1', two = 'Получатель ' + uniq + '-2';
-  await createItem(page, { name: 'Аппарат ' + uniq, code, serial: true });
-  await createCustomer(page, { name: one });
-  await createCustomer(page, { name: two });
-  await createDoc(page, 'IncomeItem', { date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] });
+  // история номеров (фон, без формы): A выдан первому на -30 и вернулся на -5 (повторный приход того же номера),
+  // B выдан первому на -10 и вернулся на -3
+  const income = (date, sn) => ({ type: 'IncomeItem', date, rows: [{ code, qty: 1, price: 0, sn }] });
+  const given = (date, sn, customer) => ({ type: 'GoodsIssue', date, customer, rows: [{ code, qty: 1, price: 0, sn }] });
+  seed({
+    items: [{ name: 'Аппарат ' + uniq, code, serial: true }],
+    customers: [{ name: one, type: 1 }, { name: two, type: 1 }],
+    docs: [{ type: 'IncomeItem', date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] },
+           given(day(-30), a, one), income(day(-5), a), given(day(-10), b, one), income(day(-3), b)],
+  });
   const issue = (date, sn, customer) => createDoc(page, 'GoodsIssue', { date, customer, payment: 0, rows: [{ code, qty: 1, price: 0, sn }] });
   const refused = async (date, sn, customer) => {
     const err = await issue(date, sn, customer).then(() => null, e => e.message);
@@ -27,15 +34,10 @@ test('расходная накладная: номера нет на склад
   };
 
   // форма накладной не дает выбрать номер, которого нет на складе сейчас; проверяются номера, которые на складе сейчас,
-  // но не на дату документа. Вернувшаяся единица оформлена повторным приходом того же номера
-  await issue(day(-30), a, one);
-  await createDoc(page, 'IncomeItem', { date: day(-5), rows: [{ code, qty: 1, price: 0, sn: a }] });
+  // но не на дату документа
   expect(qty(a)).toBe(1);
   await refused(day(-20), a, two);   // на ту дату выдан первому получателю
   await refused(day(-90), b, one);   // раньше прихода
-
-  await issue(day(-10), b, one);
-  await createDoc(page, 'IncomeItem', { date: day(-3), rows: [{ code, qty: 1, price: 0, sn: b }] });
   await refused(day(-40), b, two);   // на ту дату был, но выдан позже: задним числом остаток ушел бы в минус
   expect(qty(a)).toBe(1);
   expect(qty(b)).toBe(1);
@@ -50,12 +52,16 @@ test('списание и перемещение: номера нет на ск�
   const code = 'SM-' + uniq, a = 'SMA-' + uniq, b = 'SMB-' + uniq, one = 'Получатель ' + uniq, repair = 'Ремонт ' + uniq;
   query(`insert into stores (storename, branch_id, disabled) values ('${repair}', 0, 0)`);
   const rs = value(`select max(store_id) from stores where storename = '${repair}'`);
-  await createItem(page, { name: 'Аппарат ' + uniq, code, serial: true });
-  await createCustomer(page, { name: one });
-  await createDoc(page, 'IncomeItem', { date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] });
-  await createDoc(page, 'GoodsIssue', { date: day(-30), customer: one, payment: 0, rows: [{ code, qty: 1, price: 0, sn: a }] });
-  await createDoc(page, 'IncomeItem', { date: day(-5), rows: [{ code, qty: 1, price: 0, sn: a }] });   // вернулась
-  await createDoc(page, 'GoodsIssue', { date: day(-10), customer: one, payment: 0, rows: [{ code, qty: 1, price: 0, sn: b }] });
+  seed({
+    items: [{ name: 'Аппарат ' + uniq, code, serial: true }],
+    customers: [{ name: one, type: 1 }],
+    docs: [
+      { type: 'IncomeItem', date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] },
+      { type: 'GoodsIssue', date: day(-30), customer: one, rows: [{ code, qty: 1, price: 0, sn: a }] },
+      { type: 'IncomeItem', date: day(-5), rows: [{ code, qty: 1, price: 0, sn: a }] },   // вернулась
+      { type: 'GoodsIssue', date: day(-10), customer: one, rows: [{ code, qty: 1, price: 0, sn: b }] },
+    ],
+  });
   const refused = async (type, date, sn, extra = {}) => {
     const docs = () => value(`select count(*) from documents where meta_id = (select meta_id from metadata where meta_name = '${type}')`);
     const was = docs();
@@ -78,16 +84,20 @@ test('списание и перемещение: номера нет на ск�
 
 // Возврат поставщику и недостача по инвентаризации — без формы (fixtures/serial-doc.php): строки возврата берутся
 // из прихода от поставщика, а проверяется проведение документа в ядре
-test('возврат поставщику и инвентаризация: номера нет на складе на дату — не проводятся', async ({ page, uniq }) => {
+test('возврат поставщику и инвентаризация: номера нет на складе на дату — не проводятся', async ({ uniq }) => {
   test.setTimeout(5 * 60_000);
   const code = 'SR-' + uniq, a = 'SRA-' + uniq, b = 'SRB-' + uniq, one = 'Получатель ' + uniq;
-  await createItem(page, { name: 'Аппарат ' + uniq, code, serial: true });
-  await createCustomer(page, { name: one });
-  await createDoc(page, 'IncomeItem', { date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] });
-  await createDoc(page, 'GoodsIssue', { date: day(-30), customer: one, payment: 0, rows: [{ code, qty: 1, price: 0, sn: a }] });
-  await createDoc(page, 'IncomeItem', { date: day(-5), rows: [{ code, qty: 1, price: 0, sn: a }] });
-  await createDoc(page, 'GoodsIssue', { date: day(-10), customer: one, payment: 0, rows: [{ code, qty: 1, price: 0, sn: b }] });
-  const item = value(`select item_id from items where item_code = '${code}'`);
+  const { items } = seed({
+    items: [{ name: 'Аппарат ' + uniq, code, serial: true }],
+    customers: [{ name: one, type: 1 }],
+    docs: [
+      { type: 'IncomeItem', date: day(-60), rows: [{ code, qty: 1, price: 0, sn: a }, { code, qty: 1, price: 0, sn: b }] },
+      { type: 'GoodsIssue', date: day(-30), customer: one, rows: [{ code, qty: 1, price: 0, sn: a }] },
+      { type: 'IncomeItem', date: day(-5), rows: [{ code, qty: 1, price: 0, sn: a }] },
+      { type: 'GoodsIssue', date: day(-10), customer: one, rows: [{ code, qty: 1, price: 0, sn: b }] },
+    ],
+  });
+  const item = String(items[code]);
   execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'serial-doc.php'), `${WEB}:/tmp/serial-doc-${uniq}.php`]);
   const run = (type, date, sn) => execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'php', `/tmp/serial-doc-${uniq}.php`, type, date, item, sn], { encoding: 'utf8' }).trim();
   const refused = (type, date, sn) => expect(run(type, date, sn), `${type} ${sn} на ${date}`).toMatch(new RegExp(`^error .*${sn}.*немає на складі на ${date.split('-').reverse().join('\\.')}`));

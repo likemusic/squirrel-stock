@@ -1,7 +1,8 @@
 // Профиль для благотворительной организации (cli/charity-profile.php): в меню нужное для выдачи расходников
 // и оборудования, лишнее (продажи, касса, производство, кафе) выключено; --back возвращает меню. ZIPPY_GAPS п. 22.
 const { test, expect } = require('../fixtures');
-const { blockExternal, login, clickWait, messages, createItem, createCustomer, createDoc, printForm } = require('../helpers/zippy');
+const { blockExternal, login, clickWait, messages, createDoc, printForm } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { webPhp } = require('../helpers/stand');
 const { query, value, esc } = require('../helpers/db');
 
@@ -70,13 +71,15 @@ test('журнал выдач в профиле: статус «Все», наз
   await page.context().close();
 });
 
-test('расходная накладная в профиле: «Видав / Отримувач», адреса один раз', async ({ browser, page, uniq }) => {
+test('расходная накладная в профиле: «Видав / Отримувач», адреса один раз', async ({ browser, uniq }) => {
   const code = 'CP-' + uniq, recipient = 'Получатель ' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
-  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7), address: 'г. Вымышленный, ул. Тестовая, 1' });
-  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
-  const { number } = await createDoc(page, 'GoodsIssue', { date: '2026-10-02', customer: recipient, payment: 0, rows: [{ code, qty: 2, price: 0 }] });
-  const id = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  const { docs } = seed({
+    items: [{ name: 'Позиция ' + code, code }],
+    customers: [{ name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7), address: 'г. Вымышленный, ул. Тестовая, 1' }],
+    docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] },
+           { type: 'GoodsIssue', date: '2026-10-02', customer: recipient, rows: [{ code, qty: 2, price: 0 }] }],
+  });
+  const { id, number } = docs[1];
 
   webPhp('cli/charity-profile.php');
   let p = await freshPage(browser);
@@ -102,11 +105,13 @@ test('расходная накладная в профиле: «Видав / О
 // выдача и возврат вымышленному получателю: id выдачи и возврата
 async function issueAndReturn(page, uniq) {
   const code = 'CR-' + uniq, recipient = 'Получатель ' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
-  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) });
-  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
-  const { number } = await createDoc(page, 'GoodsIssue', { date: '2026-10-02', customer: recipient, payment: 0, rows: [{ code, qty: 2, price: 0 }] });
-  const issueId = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  const { docs } = seed({
+    items: [{ name: 'Позиция ' + code, code }],
+    customers: [{ name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) }],
+    docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] },
+           { type: 'GoodsIssue', date: '2026-10-02', customer: recipient, rows: [{ code, qty: 2, price: 0 }] }],
+  });
+  const { id: issueId, number } = docs[1];
   await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + issueId);
   await page.locator('#document_date').fill('2026-10-03');
   await page.locator('#docform #notes').fill('Возврат ' + uniq);   // вместо «Підстава …»: i18n-ru ищет украинский текст в журналах
@@ -211,12 +216,12 @@ const stockOf = code => Number(value(`select coalesce(sum(s.qty), 0) from store_
 const moneyOf = id => value(`select concat(amount, '|', payamount, '|', payed, '|', state, '|', (select count(*) from paylist p where p.document_id = d.document_id))
                              from documents d where document_id = ${id}`);
 
-test('формы выдачи и возврата в профиле: «Отримувач», без каси, цін і оплати; ціна 0, залишки сходяться', async ({ browser, page, uniq }) => {
+test('формы выдачи и возврата в профиле: «Отримувач», без каси, цін і оплати; ціна 0, залишки сходяться', async ({ browser, uniq }) => {
   const code = 'CF-' + uniq, recipient = 'Получатель ' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
+  seed({ items: [{ name: 'Позиция ' + code, code }] });
   query(`update items set detail = replace(detail, '<price1></price1>', '<price1>15</price1>') where item_code = '${esc(code)}'`);   // у позиции есть цена продажи
-  await createCustomer(page, { name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) });
-  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] });
+  seed({ customers: [{ name: recipient, type: 1, phone: '029' + String(Date.now()).slice(-7) }],
+         docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 10 }] }] });
 
   webPhp('cli/charity-profile.php');
   const p = await freshPage(browser);

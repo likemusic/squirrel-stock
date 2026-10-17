@@ -2,7 +2,8 @@
 // «До востребования» в напоминание не попадает. ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
 const { query, esc } = require('../helpers/db');
-const { createItem, createCustomer, createContract, createDoc, pickAuto, clickWait } = require('../helpers/zippy');
+const { pickAuto, clickWait } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 
 // дата по местному времени (стенд — Europe/Minsk): после полуночи по UTC еще вчерашний день
 const day = n => new Date(Date.now() + n * 86400000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -10,8 +11,8 @@ const day = n => new Date(Date.now() + n * 86400000 - new Date().getTimezoneOffs
 test('напоминание о сроке пользования на главной', async ({ page, uniq }) => {
   const code = 'ED-' + uniq, name = 'Кровать ' + uniq;
   const inv = n => `INV${n}-${uniq}`;
-  await createItem(page, { name, code, serial: true });
-  await createDoc(page, 'IncomeItem', { date: day(-60), rows: [1, 2, 3].map(n => ({ code, qty: 1, price: 0, sn: inv(n) })) });
+  seed({ items: [{ name, code, serial: true }],
+         docs: [{ type: 'IncomeItem', date: day(-60), rows: [1, 2, 3].map(n => ({ code, qty: 1, price: 0, sn: inv(n) })) }] });
 
   const issue = async (n, end) => {
     await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
@@ -40,11 +41,13 @@ test('напоминание о сроке пользования на глав�
 // мелкое оборудование выдается количеством по договору (ответ хосписа 1.5, 1.13): срок договора тоже напоминается
 test('напоминание о сроке: мелкое оборудование по договору', async ({ page, uniq }) => {
   const code = 'EDS-' + uniq, name = 'Ходунки ' + uniq, r = 'Получатель ' + uniq + ' мелочь';
-  await createItem(page, { name, code });
-  await createCustomer(page, { name: r, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: day(-60), rows: [{ code, qty: 5, price: 0 }] });
-  await createContract(page, { number: 'КМ' + uniq, customer: r, from: day(-30), to: day(4), note: 'Врач Вымышленный' });
-  await createDoc(page, 'GoodsIssue', { date: day(-30), customer: r, payment: 0, contract: 'КМ' + uniq, rows: [{ code, qty: 2, price: 0 }] });
+  seed({
+    items: [{ name, code }],
+    customers: [{ name: r, type: 1 }],
+    contracts: [{ number: 'КМ' + uniq, customer: r, from: day(-30), to: day(4), note: 'Врач Вымышленный' }],
+    docs: [{ type: 'IncomeItem', date: day(-60), rows: [{ code, qty: 5, price: 0 }] },
+           { type: 'GoodsIssue', date: day(-30), customer: r, contract: 'КМ' + uniq, rows: [{ code, qty: 2, price: 0 }] }],
+  });
 
   await page.goto('/');
   const row = page.locator('#sqs-due tr', { hasText: name });

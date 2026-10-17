@@ -1,20 +1,23 @@
 // «Получатель × месяц»: кто в каком месяце получал (замена листов «РАСХОДНИКИ ПО МЕСЯЦАМ» и «ГАСТРОСТОМЫ»),
 // с отбором по категории или позиции. ZIPPY_GAPS п. 15.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, clickWait, pickAuto } = require('../helpers/zippy');
+const { clickWait, pickAuto } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value, esc } = require('../helpers/db');
 
 test('получатель × месяц: отметки и количества, отбор по позиции', async ({ page, uniq }) => {
   const a = 'RM-' + uniq + '-A', b = 'RM-' + uniq + '-B';
   const r1 = 'Получатель ' + uniq + ' один', r2 = 'Получатель ' + uniq + ' два';
-  await createItem(page, { name: 'Позиция ' + a, code: a });
-  await createItem(page, { name: 'Позиция ' + b, code: b });
-  await createCustomer(page, { name: r1, type: 1 });
-  await createCustomer(page, { name: r2, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-06-01', rows: [{ code: a, qty: 50, price: 0 }, { code: b, qty: 50, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-07-05', customer: r1, payment: 0, rows: [{ code: a, qty: 2, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-07-20', customer: r1, payment: 0, rows: [{ code: a, qty: 3, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-08-02', customer: r2, payment: 0, rows: [{ code: b, qty: 1, price: 0 }] });
+  seed({
+    items: [{ name: 'Позиция ' + a, code: a }, { name: 'Позиция ' + b, code: b }],
+    customers: [{ name: r1, type: 1 }, { name: r2, type: 1 }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-06-01', rows: [{ code: a, qty: 50, price: 0 }, { code: b, qty: 50, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-07-05', customer: r1, rows: [{ code: a, qty: 2, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-07-20', customer: r1, rows: [{ code: a, qty: 3, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-08-02', customer: r2, rows: [{ code: b, qty: 1, price: 0 }] },
+    ],
+  });
 
   await page.goto('/');
   await expect(page.locator('a[href*="Report/RecipientMonths"]').first(), 'пункт меню (db/squirrelstock.sql)').toBeAttached();
@@ -46,7 +49,7 @@ test('получатель × месяц: отметки и количества
 
   // признак получателя — тег контрагента; с флажком «все контрагенты» видны и помеченные без выдач
   const r3 = 'Получатель ' + uniq + ' три', tag = 'гастростома-' + uniq;
-  await createCustomer(page, { name: r3, type: 1 });
+  seed({ customers: [{ name: r3, type: 1 }] });
   for (const who of [r2, r3]) {
     const id = value(`select customer_id from customers where customer_name = '${esc(who)}'`);
     query(`insert into taglist (tag_name, tag_type, item_id) values ('${esc(tag)}', 1, ${id})`);
