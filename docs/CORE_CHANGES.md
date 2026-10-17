@@ -92,6 +92,7 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `dfffae48b` | `www/init.php` | `zend.exception_ignore_args` on: exception traces in logs/ without function arguments (database password on a failed connection, API login password) | `tests/specs/exception-args.spec.js` |
 | `0369be13b` | `www/config/config.php` | log level 300 (WARNING) instead of 100 (DEBUG), as in the package: DEBUG also wrote the full SQL of a failed query | — |
 | `522f5484c` | `www/app/entity/doc/document.php` `afterDelete()` | hook `afterDelete`; DocAudit removes the edit log of the deleted document | `tests/specs/retention.spec.js` |
+| `084d03f79` | `www/app/pages/base.php` `beforeRender()`, `www/app/pages/doc/goodsreceipt.php`, `incomeitem.php`, `advancerep.php`, `moveitem.php`, `outcomeitem.php` (`OnChangeItem()`), templates `www/templates/pages/doc/` of the same forms | row editor: the serial-number label and the expiry field follow the selected position's mode (`App\SQS\SerialStock::rowFields()`, template variables `sqs_snlabel`, `sqs_sdate`); neutral label while no position is selected in a database with mixed modes. Without mixed modes the label is the old one; global expiry mode — field always shown. On an upstream update: keep the one-line call in `OnChangeItem()` and the label/`data-label` markup | `tests/specs/serial-mode-core.spec.js` |
 
 ## Proposed upstream
 

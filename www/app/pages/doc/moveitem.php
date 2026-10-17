@@ -368,6 +368,9 @@ class MoveItem extends \App\Pages\Base
 
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
+        if ($sender === $this->editdetail->edititem) {   // SquirrelStock: подпись номера и поле срока — по режиму позиции
+            \App\SQS\SerialStock::rowFields($this, $item, true);
+        }
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
 
