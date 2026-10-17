@@ -8,6 +8,7 @@ namespace App\SQS;
  * пользователю: index.php при необработанном исключении, страницы — в setError() и toastr, в том числе в ответе AJAX.
  * Этот класс ADOdb создает вместо ADODB_Exception (init.php, $ADODB_EXCEPTION): полный текст сразу пишется в журнал
  * (logs/), а сообщение заменяется общим на языке интерфейса. Поля ADODB_Exception (sql, msg, getCode) не меняются.
+ * В журнале значения скрыты (mask): в запросах ФИО, телефоны, адреса подопечных и контрагентов, примечания документов.
  */
 class DbException extends \ADODB_Exception
 {
@@ -17,7 +18,7 @@ class DbException extends \ADODB_Exception
         parent::__construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
         global $logger;
         if ($logger) {
-            $logger->error($this->message);
+            $logger->error(self::mask($this->message));
         }
         $text = 'Database error. Details are in the program log (logs folder).';
         // перевод сам может обратиться к базе (словари модулей): при повторной ошибке — текст без перевода
@@ -31,5 +32,20 @@ class DbException extends \ADODB_Exception
             }
         }
         $this->message = $text;
+    }
+
+    /**
+     * Текст для журнала: строковые значения в запросе — '…(длина)', кроме дат; в тексте ошибки СУБД — значение после
+     * «Duplicate entry», «value:» и подобных. Имена таблиц и полей, числа и форма запроса остаются — по ним ищется ошибка.
+     */
+    public static function mask(string $message): string {
+        $literal = "'((?:[^'\\\\]|\\\\.|'')*)'";
+        $hide = fn($m) => preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}(:\d{2})?)?$/', $m[1]) ? $m[0] : "'…(" . mb_strlen($m[1]) . ")'";
+        $at = strpos($message, '] in EXECUTE("');
+        $head = $at === false ? $message : substr($message, 0, $at);
+        $sql = $at === false ? '' : substr($message, $at);
+        $head = preg_replace_callback('/(?<=entry |value: |value |string: |for )' . $literal . '/u', $hide, $head) ?? $head;
+        $sql = preg_replace_callback('/' . $literal . '/su', $hide, $sql) ?? '] in EXECUTE(…)';
+        return $head . $sql;
     }
 }

@@ -17,3 +17,20 @@ test('ошибка базы: сообщение без текста запрос
   expect(out.sql, 'запрос остается в исключении для кода, который его разбирает').toContain(table);
   expect(logCount(table), 'полный текст в журнале').toBeGreaterThan(0);
 });
+
+// в журнале значения из запроса и из текста ошибки скрыты (ФИО, телефоны подопечных и контрагентов); имя таблицы и даты — остаются
+test('ошибка базы: в журнале нет значений из запроса', async ({ uniq }) => {
+  const key = 'sqs_dup_' + uniq, name = 'Фамилия' + uniq, phone = '+37529' + uniq;
+  webPhp('-r', `
+    require "init.php";
+    $c = \\ZDB\\DB::getConnect();
+    $c->Execute("insert into keyval (keyd, vald) values ('${key}', 'x')");
+    try { $c->Execute("insert into keyval (keyd, vald) values ('${key}', '${name} ${phone} 2026-10-01')"); } catch (\\Throwable $e) { }
+    $c->Execute("delete from keyval where keyd = '${key}'");
+  `);
+  expect(logCount('Duplicate entry'), 'ошибка записана').toBeGreaterThan(0);
+  expect(logCount(key), 'значение ключа из текста ошибки скрыто').toBe(0);
+  expect(logCount(name), 'ФИО скрыто').toBe(0);
+  expect(logCount(phone), 'телефон скрыт').toBe(0);
+  expect(logCount(`'…(${key.length})'`), 'вместо значения — его длина').toBeGreaterThan(0);
+});
