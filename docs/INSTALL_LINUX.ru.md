@@ -2,7 +2,7 @@
 
 Для отдельного компьютера на складе (в том числе слабого, с минимальной системой без рабочего стола) или для VPS. Ставится одним скриптом: Apache с модулем PHP, MariaDB, rclone для облачных копий и расписание резервных копий.
 
-Пометки: **[проверено]** — пройдено 15.10.2026 в контейнере `debian:12` скриптом `tools/install/test-in-docker.sh`, с пустой базой и с `--demo` (без systemd: службы запускаются через `service`); **[не проверено]** — на настоящем Debian или Ubuntu на железе и на VPS скрипт ещё не запускался, Debian 13 и Ubuntu 24.04 в контейнере ещё не проверялись (сам код программы на PHP 8.4 проверен полным набором автотестов на Docker-стенде).
+Пометки: **[проверено]** — пройдено в контейнере скриптом `tools/install/test-in-docker.sh`: `debian:12` 15.10.2026 с пустой базой и с `--demo`, `debian:13` (PHP 8.4.26, MariaDB 11.8.6) 17.10.2026 с пустой базой (без systemd: службы запускаются через `service`); **[не проверено]** — на настоящем Debian или Ubuntu на железе и на VPS скрипт ещё не запускался, Ubuntu 24.04 в контейнере ещё не проверялась; полный набор автотестов на PHP 8.4 пройден на Docker-стенде (с MariaDB 11.4, не 11.8).
 
 ## 1. Что нужно
 
@@ -50,7 +50,7 @@ sudo tools/install/linux.sh --zip=dist/squirrel-stock-<версия>.zip   # с�
 ## 5. Проверка скрипта в контейнере
 
 ```bash
-tools/install/test-in-docker.sh                     # debian:13 (по умолчанию), не проверялось
+tools/install/test-in-docker.sh                     # debian:13 (по умолчанию)
 tools/install/test-in-docker.sh debian:12           # пустая база
 tools/install/test-in-docker.sh debian:12 --demo    # демо-база
 tools/install/test-in-docker.sh ubuntu:24.04        # не проверялось
