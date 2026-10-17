@@ -38,8 +38,8 @@ async function clickWait(page, sel) {
     await loaded;   // новая страница загружена; ждать простоя сети после нее нельзя: на некоторых страницах он не наступает
   } else {
     await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});   // без перехода — ответ AJAX
+    await page.waitForTimeout(300);   // ответ AJAX дорисовывает страницу скриптом
   }
-  await page.waitForTimeout(300);
 }
 
 // Подсказка (autocomplete): ввести запрос и выбрать вариант.
@@ -54,7 +54,7 @@ async function typeText(page, inp, text) {
       await page.keyboard.press(part === '(' ? 'Digit9' : 'Digit0');
       await page.keyboard.up('Shift');
     } else if (part) {
-      await inp.pressSequentially(part, { delay: 40 });
+      await inp.pressSequentially(part, { delay: 20 });
     }
   }
 }
