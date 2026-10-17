@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Проверка tools/install/linux.sh в чистом контейнере debian:12 (без systemd: службы запускаются через service).
-#   tools/install/test-in-docker.sh [образ] [параметры linux.sh]     например: ubuntu:24.04 --demo
+# Проверка tools/install/linux.sh в чистом контейнере debian:13 (по умолчанию) (без systemd: службы запускаются через service).
+#   tools/install/test-in-docker.sh [образ] [параметры linux.sh]     например: debian:12 --demo, ubuntu:24.04
 # Что проверяется: установка с нуля; главная отдается; вход admin с напечатанным паролем (Playwright из tests/, если
 # установлен); cli/backup.php делает копию; повторный запуск установки проходит, пароль и данные не меняются.
 # Контейнер удаляется в конце (и при ошибке). Порт на этом компьютере — SQS_TEST_PORT (по умолчанию 8095).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-IMAGE=${1:-debian:12}; shift || true
+IMAGE=${1:-debian:13}; shift || true
 PORT=${SQS_TEST_PORT:-8095}
 NAME=sqs-linux-test
 trap 'docker rm -f $NAME >/dev/null 2>&1 || true' EXIT

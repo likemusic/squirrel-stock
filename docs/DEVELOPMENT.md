@@ -4,7 +4,7 @@ How to run SquirrelStock locally, run the tests and work with translations. Over
 
 ## Local stand
 
-Docker, PHP 8.2 + MariaDB 10.11; the code is taken from `www/` as is. On first start the database is created from `db/db.sql` (the Zippy database) and `www/app/sqs/schema.sql` (SquirrelStock tables); module tables and menu items are added by the program itself ([MODULES.md](MODULES.md)).
+Docker, PHP 8.4 + MariaDB 11.4 (the versions are set in one line each: `ARG PHP_VERSION` in `docker/Dockerfile`, `SQS_MARIADB` in `docker/docker-compose.yml`; PHP 8.2 is still supported and tested). A stand whose database was created by MariaDB 10.11 is upgraded in place on the first start with 11.4 (`MARIADB_AUTO_UPGRADE`; checked on a stand with test data); going back to 10.11 needs a new database or a restore from a backup; the code is taken from `www/` as is. On first start the database is created from `db/db.sql` (the Zippy database) and `www/app/sqs/schema.sql` (SquirrelStock tables); module tables and menu items are added by the program itself ([MODULES.md](MODULES.md)).
 
 ```bash
 cd docker && docker compose up -d --build        # http://127.0.0.1:8083, login admin / admin

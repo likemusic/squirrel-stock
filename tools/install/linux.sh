@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Установка SquirrelStock на чистый Debian 12 / Ubuntu 24.04 без Docker: Apache + mod_php, MariaDB, rclone, cron для копий.
+# Установка SquirrelStock на чистый Debian 13 (рекомендуется: PHP 8.4, MariaDB 11.8) / Debian 12 (PHP 8.2) / Ubuntu 24.04 (PHP 8.3)
+# без Docker: Apache + mod_php, MariaDB, rclone, cron для копий. PHP и MariaDB — из пакетов самого дистрибутива (их обновления
+# безопасности приходят через apt), сторонние репозитории не подключаются; нужен PHP 8.2 или новее.
 # Запуск от root:
 #   tools/install/linux.sh                     сайт из этой git-копии (www/), зависимости — composer
 #   tools/install/linux.sh --zip=<пакет.zip>   сайт из пакета tools/release/build.sh (там vendor уже есть)
@@ -13,7 +15,7 @@
 # версия «было → стало» печатается и пишется в logs/update.log. Порядок — docs/UPDATE.ru.md.
 #
 # Почему mod_php, а не php-fpm: одна служба вместо двух, меньше памяти на слабом компьютере, и так же устроены
-# Docker-образ стенда (php:8.2-apache) и обычный хостинг — .htaccess и настройки PHP ведут себя одинаково.
+# Docker-образ стенда (php:8.4-apache) и обычный хостинг — .htaccess и настройки PHP ведут себя одинаково.
 set -euo pipefail
 
 DIR=/var/www/squirrelstock
@@ -30,7 +32,7 @@ for a in "$@"; do
     --zip=*) ZIP=$(realpath "${a#*=}") ;;
     --demo) DEMO=1 ;;
     --no-profile) PROFILE=0 ;;
-    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
     *) echo "неизвестный параметр: $a" >&2; exit 2 ;;
   esac
 done
@@ -56,6 +58,7 @@ apt-get update -qq
 apt-get install -y -qq --no-install-recommends apache2 libapache2-mod-php php-cli php-mysql php-zip php-gmp php-gd php-mbstring \
   php-curl php-xml php-intl mariadb-server rclone cron unzip rsync ca-certificates openssl >/dev/null
 [[ -n $ZIP ]] || apt-get install -y -qq --no-install-recommends composer git >/dev/null
+php -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);' || { echo "нужен PHP 8.2 или новее, в этой системе $(php -r 'echo PHP_VERSION;'): Debian 13, Debian 12 или Ubuntu 24.04" >&2; exit 1; }
 svc mariadb start
 svc cron start || true
 
@@ -209,4 +212,5 @@ if [[ -n $ADMINPASS ]]; then
 else
   echo "База уже была: пароль admin не менялся."
 fi
+echo "PHP $(php -r 'echo PHP_VERSION;'), $(mysql -uroot -N -e 'SELECT VERSION()')"
 echo "Копии базы: $BACKUP (каждые сутки), настройки — «Сервисные страницы → Резервная копия»."
