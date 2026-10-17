@@ -1,19 +1,24 @@
 // Оборудование: где сейчас каждая единица (инвентарный номер = серийный номер, режим хосписа usesnumber = 3).
 // Выдача — по договору (номер, дата, срок, «кем направлен» в кратком описании договора). ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, createContract, clickWait, messages } = require('../helpers/zippy');
-const { query, value, esc } = require('../helpers/db');
+const { clickWait, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
+const { query, value } = require('../helpers/db');
 const { xlsxText } = require('../helpers/xlsx');
 
 test('оборудование: выдано по договору, на складе, списано', async ({ page, uniq }) => {
   const code = 'EQ-' + uniq, name = 'Концентратор ' + uniq, r1 = 'Получатель ' + uniq;
   const inv = n => `INV${n}-${uniq}`;
-  await createItem(page, { name, code, serial: true });
-  await createCustomer(page, { name: r1, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [1, 2, 3].map(n => ({ code, qty: 1, price: 0, sn: inv(n) })) });
-  await createContract(page, { number: 'Д' + uniq, customer: r1, from: '2026-10-01', to: '2099-12-31', note: 'Врач Тестовый' });
-  await createDoc(page, 'GoodsIssue', { date: '2026-10-02', customer: r1, payment: 0, contract: 'Д' + uniq, rows: [{ code, qty: 1, price: 0, sn: inv(1) }] });
-  await createDoc(page, 'OutcomeItem', { date: '2026-10-03', notes: 'Причина: сломан', rows: [{ code, qty: 1, sn: inv(3) }] });
+  seed({
+    items: [{ name, code, serial: true }],
+    customers: [{ name: r1, type: 1 }],
+    contracts: [{ number: 'Д' + uniq, customer: r1, from: '2026-10-01', to: '2099-12-31', note: 'Врач Тестовый' }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-09-01', rows: [1, 2, 3].map(n => ({ code, qty: 1, price: 0, sn: inv(n) })) },
+      { type: 'GoodsIssue', date: '2026-10-02', customer: r1, contract: 'Д' + uniq, rows: [{ code, qty: 1, price: 0, sn: inv(1) }] },
+      { type: 'OutcomeItem', date: '2026-10-03', notes: 'Причина: сломан', rows: [{ code, qty: 1, sn: inv(3) }] },
+    ],
+  });
 
   const run = async (search, state) => {
     await page.goto('/index.php?p=App/Pages/Report/EquipmentWhere');
@@ -58,8 +63,8 @@ test('оборудование: выдано по договору, на скл�
 
   // итог по моделям (над списком): выдано, по складам (склад «Ремонт» — состояние «в ремонте»), списано, всего
   const name2 = 'Кровать ' + uniq, code2 = 'EQB-' + uniq;
-  await createItem(page, { name: name2, code: code2, serial: true });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [4, 5].map(n => ({ code: code2, qty: 1, price: 0, sn: inv(n) })) });
+  seed({ items: [{ name: name2, code: code2, serial: true }],
+         docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [4, 5].map(n => ({ code: code2, qty: 1, price: 0, sn: inv(n) })) }] });
   const repair = 'Ремонт ' + uniq;
   query(`insert into stores (storename, branch_id, disabled) values ('${repair}', 0, 0)`);
   query(`update store_stock set store_id = ${value(`select max(store_id) from stores where storename = '${repair}'`)} where snumber = '${inv(5)}'`);
@@ -93,20 +98,17 @@ test('оборудование: выдано по договору, на скл�
 // Мелкое оборудование без инвентарных номеров (ответ хосписа 1.13): выдано по договору количеством — отдельный блок
 // «на руках»: выдано минус возвращено по получателю и позиции; выдача расходников без договора сюда не попадает.
 test('мелкое оборудование на руках количеством', async ({ page, uniq }) => {
-  test.setTimeout(6 * 60_000);   // десяток документов на подготовку: на загруженной машине больше двух минут
   const code = 'SM-' + uniq, name = 'Ходунки ' + uniq, code2 = 'SC-' + uniq, name2 = 'Пеленки ' + uniq;
   const r1 = 'Получатель ' + uniq + ' один', r2 = 'Получатель ' + uniq + ' два';
-  await createItem(page, { name, code });
-  await createItem(page, { name: name2, code: code2 });
-  await createCustomer(page, { name: r1, type: 1 });
-  await createCustomer(page, { name: r2, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 10, price: 0 }, { code: code2, qty: 10, price: 0 }] });
-  await createContract(page, { number: 'М1-' + uniq, customer: r1, from: '2026-09-02', to: '2099-12-31', note: 'Врач Тестовый' });
-  await createContract(page, { number: 'М2-' + uniq, customer: r2, from: '2026-09-02', to: '2026-09-30', note: 'Отделение 2' });
-  const issue = async (date, customer, contract, rows) => {
-    const { number } = await createDoc(page, 'GoodsIssue', { date, customer, payment: 0, contract, rows });
-    return value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
-  };
+  seed({
+    items: [{ name, code }, { name: name2, code: code2 }],
+    customers: [{ name: r1, type: 1 }, { name: r2, type: 1 }],
+    contracts: [{ number: 'М1-' + uniq, customer: r1, from: '2026-09-02', to: '2099-12-31', note: 'Врач Тестовый' },
+                { number: 'М2-' + uniq, customer: r2, from: '2026-09-02', to: '2026-09-30', note: 'Отделение 2' }],
+    docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 10, price: 0 }, { code: code2, qty: 10, price: 0 }] }],
+  });
+  const issue = async (date, customer, contract, rows) => seed({ docs: [{ type: 'GoodsIssue', date, customer, contract, rows }] }).docs[0].id;
+  // возврат — формой (документ на основании выдачи)
   const giveBack = async (id, date) => {
     await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + id);
     await page.locator('#document_date').fill(date);

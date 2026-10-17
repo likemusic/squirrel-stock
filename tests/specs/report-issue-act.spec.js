@@ -1,22 +1,24 @@
 // Акт списания за месяц в формате бухгалтерии хосписа: строки — позиции, колонки — выдачи «Получатель дд.мм.гггг»,
 // в ячейках количество за вычетом возвратов, итог по позиции и по выдаче; выгрузка в Excel. ZIPPY_GAPS п. 14.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, createContract, clickWait, messages } = require('../helpers/zippy');
-const { value, esc } = require('../helpers/db');
+const { clickWait, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 
 test('акт списания: матрица позиции × выдачи с итогами', async ({ page, uniq }) => {
   const a = 'AC-' + uniq + '-A', b = 'AC-' + uniq + '-B';
   const r1 = 'Получатель ' + uniq + ' один', r2 = 'Получатель ' + uniq + ' два';
-  await createItem(page, { name: 'Позиция ' + a, code: a });
-  await createItem(page, { name: 'Позиция ' + b, code: b });
-  await createCustomer(page, { name: r1, type: 1 });
-  await createCustomer(page, { name: r2, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code: a, qty: 50, price: 0 }, { code: b, qty: 50, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-09-03', customer: r1, payment: 0, rows: [{ code: a, qty: 4, price: 0 }, { code: b, qty: 2, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-09-10', customer: r1, payment: 0, rows: [{ code: a, qty: 1, price: 0 }] });
-  const { number } = await createDoc(page, 'GoodsIssue', { date: '2026-09-12', customer: r2, payment: 0, rows: [{ code: b, qty: 3, price: 0 }] });
-  // выдачу второму получателю вернули целиком: в акте ее быть не должно
-  const issueId = value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`);
+  const { docs } = seed({
+    items: [{ name: 'Позиция ' + a, code: a }, { name: 'Позиция ' + b, code: b }],
+    customers: [{ name: r1, type: 1 }, { name: r2, type: 1 }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-09-01', rows: [{ code: a, qty: 50, price: 0 }, { code: b, qty: 50, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-09-03', customer: r1, rows: [{ code: a, qty: 4, price: 0 }, { code: b, qty: 2, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-09-10', customer: r1, rows: [{ code: a, qty: 1, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-09-12', customer: r2, rows: [{ code: b, qty: 3, price: 0 }] },
+    ],
+  });
+  // выдачу второму получателю вернули целиком (формой возврата): в акте ее быть не должно
+  const issueId = docs[3].id;
   await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + issueId);
   await page.locator('#document_date').fill('2026-09-15');
   await clickWait(page, '#execdoc');
@@ -55,14 +57,16 @@ test('акт списания: матрица позиции × выдачи с 
 test('акт списания: отдельно расходники и оборудование', async ({ page, uniq }) => {
   const r = 'Получатель ' + uniq + ' акт';
   const eq = 'AE-' + uniq, small = 'AS-' + uniq, a = 'AC-' + uniq, inv = 'INV-A' + uniq;
-  await createItem(page, { name: 'Концентратор ' + eq, code: eq, serial: true });
-  await createItem(page, { name: 'Ходунки ' + small, code: small });
-  await createItem(page, { name: 'Шприц ' + a, code: a });
-  await createCustomer(page, { name: r, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-08-01', rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 5, price: 0 }, { code: a, qty: 50, price: 0 }] });
-  await createContract(page, { number: 'КА' + uniq, customer: r, from: '2026-08-03', to: '2026-12-31', note: 'Врач Вымышленный' });
-  await createDoc(page, 'GoodsIssue', { date: '2026-08-03', customer: r, payment: 0, contract: 'КА' + uniq, rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 1, price: 0 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-08-05', customer: r, payment: 0, rows: [{ code: a, qty: 4, price: 0 }] });
+  seed({
+    items: [{ name: 'Концентратор ' + eq, code: eq, serial: true }, { name: 'Ходунки ' + small, code: small }, { name: 'Шприц ' + a, code: a }],
+    customers: [{ name: r, type: 1 }],
+    contracts: [{ number: 'КА' + uniq, customer: r, from: '2026-08-03', to: '2026-12-31', note: 'Врач Вымышленный' }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-08-01', rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 5, price: 0 }, { code: a, qty: 50, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-08-03', customer: r, contract: 'КА' + uniq, rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 1, price: 0 }] },
+      { type: 'GoodsIssue', date: '2026-08-05', customer: r, rows: [{ code: a, qty: 4, price: 0 }] },
+    ],
+  });
 
   const act = async kind => {
     await page.goto('/index.php?p=App/Pages/Report/IssueAct');

@@ -2,33 +2,35 @@
 // расходники за период (по позициям и по месяцам, за вычетом возврата), история выдач и возвратов, когда можно следующую выдачу.
 // Вход — ссылка у имени в журнале выдач, значок в справочнике контрагентов, поиск по ФИО на самой странице; печать и Excel.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, createContract, clickWait, pickAuto, messages } = require('../helpers/zippy');
-const { query, value, esc } = require('../helpers/db');
+const { clickWait, pickAuto, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
+const { query } = require('../helpers/db');
 const { xlsxText } = require('../helpers/xlsx');
 
 test('карточка получателя: оборудование, расходники, история, интервал, вход из журнала и справочника', async ({ page, uniq }) => {
-  test.setTimeout(6 * 60_000);   // десяток документов на подготовку: на загруженной машине больше двух минут
   const r1 = 'Подопечный ' + uniq + ' карточка', r2 = 'Подопечный ' + uniq + ' другой';
   const phone = '029' + String(Date.now()).slice(-7);
   const eq = 'CEQ-' + uniq, small = 'CSM-' + uniq, a = 'CA-' + uniq, b = 'CB-' + uniq, inv = 'INV-' + uniq;
-  await createItem(page, { name: 'Концентратор ' + uniq, code: eq, serial: true });
-  await createItem(page, { name: 'Матрас ' + uniq, code: small });
-  await createItem(page, { name: 'Подгузники ' + uniq, code: a });
-  await createItem(page, { name: 'Трубка ' + uniq, code: b });
-  await createCustomer(page, { name: r1, type: 1, phone, address: 'г. Вымышленный, ул. Тестовая, 1' });
-  await createCustomer(page, { name: r2, type: 1 });
-  const cid = value(`select customer_id from customers where customer_name = '${esc(r1)}'`);
-  const itemB = value(`select item_id from items where item_code = '${b}'`);
+  const base = seed({
+    items: [{ name: 'Концентратор ' + uniq, code: eq, serial: true }, { name: 'Матрас ' + uniq, code: small },
+            { name: 'Подгузники ' + uniq, code: a }, { name: 'Трубка ' + uniq, code: b }],
+    customers: [{ name: r1, type: 1, phone, address: 'г. Вымышленный, ул. Тестовая, 1' }, { name: r2, type: 1 }],
+  });
+  const cid = base.customers[r1], itemB = base.items[b];
   query(`insert into sqs_issue_interval (kind, ref_id, days) values ('item', ${itemB}, 90)`);
   try {
-    await createDoc(page, 'IncomeItem', { date: '2026-06-01', rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 5, price: 0 }, { code: a, qty: 50, price: 0 }, { code: b, qty: 10, price: 0 }] });
-    await createContract(page, { number: 'К' + uniq, customer: r1, from: '2026-07-01', to: '2026-09-30', note: 'Врач Вымышленный' });
-    await createDoc(page, 'GoodsIssue', { date: '2026-07-01', customer: r1, payment: 0, contract: 'К' + uniq, rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 1, price: 0 }] });
-    await createDoc(page, 'GoodsIssue', { date: '2026-07-05', customer: r1, payment: 0, rows: [{ code: a, qty: 3, price: 0 }] });
-    const { number: ret } = await createDoc(page, 'GoodsIssue', { date: '2026-08-10', customer: r1, payment: 0, rows: [{ code: a, qty: 2, price: 0 }] });
-    await createDoc(page, 'GoodsIssue', { date: '2026-09-01', customer: r1, payment: 0, rows: [{ code: b, qty: 1, price: 0 }] });
-    await createDoc(page, 'GoodsIssue', { date: '2026-09-02', customer: r2, payment: 0, rows: [{ code: a, qty: 7, price: 0 }] });
-    const retBase = value(`select document_id from documents where document_number = '${esc(ret)}' order by document_id desc limit 1`);
+    const { docs } = seed({
+      contracts: [{ number: 'К' + uniq, customer: r1, from: '2026-07-01', to: '2026-09-30', note: 'Врач Вымышленный' }],
+      docs: [
+        { type: 'IncomeItem', date: '2026-06-01', rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 5, price: 0 }, { code: a, qty: 50, price: 0 }, { code: b, qty: 10, price: 0 }] },
+        { type: 'GoodsIssue', date: '2026-07-01', customer: r1, contract: 'К' + uniq, rows: [{ code: eq, qty: 1, price: 0, sn: inv }, { code: small, qty: 1, price: 0 }] },
+        { type: 'GoodsIssue', date: '2026-07-05', customer: r1, rows: [{ code: a, qty: 3, price: 0 }] },
+        { type: 'GoodsIssue', date: '2026-08-10', customer: r1, rows: [{ code: a, qty: 2, price: 0 }] },
+        { type: 'GoodsIssue', date: '2026-09-01', customer: r1, rows: [{ code: b, qty: 1, price: 0 }] },
+        { type: 'GoodsIssue', date: '2026-09-02', customer: r2, rows: [{ code: a, qty: 7, price: 0 }] },
+      ],
+    });
+    const { id: retBase, number: ret } = docs[3];
     await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + retBase);
     await page.locator('#document_date').fill('2026-08-15');
     await page.locator('#docform #notes').fill('Возврат: не подошел размер');
