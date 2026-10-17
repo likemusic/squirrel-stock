@@ -75,8 +75,10 @@ class Base extends \Zippy\Html\WebPage
 
         
         $this->_tvars["usesnumber"] = $options['usesnumber']  > 0;
-        $this->_tvars["usesnumberdate"] = $options['usesnumber']  == 2;
-        $this->_tvars["usesnumberitem"] = $options['usesnumber']  == 3;
+        // SquirrelStock: режим встречается в базе — общий или у какой-то позиции (Item::serialMode); поля формы видны всем
+        // позициям, а требует их сервер по режиму позиции строки
+        $this->_tvars["usesnumberdate"] = \App\SQS\SerialStock::modeUsed(2);
+        $this->_tvars["usesnumberitem"] = \App\SQS\SerialStock::modeUsed(3);
         
 
         $blist = array();

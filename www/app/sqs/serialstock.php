@@ -58,6 +58,36 @@ class SerialStock
     }
 
     /**
+     * Режим серий для проверок строки документа: у позиции с учетом серий — ее (Item::serialMode), у остальных — общий из
+     * настроек, как в формах Zippy до режима у позиции (там проверки без флажка useserial смотрели на общий режим).
+     */
+    public static function rowMode(Item $item): int {
+        return $item->serialMode() ?: intval(\App\System::getOption('common', 'usesnumber'));
+    }
+
+    private static array $used = [];
+
+    /**
+     * Режим серий $mode (2 — срок годности, 3 — серийные номера) встречается в базе: общий из настроек или у позиции с учетом
+     * серий. Для шаблонов форм (флаги usesnumberdate, usesnumberitem в App\Pages\Base): поле срока годности или ввод списком
+     * номеров нужны, если такой режим есть хоть у одной позиции. При выключенных сериях — нет.
+     */
+    public static function modeUsed(int $mode): bool {
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        if ($common == 0) {
+            return false;
+        }
+        if ($common == $mode) {
+            return true;
+        }
+        if (!isset(self::$used[$mode])) {
+            self::$used[$mode] = (bool)\ZDB\DB::getConnect()->GetOne("SELECT 1 FROM items WHERE disabled <> 1
+                AND detail LIKE '%<useserial>1</useserial>%' AND detail LIKE '%<snmode>" . intval($mode) . "</snmode>%' LIMIT 1");
+        }
+        return self::$used[$mode];
+    }
+
+    /**
      * Условие SQL «строка остатка $s (store_stock) с позицией $i — единица оборудования»: есть номер, и позиция ведется не
      * партиями. Пока режимы позиций не заданы и общий режим — серийные номера, это прежнее «snumber <> ''».
      */

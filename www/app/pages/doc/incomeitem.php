@@ -448,7 +448,12 @@ class IncomeItem extends \App\Pages\Base
         }
         
         
-        if($common['usesnumber'] == 3 ){
+        $mode = \App\SQS\SerialStock::rowMode(Item::load($id));   // SquirrelStock: режим позиции (Item::serialMode), без учета серий — общий
+        if ($mode == 1 || $mode == 2) {   // ввод списком — серийные номера, не партии
+            $this->setError(__('sqs.snmode.bulk_serial_only'));
+            return;
+        }
+        if($mode == 3 ){
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
