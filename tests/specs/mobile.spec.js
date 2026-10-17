@@ -1,7 +1,8 @@
 // Работа с телефона (ширина 375 и 414 px, касания): меню, выдача расходной накладной и выдача оборудования по договору,
 // отчеты форка с широкими таблицами. ZIPPY_GAPS п. 35. Скриншоты — в test-results (не в git).
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, pickAuto, messages, runReport } = require('../helpers/zippy');
+const { pickAuto, messages, runReport } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { value, esc, stockQty } = require('../helpers/db');
 
 // Журналы из меню профиля: строка документа (или позиции) и все ссылки и кнопки в ней. GIList и GRList по умолчанию
@@ -64,14 +65,17 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       // первые строки журналов — с заведомо длинными названиями без пробелов (поставщик, получатель, позиция)
       const long = 'Длинноеназваниебезпробелов' + uniq + 'ещедлиннееещедлиннее';
       const code = 'LG-' + uniq;
-      await createItem(page, { name: 'Позиция' + long, code });
-      await createCustomer(page, { name: 'Поставщик' + long, type: 2 });
-      await createCustomer(page, { name: 'Получатель' + long, type: 1 });
-      await createDoc(page, 'GoodsReceipt', { date: '2026-10-14', customer: 'Поставщик' + long, payment: 0, rows: [{ code, qty: 3, price: 0 }] });
-      await createDoc(page, 'GoodsIssue', { date: '2026-10-14', customer: 'Получатель' + long, payment: 0, rows: [{ code, qty: 1, price: 0 }] });
-      // непроведенные документы: у строки все иконки действий (просмотр и редактирование) — самая широкая ячейка
-      await createDoc(page, 'GoodsReceipt', { date: '2026-12-31', customer: 'Поставщик' + long, payment: 0, draft: true, rows: [{ code, qty: 1, price: 0 }] });
-      await createDoc(page, 'GoodsIssue', { date: '2026-12-31', customer: 'Получатель' + long, payment: 0, draft: true, rows: [{ code, qty: 1, price: 0 }] });
+      seed({
+        items: [{ name: 'Позиция' + long, code }],
+        customers: [{ name: 'Поставщик' + long, type: 2 }, { name: 'Получатель' + long, type: 1 }],
+        docs: [
+          { type: 'GoodsReceipt', date: '2026-10-14', customer: 'Поставщик' + long, rows: [{ code, qty: 3, price: 0 }] },
+          { type: 'GoodsIssue', date: '2026-10-14', customer: 'Получатель' + long, rows: [{ code, qty: 1, price: 0 }] },
+          // непроведенные документы: у строки все иконки действий (просмотр и редактирование) — самая широкая ячейка
+          { type: 'GoodsReceipt', date: '2026-12-31', customer: 'Поставщик' + long, draft: true, rows: [{ code, qty: 1, price: 0 }] },
+          { type: 'GoodsIssue', date: '2026-12-31', customer: 'Получатель' + long, draft: true, rows: [{ code, qty: 1, price: 0 }] },
+        ],
+      });
       const off = [];
       for (const name of Object.keys(JOURNALS)) {
         const row = await openJournal(page, name);
@@ -86,9 +90,8 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
 
     test('выдача расходной накладной с телефона', async ({ page, uniq }, testInfo) => {
       const code = 'MB-' + uniq, who = 'Получатель ' + uniq;
-      await createItem(page, { name: 'Позиция ' + code, code });
-      await createCustomer(page, { name: who, type: 1 });
-      await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 0 }] });
+      seed({ items: [{ name: 'Позиция ' + code, code }], customers: [{ name: who, type: 1 }],
+             docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 0 }] }] });
 
       await page.goto('/index.php?p=App/Pages/Doc/GoodsIssue');
       const number = await page.locator('#document_number').inputValue();
@@ -113,8 +116,8 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
 
     test('выдача оборудования по договору с телефона', async ({ page, uniq }, testInfo) => {
       const code = 'MBE-' + uniq, inv = 'INV-M-' + uniq, who = 'Получатель ' + uniq;
-      await createItem(page, { name: 'Концентратор ' + uniq, code, serial: true });
-      await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] });
+      seed({ items: [{ name: 'Концентратор ' + uniq, code, serial: true }],
+             docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] }] });
 
       await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
       const number = await page.locator('#iform #contract_number').inputValue();
