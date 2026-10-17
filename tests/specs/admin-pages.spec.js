@@ -29,6 +29,7 @@ test('системный журнал и планировщик: другая р
       await page.goto(url);
       expect(await bodyText(page), url).not.toMatch(DENIED);
     }
+    await page.goto(PAGES[0]);
     expect(await bodyText(page), 'admin видит системные уведомления').toContain(mark);
   } finally {
     await context?.close();

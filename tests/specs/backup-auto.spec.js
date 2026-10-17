@@ -152,7 +152,7 @@ test('автоматическая копия в несколько мест', a
 
   // копия из сетевой папки — так же: без пароля не восстанавливается, с паролем — восстановлено
   const netZip = testInfo.outputPath('net.zip');
-  execFileSync('docker', ['cp', `${WEB}:${T}/net/${net[1]}`, netZip]);
+  execFileSync('docker', ['cp', `${WEB}:${T}/net/${files(`${T}/net`).pop()}`, netZip]);   // последняя: ранние уже удалены ротацией
   await page.goto('/index.php?p=App/Pages/Service/Backup');
   await page.locator('#rform #rfile').setInputFiles(netZip);
   await page.locator('#rform #confirm').setChecked(true);
