@@ -1,7 +1,8 @@
 // Фильтры журналов, справочников, отчетов и документов после приведения номеров к числу (intval) и экранирования (qstr)
 // в SQL (ZIPPY_GAPS п. 21): с обычными значениями из списков отбор работает как раньше — нужное есть, лишнего нет.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, pickAuto, clickWait, bodyText } = require('../helpers/zippy');
+const { pickAuto, clickWait, bodyText } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value } = require('../helpers/db');
 
 // Выбрать значения в форме и нажать ее «ОК»
@@ -27,13 +28,12 @@ test('фильтры со своими обычными значениями о�
   query(`insert into item_cat (cat_name, parent_id) values ('Категория B ${uniq}', 0)`);
   const catB = value(`select max(cat_id) from item_cat where cat_name = 'Категория B ${uniq}'`);
   const codeA = 'FA-' + uniq, codeB = 'FB-' + uniq, itemA = 'Позиция ' + codeA, itemB = 'Позиция ' + codeB, r = 'Получатель ' + uniq;
-  await createItem(page, { name: itemA, code: codeA, serial: true });
-  await createItem(page, { name: itemB, code: codeB, serial: true });
-  query(`update items set cat_id = ${catA} where item_code = '${codeA}'`);
-  query(`update items set cat_id = ${catB} where item_code = '${codeB}'`);
-  await createCustomer(page, { name: r, type: 1 });
-  const inc = await createDoc(page, 'IncomeItem', { date: `${Y}-03-01`, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }, { code: codeB, qty: 1, price: 0, sn: 'SB-' + uniq }] });
-  const gi = await createDoc(page, 'GoodsIssue', { date: `${Y}-03-02`, customer: r, payment: 0, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }] });
+  const [inc, gi] = seed({
+    items: [{ name: itemA, code: codeA, serial: true, cat_id: catA }, { name: itemB, code: codeB, serial: true, cat_id: catB }],
+    customers: [{ name: r, type: 1 }],
+    docs: [{ type: 'IncomeItem', date: `${Y}-03-01`, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }, { code: codeB, qty: 1, price: 0, sn: 'SB-' + uniq }] },
+           { type: 'GoodsIssue', date: `${Y}-03-02`, customer: r, rows: [{ code: codeA, qty: 1, price: 0, sn: 'SA-' + uniq }] }],
+  }).docs;
   const metaGI = value(`select meta_id from metadata where meta_name = 'GoodsIssue'`);
   const metaInc = value(`select meta_id from metadata where meta_name = 'IncomeItem'`);
   const admin = value(`select user_id from users where userlogin = 'admin'`);

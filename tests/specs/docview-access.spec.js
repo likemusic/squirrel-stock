@@ -4,7 +4,8 @@
 // в отличие от Document::find — поэтому поиск документа для привязки был закрыт и раньше.
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
-const { blockExternal, clickWait, createItem, createDoc } = require('../helpers/zippy');
+const { blockExternal, clickWait } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value, esc } = require('../helpers/db');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
@@ -49,10 +50,12 @@ const json = async (page, method, params) => { const t = await call(page, method
 test('окно документа: данные и связанные документы — только видимых документов', async ({ page, browser, uniq }) => {
   test.setTimeout(300_000);
   const code = 'DV-' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
-  const inc = await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 2, price: 0 }] });
-  const inc2 = await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] });
-  const out = await createDoc(page, 'GoodsIssue', { date: '2026-10-02', rows: [{ code, qty: 1 }] });
+  const [inc, inc2, out] = seed({
+    items: [{ name: 'Позиция ' + code, code }],
+    docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 2, price: 0 }] },
+           { type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] },
+           { type: 'GoodsIssue', date: '2026-10-02', rows: [{ code, qty: 1 }] }],
+  }).docs;
   const a = docId(inc.number), c = docId(inc2.number), b = docId(out.number);   // a, c — приходы (видны), b — расход (не виден)
   const user = 'dv' + uniq.toLowerCase(), pass = 'Пароль-' + uniq;
   const role = createUser(user, pass, uniq);

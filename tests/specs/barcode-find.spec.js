@@ -1,7 +1,8 @@
 // Поиск позиции по штрихкоду в документах (Item::findBarCode): выключенная позиция не находится, отбор по категории
 // в инвентаризации работает. Поле штрихкода показывается при включенной настройке «Сканер» (Настройки → Бизнес).
 const { test, expect } = require('../fixtures');
-const { createItem, createDoc, clickWait, messages, bodyText } = require('../helpers/zippy');
+const { clickWait, messages, bodyText } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value } = require('../helpers/db');
 
 async function setScanner(page, on) {
@@ -24,8 +25,7 @@ test('штрихкод: выключенная позиция не находи�
     query(`insert into item_cat (cat_name, parent_id) values ('Категория ШК ${uniq}', 0)`);
     const cat = value(`select max(cat_id) from item_cat where cat_name = 'Категория ШК ${uniq}'`);
     const codeA = 'BA-' + uniq, codeD = 'BD-' + uniq, itemA = 'Позиция ' + codeA, itemD = 'Позиция ' + codeD;
-    await createItem(page, { name: itemA, code: codeA });
-    await createItem(page, { name: itemD, code: codeD });
+    seed({ items: [{ name: itemA, code: codeA }, { name: itemD, code: codeD }] });
     query(`update items set bar_code = '20${uniq}1', cat_id = ${cat} where item_code = '${codeA}'`);
     query(`update items set bar_code = '20${uniq}2', disabled = 1 where item_code = '${codeD}'`);
 
@@ -39,7 +39,7 @@ test('штрихкод: выключенная позиция не находи�
     else if (!(await messages(page)).length) wrong.push('оприходование: нет сообщения «не найдено»');
 
     // инвентаризация по складу и категории: позиция с остатком находится по штрихкоду
-    await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code: codeA, qty: 2, price: 0 }] });
+    seed({ docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code: codeA, qty: 2, price: 0 }] }] });
     await page.goto('/index.php?p=App/Pages/Doc/Inventory');
     await Promise.all([page.waitForLoadState('networkidle'), page.locator('#docform #store').selectOption('1')]);
     await Promise.all([page.waitForLoadState('networkidle'), page.locator('#docform #category').selectOption(String(cat))]);
