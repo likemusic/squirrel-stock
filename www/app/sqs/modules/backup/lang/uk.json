@@ -19,6 +19,7 @@
     "service.backup.never": "ще не було",
     "service.backup.no_folder": "Не вказано папку",
     "service.backup.not_backup": "Файл не є резервною копією SquirrelStock (zip з database.sql або дамп .sql). Дані не змінено",
+    "service.backup.no_encryption": "У цій збірці PHP zip не вміє шифрування AES-256: зашифровану копію (хмара, мережева папка із заданим паролем) не створено",
     "service.backup.not_encrypted": "Введено пароль, але копія не зашифрована (або зашифрована не повністю): це не зашифрована копія з хмари чи мережевої папки. Відновлення скасовано, дані не змінено",
     "service.backup.not_set": "не налаштовано",
     "service.backup.ok": "готово",

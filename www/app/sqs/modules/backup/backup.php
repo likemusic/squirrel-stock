@@ -54,8 +54,15 @@ class Backup
             }
         }
         if ($password !== '') {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $zip->setEncryptionIndex($i, \ZipArchive::EM_AES_256, $password);
+            // нет шифрования в сборке zip — ошибка, а не незашифрованная копия в облако или сетевую папку
+            $aes = defined('ZipArchive::EM_AES_256') && (!method_exists($zip, 'isEncryptionMethodSupported') || \ZipArchive::isEncryptionMethodSupported(\ZipArchive::EM_AES_256));
+            for ($i = 0; $aes && $i < $zip->numFiles; $i++) {
+                $aes = $zip->setEncryptionIndex($i, \ZipArchive::EM_AES_256, $password);
+            }
+            if (!$aes) {
+                $zip->close();
+                @unlink($zipFile);
+                throw new BackupException('service.backup.no_encryption');
             }
         }
         if (!$zip->close()) {
