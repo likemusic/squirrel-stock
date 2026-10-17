@@ -2,19 +2,22 @@
 // с последним поступлением; позиция, которой на складе не было ни разу, тоже в списке (виджет главной страницы Zippy
 // ее не показывает). Заголовки колонок — украинского интерфейса тестов. ZIPPY_GAPS п. 31.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, runReport } = require('../helpers/zippy');
+const { runReport } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 
 test('позиции ниже минимального остатка и выгрузка в Excel', async ({ page, uniq }) => {
   const low = 'BM-' + uniq + '-L', ok = 'BM-' + uniq + '-OK', none = 'BM-' + uniq + '-N', nomin = 'BM-' + uniq + '-X';
   const donor = 'Донор ' + uniq;
-  await createCustomer(page, { name: donor, type: 2 });
-  await createItem(page, { name: 'Позиция ' + low, code: low, minqty: 5 });
-  await createItem(page, { name: 'Позиция ' + ok, code: ok, minqty: 5 });
-  await createItem(page, { name: 'Позиция ' + none, code: none, minqty: 3 });
-  await createItem(page, { name: 'Позиция ' + nomin, code: nomin });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code: low, qty: 4, price: 0 }, { code: ok, qty: 5, price: 0 }, { code: nomin, qty: 1, price: 0 }] });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-10', customer: donor, rows: [{ code: low, qty: 2, price: 0 }] });
-  await createDoc(page, 'OutcomeItem', { date: '2026-09-12', rows: [{ code: low, qty: 3 }] });
+  seed({
+    customers: [{ name: donor, type: 2 }],
+    items: [{ name: 'Позиция ' + low, code: low, minqty: 5 }, { name: 'Позиция ' + ok, code: ok, minqty: 5 },
+            { name: 'Позиция ' + none, code: none, minqty: 3 }, { name: 'Позиция ' + nomin, code: nomin }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-09-01', rows: [{ code: low, qty: 4, price: 0 }, { code: ok, qty: 5, price: 0 }, { code: nomin, qty: 1, price: 0 }] },
+      { type: 'IncomeItem', date: '2026-09-10', customer: donor, rows: [{ code: low, qty: 2, price: 0 }] },
+      { type: 'OutcomeItem', date: '2026-09-12', rows: [{ code: low, qty: 3 }] },
+    ],
+  });
 
   await page.goto('/');
   await expect(page.locator('a[href*="Report/BelowMinimum"]').first(), 'пункт меню (db/squirrelstock.sql)').toBeAttached();

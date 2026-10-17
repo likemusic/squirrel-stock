@@ -2,15 +2,16 @@
 // позиции с количеством из того, что есть на складе, «Выдать» → проведенная расходная накладная по цене 0.
 // На десктопе и на телефоне (375 px, касания). ZIPPY_GAPS п. 35.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { value, query, esc, stockQty } = require('../helpers/db');
 
 async function prepare(page, uniq) {
   const a = 'CA-' + uniq, b = 'CB-' + uniq, eq = 'CE-' + uniq;
-  await createItem(page, { name: 'Перевязка ' + a, code: a });
-  await createItem(page, { name: 'Шприц ' + b, code: b });
-  await createItem(page, { name: 'Концентратор ' + eq, code: eq, serial: true });
-  await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code: a, qty: 10, price: 0 }, { code: b, qty: 5, price: 0 }, { code: eq, qty: 1, price: 0, sn: 'INV-' + eq }] });
+  seed({
+    items: [{ name: 'Перевязка ' + a, code: a }, { name: 'Шприц ' + b, code: b }, { name: 'Концентратор ' + eq, code: eq, serial: true }],
+    docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code: a, qty: 10, price: 0 }, { code: b, qty: 5, price: 0 }, { code: eq, qty: 1, price: 0, sn: 'INV-' + eq }] }],
+  });
   return { a, b, eq };
 }
 
@@ -60,7 +61,7 @@ test('выдача расходников: новый получатель, не
 
   // существующий получатель; позиция выбрана, но кнопка «Добавить» не нажата — тоже выдается
   const who2 = 'Получатель ' + uniq + ' два';
-  await createCustomer(page, { name: who2, type: 1 });
+  seed({ customers: [{ name: who2, type: 1 }] });
   await page.goto('/index.php?p=App/Pages/Service/ConsumablesIssue');
   await pickAuto(page, '#cform #customer', who2, who2);
   await pickAuto(page, '#cform #item', a, a);
