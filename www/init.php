@@ -1,6 +1,9 @@
 <?php
 
 error_reporting(E_ALL & ~E_WARNING   & ~E_NOTICE & ~E_DEPRECATED);
+// SquirrelStock: трассы исключений в журнале (logs/) без аргументов функций — иначе туда попадали пароль базы при сбое
+// соединения, пароль входа через API, значения из запросов. В php.ini-production так и есть, в образе php:*-apache и на хостинге — нет
+ini_set('zend.exception_ignore_args', '1');
 
 
 $http = 'http';
