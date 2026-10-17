@@ -36,6 +36,11 @@ class DocAudit
         self::setPending($doc, $changes);
     }
 
+    // обработчик afterDelete: журнал правок удаляется вместе с документом — в нем примечания и прежние значения полей
+    public static function afterDelete(Document $doc): void {
+        \ZDB\DB::getConnect()->Execute('DELETE FROM sqs_doclog WHERE document_id = ' . intval($doc->document_id));
+    }
+
     // обработчик afterSave: изменения, найденные в beforeSave, — в журнал
     public static function afterSave(Document $doc): void {
         self::writePending($doc);

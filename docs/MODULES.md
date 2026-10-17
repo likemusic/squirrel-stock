@@ -77,10 +77,11 @@ Platform code outside modules (`www/app/sqs/`): `Hooks`, `Modules`, `Categories`
 | `afterExecute` | once, after the executed state is saved |
 | `beforeCancel` | before execution is cancelled, before any write |
 | `afterCancel` | once, after the cancelled state is saved |
+| `afterDelete` | after the document is deleted (`Document::afterDelete`): remove module data of the document |
 
 An exception thrown in a `before*` handler stops the action; its message is shown to the user. Document pages save and execute inside one transaction, so nothing is half done: for a new document nothing is saved, stock does not change.
 
-The audit log of document edits (`App\SQS\DocAudit`) is a built-in `beforeSave`/`afterSave` handler and works without modules.
+The audit log of document edits (`App\SQS\DocAudit`) is a built-in `beforeSave`/`afterSave` handler and works without modules; its `afterDelete` handler removes the log of a deleted document.
 
 ## Other extension points
 

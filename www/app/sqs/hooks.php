@@ -6,14 +6,14 @@ use App\Entity\Doc\Document;
 
 /**
  * SquirrelStock: точки расширения документа — обработчики по типу документа (meta_name) или для всех ('*').
- * События: beforeSave, afterSave, beforeExecute, afterExecute, beforeCancel, afterCancel.
+ * События: beforeSave, afterSave, beforeExecute, afterExecute, beforeCancel, afterCancel, afterDelete (документ уже удален).
  * Обработчик: function (Document $doc, string $event): void. Общие события (не документ) — listen()/emit(). Исключение в before* отменяет сохранение или проведение,
- * текст исключения видит пользователь. Вызовы — в Document::beforeSave/afterSave/updateStatus.
+ * текст исключения видит пользователь. Вызовы — в Document::beforeSave/afterSave/updateStatus/afterDelete.
  * Встроенные обработчики форка (журнал правок DocAudit) регистрируются здесь же, модули — в своем module.php (App\SQS\Modules).
  */
 class Hooks
 {
-    public const EVENTS = ['beforeSave', 'afterSave', 'beforeExecute', 'afterExecute', 'beforeCancel', 'afterCancel'];
+    public const EVENTS = ['beforeSave', 'afterSave', 'beforeExecute', 'afterExecute', 'beforeCancel', 'afterCancel', 'afterDelete'];
 
     private static array $handlers = [];
     private static array $listeners = [];   // общие события (не документ): событие => [callable]
@@ -67,6 +67,7 @@ class Hooks
         self::$booted = true;
         self::on('beforeSave', '*', [DocAudit::class, 'beforeSave']);
         self::on('afterSave', '*', [DocAudit::class, 'afterSave']);
+        self::on('afterDelete', '*', [DocAudit::class, 'afterDelete']);
         self::listen('itemSaved', [Item1C::class, 'itemSaved']);
     }
 }

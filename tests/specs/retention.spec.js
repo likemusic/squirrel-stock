@@ -42,3 +42,17 @@ test('резервная копия без попыток входа и токе
     query(`delete from sqs_loginfail where login = '${mark}'`);
   }
 });
+
+// журнал правок (sqs_doclog: примечания, прежние значения полей) удаляется вместе с документом — хук afterDelete
+test('удаление документа удаляет его журнал правок', async ({ uniq }) => {
+  const meta = Number(value(`select meta_id from metadata where meta_type = 1 and meta_name = 'IncomeItem'`));
+  const id = Number(value(`insert into documents (document_number, document_date, meta_id, state, notes) values ('RT-${uniq}', curdate(), ${meta}, 1, ''); select last_insert_id()`));
+  query(`insert into sqs_doclog (document_id, user_id, createdon, changes) values (${id}, 0, now(), '[]'), (${id}, 0, now(), '[]')`);
+  try {
+    webPhp('-r', `require "init.php"; \\App\\Entity\\Doc\\Document::delete(${id});`);
+    expect(Number(value(`select count(*) from documents where document_id = ${id}`)), 'документ удален').toBe(0);
+    expect(Number(value(`select count(*) from sqs_doclog where document_id = ${id}`)), 'журнал правок удален').toBe(0);
+  } finally {
+    query(`delete from documents where document_id = ${id}; delete from sqs_doclog where document_id = ${id}`);
+  }
+});

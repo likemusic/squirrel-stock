@@ -919,6 +919,7 @@ class Document extends \ZCL\DB\Entity
             $n->message = __('doc.document.korystuvach').System::getUser()->username.__('doc.document.vydalyv_ranishe_provedenyi_dokument') .$this->document_number  ;
             $n->save();
         }
+        \App\SQS\Hooks::run('afterDelete', $this);   // SquirrelStock: данные модулей и журнал правок удаленного документа
     }
 
     /**
