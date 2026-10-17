@@ -56,6 +56,8 @@ docker exec -u www-data $NAME php /var/www/squirrelstock/cli/backup.php --only=l
 n=$(docker exec $NAME sh -c 'ls /var/www/squirrelstock-backup/*.zip 2>/dev/null | wc -l')
 [[ $n -ge 1 ]] && ok "копия в /var/www/squirrelstock-backup ($n)" || fail "нет файла копии"
 docker exec $NAME test -f /etc/cron.d/squirrelstock && ok "cron: /etc/cron.d/squirrelstock" || fail "нет cron"
+docker exec $NAME sh -c 'echo проверка >> /var/www/squirrelstock/logs/backup-cron.log && logrotate -f /etc/logrotate.d/squirrelstock && test -f /var/www/squirrelstock/logs/backup-cron.log.1.gz' \
+  && ok "logrotate: журнал копий по расписанию ротируется" || fail "logrotate"
 
 docs=$(docker exec $NAME mysql -uroot -N squirrelstock -e "select count(*) from documents")
 echo "--- повторный запуск"

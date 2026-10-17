@@ -56,7 +56,7 @@ say "пакеты"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
 apt-get install -y -qq --no-install-recommends apache2 libapache2-mod-php php-cli php-mysql php-zip php-gmp php-gd php-mbstring \
-  php-curl php-xml php-intl mariadb-server rclone cron unzip rsync ca-certificates openssl >/dev/null
+  php-curl php-xml php-intl mariadb-server rclone cron logrotate unzip rsync ca-certificates openssl >/dev/null
 [[ -n $ZIP ]] || apt-get install -y -qq --no-install-recommends composer git >/dev/null
 php -r 'exit(PHP_VERSION_ID >= 80200 ? 0 : 1);' || { echo "нужен PHP 8.2 или новее, в этой системе $(php -r 'echo PHP_VERSION;'): Debian 13, Debian 12 или Ubuntu 24.04" >&2; exit 1; }
 svc mariadb start
@@ -77,6 +77,10 @@ if [[ -f $DIR/config/config.php && $(mysql -uroot -N -e "SELECT COUNT(*) FROM in
     mysqldump -uroot --single-transaction --routines "$DB" | gzip > "$BACKUP/before-update/database-$ts.sql.gz"
     tar -czf "$BACKUP/before-update/files-$ts.tar.gz" -C "$DIR" config/config.php upload
     echo "копия (mysqldump): $BACKUP/before-update/database-$ts.sql.gz, файлы: files-$ts.tar.gz"
+    # запасные копии храним последние 5 (копии программой выше ограничивает ее настройка «сколько хранить»)
+    for p in database files; do
+      ls -1t "$BACKUP"/before-update/$p-*.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
+    done
   fi
 fi
 
@@ -197,6 +201,18 @@ cat > /etc/cron.d/squirrelstock <<CRON
 17 * * * * www-data php $DIR/cli/backup.php --if-older=20 >> $DIR/logs/backup-cron.log 2>&1
 CRON
 chmod 644 /etc/cron.d/squirrelstock
+# журналы копий по расписанию и обновлений растут без конца (журнал программы log-*.txt чистит она сама — 7 дней)
+cat > /etc/logrotate.d/squirrelstock <<ROT
+$DIR/logs/backup-cron.log $DIR/logs/update.log {
+  monthly
+  rotate 12
+  compress
+  missingok
+  notifempty
+  su www-data www-data
+}
+ROT
+chmod 644 /etc/logrotate.d/squirrelstock
 
 ADDR=$(hostname -I 2>/dev/null | awk '{print $1}')
 echo
