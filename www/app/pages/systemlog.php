@@ -32,6 +32,12 @@ class SystemLog extends \App\Pages\Base
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
         }
+        // SquirrelStock: только роль admins, как пункт в меню; раньше страница открывалась у любого пользователя по прямому адресу
+        if ($user->rolename != 'admins') {
+            System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
+            \App\Application::RedirectError();
+            return;
+        }
 
         $this->add(new Label('fc'));
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
