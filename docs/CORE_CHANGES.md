@@ -87,6 +87,11 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `ded585d2a` | `www/app/entity/item.php` `afterLoad()`, `beforeSave()`, new `serialMode()` | serial mode per position: `<snmode>1\|2\|3</snmode>` in `items.detail` (written only when set), `serialMode()` — the position's mode or the global `usesnumber`, 0 without `useserial`; lets one database keep consumables in batches and equipment by serial numbers (fork modules use it; document forms — next step) | `tests/specs/serial-mode-modules.spec.js` |
 | `0993ed964` | `www/app/pages/reference/itemlist.php` (constructor, `openEdit()`, `addOnClick()`, `save()`, new `snModes()`, `onAllSnMode()`), `www/templates/pages/reference/itemlist.html` | serial mode in the item card next to the serial flag, and for the selected positions in the list (next to "Move to"); a mode 1–3 also turns the serial flag on | `tests/specs/serial-mode-core.spec.js` |
 | `fdac00a8d` | `www/app/pages/doc/goodsreceipt.php`, `goodsissue.php`, `serviceact.php`, `incomeitem.php`, `advancerep.php`, `www/app/modules/df/public/incomeitem.php` (row and serial-list checks), `www/app/pages/base.php` (`usesnumberdate`, `usesnumberitem`), `www/app/pages/service/armpos.php` (date column) | `$common['usesnumber']` in row checks → `App\SQS\SerialStock::rowMode($item)` (position's mode, global for positions without the serial flag); page flags — the mode is global or set on an enabled position (`SerialStock::modeUsed()`). On an upstream update: the same replacement in these places | `tests/specs/serial-mode-core.spec.js` |
+| `fc66b4928` | `www/app/pages/userprofile.php` `onsubmitpass()`, `www/lang/ru.json`, `uk.json` (`app.userprofile.korystuvach_zminyv_parol_na`) | password change notification without the new password (it was written to the system log in plain text, visible on the System log page and in backups); earlier such records are deleted by `www/app/sqs/schema.sql` | `tests/specs/password-notify.spec.js` |
+| `837f371a6` | `www/app/pages/systemlog.php`, `www/app/pages/crontab.php` | only the `admins` role, as in the menu; before: any logged-in user by direct URL (system notifications, logs/*.txt, scheduler tasks) | `tests/specs/admin-pages.spec.js` |
+| `dfffae48b` | `www/init.php` | `zend.exception_ignore_args` on: exception traces in logs/ without function arguments (database password on a failed connection, API login password) | `tests/specs/exception-args.spec.js` |
+| `0369be13b` | `www/config/config.php` | log level 300 (WARNING) instead of 100 (DEBUG), as in the package: DEBUG also wrote the full SQL of a failed query | — |
+| `522f5484c` | `www/app/entity/doc/document.php` `afterDelete()` | hook `afterDelete`; DocAudit removes the edit log of the deleted document | `tests/specs/retention.spec.js` |
 
 ## Proposed upstream
 
@@ -110,7 +115,7 @@ When merging an upstream update, check these places first: modules (`www/app/sqs
 | `www/init.php` | `App\SQS\Modules::load()` after `session_start()` |
 | `www/app/application.php` `getTemplate()` | page template from a module |
 | `www/app/report.php` `generate()` | print form from a module; in the charity profile `printforms/charity/<template>` first |
-| `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()` | document hooks |
+| `www/app/entity/doc/document.php` `beforeSave()`, `afterSave()`, `updateStatus()`, `afterDelete()` | document hooks |
 | `www/app/pages/main.php`, `www/templates/pages/main.html` | `mainBlocks` |
 | `www/app/pages/reference/itemlist.php` | `itemSaved` |
 
