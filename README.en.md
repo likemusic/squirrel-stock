@@ -29,7 +29,7 @@ Demo data (fictional): restore `db/demo/squirrelstock-demo.zip` on the backup pa
 
 ## Differences from Zippy
 
-Stock accounting fixes (double posting, batch with the nearest expiry date, import date, serial units issued on a date when they are not in stock, and others), each change to Zippy code listed in [docs/CORE_CHANGES.md](docs/CORE_CHANGES.md) with a test; interface translation by English keys; offline operation; the charity features above; Playwright regression tests. Development: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+Stock accounting fixes (double posting, batch with the nearest expiry date, import date, serial units issued on a date when they are not in stock, and others), serial mode per item (consumables in batches with expiry and equipment by serial numbers in one database; Zippy has one mode for the whole database), each change to Zippy code listed in [docs/CORE_CHANGES.md](docs/CORE_CHANGES.md) with a test; interface translation by English keys; offline operation; the charity features above; Playwright regression tests. Development: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## License
 
