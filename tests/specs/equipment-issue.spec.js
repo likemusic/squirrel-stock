@@ -1,15 +1,15 @@
 // Выдача оборудования одной формой «договор + выдача» (ответ хосписа 1.3) и заводской номер единицы (1.1).
 // Форма создает получателя, договор «В работе» и проведенную расходную накладную по нему. ZIPPY_GAPS п. 10.
 const { test, expect } = require('../fixtures');
-const { createItem, createDoc, pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { value, esc } = require('../helpers/db');
 
 test('договор и выдача одной формой, поиск единицы по заводскому номеру', async ({ page, uniq }) => {
   const code = 'EI-' + uniq, name = 'Концентратор ' + uniq, who = 'Получатель ' + uniq;
   const inv1 = 'INV1-' + uniq, inv2 = 'INV2-' + uniq, factory = 'ZAV-' + uniq;
-  await createItem(page, { name, code, serial: true });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv1 }, { code, qty: 1, price: 0, sn: inv2 }] });
-  const item = value(`select item_id from items where item_code = '${esc(code)}'`);
+  const item = seed({ items: [{ name, code, serial: true }],
+                      docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv1 }, { code, qty: 1, price: 0, sn: inv2 }] }] }).items[code];
   value(`insert into sqs_unit (item_id, snumber, factory_no) values (${item}, '${esc(inv2)}', '${esc(factory)}')`);
 
   await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
@@ -41,8 +41,7 @@ test('договор и выдача одной формой, поиск еди�
 
 test('справочник единиц: заводской номер задается и ищется', async ({ page, uniq }) => {
   const code = 'EU-' + uniq, name = 'Отсасыватель ' + uniq, inv = 'INV-' + uniq, factory = 'F-' + uniq;
-  await createItem(page, { name, code, serial: true });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] });
+  seed({ items: [{ name, code, serial: true }], docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] }] });
 
   const search = async text => {
     await page.goto('/index.php?p=App/Pages/Reference/EquipmentUnits');
@@ -69,8 +68,7 @@ test('справочник единиц: заводской номер зада�
 // документа (App\SQS\SerialStock); при переносе ОСВ 01 приходуется датой раньше первой выдачи (поле «Дата оприходования»).
 test('выдача оборудования раньше даты прихода — отказ с понятной причиной', async ({ page, uniq }) => {
   const code = 'EL-' + uniq, inv = 'INV-' + uniq, who = 'Получатель ' + uniq;
-  await createItem(page, { name: 'Ингалятор ' + uniq, code, serial: true });
-  await createDoc(page, 'IncomeItem', { date: '2026-10-10', rows: [{ code, qty: 1, price: 0, sn: inv }] });
+  seed({ items: [{ name: 'Ингалятор ' + uniq, code, serial: true }], docs: [{ type: 'IncomeItem', date: '2026-10-10', rows: [{ code, qty: 1, price: 0, sn: inv }] }] });
   await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
   await page.locator('#iform #customer').fill(who);
   await page.locator('#iform #date').fill('2026-09-01');

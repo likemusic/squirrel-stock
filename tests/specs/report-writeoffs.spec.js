@@ -1,19 +1,24 @@
 // Списания с причинами за период — для бухгалтерии: причина — примечание документа «Списание ТМЦ» (ответ хосписа 3.2,
 // справочник причин не нужен). Строка — позиция документа с инвентарным номером, отбор по тексту причины, выгрузка в Excel.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, clickWait } = require('../helpers/zippy');
+const { clickWait } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { xlsxText } = require('../helpers/xlsx');
 
 test('списания с причинами: позиции, инвентарный номер, отбор по причине, Excel', async ({ page, uniq }) => {
   const a = 'WA-' + uniq, eq = 'WE-' + uniq, inv = 'INV-W' + uniq, r = 'Получатель ' + uniq + ' списания';
-  await createItem(page, { name: 'Пеленки ' + a, code: a });
-  await createItem(page, { name: 'Отсасыватель ' + eq, code: eq, serial: true });
-  await createCustomer(page, { name: r, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-05-01', rows: [{ code: a, qty: 20, price: 0 }, { code: eq, qty: 1, price: 0, sn: inv }] });
-  const { number: w1 } = await createDoc(page, 'OutcomeItem', { date: '2026-05-10', notes: 'Причина: порча — намокла упаковка', rows: [{ code: a, qty: 3 }] });
-  const { number: w2 } = await createDoc(page, 'OutcomeItem', { date: '2026-05-20', notes: 'Причина: сломан, ремонт невозможен', rows: [{ code: eq, qty: 1, sn: inv }] });
-  await createDoc(page, 'OutcomeItem', { date: '2026-06-02', notes: 'Причина: порча — вне периода', rows: [{ code: a, qty: 1 }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-05-12', customer: r, payment: 0, rows: [{ code: a, qty: 5, price: 0 }] });   // выдача — не списание
+  const { docs } = seed({
+    items: [{ name: 'Пеленки ' + a, code: a }, { name: 'Отсасыватель ' + eq, code: eq, serial: true }],
+    customers: [{ name: r, type: 1 }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-05-01', rows: [{ code: a, qty: 20, price: 0 }, { code: eq, qty: 1, price: 0, sn: inv }] },
+      { type: 'OutcomeItem', date: '2026-05-10', notes: 'Причина: порча — намокла упаковка', rows: [{ code: a, qty: 3 }] },
+      { type: 'OutcomeItem', date: '2026-05-20', notes: 'Причина: сломан, ремонт невозможен', rows: [{ code: eq, qty: 1, sn: inv }] },
+      { type: 'OutcomeItem', date: '2026-06-02', notes: 'Причина: порча — вне периода', rows: [{ code: a, qty: 1 }] },
+      { type: 'GoodsIssue', date: '2026-05-12', customer: r, rows: [{ code: a, qty: 5, price: 0 }] },   // выдача — не списание
+    ],
+  });
+  const [, { number: w1 }, { number: w2 }] = docs;
 
   await page.goto('/');
   await expect(page.locator('a[href*="Report/WriteOffs"]').first(), 'пункт меню модуля reports').toBeAttached();
