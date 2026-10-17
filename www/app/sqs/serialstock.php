@@ -87,6 +87,58 @@ class SerialStock
         return self::$used[$mode];
     }
 
+    private static ?bool $mixed = null;
+
+    /**
+     * В базе встречаются разные режимы серий: у какой-то включенной позиции с учетом серий режим не тот, что в настройках.
+     * Тогда подпись поля номера в строке документа зависит от позиции (см. rowFields).
+     */
+    public static function mixed(): bool {
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        if ($common == 0) {
+            return false;
+        }
+        if (self::$mixed === null) {
+            self::$mixed = (bool)\ZDB\DB::getConnect()->GetOne("SELECT 1 FROM items WHERE disabled <> 1
+                AND detail LIKE '%<useserial>1</useserial>%' AND detail REGEXP '<snmode>[123]</snmode>'
+                AND detail NOT LIKE '%<snmode>{$common}</snmode>%' LIMIT 1");
+        }
+        return self::$mixed;
+    }
+
+    /**
+     * Поля строки документа по позиции строки $item (null — позиция не выбрана): подпись поля номера и видимость поля
+     * «годен до». Шаблоны форм берут их из переменных sqs_snlabel и sqs_sdate (App\Pages\Base::beforeRender), выбор позиции
+     * (OnChangeItem, AJAX) меняет их на месте. Без разных режимов в базе подпись прежняя — по общему режиму; при общем
+     * режиме «срок годности» поле срока видно всегда, как в Zippy.
+     */
+    public static function rowFields(\Zippy\Html\WebPage $page, ?Item $item, bool $ajax = false): void {
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        if ($item != null && $item->item_id > 0 && self::mixed()) {
+            $mode = self::rowMode($item);
+        } else {
+            $mode = self::mixed() ? 0 : $common;
+        }
+        $label = $mode == 3 ? __('common.seriinyi_nomer') : ($mode == 0 ? __('sqs.snmode.snumber_any') : __('common.seriia_partiia_vyrobnyka'));
+        $sdate = $common == 2 || ($item != null && $item->item_id > 0 && self::rowMode($item) == 2);
+        $page->_tvars['sqs_snlabel'] = $label;
+        $page->_tvars['sqs_sdate'] = $sdate;
+        if (!$ajax) {
+            return;
+        }
+        $response = \Zippy\WebApplication::$app->getResponse();
+        if (self::mixed()) {
+            $response->addAjaxResponse(['id' => 'sqssnlabel', 'type' => 'Label', 'data' => $label, 'ishtml' => false]);
+        }
+        $date = $page->editdetail->getComponent('editsdate');   // поле срока есть только в формах прихода
+        if ($date != null && $common != 2 && self::modeUsed(2)) {
+            $response->addAjaxResponse(['id' => 'editsdate', 'type' => 'Visible', 'visible' => $sdate]);   // и подпись, и блок с data-label
+            if (!$sdate) {
+                $date->setText('');   // срок, введенный для прежней позиции, не уходит в строку без срока
+            }
+        }
+    }
+
     /**
      * Условие SQL «строка остатка $s (store_stock) с позицией $i — единица оборудования»: есть номер, и позиция ведется не
      * партиями. Пока режимы позиций не заданы и общий режим — серийные номера, это прежнее «snumber <> ''».

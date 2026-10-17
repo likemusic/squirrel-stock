@@ -144,12 +144,7 @@
                 {{#usesnumber}}
                 <div class="mb-2">
 
-                         {{^usesnumberitem}}
-                        <label for="editsnumber">{{#t}}common.seriia_partiia_vyrobnyka{{/t}} </label>
-                         {{/usesnumberitem}}
-                         {{#usesnumberitem}}
-                        <label for="editsnumber">{{#t}}common.seriinyi_nomer{{/t}} </label>
-                         {{/usesnumberitem}}
+                         <label for="editsnumber" id="sqssnlabel">{{sqs_snlabel}} </label>
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 

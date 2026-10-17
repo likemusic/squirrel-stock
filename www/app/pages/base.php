@@ -424,6 +424,12 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
+        // SquirrelStock: подпись номера и поле срока в строке документа — по позиции строки (SerialStock::rowFields)
+        $edit = $this->components['editdetail'] ?? null;
+        $pick = $edit instanceof \Zippy\Html\HtmlContainer ? $edit->getComponent('edititem') : null;
+        if ($pick instanceof \Zippy\Html\Form\AutocompleteTextInput) {
+            \App\SQS\SerialStock::rowFields($this, $pick->getKey() > 0 ? \App\Entity\Item::load($pick->getKey()) : null);
+        }
             
              
     }
