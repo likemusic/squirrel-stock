@@ -6,6 +6,7 @@ namespace App\SQS;
  * SquirrelStock: ограничение подбора пароля. Неудачные попытки входа пишутся в sqs_loginfail (app/sqs/schema.sql);
  * после MAX_LOGIN неудач по логину или MAX_IP по адресу за WINDOW минут вход временно не проверяется.
  * Удачный вход очищает попытки этого логина. Счетчик в Zippy жил в сессии и обнулялся с новой сессией.
+ * Записи старше суток удаляются при каждой попытке входа, удачной или нет (purge): в логине бывает пароль, набранный не в то поле.
  */
 class LoginGuard
 {
@@ -33,7 +34,7 @@ class LoginGuard
 
     public static function fail(string $login, string $ip): void {
         $conn = \ZDB\DB::getConnect();
-        $conn->Execute('DELETE FROM sqs_loginfail WHERE createdon < ' . $conn->qstr(date('Y-m-d H:i:s', time() - 86400)));
+        self::purge();
         $conn->Execute('INSERT INTO sqs_loginfail (login, ip, createdon) VALUES (' . $conn->qstr(mb_substr($login, 0, 100)) . ', '
             . $conn->qstr($ip) . ', ' . $conn->qstr(date('Y-m-d H:i:s')) . ')');
     }
@@ -60,5 +61,16 @@ class LoginGuard
     public static function success(string $login): void {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute('DELETE FROM sqs_loginfail WHERE login = ' . $conn->qstr($login));
+        self::purge();
+    }
+
+    /**
+     * Неудачные попытки старше суток и просроченные токены «Запомнить»: раньше удалялись только при следующей неудаче
+     * (выдаче токена), без них — лежали в базе и в резервных копиях бессрочно
+     */
+    public static function purge(): void {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute('DELETE FROM sqs_loginfail WHERE createdon < ' . $conn->qstr(date('Y-m-d H:i:s', time() - 86400)));
+        Remember::purge();
     }
 }

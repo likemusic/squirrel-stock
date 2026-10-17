@@ -20,7 +20,7 @@ class Remember
         $validator = bin2hex(random_bytes(32));
         $expires = time() + self::DAYS * 86400;
         $conn = \ZDB\DB::getConnect();
-        $conn->Execute('DELETE FROM sqs_remember WHERE expires < ' . $conn->qstr(date('Y-m-d H:i:s')));
+        self::purge();
         $conn->Execute('INSERT INTO sqs_remember (selector, user_id, token_hash, pass_fp, expires) VALUES ('
             . $conn->qstr($selector) . ', ' . intval($user->user_id) . ', ' . $conn->qstr(hash('sha256', $validator)) . ', '
             . $conn->qstr(self::passFingerprint($user)) . ', ' . $conn->qstr(date('Y-m-d H:i:s', $expires)) . ')');
@@ -62,6 +62,12 @@ class Remember
             $conn->Execute('DELETE FROM sqs_remember WHERE selector = ' . $conn->qstr($selector));
         }
         self::setCookie('', 1);
+    }
+
+    // просроченные токены (App\SQS\LoginGuard::purge — при каждой попытке входа, и при выдаче нового)
+    public static function purge(): void {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute('DELETE FROM sqs_remember WHERE expires < ' . $conn->qstr(date('Y-m-d H:i:s')));
     }
 
     // все входы «Запомнить» пользователя (например, после включения двухфакторного входа)
