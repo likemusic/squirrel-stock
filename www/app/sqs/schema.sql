@@ -64,3 +64,8 @@ CREATE TABLE IF NOT EXISTS sqs_2fa_backup (
   PRIMARY KEY (id),
   KEY user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Zippy писал в системный журнал новый пароль пользователя открытым текстом («сменил пароль на <b>…</b>», app/pages/userprofile.php).
+-- Теперь пароль в сообщение не попадает; прежние записи удаляются, в том числе пришедшие из восстановленной копии.
+-- Шаблон — сообщение на ru и uk целиком, другие системные уведомления (user_id = -4) так не начинаются.
+DELETE FROM notifies WHERE user_id = -4 AND (message LIKE 'Пользователь <b>%</b> сменил пароль на <b>%</b>' OR message LIKE 'Користувач <b>%</b> змінив пароль на <b>%</b>');
