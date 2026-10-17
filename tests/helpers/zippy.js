@@ -109,7 +109,6 @@ async function createDoc(page, type, d) {
   await page.locator('#docform #store').selectOption('1');
   if (d.tostore) await page.locator('#docform #tostore').selectOption(String(d.tostore));   // перемещение: склад-получатель
   if (d.customer) await pickAuto(page, '#docform #customer', d.customer, d.customer);
-  if (d.payment !== undefined && await page.locator('#docform #payment:visible').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
   if (d.contract) {   // договор выбирается по номеру; список появляется после выбора контрагента
     const find = () => page.locator('#docform #contract option').evaluateAll((os, n) => (os.find(o => o.textContent.trim().startsWith(n + ' ')) || {}).value, d.contract);
     let value = await find();
@@ -139,6 +138,9 @@ async function createDoc(page, type, d) {
   const nrows = await page.locator('#docform a[id^=delete_]:visible').count();
   const uniq = new Set(d.rows.map(r => r.code + '|' + (r.sn || ''))).size;
   if (nrows !== uniq) throw new Error(`${type} ${number}: строк ${nrows}, ожидалось ${uniq}: ${(await messages(page)).join(' | ')}`);
+  // касса — перед сохранением: ответ AJAX на выбор контрагента может прийти позже и вернуть кассу по умолчанию
+  // (на медленной машине накладная сохранялась с кассой 1 вместо 0)
+  if (d.payment !== undefined && await page.locator('#docform #payment:visible').count()) await page.locator('#docform #payment').selectOption(String(d.payment));
   if (d.draft) {   // сохранить без проведения
     await clickWait(page, '#savedoc');
     return { number, msgs: await messages(page), suggested };

@@ -10,6 +10,11 @@ const test = base.test.extend({
   },
   page: async ({ page }, use) => {
     page.on('dialog', d => d.accept());
+    // SQS_CPU_THROTTLE=4 — браузер в 4 раза медленнее (проверка ожиданий в helpers на медленной машине)
+    if (process.env.SQS_CPU_THROTTLE) {
+      const cdp = await page.context().newCDPSession(page);
+      await cdp.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.SQS_CPU_THROTTLE) });
+    }
     await use(page);
   },
   // уникальный суффикс: тесты не зависят от того, что уже есть в базе стенда
