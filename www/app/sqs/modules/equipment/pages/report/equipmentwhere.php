@@ -56,7 +56,7 @@ class EquipmentWhere extends \App\Pages\Base
 
     private function generateReport() {
         $conn = \ZDB\DB::getConnect();
-        $where = "s.snumber <> ''";
+        $where = \App\SQS\SerialStock::unitSql();   // единицы, без партий расходников
         $text = mb_strtolower(trim($this->filter->searchtext->getText()));
         $cat = intval($this->filter->cat->getValue());
         if ($cat > 0) {

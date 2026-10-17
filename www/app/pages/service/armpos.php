@@ -279,7 +279,7 @@ class ARMPos extends \App\Pages\Base
             $this->_tvars["usesnumber"] = true;
             $this->docpanel->navbar->tosimple->setVisible(false) ;
         }
-        if($common['usesnumber'] ==2) {
+        if($common['usesnumber'] > 0 && \App\SQS\SerialStock::modeUsed(2)) {   // SquirrelStock: срок годности — общий режим или у позиции
             $this->_tvars["colspan"] = 8;
             $this->_tvars["usesnumberdate"] = true;
         }

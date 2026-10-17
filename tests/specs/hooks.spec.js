@@ -136,8 +136,11 @@ class ${cls} extends \\App\\Pages\\Base
 
     // профиль благотворительной организации не выключает пункт модуля
     webPhp('cli/charity-profile.php');
-    expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('0');
-    webPhp('cli/charity-profile.php', '--back');
+    try {
+      expect(value(`select disabled from metadata where meta_type = 2 and meta_name = '${cls}'`)).toBe('0');
+    } finally {
+      webPhp('cli/charity-profile.php', '--back');   // при падении профиль не должен остаться включенным для следующих тестов
+    }
 
     // выключение: папка с точкой — страницы открываются, пункт выключен; возвращение — включен снова
     fs.renameSync(dir, off);

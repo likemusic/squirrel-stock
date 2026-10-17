@@ -513,7 +513,12 @@ class GoodsReceipt extends \App\Pages\Base
         }
         
         
-        if($common['usesnumber'] == 3 ){
+        $mode = \App\SQS\SerialStock::rowMode(Item::load($id));   // SquirrelStock: режим позиции (Item::serialMode), без учета серий — общий
+        if ($mode == 1 || $mode == 2) {   // ввод списком — серийные номера, не партии
+            $this->setError(__('sqs.snmode.bulk_serial_only'));
+            return;
+        }
+        if($mode == 3 ){
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
@@ -594,13 +599,14 @@ class GoodsReceipt extends \App\Pages\Base
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->sdate = $this->editdetail->editsdate->getDate();
 
-        if($common['usesnumber'] > 0) {
+        $mode = \App\SQS\SerialStock::rowMode($item);   // SquirrelStock: режим позиции (Item::serialMode), без учета серий — общий
+        if($mode > 0) {
             if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
-                if($common['usesnumber'] != 3){
+                if($mode != 3){
                    $this->setError(__('common.potribna_partiia_vyrobnyka'));
                    return;
                 }
-                if($common['usesnumber'] == 3 && $item->quantity <> 1){
+                if($mode == 3 && $item->quantity <> 1){
                    $this->setError(__('common.seriinyi_nomer_maie_buty_unikalnym'));    
                    return;
                 }  
@@ -610,7 +616,7 @@ class GoodsReceipt extends \App\Pages\Base
                 
             }
         }
-        if($common['usesnumber'] == 2) {
+        if($mode == 2) {
             if ($item->sdate == false) {
                 $item->sdate = '';
             }
@@ -621,7 +627,7 @@ class GoodsReceipt extends \App\Pages\Base
            
         }
      
-        if($common['usesnumber'] == 3  ) {           
+        if($mode == 3  ) {           
 
             foreach(  $this->_itemlist as $i){
                 if( $this->_rowid == -1 && strlen($item->snumber) > 0 && $item->snumber==$i->snumber )  {

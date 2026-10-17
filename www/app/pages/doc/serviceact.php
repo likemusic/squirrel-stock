@@ -370,7 +370,8 @@ class ServiceAct extends \App\Pages\Base
         
         $item->pricenonds= $item->price - $item->price * $item->nds(true);
          
-        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
+        $mode = \App\SQS\SerialStock::rowMode($item);   // SquirrelStock: режим позиции (Item::serialMode), без учета серий — общий
+        if($mode > 0 && $item->useserial == 1 ) {
             
             if (strlen($item->snumber) == 0  ) {
 
@@ -388,13 +389,13 @@ class ServiceAct extends \App\Pages\Base
             }  
 
             
-            if($common['usesnumber'] == 2  ) {           
+            if($mode == 2  ) {           
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
                      $item->sdate = $st->sdate;
                 }           
             }
-            if($common['usesnumber'] == 3  ) {           
+            if($mode == 3  ) {           
 
                 foreach(  $this->_itemlist as $i){
                     if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {

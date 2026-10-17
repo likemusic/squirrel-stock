@@ -76,7 +76,8 @@ class IssueAct extends \App\Pages\Base
         // возврат относится к колонке выдачи, на основании которой создан; договор — в заголовке выдачи или самого возврата
         $contract = fn($t) => "CAST(REGEXP_SUBSTR(REGEXP_SUBSTR({$t}.content, '<contract_id>[0-9]+</contract_id>'), '[0-9]+') AS UNSIGNED)";
         if ($kind != self::ALL) {
-            $equipment = "(st.snumber <> '' OR COALESCE({$contract('d')}, 0) > 0 OR COALESCE({$contract('base')}, 0) > 0)";
+            // оборудование — единица с номером (не партия расходника, App\SQS\SerialStock::unitSql) или выдача по договору
+            $equipment = "(" . \App\SQS\SerialStock::unitSql('st') . " OR COALESCE({$contract('d')}, 0) > 0 OR COALESCE({$contract('base')}, 0) > 0)";
             $where .= ' AND ' . ($kind == self::EQUIPMENT ? $equipment : "NOT {$equipment}");
         }
         $sql = "SELECT COALESCE(base.document_date, d.document_date) AS issue_date,

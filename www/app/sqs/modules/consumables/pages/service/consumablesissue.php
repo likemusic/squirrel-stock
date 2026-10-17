@@ -53,18 +53,27 @@ class ConsumablesIssue extends \App\Pages\Base
     }
 
     /**
-     * Позиции без серийного учета с остатком на складе: id => «название, код — остаток N ед.»
+     * Условие SQL «строка остатка s годится для выдачи»: у позиции, которая ведется партиями, — партия не просрочена
+     */
+    private static function usableSql(): string {
+        return "NOT (" . \App\SQS\SerialStock::batchSql() . " AND s.sdate IS NOT NULL AND s.sdate < CURDATE())";
+    }
+
+    /**
+     * Расходники с остатком на складе: id => «название, код — остаток N ед.». Расходник — позиция без серийного учета или
+     * с учетом партиями (Item::serialMode() 1 или 2; просроченные партии не считаются); оборудование по номерам — нет.
      */
     public static function findInStock(int $store, string $text, int $limit = 30): array {
         $conn = \ZDB\DB::getConnect();
         $like = $conn->qstr('%' . trim($text) . '%');
         $sql = "SELECT i.item_id, i.itemname, i.item_code, i.msr, SUM(s.qty) AS qty
                 FROM items i JOIN store_stock s ON s.item_id = i.item_id AND s.store_id = {$store}
-                WHERE i.disabled <> 1 AND COALESCE(i.detail, '') NOT LIKE '%<useserial>1</useserial>%'
+                WHERE i.disabled <> 1 AND (COALESCE(i.detail, '') NOT LIKE '%<useserial>1</useserial>%' OR " . \App\SQS\SerialStock::batchSql() . ")
+                  AND " . self::usableSql() . "
                   AND (i.itemname LIKE {$like} OR i.item_code LIKE {$like} OR i.bar_code LIKE {$like})
                 GROUP BY i.item_id, i.itemname, i.item_code, i.msr
                 HAVING SUM(s.qty) > 0
-                ORDER BY i.itemname
+                ORDER BY i.itemname, i.item_id
                 LIMIT {$limit}";
         $list = [];
         foreach ($conn->Execute($sql) as $r) {
@@ -76,8 +85,38 @@ class ConsumablesIssue extends \App\Pages\Base
 
     private function stockQty(int $item_id): float {
         $conn = \ZDB\DB::getConnect();
-        return doubleval($conn->GetOne('SELECT COALESCE(SUM(qty), 0) FROM store_stock WHERE item_id = ' . $item_id
-            . ' AND store_id = ' . intval($this->cform->store->getValue())));
+        return doubleval($conn->GetOne('SELECT COALESCE(SUM(s.qty), 0) FROM store_stock s JOIN items i ON i.item_id = s.item_id WHERE s.item_id = ' . $item_id
+            . ' AND s.store_id = ' . intval($this->cform->store->getValue()) . ' AND ' . self::usableSql()));
+    }
+
+    /**
+     * Строки документа по позиции: у позиции, которая ведется партиями, — по партиям, сначала с ближайшим сроком годности,
+     * партии без срока — после (как Item::getNearestSerie), просроченные не выдаются; у остальных — одна строка без номера
+     */
+    private function lines(Item $item, float $qty, int $store): array {
+        $mode = $item->serialMode();
+        if ($mode != 1 && $mode != 2) {
+            $item->quantity = $qty;
+            return [$item];
+        }
+        $conn = \ZDB\DB::getConnect();
+        $rows = $conn->GetAll("SELECT s.snumber, MAX(s.sdate) AS sdate, SUM(s.qty) AS qty FROM store_stock s JOIN items i ON i.item_id = s.item_id
+                               WHERE s.item_id = " . intval($item->item_id) . " AND s.store_id = {$store} AND s.qty > 0 AND " . self::usableSql() . "
+                               GROUP BY s.snumber ORDER BY MAX(s.sdate) IS NULL, MAX(s.sdate), MIN(s.stock_id)");
+        $lines = [];
+        foreach ($rows as $r) {
+            if ($qty <= 0) {
+                break;
+            }
+            $take = min($qty, doubleval($r['qty']));
+            $line = clone $item;
+            $line->snumber = (string)$r['snumber'];
+            $line->sdate = strlen((string)$r['sdate']) ? strtotime($r['sdate']) : '';
+            $line->quantity = $take;
+            $lines[] = $line;
+            $qty -= $take;
+        }
+        return $lines;
     }
 
     public function onAutoItem($sender) {
@@ -188,12 +227,13 @@ class ConsumablesIssue extends \App\Pages\Base
             $doc->headerdata['pricetype'] = 'price1';
             $doc->headerdata['sqs_interval_checked'] = 1;   // предупреждение показано здесь, хук после проведения его не повторяет
             $items = [];
-            foreach (array_values($this->_rows) as $i => $r) {
+            foreach (array_values($this->_rows) as $r) {
                 $item = Item::load($r->item_id);
-                $item->quantity = $r->qty;
                 $item->price = 0;
-                $item->rowid = $i + 1;
-                $items[$item->rowid] = $item;
+                foreach ($this->lines($item, doubleval($r->qty), $store) as $line) {
+                    $line->rowid = count($items) + 1;
+                    $items[$line->rowid] = $line;
+                }
             }
             $doc->packDetails('detaildata', $items);
             $doc->amount = 0;
