@@ -7,9 +7,17 @@ const { test, expect } = require('../fixtures');
 const { createItem, createCustomer, createDoc, createContract, pickAuto, clickWait, messages } = require('../helpers/zippy');
 const { query, value, esc } = require('../helpers/db');
 
+// расходник с режимом «срок годности» после теста отключается: включенный, он показывает поле срока во всех формах
+// прихода (App\SQS\SerialStock::modeUsed), а остальные тесты ждут формы хосписа
+const codes = [];
+test.afterEach(() => {
+  if (codes.length) query(`update items set disabled = 1 where item_code in (${codes.map(c => `'${esc(c)}'`).join(',')})`);
+});
+
 test('партии расходника — не оборудование; выдача расходников по партиям, сначала ближайший срок', async ({ page, uniq }) => {
   const cons = 'BT-' + uniq, eq = 'EQ-' + uniq, who = 'Получатель ' + uniq;
   const batch = n => `П${n}-${uniq}`, inv = n => `INV${n}-${uniq}`;
+  codes.push(cons);
   await createItem(page, { name: 'Раствор ' + cons, code: cons, serial: true });
   await createItem(page, { name: 'Концентратор ' + eq, code: eq, serial: true });
   query(`update items set detail = replace(detail, '<useserial>1</useserial>', '<useserial>1</useserial><snmode>2</snmode>') where item_code = '${cons}'`);

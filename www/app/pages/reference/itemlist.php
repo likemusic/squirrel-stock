@@ -87,6 +87,8 @@ class ItemList extends \App\Pages\Base
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
+        // SquirrelStock: режим серий отмеченным позициям (например, всем позициям категории после отбора); 9 — как в настройках
+        $this->itemtable->listform->add(new DropDownChoice('allsnmode', [9 => __('sqs.snmode.inherit')] + array_slice(self::snModes(), 1, null, true), 0))->onChange($this, 'onAllSnMode');
         $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
        
         $this->add(new Form('itemdetail'))->setVisible(false);
@@ -165,6 +167,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
+        $this->itemdetail->add(new DropDownChoice('editsnmode', self::snModes(), 0));   // SquirrelStock: режим серий позиции (Item::serialMode)
         $this->itemdetail->add(new CheckBox('editnoprice'));
         $this->itemdetail->add(new CheckBox('editisweight'));
         $this->itemdetail->add(new CheckBox('editnoshop'));
@@ -396,6 +399,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
+        $this->itemdetail->editsnmode->setValue(intval($this->_item->snmode ?? 0));
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
         $this->itemdetail->editnoprint->setChecked($this->_item->noprint);
         $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
@@ -450,6 +454,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editnoprint->setChecked(false);
         $this->itemdetail->editautooutcome->setChecked(false);
         $this->itemdetail->editautoincome->setChecked(false);
+        $this->itemdetail->editsnmode->setValue(0);
         $this->_item = new Item();
 
         $this->itemdetail->editcode->setText(Item::getNextArticle());
@@ -552,6 +557,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
+        $this->_item->snmode = intval($this->itemdetail->editsnmode->getValue());
         $this->_item->nds = $this->itemdetail->editnds->getText();
         $this->_item->isnds = $this->itemdetail->editisnds->getValue();
 
@@ -1052,6 +1058,47 @@ class ItemList extends \App\Pages\Base
 
         $this->Reload();
         $sender->setValue(0);
+    }
+
+    /**
+     * SquirrelStock: режимы серий для выбора у позиции: 0 — как в настройках (в скобках — какой там), 1–3 — названия режимов со страницы настроек
+     */
+    public static function snModes(): array {
+        $names = [1 => __('app.options.za_seriiamy_partiiamy_vyrobnyka'), 2 => __('app.options.za_seriiamy_ta_datoiu_prydatnosti'),
+                  3 => __('app.options.za_seriinymy_nomeramy_vyrobiv')];
+        $common = intval(\App\System::getOption('common', 'usesnumber'));
+        return [0 => __('sqs.snmode.inherit') . (isset($names[$common]) ? ' (' . $names[$common] . ')' : '')] + $names;
+    }
+
+    /**
+     * SquirrelStock: режим серий отмеченным позициям; режим 1–3 включает и учет серий (useserial), «как в настройках» его не меняет
+     */
+    public function onAllSnMode($sender) {
+        $mode = intval($sender->getValue());
+        $sender->setValue(0);
+        if ($mode == 0) {
+            return;
+        }
+        $cnt = 0;
+        foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
+            if ($row->getDataItem()->seldel != true) {
+                continue;
+            }
+            $item = Item::load($row->getDataItem()->item_id);
+            if ($item == null) {
+                continue;
+            }
+            $item->snmode = $mode == 9 ? 0 : $mode;
+            if ($mode != 9) {
+                $item->useserial = 1;
+            }
+            $item->save();
+            $cnt++;
+        }
+        if ($cnt > 0) {
+            $this->setSuccess(__('sqs.snmode.set_done', ['cnt' => $cnt]));
+            $this->Reload();
+        }
     }
 
     public function OnDelAll($sender) {
