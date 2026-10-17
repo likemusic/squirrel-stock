@@ -2,8 +2,17 @@
 // без минусовых остатков, цена выдачи 0, копейки). Сессия сохраняется в .auth/admin.json и переиспользуется тестами.
 const { chromium } = require('@playwright/test');
 const { login, clickWait, blockExternal, USESNUMBER_HOSPICE } = require('./helpers/zippy');
+const { webPhp } = require('./helpers/stand');
 
 module.exports = async config => {
+  // профиль благотворительной организации выключен: тесты включают его сами и снимают в finally/afterEach, но прерванный
+  // прогон (остановка процесса) может оставить его включенным, и тогда формы без цен ломают тесты, которым профиль не нужен
+  try {
+    webPhp('cli/charity-profile.php', '--back');
+  } catch (e) {
+    console.warn('global-setup: профиль не снят (нет контейнера ' + (process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1') + '?)');
+  }
+
   const { baseURL } = config.projects[0].use;
   const browser = await chromium.launch();
   const context = await browser.newContext({ baseURL });
