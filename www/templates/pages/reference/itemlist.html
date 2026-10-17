@@ -238,6 +238,12 @@
                                 ><option value="0">{{#t}}common.ne_vkazano{{/t}} </option>
                                 </select>
                                 </div> 
+                                {{#usesnumber}}
+                                <div class="input-group mt-1">
+                                    <label for="allsnmode">{{#t}}sqs.snmode.bulk{{/t}}</label>
+                                    <select class="form-select form-control-sm" zippy="allsnmode"><option value="0">{{#t}}common.ne_vkazano{{/t}}</option></select>
+                                </div>
+                                {{/usesnumber}}
                                 </div> 
                              </div> 
                     <div class="w-75 mt-2" zippy="pag"></div>   
@@ -403,6 +409,11 @@
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="edituseserial">{{#t}}reference.itemlist.oblik_serii_vyrobnyka_abo_seriinykh{{/t}}</label>
+                            </div>
+                            <div class="mb-2">
+                                <label for="editsnmode" class="form-label">{{#t}}sqs.snmode.label{{/t}}</label>
+                                <select class="form-select" zippy="editsnmode"></select>
+                                <small>{{#t}}sqs.snmode.help{{/t}}</small>
                             </div>
 
 

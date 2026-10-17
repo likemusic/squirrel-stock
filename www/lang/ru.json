@@ -3965,5 +3965,11 @@
     "sqs.mark.on_request": "по запросу",
     "sqs.mark.off_care": "снят с опеки",
     "sqs.charity.recipients": "Получатели",
-    "sqs.charity.marks_and_tags": "Признаки и теги"
+    "sqs.charity.marks_and_tags": "Признаки и теги",
+    "sqs.snmode.label": "Режим серий",
+    "sqs.snmode.inherit": "Как в настройках",
+    "sqs.snmode.bulk": "Режим серий отмеченным",
+    "sqs.snmode.set_done": "Режим серий задан: {cnt} поз.",
+    "sqs.snmode.bulk_serial_only": "Ввод списком номеров — только для позиций с учетом по серийным номерам изделий",
+    "sqs.snmode.help": "У позиции может быть свой режим: например, расходники — партиями со сроком годности, оборудование — по серийным номерам"
 }
