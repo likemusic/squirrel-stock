@@ -1,7 +1,8 @@
 // Автоматическая резервная копия (cli/backup.php, App\SQS\BackupJob): копия в несколько мест — папка этого компьютера,
 // сетевая папка, несколько облаков через rclone (в тесте — remote типов local и alias на папки в контейнере, в настоящие облака
 // ничего не уходит).
-// Последние N копий в каждом месте; сбой одного места не мешает остальным; в облако — только зашифрованный архив;
+// Последние N копий в каждом месте; сбой одного места не мешает остальным; в облако — только зашифрованный архив, в сетевую
+// папку (другой компьютер) — тоже, если задан пароль, а в папку этого компьютера — без шифрования;
 // предупреждение, если удачной копии нет больше 2 суток; копия на флешку вручную. ZIPPY_GAPS п. 33.
 const { execFileSync, spawnSync } = require('child_process');
 const { test, expect } = require('../fixtures');
@@ -78,7 +79,11 @@ test('автоматическая копия в несколько мест', a
   expect(zipTest('')).toBe('closed');
   expect(zipTest('Секрет-123')).toBe('open');
   expect(sh(`php -r '$z = new ZipArchive(); $z->open("${DIR2}/${cloud[1]}"); echo $z->getFromName("database.sql") === false ? "closed" : "open";'`), 'второе облако зашифровано').toBe('closed');
-  expect(sh(`php -r '$z = new ZipArchive(); $z->open("${T}/local/${files(`${T}/local`)[1]}"); echo $z->getFromName("database.sql") === false ? "closed" : "open";'`)).toBe('open');
+  const zipOpen = (file, pass) => sh(`php -r '$z = new ZipArchive(); $z->open("${file}"); ${pass ? `$z->setPassword("${pass}");` : ''} echo $z->getFromName("database.sql") === false ? "closed" : "open";'`);
+  expect(zipOpen(`${T}/local/${files(`${T}/local`)[1]}`), 'папка этого компьютера — без шифрования').toBe('open');
+  const net = files(`${T}/net`);
+  expect(zipOpen(`${T}/net/${net[1]}`), 'сетевая папка при заданном пароле — зашифрована').toBe('closed');
+  expect(zipOpen(`${T}/net/${net[1]}`, 'Секрет-123')).toBe('open');
 
   st = await status();
   for (const p of ['local', 'network', 'cloud', 'cloud2']) expect(st[p][3], p).toBe('');
@@ -139,6 +144,22 @@ test('автоматическая копия в несколько мест', a
   expect((await messages(page)).join(' ')).toMatch(/невірний пароль/);
   expect(tables()).toBe(before);
   await page.locator('#rform #rfile').setInputFiles(enc);
+  await page.locator('#rform #rpassword').fill('Секрет-123');
+  await page.locator('#rform #confirm').setChecked(true);
+  await clickWait(page, '#rform #restore');
+  await expect(page.locator('.toast-message').first()).toContainText(/відновлено/);
+  expect(tables()).toBe(before);
+
+  // копия из сетевой папки — так же: без пароля не восстанавливается, с паролем — восстановлено
+  const netZip = testInfo.outputPath('net.zip');
+  execFileSync('docker', ['cp', `${WEB}:${T}/net/${files(`${T}/net`).pop()}`, netZip]);   // последняя: ранние уже удалены ротацией
+  await page.goto('/index.php?p=App/Pages/Service/Backup');
+  await page.locator('#rform #rfile').setInputFiles(netZip);
+  await page.locator('#rform #confirm').setChecked(true);
+  await clickWait(page, '#rform #restore');
+  expect((await messages(page)).join(' ')).toMatch(/невірний пароль/);
+  expect(tables()).toBe(before);
+  await page.locator('#rform #rfile').setInputFiles(netZip);
   await page.locator('#rform #rpassword').fill('Секрет-123');
   await page.locator('#rform #confirm').setChecked(true);
   await clickWait(page, '#rform #restore');

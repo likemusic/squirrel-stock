@@ -3,7 +3,7 @@
 
 $_config = array('common'=>[],'db'=>[],'smtp'=>[]) ;
 
-$_config['common']['loglevel'] = 100  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
+$_config['common']['loglevel'] = 300  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
 $_config['common']['lang'] = 'uk'  ; // мова інтерфейсу за замовчуванням: uk, ru (файли lang/*.json)
 
 $_config['db']['host'] = 'localhost:3306'  ;

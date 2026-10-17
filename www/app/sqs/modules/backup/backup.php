@@ -11,9 +11,10 @@ class Backup
 {
     public const SQL_NAME = 'database.sql';
 
-    // таблицы, которые копия не переносит: журнал самих копий описывает эту установку, а не данные. В дампе — только
+    // таблицы, которые копия не переносит: журнал самих копий описывает эту установку, а не данные; неудачные попытки
+    // входа (в логине бывает пароль, набранный не в то поле) и токены «Запомнить» в копии не нужны. В дампе — только
     // CREATE TABLE IF NOT EXISTS (чтобы дамп годился для новой базы), при восстановлении они не удаляются
-    public const LOCAL_TABLES = ['sqs_backuplog'];
+    public const LOCAL_TABLES = ['sqs_backuplog', 'sqs_loginfail', 'sqs_remember'];
 
     private \mysqli $db;
 
@@ -53,8 +54,15 @@ class Backup
             }
         }
         if ($password !== '') {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $zip->setEncryptionIndex($i, \ZipArchive::EM_AES_256, $password);
+            // нет шифрования в сборке zip — ошибка, а не незашифрованная копия в облако или сетевую папку
+            $aes = defined('ZipArchive::EM_AES_256') && (!method_exists($zip, 'isEncryptionMethodSupported') || \ZipArchive::isEncryptionMethodSupported(\ZipArchive::EM_AES_256));
+            for ($i = 0; $aes && $i < $zip->numFiles; $i++) {
+                $aes = $zip->setEncryptionIndex($i, \ZipArchive::EM_AES_256, $password);
+            }
+            if (!$aes) {
+                $zip->close();
+                @unlink($zipFile);
+                throw new BackupException('service.backup.no_encryption');
             }
         }
         if (!$zip->close()) {

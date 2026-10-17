@@ -223,7 +223,8 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
 
-                \App\Entity\Notify::toSystemLog(__('app.userprofile.korystuvach_zminyv_parol_na', ['username' => $this->user->username, 'pass' => $pass])) ;
+                // SquirrelStock: без нового пароля — раньше он открытым текстом попадал в системный журнал и в резервные копии
+                \App\Entity\Notify::toSystemLog(__('app.userprofile.korystuvach_zminyv_parol_na', ['username' => $this->user->username])) ;
 
             }
 

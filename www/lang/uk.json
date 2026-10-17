@@ -897,7 +897,7 @@
     "app.userprofile.kilkist_na_pozytsiiu_zadaietsia_v": "Кількість на позицію, задається в довіднику ТМЦ",
     "app.userprofile.kodova_storinka": "Кодова сторінка",
     "app.userprofile.koduvannia_vystavlene_v_prynteri": "Кодування, виставлене в принтері",
-    "app.userprofile.korystuvach_zminyv_parol_na": "Користувач <b>{username}</b> змінив пароль на <b>{pass}</b>",
+    "app.userprofile.korystuvach_zminyv_parol_na": "Користувач <b>{username}</b> змінив пароль",
     "app.userprofile.nichna_tema": "Нічна тема",
     "app.userprofile.novyi_parol": "Новий пароль",
     "app.userprofile.pered_vvedenniam_perevirte_rozkladku_ta": "Перед введенням перевірте розкладку та регістр клавіатури",

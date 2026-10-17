@@ -5,7 +5,8 @@ namespace App\SQS;
 /**
  * SquirrelStock: автоматическая резервная копия в несколько мест — по расписанию (cli/backup.php из планировщика ОС).
  *  - local   — папка на этом компьютере (всегда);
- *  - network — папка на другом компьютере или сетевом хранилище (\\server\share, смонтированная папка);
+ *  - network — папка на другом компьютере или сетевом хранилище (\\server\share, смонтированная папка); при заданном пароле —
+ *              тот же зашифрованный архив, что в облако;
  *  - cloud   — облака через rclone (remote настраивает установщик: Яндекс Диск, Google Drive, S3...), по одному в строке настройки;
  *              только зашифрованный архив (один на все облака), у каждого облака своя попытка, запись журнала и ротация.
  * В журнале облако — place = 'cloud', file = «remote/имя файла» (по нему статус каждого облака).
@@ -136,7 +137,7 @@ class BackupJob
         $name = 'squirrelstock-' . date('Y-m-d-His') . '.zip';
         $result = [];
         $plain = null;
-        $enc = null;   // зашифрованный архив — один на все облака
+        $enc = null;   // зашифрованный архив — один на все облака и сетевую папку
         $places = array_filter(self::places($s), fn($p) => $only === null || in_array($p['place'], $only, true));
 
         foreach ($places as $key => ['place' => $place, 'target' => $target]) {
@@ -152,6 +153,11 @@ class BackupJob
                     $size = filesize($enc);
                     self::cloudUpload($s, $target, $enc, $name);
                     $removed = self::cloudRotate($s, $target, $keep);
+                } elseif ($place == 'network' && $s['password'] !== '') {
+                    // сетевая папка — на другом компьютере: при заданном пароле копия та же, что в облако (zip AES-256)
+                    $enc ??= (new Backup())->create(_ROOT . 'upload', $s['password']);
+                    $size = filesize($enc);
+                    $removed = self::folderPut($target, $enc, $name, $keep);
                 } else {
                     $plain ??= (new Backup())->create(_ROOT . 'upload');
                     $size = filesize($plain);
