@@ -103,7 +103,12 @@ class GoodsReceipt extends Document
             $rate =1;
         }
 
-        $total = $this->amount;
+        // SquirrelStock: сумма строк без округления — сумма документа при «без копеек» округлена до рубля (у позиции за 0,45 — 0)
+        $amount = 0;
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $amount += doubleval($item->price) * doubleval($item->quantity);
+        }
+        $total = $amount;
         if ($this->headerdata["disc"] > 0) {
             $total = $total - $this->headerdata["disc"];
         }
@@ -120,7 +125,7 @@ class GoodsReceipt extends Document
         $total = $total * $rate;
 
 
-        $k = $this->amount > 0 ? $total / $this->amount : 1;
+        $k = $amount > 0 ? $total / $amount : 1;
 
 
         //аналитика
@@ -129,7 +134,7 @@ class GoodsReceipt extends Document
 
             if ($total > 0) {
 
-                $iprice = H::fa($item->price * $k); //пересчитываем  учетную цену
+                $iprice = H::fp($item->price * $k); //пересчитываем  учетную цену  (SquirrelStock: H::fp — цена партии, не H::fa — сумма)
             } else {
                 $iprice = 0;
             }
