@@ -1,0 +1,11 @@
+# tests/specs/i18n-keys.spec.js: прогон tools/i18n/rename.php туда и обратно на копии кода
+sqs.extend.link	sqs.test_rename.extend_link
+sqs.units.factory	sqs.test_rename.units_factory
+sqs.charity.recipient	sqs.test_rename.charity_recipient
+sqs.units.title	sqs.test_rename.units_title
+sqs.interval.days	sqs.test_rename.interval_days
+sqs.snmode.bulk_serial_only	sqs.test_rename.bulk_serial_only
+sqs.2fa.bad_code	sqs.test_rename.bad_code
+sqs.eqhist.unit_ambiguous	sqs.test_rename.unit_ambiguous
+sqs.interval.title	sqs.extend.title
+sqs.extend.title	sqs.interval.title

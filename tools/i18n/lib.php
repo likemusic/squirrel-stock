@@ -394,3 +394,32 @@ function scanTemplate(string $src, string $rel, array &$manual): array {
     }
     return $out;
 }
+
+// ---------- словари ----------
+
+// каталоги словарей относительно root: основной и модулей SquirrelStock (ключи одного пространства — переводчик их сливает)
+function langDirs(string $root): array {
+    $dirs = ['lang'];
+    foreach (glob($root . '/app/sqs/modules/*/lang', GLOB_ONLYDIR) as $d) {
+        $dirs[] = substr($d, strlen($root) + 1);
+    }
+    return $dirs;
+}
+
+function readJson(string $file): array {
+    return is_file($file) ? json_decode(file_get_contents($file), true, 512, JSON_THROW_ON_ERROR) : [];
+}
+
+function writeJson(string $file, array $data): void {
+    file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+}
+
+// черновой ключ конвертера: последняя часть — транслит фразы (slug), может быть с _2, _3 при совпадении
+function isTranslitKey(string $key, string $phrase): bool {
+    if (!hasCyr($phrase)) {
+        return false;
+    }
+    $tail = substr($key, strrpos($key, '.') === false ? 0 : strrpos($key, '.') + 1);
+    $s = slug($phrase);
+    return $tail === $s || preg_match('/^' . preg_quote($s, '/') . '_\d+$/', $tail);
+}
