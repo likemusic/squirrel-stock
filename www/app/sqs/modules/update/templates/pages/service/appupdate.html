@@ -9,6 +9,9 @@
                 <p class="fs-5">{{#t}}service.appupdate.version{{/t}}: <b id="appupdate-version">{{version}}</b></p>
                 <p class="text-muted">{{#t}}service.appupdate.help{{/t}}</p>
 
+                {{#schema_error}}
+                <div class="alert alert-danger" id="appupdate-schema-error">{{schema_error}}</div>
+                {{/schema_error}}
                 {{#nomanifest}}
                 <div class="alert alert-secondary" id="appupdate-nomanifest">{{#t}}service.appupdate.nomanifest{{/t}}</div>
                 {{/nomanifest}}

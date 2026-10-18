@@ -14,6 +14,9 @@ use App\Entity\Doc\Document;
 class Hooks
 {
     public const EVENTS = ['beforeSave', 'afterSave', 'beforeExecute', 'afterExecute', 'beforeCancel', 'afterCancel', 'afterDelete'];
+    // общие события, где ошибка обработчика не прерывает страницу: блок модуля пропускается, ошибка — в журнал
+    // (нет таблицы модуля — схема не применилась — и главная после входа не открывалась целиком)
+    public const SAFE = ['mainBlocks'];
 
     private static array $handlers = [];
     private static array $listeners = [];   // общие события (не документ): событие => [callable]
@@ -51,7 +54,17 @@ class Hooks
         self::boot();
         $out = [];
         foreach (self::$listeners[$event] ?? [] as $handler) {
-            $r = $handler(...$args);
+            if (in_array($event, self::SAFE, true)) {
+                try {
+                    $r = $handler(...$args);
+                } catch (\Throwable $e) {
+                    global $logger;
+                    $logger?->error("SquirrelStock {$event}: " . $e->getMessage());
+                    continue;
+                }
+            } else {
+                $r = $handler(...$args);
+            }
             if ($r !== null) {
                 $out[] = $r;
             }
@@ -69,5 +82,6 @@ class Hooks
         self::on('afterSave', '*', [DocAudit::class, 'afterSave']);
         self::on('afterDelete', '*', [DocAudit::class, 'afterDelete']);
         self::listen('itemSaved', [Item1C::class, 'itemSaved']);
+        self::listen('mainBlocks', [Modules::class, 'mainBlock']);
     }
 }
