@@ -50,3 +50,17 @@ test('версия внизу меню и в истории обновлений
   await expect(page.locator('#sqs-version')).toContainText('SquirrelStock dev');
   expect(value(`select vald from keyval where keyd = 'sqs_version'`)).toBe('dev');
 });
+
+test('сверка с пакетом: сам список файлов пакета не попадает в «Другие файлы не из пакета»', async ({ page }) => {
+  const MANIFEST = '/var/www/html/config/manifest.txt';
+  // список из одного файла: остальные файлы стенда — «остатки старых версий» и «другие файлы», среди них не должно быть manifest.txt
+  execFileSync('docker', ['exec', WEB, 'sh', '-c', `cd /var/www/html && md5sum index.php > ${MANIFEST}`]);
+  try {
+    await page.goto('/index.php?p=App/Pages/Service/AppUpdate');
+    await expect(page.locator('#appupdate-nomanifest')).toHaveCount(0);
+    await expect(page.locator('#appupdate-foreign')).toBeAttached();
+    await expect(page.locator('#appupdate-foreign')).not.toContainText('config/manifest.txt');
+  } finally {
+    execFileSync('docker', ['exec', WEB, 'rm', '-f', MANIFEST]);
+  }
+});

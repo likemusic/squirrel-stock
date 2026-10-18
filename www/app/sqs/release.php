@@ -22,7 +22,7 @@ class Release
     // папки пакета, в которых лишние файлы — остатки старых версий и удаляются кнопкой; в остальных местах (корень сайта,
     // config/, upload/, logs/) лишнее показывается, но не трогается: это настройки, файлы пользователей, файлы хостинга
     public const CODE_DIRS = ['app', 'assets', 'cli', 'lang', 'templates', 'vendor'];
-    private const KEEP = ['config/config.php'];
+    private const KEEP = ['config/config.php', self::MANIFEST_FILE];   // список файлов пакета в самом себе не записан
     private const KEEP_DIRS = ['upload', 'logs'];
 
     private static ?string $version = null;
