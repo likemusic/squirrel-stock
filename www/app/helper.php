@@ -687,6 +687,19 @@ class Helper
     }
 
     /**
+     * SquirrelStock: цена партии (store_stock.partion) — от нее считаются все суммы по товару (количество × цена).
+     * 2 знака или точная, 6 знаков (настройка common.sqs_partion_exact); от округления сумм (amdigits) не зависит:
+     * через fa() при «без копеек» позиция за 0,45 приходила с ценой 0
+     *
+     * @param mixed $price
+     * @return float
+     */
+    public static function fp($price) {
+        $common = System::getOptions("common");
+        return round(doubleval($price), intval($common['sqs_partion_exact'] ?? 0) === 1 ? 6 : 2);
+    }
+
+    /**
      * форматирование  сумм    с копейками
      *
      * @param mixed $am
