@@ -298,3 +298,44 @@ a.sidebar-link {
 #sidebar.collapsed {
     box-shadow: none;
 }
+
+/* SquirrelStock: печать документа и отчета (кнопка «Печать» печатает блок #preview, printThis). Поля листа и номер страницы
+   «1 / 3» внизу справа — на своей именованной странице: общее правило выше (поля 0) остается для чеков (#previewpos).
+   Раньше: текст вплотную к краю листа (принтер обрезает), широкая таблица обрезалась справа (прокрутка .table-responsive),
+   строка таблицы разрывалась между страницами, ссылки печатались синим, на печать попадал значок «Продлить».
+   Отчет с классом sqs-print-land на #preview печатается на альбомном листе. */
+@media print {
+    @page sqs {
+        margin: 12mm 10mm 14mm 12mm !important;
+        @bottom-right { content: counter(page) " / " counter(pages); font-size: 8pt; }
+    }
+    @page sqs-land {
+        size: A4 landscape;
+        margin: 10mm 10mm 12mm 12mm !important;
+        @bottom-right { content: counter(page) " / " counter(pages); font-size: 8pt; }
+    }
+    #preview {
+        page: sqs;
+        overflow: visible !important;
+        font-size: 10pt;
+    }
+    #preview.sqs-print-land {
+        page: sqs-land;
+    }
+    #preview .table-responsive {
+        overflow: visible !important;
+    }
+    #preview tr, #preview img {
+        break-inside: avoid;
+    }
+    #preview thead {
+        display: table-header-group;
+    }
+    #preview a {
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+    #preview .sqs-extend {
+        display: none !important;
+    }
+}
