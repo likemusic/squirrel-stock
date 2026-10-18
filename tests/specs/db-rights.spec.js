@@ -45,7 +45,7 @@ test('восстановление без права CREATE: отказ до у�
     try { now = objects(); } catch { now = 'нет таблицы documents'; }
     if (now !== before) {   // ошибка воспроизвелась — вернуть базу стенда из копии
       grantAll();
-      execFileSync('docker', ['exec', '-i', DB, 'mariadb', '-uroot', '-prootpass', 'zstore'], { input: execFileSync('unzip', ['-p', file, 'database.sql']) });
+      execFileSync('sh', ['-c', 'unzip -p "$0" database.sql | docker exec -i "$1" mariadb -uroot -prootpass zstore', file, DB]);
     }
   }
 });

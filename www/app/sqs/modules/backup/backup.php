@@ -75,7 +75,8 @@ class Backup
 
     public function dump(string $file): void {
         $out = fopen($file, 'w');
-        fwrite($out, "-- SquirrelStock backup " . date('Y-m-d H:i:s') . "\nSET NAMES utf8;\nSET FOREIGN_KEY_CHECKS = 0;\n\n");
+        // версия программы — в первой строке: восстановление копии новой версии на старой предупреждает (newerThan)
+        fwrite($out, "-- SquirrelStock backup " . date('Y-m-d H:i:s') . ' version ' . Release::version() . "\nSET NAMES utf8;\nSET FOREIGN_KEY_CHECKS = 0;\n\n");
         $tables = [];
         $views = [];
         foreach ($this->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
@@ -218,7 +219,7 @@ class Backup
      * $password — для зашифрованного архива (копия в облаке): тогда все файлы архива должны быть зашифрованы, иначе это
      * не та копия (ZipArchive читает незашифрованные файлы и без пароля). Проверки архива — до удаления текущих таблиц.
      */
-    public function restore(string $file, string $uploadDir, string $password = ''): array {
+    public function restore(string $file, string $uploadDir, string $password = '', bool $newerOk = false): array {
         $sqlFile = $file;
         $tmp = null;
         $zip = new \ZipArchive();
@@ -261,6 +262,12 @@ class Backup
             if (!is_string($head) || !preg_match('/^\s*(CREATE TABLE|INSERT INTO|DROP TABLE)\b/mi', $head)) {
                 throw new BackupException('service.backup.not_backup');
             }
+            // копия более новой версии программы: старый код может не знать ее таблиц и столбцов — только после
+            // второго подтверждения ($newerOk), без запрета (откат на старую версию бывает нужен)
+            $copyVersion = self::copyVersion($head);
+            if (!$newerOk && $copyVersion !== null && self::newerThan($copyVersion, Release::version())) {
+                throw new BackupException('service.backup.newer', ['copy' => $copyVersion, 'installed' => Release::version()]);
+            }
             $this->checkRights();
             // текущие таблицы и представления удаляются: база становится такой, какой была в копии
             $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
@@ -302,6 +309,17 @@ class Backup
         \App\SQS\Modules::reapply();   // копия могла быть сделана до появления таблиц платформы или модулей — досоздать
 
         return [$n, $skipped];
+    }
+
+    // версия программы из первой строки дампа; null — копия до 18.10.2026 или дамп не этой программы
+    public static function copyVersion(string $head): ?string {
+        return preg_match('/^-- SquirrelStock backup \S+ \S+ version ([\w.+-]{1,64})\s/', $head, $m) ? $m[1] : null;
+    }
+
+    // версия пакета «2026.10.18-<коммит>»: новее — по дате; dev (стенд, git-копия без версии) и одна дата не сравниваются
+    public static function newerThan(string $copy, string $installed): bool {
+        $date = fn(string $v) => preg_match('/^(\d{4})\.(\d{2})\.(\d{2})(?!\d)/', $v, $m) ? $m[1] . $m[2] . $m[3] : null;
+        return $date($copy) !== null && $date($installed) !== null && $date($copy) > $date($installed);
     }
 
     /**
