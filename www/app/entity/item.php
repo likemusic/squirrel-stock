@@ -632,7 +632,7 @@ class Item extends \ZCL\DB\Entity
           $price  =  abs($r['p']/$r['q']); 
         }
         
-        $price = number_format($price, 2, '.', '') ;
+        $price = \App\Helper::fp($price);   // SquirrelStock: как цена партии (2 или 6 знаков) — иначе строка акта списания 300 × 0,120411 = 36,00
         
         return doubleval($price);
     }
