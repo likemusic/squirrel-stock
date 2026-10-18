@@ -1,5 +1,5 @@
 // Перед тестами: вход под admin и настройки, как у хосписа (серийные номера изделий без сроков годности,
-// без минусовых остатков, цена выдачи 0, копейки). Сессия сохраняется в .auth/admin.json и переиспользуется тестами.
+// без минусовых остатков, цена выдачи 0, копейки), цена партии — до копейки, как у Zippy. Сессия сохраняется в .auth/admin.json и переиспользуется тестами.
 const { chromium } = require('@playwright/test');
 const { login, clickWait, blockExternal, USESNUMBER_HOSPICE } = require('./helpers/zippy');
 const { webPhp } = require('./helpers/stand');
@@ -28,6 +28,7 @@ module.exports = async config => {
   await clickWait(page, '#business button[type=submit]');
   await page.goto('/index.php?p=App/Pages/Options');
   await page.locator('#common #amdigits').selectOption('1');      // до копейки
+  await page.locator('#common #sqspartion').selectOption('0');    // цена партии до копейки (профиль ставит «точная»)
   await clickWait(page, '#common button[type=submit]');
 
   // тесты проверяют украинские тексты (язык автора): язык администратора задается явно, независимо от SQS_LANG стенда
