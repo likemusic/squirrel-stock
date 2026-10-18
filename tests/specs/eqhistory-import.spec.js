@@ -1,4 +1,4 @@
-// Импорт истории выдачи оборудования из Google-таблиц хосписа (перепись и журнал, .xlsx), ZIPPY_GAPS п. 28.
+// Импорт истории выдачи оборудования из Google-таблиц (таблицы переписи и выдачи, .xlsx), ZIPPY_GAPS п. 28.
 // Таблицы вымышленные, той же раскладки (tests/fixtures/make-eqhistory.php), номера — свои на каждый прогон.
 // Проверяется: «Проверить» ничего не пишет и показывает ошибки с причиной; «Записать» создает выдачи, возвраты, списания
 // и приход единицы только с заводским номером; одна выдача из двух таблиц склеивается; повторный импорт не дублирует;
@@ -36,7 +36,7 @@ test('импорт истории оборудования: проверка, з
   execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'make-eqhistory.php'), `${WEB}:${tmp}/make.php`]);
   execFileSync('docker', ['exec', WEB, 'php', `${tmp}/make.php`, tmp, String(base), uniq]);
   require('fs').mkdirSync(dir, { recursive: true });
-  for (const f of ['osv-01.xls', 'perepis.xlsx', 'zhurnal.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}`, path.join(dir, f)]);
+  for (const f of ['osv-01.xls', 'census.xlsx', 'issues.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}`, path.join(dir, f)]);
 
   // начало актуального периода (настройки): документы раньше него ядро не сохраняет, а история — с 2015 года
   const setActual = async date => {
@@ -61,8 +61,8 @@ test('импорт истории оборудования: проверка, з
     const resp = await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
     expect(resp.status()).toBe(200);
     if (map !== undefined) await page.locator('#iform #itemmap').fill(map);
-    await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
-    await page.locator('#iform #journal').setInputFiles(path.join(dir, 'zhurnal.xlsx'));
+    await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
+    await page.locator('#iform #journal').setInputFiles(path.join(dir, 'issues.xlsx'));
     await clickWait(page, '#iform #check');
     if (button == 'write') await clickWait(page, '#iform #write');
   };
