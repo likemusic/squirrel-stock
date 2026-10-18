@@ -261,6 +261,16 @@ class Modules
         return __('sqs.schema.error', ['files' => implode(', ', array_keys($errors)), 'error' => implode('; ', array_unique($errors))]);
     }
 
+    /**
+     * Столбцы цены, которые еще не расширены до 6 знаков (схема платформы не применилась — нет права ALTER и т. п.):
+     * «точная» цена партии в них молча округлялась бы до копеек, поэтому настройка без них не включается
+     */
+    public static function narrowPriceColumns(): array {
+        $wide = \ZDB\DB::getConnect()->GetCol("SELECT CONCAT(table_name, '.', column_name) FROM information_schema.columns WHERE table_schema = DATABASE()
+            AND ((table_name = 'store_stock' AND column_name = 'partion') OR (table_name = 'entrylist' AND column_name = 'outprice')) AND numeric_scale >= 6");
+        return array_values(array_diff(['store_stock.partion', 'entrylist.outprice'], $wide));
+    }
+
     // блок главной страницы (событие mainBlocks): администратору — схемы, которые не применились
     public static function mainBlock(): string {
         if (\App\System::getUser()->rolename != 'admins' || ($text = self::schemaErrorText()) === '') {

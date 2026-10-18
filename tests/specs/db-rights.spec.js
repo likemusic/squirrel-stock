@@ -4,7 +4,7 @@ const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
 const { clickWait, login } = require('../helpers/zippy');
 const { value } = require('../helpers/db');
-const { logCount } = require('../helpers/stand');
+const { logCount, webPhp } = require('../helpers/stand');
 
 const DB = process.env.SQS_DB_CONTAINER || 'squirrelstock-db-1';
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
@@ -119,4 +119,30 @@ test('нет таблицы модуля: блок главной пропуск
   } finally {
     root('rename table zstore.sqs_unit_t to zstore.sqs_unit');
   }
+});
+
+// цена в проводке не расширена (схема не применилась): «точная» цена партии не включается — иначе она молча
+// округлялась бы до копеек столбцом decimal(11,2); администратор видит, почему
+test('точная цена партии не включается, пока столбцы цены не decimal(15,6)', async ({ page }) => {
+  const exact = () => webPhp('-r', "$_SERVER['HTTP_HOST']='localhost'; require 'init.php'; echo intval(\\App\\System::getOptions('common')['sqs_partion_exact'] ?? 0);").trim();
+  root(`create table zstore.sqs_t_outprice select entry_id, outprice from zstore.entrylist where outprice <> round(outprice, 2);
+        alter table zstore.entrylist modify outprice decimal(11,2) default null`);
+  try {
+    await page.goto('/index.php?p=App/Pages/Options');
+    await page.locator('#common #sqspartion').selectOption('1');
+    await clickWait(page, '#common button[type=submit]');
+    await expect(page.locator('.toast-message, .alert-danger').first()).toContainText(/entrylist\.outprice/);
+    expect(exact(), 'настройка осталась «до копейки»').toBe('0');
+  } finally {
+    root(`alter table zstore.entrylist modify outprice decimal(15,6) default null;
+          update zstore.entrylist e join zstore.sqs_t_outprice t using (entry_id) set e.outprice = t.outprice;
+          drop table zstore.sqs_t_outprice`);
+  }
+  await page.goto('/index.php?p=App/Pages/Options');
+  await page.locator('#common #sqspartion').selectOption('1');
+  await clickWait(page, '#common button[type=submit]');
+  expect(exact(), 'со столбцами decimal(15,6) — включается').toBe('1');
+  await page.goto('/index.php?p=App/Pages/Options');
+  await page.locator('#common #sqspartion').selectOption('0');
+  await clickWait(page, '#common button[type=submit]');
 });

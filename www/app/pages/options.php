@@ -313,6 +313,11 @@ class Options extends \App\Pages\Base
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['sqs_partion_exact'] = intval($this->common->sqspartion->getValue());
+        // SquirrelStock: «точная» — только когда столбцы цены уже 6 знаков, иначе цена молча округлялась бы до копеек
+        $narrow = $common['sqs_partion_exact'] == 1 ? \App\SQS\Modules::narrowPriceColumns() : [];
+        if ($narrow) {
+            $common['sqs_partion_exact'] = 0;
+        }
         $common['money2str'] = $this->common->money2str->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
 
@@ -329,7 +334,11 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess(__('common.zberezheno'));
+        if ($narrow) {
+            $this->setError(__('sqs.partion_exact_narrow', ['columns' => implode(', ', $narrow)]));
+        } else {
+            $this->setSuccess(__('common.zberezheno'));
+        }
 
         App::Redirect("\\App\\Pages\\Options");
 
