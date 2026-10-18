@@ -3957,6 +3957,7 @@
     "sqs.remote.not_found": "ім'я не знайдено: {host}",
     "sqs.remote.not_public": "адреса не в інтернеті: {ip}",
     "sqs.remote.too_big": "більше {mb} МБ",
+    "sqs.report.pdf_too_big": "Звіт завеликий для PDF. Вивантажте його в Excel або звузьте відбір (наприклад, за категорією).",
     "sqs.remote.failed": "не завантажено: {error}",
     "sqs.remote.status": "сервер відповів {code}",
     "sqs.import.images_failed": "Не завантажено зображень: {n} ({list})",
