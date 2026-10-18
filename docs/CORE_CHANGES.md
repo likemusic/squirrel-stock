@@ -98,14 +98,14 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 
 Fixes offered to the author as pull requests (15.10.2026, branches in [likemusic/zstore](https://github.com/likemusic/zstore) from `master` `c74df59f4`, only the `www/` part of the commit). If a PR is merged, the change comes with the next upstream update and the row above needs no reapplying.
 
-| Commit | Pull request |
-|---|---|
-| `02221545c` | [#1107](https://github.com/leon-mbs/zstore/pull/1107) nearest expiry batch |
-| `9e9bcec26` | [#1108](https://github.com/leon-mbs/zstore/pull/1108) sales report, zero price |
-| `3c5f5f65c` | [#1109](https://github.com/leon-mbs/zstore/pull/1109) repeated Execute |
-| `3e01ce6d1` | [#1110](https://github.com/leon-mbs/zstore/pull/1110) browser Back duplicate |
-| `0b821c391` | [#1111](https://github.com/leon-mbs/zstore/pull/1111) autocomplete order |
-| `8e9021bf9` | [#1112](https://github.com/leon-mbs/zstore/pull/1112) import document date |
+| Commit | Pull request | Status (checked 18.10.2026) |
+|---|---|---|
+| `02221545c` | [#1107](https://github.com/leon-mbs/zstore/pull/1107) nearest expiry batch | merged 15.10.2026 (upstream `4bd851306`) |
+| `9e9bcec26` | [#1108](https://github.com/leon-mbs/zstore/pull/1108) sales report, zero price | merged 15.10.2026 (upstream `b010f0c5d`) |
+| `3c5f5f65c` | [#1109](https://github.com/leon-mbs/zstore/pull/1109) repeated Execute | closed without comment 16.10.2026; not fixed upstream — keep our change |
+| `3e01ce6d1` | [#1110](https://github.com/leon-mbs/zstore/pull/1110) browser Back duplicate | closed without comment 16.10.2026; not fixed upstream — keep our change |
+| `0b821c391` | [#1111](https://github.com/leon-mbs/zstore/pull/1111) autocomplete order | merged 16.10.2026 (upstream `404977c07`) |
+| `8e9021bf9` | [#1112](https://github.com/leon-mbs/zstore/pull/1112) import document date | merged 16.10.2026 (upstream `9baa2d32d`) |
 
 ## Extension points used by modules
 
