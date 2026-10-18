@@ -97,7 +97,7 @@ A block is usually rendered from the module's print form folder: `(new \App\Repo
 
 ## Tables, translations, console scripts
 
-- `schema.sql` is executed when the file changes (hash in `keyval`), from a web request or a console script (`init.php`). Statements must be repeatable (`CREATE TABLE IF NOT EXISTS`). The database user needs the CREATE privilege; an error is written to `logs/` and retried on the next session.
+- `schema.sql` is executed when the file changes (hash in `keyval`), from a web request or a console script (`init.php`). Statements must be repeatable (`CREATE TABLE IF NOT EXISTS`). The database user needs CREATE (and ALTER for the platform schema). A schema that fails is written to `logs/` and to `keyval` `sqs_schema_error` (file and database error; shown to the admin on the main page and on "Program update", `cli/modules.php` exits with code 1) and is retried on the next session. A `mainBlocks` handler that throws is logged and its block skipped; the rest of the main page opens.
 - `lang/<language>.json` keys are merged into the main dictionaries (the main dictionary wins on the same key).
 - Menu titles and groups may be given per language: `[2, 'Hello', ['uk' => 'Привіт', 'ru' => 'Привет'], ['uk' => 'Склад', 'ru' => 'Склад']]`; the installation language (`$_config['common']['lang']`) is written to `metadata`, `cli/localize-db.php` switches them like the other menu titles.
 - The charity profile (`cli/charity-profile.php`) keeps menu items of enabled modules: an enabled module is a wanted one.

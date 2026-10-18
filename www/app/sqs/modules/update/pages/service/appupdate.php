@@ -39,6 +39,7 @@ class AppUpdate extends \App\Pages\Base
 
     private function refresh(): void {
         $this->_tvars['version'] = Release::version();
+        $this->_tvars['schema_error'] = \App\SQS\Modules::schemaErrorText();   // схема не применилась: нет прав у пользователя базы и т. п.
         $this->_tvars['history'] = array_map(fn($h) => [
             'from' => $h['from'] !== '' ? $h['from'] : __('service.appupdate.unknown'),
             'to'   => $h['to'],

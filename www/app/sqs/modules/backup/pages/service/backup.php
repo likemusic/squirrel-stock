@@ -44,6 +44,9 @@ class Backup extends \App\Pages\Base
         $this->rform->add(new \Zippy\Html\Form\File('rfile'));
         $this->rform->add(new TextInput('rpassword'));
         $this->rform->add(new CheckBox('confirm'));
+        // копия из более новой версии программы — второе подтверждение (показывается после предупреждения)
+        $this->rform->add(new \Zippy\Html\Panel('newerpanel'))->setVisible(false);
+        $this->rform->newerpanel->add(new CheckBox('confirmnewer'));
         $this->rform->add(new SubmitButton('restore'))->onClick($this, 'onRestore');
 
         $this->updateStatus();
@@ -78,7 +81,12 @@ class Backup extends \App\Pages\Base
     }
 
     public function onCreate($sender) {
-        $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
+        try {
+            $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
+        } catch (\App\SQS\BackupException $e) {
+            $this->setError($e->getMessage());   // нет прав у пользователя базы и т. п. — на странице, а не вместо нее
+            return;
+        }
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="squirrelstock-' . date('Y-m-d-Hi') . '.zip"');
         header('Content-Length: ' . filesize($zip));
@@ -153,11 +161,20 @@ class Backup extends \App\Pages\Base
             return;
         }
         try {
-            [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText());
+            $newerOk = $this->rform->newerpanel->isVisible() && $this->rform->newerpanel->confirmnewer->isChecked();
+            [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText(), $newerOk);
+        } catch (\App\SQS\BackupException $e) {
+            if ($e->key == 'service.backup.newer') {
+                $this->rform->newerpanel->setVisible(true);
+                $this->rform->newerpanel->confirmnewer->setChecked(false);
+            }
+            $this->setError($e->getMessage());
+            return;
         } catch (\Throwable $e) {
             $this->setError($e->getMessage());
             return;
         }
+        $this->rform->newerpanel->setVisible(false);
         $this->setSuccess(__('service.backup.restored', ['n' => $n]) . ($skipped ? '. ' . __('service.backup.skipped', ['n' => $skipped]) : ''));
     }
 }

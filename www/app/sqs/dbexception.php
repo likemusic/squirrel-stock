@@ -25,7 +25,9 @@ class DbException extends \ADODB_Exception
         if (!self::$inside) {
             self::$inside = true;
             try {
-                $text = __('sqs.db_error');
+                // нет права у пользователя базы (хостинг, права урезаны вручную): какой команды — понятно и без журнала
+                $text = in_array((int)$errno, [1044, 1142, 1143], true) && preg_match('/^([A-Z][A-Z ]*?) command denied/', (string)$errmsg, $m)
+                    ? __('sqs.db_rights', ['command' => $m[1]]) : __('sqs.db_error');
             } catch (\Throwable $e) {
             } finally {
                 self::$inside = false;

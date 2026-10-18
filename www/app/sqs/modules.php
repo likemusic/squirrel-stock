@@ -29,6 +29,7 @@ class Modules
 {
     public const DIR = 'app/sqs/modules';
     public const PLATFORM_SCHEMA = 'app/sqs/schema.sql';   // таблицы платформы — досоздаются так же, как таблицы модулей
+    public const SCHEMA_ERROR = 'sqs_schema_error';         // keyval: схемы, которые не применились, — [файл => ошибка базы]
 
     private static ?array $modules = null;   // имя => ['dir' => путь, 'def' => массив module.php]
     private static ?array $dirs = null;      // имя => путь: включенные модули, без чтения module.php
@@ -208,6 +209,7 @@ class Modules
                 }
             }
             \App\Helper::setKeyVal($key, $hash);
+            self::noteSchema($file, null);
             // из консоли не пишется: скрипт от root создал бы журнал дня, в который веб-сервер потом не может писать
             if ($logger && PHP_SAPI !== 'cli') {
                 $logger->info("SquirrelStock schema {$label} applied");
@@ -217,7 +219,64 @@ class Modules
             if ($logger) {
                 $logger->error("SquirrelStock schema {$label}: " . $e->getMessage());
             }
+            // текст исключения — общий «ошибка базы», причина (нет права CREATE) — в сообщении драйвера
+            self::noteSchema($file, (string)($conn->ErrorMsg() ?: $e->getMessage()));
         }
+    }
+
+    // ошибка схемы — для администратора (главная, «Обновление программы», cli/modules.php); null — схема применилась
+    private static function noteSchema(string $file, ?string $error): void {
+        try {
+            $errors = self::schemaErrors();
+            $rel = str_replace('\\', '/', substr($file, strlen(_ROOT)));
+            if ($error === null && !isset($errors[$rel])) {
+                return;
+            }
+            if ($error === null) {
+                unset($errors[$rel]);
+            } else {
+                $errors[$rel] = mb_substr($error, 0, 300);
+            }
+            \App\Helper::setKeyVal(self::SCHEMA_ERROR, $errors ? json_encode($errors, JSON_UNESCAPED_UNICODE) : '');
+        } catch (\Throwable $e) {
+            // база не принимает и запись — ошибка схемы уже в журнале
+        }
+    }
+
+    /**
+     * Схемы, которые не применились: [файл схемы относительно корня => ошибка базы]. Чаще всего у пользователя базы нет
+     * права CREATE или ALTER (хостинг) — тогда нет таблиц модуля и не расширены цены партии.
+     */
+    public static function schemaErrors(): array {
+        $errors = json_decode((string)\App\Helper::getKeyVal(self::SCHEMA_ERROR), true);
+        return is_array($errors) ? $errors : [];
+    }
+
+    // текст для администратора; '' — ошибок нет
+    public static function schemaErrorText(): string {
+        $errors = self::schemaErrors();
+        if (!$errors) {
+            return '';
+        }
+        return __('sqs.schema.error', ['files' => implode(', ', array_keys($errors)), 'error' => implode('; ', array_unique($errors))]);
+    }
+
+    /**
+     * Столбцы цены, которые еще не расширены до 6 знаков (схема платформы не применилась — нет права ALTER и т. п.):
+     * «точная» цена партии в них молча округлялась бы до копеек, поэтому настройка без них не включается
+     */
+    public static function narrowPriceColumns(): array {
+        $wide = \ZDB\DB::getConnect()->GetCol("SELECT CONCAT(table_name, '.', column_name) FROM information_schema.columns WHERE table_schema = DATABASE()
+            AND ((table_name = 'store_stock' AND column_name = 'partion') OR (table_name = 'entrylist' AND column_name = 'outprice')) AND numeric_scale >= 6");
+        return array_values(array_diff(['store_stock.partion', 'entrylist.outprice'], $wide));
+    }
+
+    // блок главной страницы (событие mainBlocks): администратору — схемы, которые не применились
+    public static function mainBlock(): string {
+        if (\App\System::getUser()->rolename != 'admins' || ($text = self::schemaErrorText()) === '') {
+            return '';
+        }
+        return '<div class="alert alert-danger" id="sqs-schema-error">' . htmlspecialchars($text) . '</div>';
     }
 
     // пункты меню модулей: [ключ «тип|meta_name» => [тип, meta_name, описание, группа]] на языке установки
