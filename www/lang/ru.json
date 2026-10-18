@@ -3957,6 +3957,7 @@
     "sqs.remote.not_found": "имя не найдено: {host}",
     "sqs.remote.not_public": "адрес не в интернете: {ip}",
     "sqs.remote.too_big": "больше {mb} МБ",
+    "sqs.report.pdf_too_big": "Отчет слишком большой для PDF. Выгрузите его в Excel или сузьте отбор (например, по категории).",
     "sqs.remote.failed": "не загружено: {error}",
     "sqs.remote.status": "сервер ответил {code}",
     "sqs.import.images_failed": "Не загружено изображений: {n} ({list})",
