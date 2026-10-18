@@ -4,7 +4,8 @@
 // Файлы — безобидный текст, вставляются прямо в базу (кроме проверки размера).
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
-const { blockExternal, clickWait, createItem, createDoc } = require('../helpers/zippy');
+const { blockExternal, clickWait } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value, esc } = require('../helpers/db');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
@@ -56,9 +57,8 @@ test('файлы: просмотр по правам на объект, удал
   test.setTimeout(240_000);
   const admin = Number(value(`select user_id from users where userlogin = 'admin'`));
   const code = 'FA-' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
-  const { number } = await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] });
-  const doc = Number(value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`));
+  const { id: doc, number } = seed({ items: [{ name: 'Позиция ' + code, code }],
+                                     docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] }] }).docs[0];
   const cust = Number(value('select min(customer_id) from customers'));
   const fDoc = addFile(1, doc, `Скан ${uniq}.txt`, 'текст документа', admin);
   const fDoc2 = addFile(1, doc, `второй ${uniq}.txt`, 'второй', admin);
@@ -135,9 +135,8 @@ function webShopOn() {
 
 test('файл больше 4 МБ: сообщение, файл не сохранен', async ({ page, uniq }) => {
   const code = 'FB-' + uniq;
-  await createItem(page, { name: 'Позиция ' + code, code });
-  const { number } = await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] });
-  const doc = Number(value(`select document_id from documents where document_number = '${esc(number)}' order by document_id desc limit 1`));
+  const { id: doc, number } = seed({ items: [{ name: 'Позиция ' + code, code }],
+                                     docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 1, price: 0 }] }] }).docs[0];
   await openDoc(page, number);
   await page.locator('a[data-bs-target="#tfiles"]').click();
   await page.locator('#fileaddform input[name=addfile]').setInputFiles({ name: `большой-${uniq}.txt`, mimeType: 'text/plain', buffer: Buffer.alloc(4 * 1024 * 1024 + 10, 'a') });

@@ -3,7 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const { test, expect } = require('../fixtures');
-const { createItem, createDoc } = require('../helpers/zippy');
+const { createDoc } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value, stockQty } = require('../helpers/db');
 
 const MODULES = path.join(__dirname, '../../www/app/sqs/modules');
@@ -48,8 +49,7 @@ test('модуль: хуки проведения и пункт меню', async
   const cls = writeModule(dir, uniq);
   try {
     const code = 'HK-' + uniq;
-    await createItem(page, { name: 'Позиция ' + code, code });
-    await createDoc(page, 'IncomeItem', { date: '2026-10-01', rows: [{ code, qty: 5, price: 0 }] });
+    seed({ items: [{ name: 'Позиция ' + code, code }], docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 0 }] }] });
 
     // хук до проведения отменяет его: сообщение пользователю, документ не создан, остаток прежний
     const stop = 'STOP-HOOK-' + uniq;

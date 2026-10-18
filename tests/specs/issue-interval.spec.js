@@ -2,7 +2,8 @@
 // повредилась. Правило — на категорию (действует и на подкатегорию), раньше срока — предупреждение, выдать можно.
 // Данные вымышленные.
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { createDoc, pickAuto, clickWait, messages } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value, esc } = require('../helpers/db');
 
 test('повторная выдача раньше интервала — предупреждение, позже — нет', async ({ page, uniq }) => {
@@ -11,11 +12,11 @@ test('повторная выдача раньше интервала — пре
   query(`insert into item_cat (cat_name, parent_id) values ('Трубки ${uniq}', ${parent})`);
   const child = value(`select max(cat_id) from item_cat where cat_name = 'Трубки ${uniq}'`);
   const code = 'GT-' + uniq, who = 'Получатель ' + uniq, other = 'Получатель ' + uniq + ' другой';
-  await createItem(page, { name: 'Трубка ' + code, code });
-  query(`update items set cat_id = ${child} where item_code = '${esc(code)}'`);
-  await createCustomer(page, { name: who, type: 1 });
-  await createCustomer(page, { name: other, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-01-01', rows: [{ code, qty: 10, price: 0 }] });
+  seed({
+    items: [{ name: 'Трубка ' + code, code, cat_id: child }],
+    customers: [{ name: who, type: 1 }, { name: other, type: 1 }],
+    docs: [{ type: 'IncomeItem', date: '2026-01-01', rows: [{ code, qty: 10, price: 0 }] }],
+  });
 
   // правило в справочнике: категория «Гастростомы» — не чаще раза в 90 дней
   await page.goto('/');

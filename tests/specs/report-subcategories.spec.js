@@ -1,7 +1,8 @@
 // Отбор по категории в отчетах форка включает подкатегории: категория «Расходники» с подкатегорией «Перевязка» —
 // по родителю позиция подкатегории в отчете есть (раньше по родителю было пусто, по подкатегории — есть).
 const { test, expect } = require('../fixtures');
-const { createItem, createCustomer, createDoc, runReport, bodyText } = require('../helpers/zippy');
+const { runReport, bodyText } = require('../helpers/zippy');
+const { seed } = require('../helpers/seed');
 const { query, value } = require('../helpers/db');
 
 test('отбор по родительской категории включает подкатегории', async ({ page, uniq }) => {
@@ -13,11 +14,12 @@ test('отбор по родительской категории включае
   const grandchild = value(`select max(cat_id) from item_cat where cat_name = 'Внук ${uniq}'`);
 
   const code = 'SC-' + uniq, item = 'Позиция ' + code, inv = 'INV-SC-' + uniq, r = 'Получатель ' + uniq;
-  await createItem(page, { name: item, code, serial: true, minqty: 5 });
-  query(`update items set cat_id = ${grandchild} where item_code = '${code}'`);
-  await createCustomer(page, { name: r, type: 1 });
-  await createDoc(page, 'IncomeItem', { date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] });
-  await createDoc(page, 'GoodsIssue', { date: '2026-09-03', customer: r, payment: 0, rows: [{ code, qty: 1, price: 0, sn: inv }] });
+  seed({
+    items: [{ name: item, code, serial: true, minqty: 5, cat_id: grandchild }],
+    customers: [{ name: r, type: 1 }],
+    docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] },
+           { type: 'GoodsIssue', date: '2026-09-03', customer: r, rows: [{ code, qty: 1, price: 0, sn: inv }] }],
+  });
 
   const period = { from: '2026-09-01', to: '2026-09-30' };
   const reports = [
