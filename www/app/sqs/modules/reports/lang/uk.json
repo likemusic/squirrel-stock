@@ -16,6 +16,7 @@
     "report.issueact.kind_consumables": "Витратні матеріали",
     "report.issueact.kind_equipment": "Обладнання (за договорами)",
     "report.issueact.names1c": "Назви позицій — як в 1С (з імпорту відомості), навіть якщо позицію перейменовано в програмі; однойменні позиції 1С — один рядок.",
+    "report.issueact.print_part": "колонки {from}–{to}",
     "report.issueact.title": "Акт списання за місяць",
     "report.issueact.title_consumables": "Списання витратних матеріалів",
     "report.issueact.title_equipment": "Списання обладнання",

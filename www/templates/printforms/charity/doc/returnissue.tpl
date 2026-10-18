@@ -26,7 +26,7 @@
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;" colspan="2">{{#t}}common.naimenuvannia{{/t}}</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.od{{/t}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">{{#t}}common.od{{/t}}</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;">{{#t}}common.kil{{/t}}</th>
     </tr>
     {{#_detail}}

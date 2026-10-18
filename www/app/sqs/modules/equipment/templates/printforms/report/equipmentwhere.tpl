@@ -1,5 +1,6 @@
 {{#hassummary}}
 <table class="ctable sqs-summary" border="0" cellpadding="2" cellspacing="0" style="margin-bottom: 1em;">
+    <thead>
     <tr style="font-weight: bolder;">
         <td colspan="{{scolspan}}">{{#t}}report.equipmentwhere.summary{{/t}}</td>
     </tr>
@@ -8,6 +9,8 @@
         {{#_scols}}<th style="border: solid black 1px;">{{name}}</th>{{/_scols}}
         <th style="border: solid black 1px;">{{#t}}report.equipmentwhere.col_total{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_srows}}
     <tr>
         <td style="border: solid black 1px;">{{name}}</td>
@@ -15,9 +18,11 @@
         <td style="border: solid black 1px; text-align: right; font-weight: bolder;">{{total}}</td>
     </tr>
     {{/_srows}}
+    </tbody>
 </table>
 {{/hassummary}}
 <table class="ctable sqs-units" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <td colspan="12">{{#t}}report.equipmentwhere.title{{/t}} {{#t}}report.equipmentwhere.on_date{{/t}} {{date}} ({{#t}}report.equipmentwhere.units{{/t}}: {{cnt}})</td>
     </tr>
@@ -35,6 +40,8 @@
         <th style="border: solid black 1px;">{{#t}}report.equipmentwhere.sent_by{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}common.dokument{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_detail}}
     <tr>
         <td style="border: solid black 1px;">{{itemname}}</td>
@@ -51,9 +58,11 @@
         <td style="border: solid black 1px;">{{document}}</td>
     </tr>
     {{/_detail}}
+    </tbody>
 </table>
 {{#hassmall}}
 <table class="ctable sqs-small" border="0" cellpadding="2" cellspacing="0" style="margin-top: 1em;">
+    <thead>
     <tr style="font-weight: bolder;">
         <td colspan="10">{{#t}}report.equipmentwhere.small_title{{/t}} ({{#t}}report.equipmentwhere.small_pieces{{/t}}: {{smallcnt}})</td>
     </tr>
@@ -69,6 +78,8 @@
         <th style="border: solid black 1px;">{{#t}}report.equipmentwhere.sent_by{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}common.dokument{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_small}}
     <tr>
         <td style="border: solid black 1px;">{{itemname}}</td>
@@ -83,5 +94,6 @@
         <td style="border: solid black 1px;">{{document}}</td>
     </tr>
     {{/_small}}
+    </tbody>
 </table>
 {{/hassmall}}

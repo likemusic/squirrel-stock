@@ -3,6 +3,7 @@
 const { test, expect } = require('../fixtures');
 const { clickWait, messages } = require('../helpers/zippy');
 const { seed } = require('../helpers/seed');
+const { xlsxText } = require('../helpers/xlsx');
 
 test('акт списания: матрица позиции × выдачи с итогами', async ({ page, uniq }) => {
   const a = 'AC-' + uniq + '-A', b = 'AC-' + uniq + '-B';
@@ -94,4 +95,54 @@ test('акт списания: отдельно расходники и обор
   text = await act('0');
   expect(text).toContain('Шприц ' + a);
   expect(text).toContain('Концентратор ' + eq);
+});
+
+// печать широкого акта: больше 10 выдач — на печать куски по 10 колонок с наименованием в каждом и «Разом» в последнем;
+// на экране и в Excel — одна таблица
+test('акт списания: печать по 10 выдач', async ({ page, uniq }) => {
+  const a = 'AP-' + uniq;
+  const r = n => `Получатель ${uniq} п${String(n).padStart(2, '0')}`;
+  const n = 12;
+  seed({
+    items: [{ name: 'Позиция ' + a, code: a }],
+    customers: Array.from({ length: n }, (_, i) => ({ name: r(i + 1), type: 1 })),
+    docs: [
+      { type: 'IncomeItem', date: '2026-04-01', rows: [{ code: a, qty: 100, price: 0 }] },
+      ...Array.from({ length: n }, (_, i) => ({ type: 'GoodsIssue', date: '2026-04-' + String(i + 2).padStart(2, '0'), customer: r(i + 1), rows: [{ code: a, qty: i + 1, price: 0 }] })),
+    ],
+  });
+  await page.goto('/index.php?p=App/Pages/Report/IssueAct');
+  await page.locator('#filter #year').selectOption('2026');
+  await page.locator('#filter #month').selectOption('4');
+  await clickWait(page, '#filter #onreport');
+
+  const screen = page.locator('#preview table:not(.d-print-table)');
+  const parts = page.locator('#preview table.d-print-table');
+  const heads = async t => (await t.locator('tr').nth(1).locator('th').allInnerTexts()).map(s => s.replace(/\s+/g, ' ').trim());
+  const row = async t => (await t.locator('tr', { hasText: 'Позиция ' + a }).locator('td').allInnerTexts()).map(s => s.trim());
+  const all = await heads(screen);
+  const issues = all.length - 2;   // без «Найменування» и «Разом»
+  expect(issues).toBeGreaterThanOrEqual(n);
+  await expect(parts).toHaveCount(Math.ceil(issues / 10));
+  await expect(screen).toBeVisible();
+  await expect(parts.first()).toBeHidden();
+
+  await page.emulateMedia({ media: 'print' });
+  await expect(screen).toBeHidden();
+  await expect(parts.first()).toBeVisible();
+  const cols = [], cells = [];
+  for (let i = 0; i < await parts.count(); i++) {
+    const h = await heads(parts.nth(i)), c = await row(parts.nth(i));
+    expect(h[0], 'наименование в каждом куске').toBe(all[0]);
+    expect(h.length, 'не больше 10 выдач в куске').toBeLessThanOrEqual(i == await parts.count() - 1 ? 12 : 11);
+    cols.push(...h.slice(1));
+    cells.push(...c.slice(1));
+  }
+  expect(cols, 'все колонки и «Разом» в последнем куске').toEqual(all.slice(1));
+  expect(cells).toEqual((await row(screen)).slice(1));
+  expect(cells[cells.length - 1]).toBe(String(n * (n + 1) / 2));
+  await page.emulateMedia({ media: 'screen' });
+
+  const xls = await xlsxText(page.context().request, '/index.php?p=App/Pages/ShowReport&arg=xls/issueact');
+  expect(xls.split('Позиция ' + a).length - 1, 'в Excel позиция один раз').toBe(1);
 });

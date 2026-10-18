@@ -147,3 +147,31 @@ test('мелкое оборудование на руках количество
   await run(uniq);
   expect(await xlsxText(page.context().request, '/index.php?p=App/Pages/ShowReport&arg=xls/equipmentwhere'), 'в Excel').toContain(name);
 });
+
+// печать (кнопка печатает #preview, printThis): альбомный лист с полями и номером страницы (app.css, @page sqs-land),
+// таблица не обрезается прокруткой, шапка повторяется на листах (thead), значок «Продлить» не печатается
+test('печать «Где сейчас»: альбомный лист, без «Продлить», шапка на каждом листе', async ({ page, uniq }) => {
+  const code = 'EP-' + uniq, r1 = 'Получатель ' + uniq, inv = 'INVP-' + uniq;
+  seed({
+    items: [{ name: 'Концентратор ' + uniq, code, serial: true }],
+    customers: [{ name: r1, type: 1 }],
+    contracts: [{ number: 'ДП' + uniq, customer: r1, from: '2026-10-01', to: '2099-12-31' }],
+    docs: [
+      { type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] },
+      { type: 'GoodsIssue', date: '2026-10-02', customer: r1, contract: 'ДП' + uniq, rows: [{ code, qty: 1, price: 0, sn: inv }] },
+    ],
+  });
+  await page.goto('/index.php?p=App/Pages/Report/EquipmentWhere');
+  await page.locator('#filter #searchtext').fill(uniq);
+  await clickWait(page, '#filter #onreport');
+  const preview = page.locator('#preview');
+  const extend = preview.locator('table.sqs-units tr', { hasText: inv }).locator('a.sqs-extend');
+  await expect(extend).toBeVisible();
+  await expect(preview.locator('table.sqs-units thead tr'), 'заголовок и шапка колонок в thead').toHaveCount(2);
+
+  await page.emulateMedia({ media: 'print' });
+  await expect(extend).toBeHidden();
+  const css = await preview.evaluate(e => { const s = getComputedStyle(e); return { page: s.page, overflow: s.overflowX }; });
+  expect(css).toEqual({ page: 'sqs-land', overflow: 'visible' });
+  await page.emulateMedia({ media: 'screen' });
+});
