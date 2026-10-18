@@ -52,8 +52,18 @@ test('«Движение по счету»: Excel и PDF', async ({ page }) => {
 // dompdf на длинной таблице расходует память квадратично — у Zippy «PDF» отчета в тысячи строк давал 500 (нехватка памяти).
 // Длинная таблица режется на куски с шапкой, слишком большой отчет — сообщение и запись в журнал (fixtures/pdf-report.php).
 test('большой отчет: длинная таблица в PDF режется на куски, слишком большой — сообщение вместо 500', () => {
-  expect(JSON.parse(pdfReport(400, 6, 'split')), '400 строк — как есть').toEqual({ tables: 1, heads: 1, rows: 400 });
-  expect(JSON.parse(pdfReport(600, 6, 'split')), '600 строк — 12 кусков по 50, шапка в каждом').toEqual({ tables: 12, heads: 12, rows: 600 });
+  expect(JSON.parse(pdfReport(400, 6, 'split')), '400 строк — как есть').toEqual({ tables: 1, heads: 1, rows: 400, fixed: 0, widths: [] });
+  const split = JSON.parse(pdfReport(600, 6, 'split'));
+  expect(split, '600 строк — 12 кусков по 50, шапка в каждом').toMatchObject({ tables: 12, heads: 12, rows: 600 });
+  // ширина колонок у всех кусков одна (table-layout: fixed), по содержимому: «Позиция 599» шире «Колонка 1» над цифрами
+  expect(split.fixed).toBe(12);
+  expect(split.widths).toHaveLength(1);
+  const [w] = split.widths;
+  expect(w).toHaveLength(6);
+  expect(w[0]).toBeGreaterThan(w[1]);
+  expect(w.reduce((a, b) => a + b)).toBeCloseTo(100, 0);
+  // короткий хвост («Итого») — в последний кусок, а не отдельной таблицей с одной шапкой
+  expect(JSON.parse(pdfReport(605, 6, 'split'))).toMatchObject({ tables: 12, heads: 12, rows: 605 });
   expect(pdfReport(600, 6)).toMatch(/^%PDF \d+$/);
 
   const logged = logCount('PDF report is too big: test: 33001 cells');

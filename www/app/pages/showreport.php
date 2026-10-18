@@ -93,10 +93,12 @@ class ShowReport extends \Zippy\Html\WebPage
 
     // SquirrelStock: PDF большого отчета. dompdf верстает таблицу через все страницы целиком: память и время растут
     // квадратично (2000 строк — 3,3 ГБ и 2 минуты). Таблица режется на куски с повтором шапки — рост линейный
-    // (2000 строк — около 0,5 ГБ и 25 с), но ширина колонок у каждого куска своя — режется только длинная таблица.
+    // (2000 строк — около 0,5 ГБ и 25 с). Ширина колонок у всех кусков одна — по содержимому всей таблицы.
     // Что не помещается в предел — сообщение пользователю и запись в журнал.
     private const PDF_SPLIT = 500;        // таблица длиннее — режется (500 строк целиком — около 0,3 ГБ)
     private const PDF_ROWS = 50;          // строк в куске таблицы
+    private const PDF_TAIL = 10;          // остаток короче — в последний кусок, а не отдельной таблицей с шапкой («Итого»)
+    private const PDF_COL_CHARS = 40;     // текст длиннее при расчете ширины колонки не учитывается — переносится
     private const PDF_CELLS = 30000;      // больше ячеек — не пытаться: около 18 КБ памяти на ячейку
     private const PDF_MEMORY = '768M';
     private const PDF_SECONDS = 180;
@@ -163,16 +165,53 @@ class ShowReport extends \Zippy\Html\WebPage
                 return $m[0];
             }
             $repeat = implode('', array_filter(array_slice($rows, 0, $head), fn($r) => stripos($r, '<th') !== false));
-            $out = $t[1] . implode('', array_slice($rows, 0, $head));
+            $open = self::fixedTable($t[1], $rows);
+            $out = $open . implode('', array_slice($rows, 0, $head));
+            $body = count($rows) - $head;
             foreach (array_slice($rows, $head) as $i => $r) {
-                if ($i > 0 && $i % self::PDF_ROWS == 0) {
-                    $out .= '</table>' . $t[1] . $repeat;
+                if ($i > 0 && $i % self::PDF_ROWS == 0 && $body - $i >= self::PDF_TAIL) {
+                    $out .= '</table>' . $open . $repeat;
                 }
                 $out .= $r;
             }
 
             return $out . '</table>';
         }, $html) ?? $html;   // ошибка PCRE (предел возвратов) — как есть
+    }
+
+    // начало куска: table-layout: fixed и невидимая первая строка с шириной колонок — dompdf при fixed берет ширину
+    // только из ячеек первой строки (<col> не поддерживает). Ширина — доля самого длинного текста колонки
+    // (не длиннее PDF_COL_CHARS, у заголовка — самое длинное слово, он переносится).
+    private static function fixedTable(string $open, array $rows): string {
+        $len = [];
+        foreach ($rows as $r) {
+            preg_match_all('~<t([dh])\b([^>]*)>(.*?)</t[dh]>~is', $r, $cells, PREG_SET_ORDER);
+            $col = 0;
+            foreach ($cells as [, $tag, $attr, $text]) {
+                $span = preg_match('~colspan\s*=\s*["\']?(\d+)~i', $attr, $s) ? max((int)$s[1], 1) : 1;
+                if ($span == 1) {
+                    $text = trim(html_entity_decode(strip_tags(preg_replace('~<br\s*/?>~i', ' ', $text)), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $n = strtolower($tag) == 'h' ? max(array_map('mb_strlen', preg_split('~\s+~u', $text))) : mb_strlen($text);
+                    $len[$col] = max($len[$col] ?? 2, min($n, self::PDF_COL_CHARS));
+                }
+                $col += $span;
+            }
+            for ($c = 0; $c < $col; $c++) {
+                $len[$c] ??= 2;   // колонка только под colspan
+            }
+        }
+        ksort($len);
+        $total = array_sum($len);
+        $widths = '';
+        foreach ($len as $n) {
+            $widths .= '<td style="width:' . round($n * 100 / $total, 2) . '%;padding:0;border:0;height:0"></td>';
+        }
+        $fixed = 'table-layout:fixed;width:100%;';
+        $open = preg_match('~\bstyle\s*=\s*["\']~i', $open)
+            ? preg_replace('~\bstyle\s*=\s*(["\'])~i', 'style=$1' . $fixed, $open, 1)
+            : preg_replace('~^<table\b~i', '<table style="' . $fixed . '"', $open);
+
+        return $open . '<tr>' . $widths . '</tr>';
     }
 
     private static function bytes(string $v): int {
