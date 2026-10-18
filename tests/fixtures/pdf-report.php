@@ -2,7 +2,8 @@
 /**
  * PDF большого отчета — без формы и без раздувания базы (tests/specs/report-export.spec.js): отчет-таблица вида «Состояние складов»
  * из вымышленных строк отдается в ShowReport::pdf, как при нажатии «PDF».
- * Запуск в web-контейнере от www-data, скрипт — на stdin: php -- <строк> <колонок> [split]
+ * Запуск в web-контейнере от www-data, скрипт — на stdin: php -- <строк> <колонок> [split] [thead]
+ * thead — шапка в <thead>, строки в <tbody> (так размечены отчеты модулей: шапка повторяется на каждом листе печати).
  * Вывод: split — JSON { tables, heads, rows, fixed, widths } после разрезания (widths — ширины колонок каждого куска, без повторов); иначе — начало ответа (%PDF… или страница сообщения) и число страниц.
  */
 $_SERVER['HTTP_HOST'] = 'localhost';
@@ -10,16 +11,17 @@ $_SERVER['SERVER_PORT'] = 80;
 require '/var/www/html/init.php';
 
 [$_, $rows, $cols] = $argv;
+$thead = ($argv[4] ?? '') == 'thead';
 $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><table class="ctable" border="0" cellpadding="2" cellspacing="0">'
-    . '<tr><td colspan="' . $cols . '">Отчет (тест)</td></tr><tr>';
+    . ($thead ? '<thead>' : '') . '<tr><td colspan="' . $cols . '">Отчет (тест)</td></tr><tr>';
 for ($c = 0; $c < $cols; $c++) {
     $html .= '<th style="border: solid black 1px">Колонка ' . $c . '</th>';
 }
-$html .= '</tr>';
+$html .= '</tr>' . ($thead ? '</thead><tbody>' : '');
 for ($r = 0; $r < $rows; $r++) {
     $html .= '<tr><td>Позиция ' . $r . '</td>' . str_repeat('<td align="right">' . ($r % 7) . '</td>', $cols - 1) . '</tr>';
 }
-$html .= '</table></body></html>';
+$html .= ($thead ? '</tbody>' : '') . '</table></body></html>';
 
 $call = fn(string $name, ...$args) => (new ReflectionMethod(\App\Pages\ShowReport::class, $name))->invoke(null, ...$args);
 if (($argv[3] ?? '') == 'split') {
