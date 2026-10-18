@@ -3,7 +3,7 @@
  * PDF большого отчета — без формы и без раздувания базы (tests/specs/report-export.spec.js): отчет-таблица вида «Состояние складов»
  * из вымышленных строк отдается в ShowReport::pdf, как при нажатии «PDF».
  * Запуск в web-контейнере от www-data, скрипт — на stdin: php -- <строк> <колонок> [split]
- * Вывод: split — JSON { tables, heads, rows } после разрезания; иначе — начало ответа (%PDF… или страница сообщения) и число страниц.
+ * Вывод: split — JSON { tables, heads, rows, fixed, widths } после разрезания (widths — ширины колонок каждого куска, без повторов); иначе — начало ответа (%PDF… или страница сообщения) и число страниц.
  */
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SERVER_PORT'] = 80;
@@ -24,7 +24,10 @@ $html .= '</table></body></html>';
 $call = fn(string $name, ...$args) => (new ReflectionMethod(\App\Pages\ShowReport::class, $name))->invoke(null, ...$args);
 if (($argv[3] ?? '') == 'split') {
     $out = $call('splitTables', $html);
-    echo json_encode(['tables' => substr_count($out, '<table'), 'heads' => substr_count($out, '<th style') / $cols, 'rows' => substr_count($out, '<tr><td>')]), "\n";
+    preg_match_all('~<tr>((?:<td style="width:[^"]*"></td>)+)</tr>~', $out, $w);
+    $widths = array_values(array_unique(array_map(fn($r) => array_map('floatval', preg_match_all('~width:([\d.]+)%~', $r, $p) ? $p[1] : []), $w[1]), SORT_REGULAR));
+    echo json_encode(['tables' => substr_count($out, '<table'), 'heads' => substr_count($out, '<th style') / $cols, 'rows' => substr_count($out, '<tr><td>'),
+                      'fixed' => substr_count($out, 'table-layout:fixed'), 'widths' => $widths], JSON_UNESCAPED_UNICODE), "\n";
     exit;
 }
 $pdf = $call('pdf', $html, 'test');
