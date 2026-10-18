@@ -93,6 +93,12 @@ Every place where SquirrelStock changes files inherited from Zippy ([leon-mbs/zs
 | `0369be13b` | `www/config/config.php` | log level 300 (WARNING) instead of 100 (DEBUG), as in the package: DEBUG also wrote the full SQL of a failed query | — |
 | `522f5484c` | `www/app/entity/doc/document.php` `afterDelete()` | hook `afterDelete`; DocAudit removes the edit log of the deleted document | `tests/specs/retention.spec.js` |
 | `084d03f79` | `www/app/pages/base.php` `beforeRender()`, `www/app/pages/doc/goodsreceipt.php`, `incomeitem.php`, `advancerep.php`, `moveitem.php`, `outcomeitem.php` (`OnChangeItem()`), templates `www/templates/pages/doc/` of the same forms | row editor: the serial-number label and the expiry field follow the selected position's mode (`App\SQS\SerialStock::rowFields()`, template variables `sqs_snlabel`, `sqs_sdate`); neutral label while no position is selected in a database with mixed modes. Without mixed modes the label is the old one; global expiry mode — field always shown. On an upstream update: keep the one-line call in `OnChangeItem()` and the label/`data-label` markup | `tests/specs/serial-mode-core.spec.js` |
+| `0cd2d1dd7` | `www/app/helper.php` new `fp()` | batch price rounding: 2 digits or 6 with the setting `common.sqs_partion_exact`, independent of the amount rounding `amdigits` | `tests/specs/partion-price.spec.js` |
+| `978c33439` | `www/app/entity/doc/goodsreceipt.php` `Execute()` | batch price `H::fa()` → `H::fp()`, coefficient (discount, VAT, delivery, rate) from the unrounded sum of lines instead of the document amount; before: with "no kopecks" an item at 0.45 came in at 0 | `tests/specs/partion-price.spec.js` |
+| `213a974e6` | `www/app/entity/stock.php` `getStock()` | price through `H::fp()`, compared with six digits; before: 33.333 did not find the stored 33.33 and every receipt created a new batch | `tests/specs/partion-price.spec.js` |
+| `b08f8c248` | `www/app/entity/item.php` `getPartion()` | average batch price rounded with `H::fp()` instead of two digits: write-off act line by the exact price | `tests/specs/partion-price.spec.js` |
+| `6da31723c` | `www/app/pages/options.php` + template, `www/lang/*.json` | common setting "Batch price": to a kopeck (default) or exact. Columns `store_stock.partion`, `entrylist.outprice` → `decimal(15,6)` in `www/app/sqs/schema.sql` (not in `db/`) | `tests/specs/partion-price.spec.js` |
+| `3b634d092` | `www/app/pages/report/storeitems.php`, `accountactivity.php` (constructor, `OnSubmit()`) | report written to the export (`setExportReport()`) instead of the print buffer only: Excel/PDF buttons returned an empty file; the constructor clears the export explicitly instead of an undefined `$html`. Taken from upstream `c957f18be` | `tests/specs/report-export.spec.js` |
 
 ## Proposed upstream
 
@@ -121,11 +127,6 @@ When merging an upstream update, check these places first: modules (`www/app/sqs
 | `www/app/pages/reference/itemlist.php` | `itemSaved` |
 
 ## Changes in vendor/
-| `0cd2d1dd7` | `www/app/helper.php` new `fp()` | batch price rounding: 2 digits or 6 with the setting `common.sqs_partion_exact`, independent of the amount rounding `amdigits` | `tests/specs/partion-price.spec.js` |
-| `978c33439` | `www/app/entity/doc/goodsreceipt.php` `Execute()` | batch price `H::fa()` → `H::fp()`, coefficient (discount, VAT, delivery, rate) from the unrounded sum of lines instead of the document amount; before: with "no kopecks" an item at 0.45 came in at 0 | `tests/specs/partion-price.spec.js` |
-| `213a974e6` | `www/app/entity/stock.php` `getStock()` | price through `H::fp()`, compared with six digits; before: 33.333 did not find the stored 33.33 and every receipt created a new batch | `tests/specs/partion-price.spec.js` |
-| `b08f8c248` | `www/app/entity/item.php` `getPartion()` | average batch price rounded with `H::fp()` instead of two digits: write-off act line by the exact price | `tests/specs/partion-price.spec.js` |
-| `6da31723c` | `www/app/pages/options.php` + template, `www/lang/*.json` | common setting "Batch price": to a kopeck (default) or exact. Columns `store_stock.partion`, `entrylist.outprice` → `decimal(15,6)` in `www/app/sqs/schema.sql` (not in `db/`) | `tests/specs/partion-price.spec.js` |
 
 `vendor/` is installed by composer and is not in the repository. Changes to it are exact text replacements in `www/cli/patch-vendor.php`, run by composer after the autoloader is built (`composer.json`, `scripts.post-autoload-dump`): `composer install` in `tools/install/linux.sh`, `composer dump-autoload` in `docker/Dockerfile`; `tools/release/build.sh` takes `vendor/` from the image. An applied patch is skipped; if the original text is not found (new package version), the script fails and so does the build. After a dependency update: check each patch against the new code, adjust or remove it.
 
