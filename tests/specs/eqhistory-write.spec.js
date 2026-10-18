@@ -33,7 +33,7 @@ test('импорт истории: пересечения, договор с д�
   execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'make-eqhistory-write.php'), `${WEB}:${tmp}/make.php`]);
   execFileSync('docker', ['exec', WEB, 'php', `${tmp}/make.php`, tmp, String(base), uniq, future]);
   require('fs').mkdirSync(dir, { recursive: true });
-  for (const f of ['osv-01.xls', 'perepis.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}`, path.join(dir, f)]);
+  for (const f of ['osv-01.xls', 'census.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}`, path.join(dir, f)]);
 
   const setActual = async date => {
     await page.goto('/index.php?p=App/Pages/Options');
@@ -52,7 +52,7 @@ test('импорт истории: пересечения, договор с д�
 
     const stat = async k => Number((await page.locator(`#eqh-summary tr[data-stat=${k}] td`).last().innerText()).trim());
     await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
-    await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
+    await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
     await clickWait(page, '#iform #check');
 
     // проверка: две ошибки, план без строк с ошибками
@@ -104,7 +104,7 @@ test('импорт истории: пересечения, договор с д�
     // а не «договор с другим получателем» (иначе отпал бы и возврат, вписанный в таблицу потом)
     query(`update customers set customer_name = '${who(3)} испр.' where customer_name = '${who(3)}'`);
     await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
-    await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
+    await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
     await clickWait(page, '#iform #check');
     expect((await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n')).not.toContain(`Договір ${cn(3, '25')}`);
     expect(await stat('done')).toBe(5);    // 4 выдачи и возврат

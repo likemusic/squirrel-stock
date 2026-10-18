@@ -3,7 +3,7 @@
  * Вымышленные таблицы объема хосписа для замера отчетов оборудования (tools/equipment-volume.js): ~700 единиц, у каждой
  * от нуля до нескольких выдач с возвратами, часть на руках (со сроком — прошедшим, ближайшим, дальним — или «до востр.»).
  *  - osv-01.xls: ведомость 1С по счету 01 (основные средства) — единицы с инвентарными номерами;
- *  - perepis.xlsx: перепись оборудования, по листу на вид.
+ *  - census.xlsx: таблица переписи, по листу на вид.
  * Данные выдуманы, генератор детерминированный. Запуск в web-контейнере: php equipment-volume.php <папка> [единиц]
  */
 require '/var/www/html/vendor/autoload.php';
@@ -109,5 +109,5 @@ foreach ($sheets as $name => $data) {
     }
     $s->mergeCells('D1:E2');
 }
-(new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($book))->save("$dir/perepis.xlsx");
+(new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($book))->save("$dir/census.xlsx");
 echo "единиц: $total, выдач: $issues, на руках: $onhand\n";

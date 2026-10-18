@@ -20,7 +20,7 @@ async function load(page) {
   execFileSync('docker', ['exec', WEB, 'mkdir', '-p', '/tmp/eqvol']);
   execFileSync('docker', ['cp', path.join(__dirname, 'equipment-volume.php'), `${WEB}:/tmp/eqvol/make.php`]);
   console.log(execFileSync('docker', ['exec', WEB, 'php', '/tmp/eqvol/make.php', '/tmp/eqvol'], { encoding: 'utf8' }).trim());
-  for (const f of ['osv-01.xls', 'perepis.xlsx']) execFileSync('docker', ['cp', `${WEB}:/tmp/eqvol/${f}`, path.join(dir, f)]);
+  for (const f of ['osv-01.xls', 'census.xlsx']) execFileSync('docker', ['cp', `${WEB}:/tmp/eqvol/${f}`, path.join(dir, f)]);
   execFileSync('docker', ['exec', WEB, 'rm', '-rf', '/tmp/eqvol']);
 
   await page.goto('/index.php?p=App/Pages/Service/Import1C');
@@ -31,7 +31,7 @@ async function load(page) {
   console.log('ведомость:', (await messages(page)).join(' | '));
 
   await page.goto('/index.php?p=App/Pages/Service/ImportEquipmentHistory');
-  await page.locator('#iform #census').setInputFiles(path.join(dir, 'perepis.xlsx'));
+  await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
   let t = Date.now();
   await clickWait(page, '#iform #check');
   console.log('проверка, с:', ((Date.now() - t) / 1000).toFixed(1), (await messages(page)).join(' | '));
