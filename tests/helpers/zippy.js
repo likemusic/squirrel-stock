@@ -1,6 +1,8 @@
 // Действия в интерфейсе Zippy/SquirrelStock: вход, справочники, документы, отчёты.
 // Перенесено из сценариев исследования (../Zippy/tools: lib.js, docs.js, reports.js).
 
+const { query, value, esc } = require('./db');
+
 const LOCAL = ['127.0.0.1', 'localhost'];
 
 // Режим учёта серий (настройка usesnumber): 2 — серии со сроком годности, 3 — серийные номера изделий.
@@ -145,14 +147,23 @@ async function createDoc(page, type, d) {
     await clickWait(page, '#savedoc');
     return { number, msgs: await messages(page), suggested };
   }
+  const before = Number(value('select coalesce(max(document_id), 0) from documents'));
   if (d.dblclick) {
     await page.locator('#execdoc').dblclick();
     await page.waitForTimeout(2000); // оба запроса и переход после проведения
     await page.waitForLoadState('networkidle');
   } else await clickWait(page, '#execdoc');
   const msgs = await messages(page);
-  if (await page.locator('#docform #execdoc:visible').count()) throw new Error(`${type} ${number}: не проведён: ${msgs.join(' | ')}`);
-  return { number, msgs, suggested };
+  // проведен ли — по базе, а не по странице: после проведения форма возвращает на предыдущую страницу из цепочки
+  // страниц сессии (App::RedirectBack), а у тестов одна сессия на весь прогон — там может оказаться форма другого
+  // документа со своей кнопкой «Провести» (флак hooks.spec: возврат на форму инвентаризации из прошлого теста).
+  // Номер — из базы: форма заменяет занятый номер следующим.
+  const [doc] = query(`select d.document_number, d.state from documents d join metadata m on m.meta_id = d.meta_id
+                       where d.document_id > ${before} and m.meta_name = '${esc(type)}' order by d.document_id limit 1`);
+  if (!doc || [0, 1, 2, 3, 6].includes(Number(doc[1]))) {
+    throw new Error(`${type} ${number}: не проведён${doc ? ` (состояние ${doc[1]})` : ''}: ${msgs.join(' | ')}`);
+  }
+  return { number: doc[0], msgs, suggested };
 }
 
 // Отчёт: заполнить фильтр и нажать «ОК».
