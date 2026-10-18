@@ -78,7 +78,7 @@ class Backup
         fwrite($out, "-- SquirrelStock backup " . date('Y-m-d H:i:s') . "\nSET NAMES utf8;\nSET FOREIGN_KEY_CHECKS = 0;\n\n");
         $tables = [];
         $views = [];
-        foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
+        foreach ($this->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
             if ($type == 'VIEW') {
                 $views[] = $name;
             } else {
@@ -86,13 +86,13 @@ class Backup
             }
         }
         foreach ($tables as $t) {
-            $create = $this->db->query("SHOW CREATE TABLE `{$t}`")->fetch_row()[1];
+            $create = $this->query("SHOW CREATE TABLE `{$t}`")->fetch_row()[1];
             if (in_array($t, self::LOCAL_TABLES, true)) {
                 fwrite($out, preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create) . ";\n");
                 continue;
             }
             fwrite($out, "DROP TABLE IF EXISTS `{$t}`;\n{$create};\n");
-            $res = $this->db->query("SELECT * FROM `{$t}`", MYSQLI_USE_RESULT);
+            $res = $this->query("SELECT * FROM `{$t}`", MYSQLI_USE_RESULT);
             $batch = [];
             while ($row = $res->fetch_row()) {
                 $batch[] = '(' . implode(',', array_map(fn($v) => $v === null ? 'NULL' : "'" . $this->db->real_escape_string($v) . "'", $row)) . ')';
@@ -110,7 +110,7 @@ class Backup
         // представления: сначала те, что не ссылаются на еще не созданные представления
         $defs = [];
         foreach ($views as $v) {
-            $create = $this->db->query("SHOW CREATE VIEW `{$v}`")->fetch_row()[1];
+            $create = $this->query("SHOW CREATE VIEW `{$v}`")->fetch_row()[1];
             $defs[$v] = preg_replace('/^CREATE .*? VIEW/s', 'CREATE VIEW', $create);   // без DEFINER: восстановит любой пользователь
         }
         $done = [];
@@ -131,11 +131,11 @@ class Backup
                 throw new \Exception('Циклическая зависимость представлений');
             }
         }
-        $triggers = $this->db->query('SHOW TRIGGERS')->fetch_all(MYSQLI_ASSOC);
+        $triggers = $this->query('SHOW TRIGGERS')->fetch_all(MYSQLI_ASSOC);
         if ($triggers) {
             fwrite($out, "\nDELIMITER ;;\n");
             foreach ($triggers as $tr) {
-                $create = $this->db->query("SHOW CREATE TRIGGER `{$tr['Trigger']}`")->fetch_assoc()['SQL Original Statement'];
+                $create = $this->query("SHOW CREATE TRIGGER `{$tr['Trigger']}`")->fetch_assoc()['SQL Original Statement'];
                 $create = preg_replace('/^CREATE .*?TRIGGER/s', 'CREATE TRIGGER', $create);
                 fwrite($out, "DROP TRIGGER IF EXISTS `{$tr['Trigger']}`;;\n{$create};;\n");
             }
@@ -143,6 +143,55 @@ class Backup
         }
         fwrite($out, "\nSET FOREIGN_KEY_CHECKS = 1;\n");
         fclose($out);
+    }
+
+    // запрос дампа: отказ в правах (у пользователя базы нет SHOW VIEW и т. п.) — понятная ошибка вместо падения на false
+    private function query(string $sql, int $mode = MYSQLI_STORE_RESULT): \mysqli_result {
+        try {
+            $res = $this->db->query($sql, $mode);
+        } catch (\mysqli_sql_exception $e) {
+            $res = false;
+        }
+        if (!$res instanceof \mysqli_result) {
+            throw new BackupException('service.backup.no_rights_dump', ['error' => $this->db->error]);
+        }
+        return $res;
+    }
+
+    /**
+     * Права на структуру базы — до удаления текущих таблиц: без CREATE (CREATE VIEW, TRIGGER) восстановление с правом DROP
+     * удалило бы все таблицы и не создало их заново. Проверка — пробной таблицей, представлением и триггером: список прав
+     * пользователя (SHOW GRANTS) на хостинге бывает выдан через роль или шаблон имени базы и надежно не разбирается.
+     */
+    private function checkRights(): void {
+        $probe = 'sqs_restore_probe';
+        $steps = [
+            "DROP TABLE IF EXISTS `{$probe}`",
+            "CREATE TABLE `{$probe}` (id int)",
+            "ALTER TABLE `{$probe}` ADD COLUMN x int",
+            "CREATE VIEW `{$probe}_v` AS SELECT id FROM `{$probe}`",
+            "CREATE TRIGGER `{$probe}_tr` BEFORE INSERT ON `{$probe}` FOR EACH ROW SET NEW.x = 0",
+            "DROP TRIGGER `{$probe}_tr`",
+            "DROP VIEW `{$probe}_v`",
+            "DROP TABLE `{$probe}`",
+        ];
+        foreach ($steps as $sql) {
+            try {
+                $ok = $this->db->query($sql);
+            } catch (\mysqli_sql_exception $e) {
+                $ok = false;
+            }
+            if (!$ok) {
+                $error = $this->db->error;
+                foreach (["DROP TRIGGER IF EXISTS `{$probe}_tr`", "DROP VIEW IF EXISTS `{$probe}_v`", "DROP TABLE IF EXISTS `{$probe}`"] as $undo) {
+                    try {
+                        $this->db->query($undo);
+                    } catch (\mysqli_sql_exception $e) {
+                    }
+                }
+                throw new BackupException('service.backup.no_rights_restore', ['error' => $error]);
+            }
+        }
     }
 
     // файлы, которые восстановление записывает в upload/: картинки и документы. Скрипты, .htaccess и прочие файлы
@@ -212,6 +261,7 @@ class Backup
             if (!is_string($head) || !preg_match('/^\s*(CREATE TABLE|INSERT INTO|DROP TABLE)\b/mi', $head)) {
                 throw new BackupException('service.backup.not_backup');
             }
+            $this->checkRights();
             // текущие таблицы и представления удаляются: база становится такой, какой была в копии
             $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
             foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {

@@ -78,7 +78,12 @@ class Backup extends \App\Pages\Base
     }
 
     public function onCreate($sender) {
-        $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
+        try {
+            $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
+        } catch (\App\SQS\BackupException $e) {
+            $this->setError($e->getMessage());   // нет прав у пользователя базы и т. п. — на странице, а не вместо нее
+            return;
+        }
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="squirrelstock-' . date('Y-m-d-Hi') . '.zip"');
         header('Content-Length: ' . filesize($zip));
