@@ -23,6 +23,7 @@ class IssueAct extends \App\Pages\Base
     public const ALL = 0;
     public const CONSUMABLES = 1;
     public const EQUIPMENT = 2;
+    private const PRINT_COLS = 10;   // выдач в куске акта на печати (альбомный лист A4)
 
     public function __construct() {
         parent::__construct();
@@ -54,9 +55,9 @@ class IssueAct extends \App\Pages\Base
         if ($title == '' || in_array($title, array_map([self::class, 'defaultTitle'], [self::ALL, self::CONSUMABLES, self::EQUIPMENT]), true)) {
             $this->filter->title->setText(self::defaultTitle(intval($this->filter->kind->getValue())));
         }
-        $html = $this->generateReport();
+        [$html, $export] = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+        \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $export . "</body></html>");
         $this->detail->setVisible(true);
     }
 
@@ -163,13 +164,36 @@ class IssueAct extends \App\Pages\Base
 
         $months = \App\Util::getMonth();
         $report = new \App\Report('report/issueact.tpl');
-        return $report->generate([
+        $data = [
             'heading' => __('report.issueact.heading', ['title' => trim($this->filter->title->getText()), 'month' => mb_strtolower($months[$month]), 'year' => $year]),
             'cols'    => $header,
             'rows'    => $rows,
             'totals'  => array_map(fn($q) => ['qty' => H::fqty($q)], array_values($coltotal)),
             'total'   => H::fqty(array_sum($coltotal)),
             'issues'  => count($cols),
-        ]);
+        ];
+        // на экране и в Excel — одна таблица; на печать, если выдач больше PRINT_COLS, — куски с наименованием в каждом
+        $html = $report->generate($data);
+        return [count($header) > self::PRINT_COLS ? $report->generate($data + ['print' => true, 'parts' => self::printParts($data)]) : $html, $html];
+    }
+
+    // куски акта для печати: колонки выдач по PRINT_COLS, «Итого» по позиции — в последнем куске
+    private static function printParts(array $data): array {
+        $parts = [];
+        $chunks = array_chunk(array_keys($data['cols']), self::PRINT_COLS);
+        foreach ($chunks as $k => $idx) {
+            $last = $k == count($chunks) - 1;
+            $pick = fn(array $a) => array_values(array_intersect_key($a, array_flip($idx)));
+            $parts[] = [
+                'part'   => __('report.issueact.print_part', ['from' => $idx[0] + 1, 'to' => end($idx) + 1]),
+                'cols'   => $pick($data['cols']),
+                'rows'   => array_map(fn($r) => ['cells' => $pick($r['cells'])] + $r, $data['rows']),
+                'totals' => $pick($data['totals']),
+                'last'   => $last,
+                'total'  => $data['total'],
+                'span'   => count($idx) + ($last ? 2 : 1),
+            ];
+        }
+        return $parts;
     }
 }

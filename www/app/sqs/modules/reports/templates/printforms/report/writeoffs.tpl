@@ -1,4 +1,5 @@
 <table class="ctable sqs-writeoffs" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <td colspan="7"><h4>{{#t}}report.writeoffs.title{{/t}} {{period}}</h4></td>
     </tr>
@@ -12,6 +13,10 @@
         <th style="border: solid black 1px;">{{#t}}common.kilkist{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.writeoffs.reason{{/t}}</th>
     </tr>
+    {{/hasrows}}
+    </thead>
+    <tbody>
+    {{#hasrows}}
     {{#_rows}}
     <tr>
         <td style="border: solid black 1px;">{{date}}</td>
@@ -30,5 +35,6 @@
     </tr>
     {{/hasrows}}
     {{^hasrows}}<tr><td colspan="7">{{#t}}report.writeoffs.none{{/t}}</td></tr>{{/hasrows}}
+    </tbody>
 </table>
 <p class="mt-2">{{#t}}report.writeoffs.made{{/t}} {{date}}</p>

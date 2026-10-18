@@ -15,6 +15,7 @@
 <h5 class="mt-3">{{#t}}report.recipientcard.on_hand{{/t}}</h5>
 {{#hasunits}}
 <table class="ctable sqs-card-units" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px;">{{#t}}common.tovar{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.inv{{/t}}</th>
@@ -24,6 +25,8 @@
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.term{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.sent_by{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_units}}
     <tr>
         <td style="border: solid black 1px;">{{itemname}}</td>
@@ -35,6 +38,7 @@
         <td style="border: solid black 1px;">{{sent}}</td>
     </tr>
     {{/_units}}
+    </tbody>
 </table>
 {{/hasunits}}
 {{^hasunits}}<p>{{#t}}report.recipientcard.none{{/t}}</p>{{/hasunits}}
@@ -43,6 +47,7 @@
 <h5 class="mt-3">{{#t}}report.recipientcard.consumables{{/t}} {{period}}</h5>
 {{#hasitems}}
 <table class="ctable sqs-card-items" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px;">{{#t}}common.tovar{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}common.od_vym{{/t}}</th>
@@ -50,6 +55,8 @@
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.returned{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.net{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_items}}
     <tr>
         <td style="border: solid black 1px;">{{itemname}}</td>
@@ -63,15 +70,19 @@
         <td style="border: solid black 1px;" colspan="4">{{#t}}report.recipientcard.total{{/t}} ({{#t}}report.recipientcard.issues{{/t}}: {{issues}})</td>
         <td style="border: solid black 1px; text-align: right;">{{total}}</td>
     </tr>
+    </tbody>
 </table>
 
 <h5 class="mt-3">{{#t}}report.recipientcard.by_months{{/t}}</h5>
 <table class="ctable sqs-card-months" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px; text-align: left;">{{#t}}common.tovar{{/t}}</th>
         {{#_months}}<th style="border: solid black 1px; min-width: 60px;">{{m}}</th>{{/_months}}
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.total{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_mrows}}
     <tr>
         <td style="border: solid black 1px;">{{itemname}}</td>
@@ -84,6 +95,7 @@
         {{#_mdocs}}<td style="border: solid black 1px; text-align: center;">{{n}}</td>{{/_mdocs}}
         <td style="border: solid black 1px; text-align: center;">{{issues}}</td>
     </tr>
+    </tbody>
 </table>
 {{/hasitems}}
 {{^hasitems}}<p>{{#t}}report.recipientcard.none{{/t}}</p>{{/hasitems}}
@@ -91,6 +103,7 @@
 <h5 class="mt-3">{{#t}}report.recipientcard.history{{/t}} {{period}}</h5>
 {{#hashistory}}
 <table class="ctable sqs-card-history" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px;">{{#t}}common.data{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.document{{/t}}</th>
@@ -98,6 +111,8 @@
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.state{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.notes{{/t}}</th>
     </tr>
+    </thead>
+    <tbody>
     {{#_history}}
     <tr>
         <td style="border: solid black 1px;">{{date}}</td>
@@ -107,6 +122,7 @@
         <td style="border: solid black 1px;">{{notes}}</td>
     </tr>
     {{/_history}}
+    </tbody>
 </table>
 {{/hashistory}}
 {{^hashistory}}<p>{{#t}}report.recipientcard.none{{/t}}</p>{{/hashistory}}
@@ -115,6 +131,7 @@
 {{#hasnext}}
 <h5 class="mt-3">{{#t}}report.recipientcard.next{{/t}}</h5>
 <table class="ctable sqs-card-intervals" border="0" cellpadding="2" cellspacing="0">
+    <thead>
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.rule{{/t}}</th>
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.interval{{/t}}</th>
@@ -122,6 +139,8 @@
         <th style="border: solid black 1px;">{{#t}}report.recipientcard.next_date{{/t}}</th>
         <th style="border: solid black 1px;"></th>
     </tr>
+    </thead>
+    <tbody>
     {{#_next}}
     <tr>
         <td style="border: solid black 1px;">{{what}}</td>
@@ -131,6 +150,7 @@
         <td style="border: solid black 1px;{{^can}} color: #b45309;{{/can}}">{{wait}}</td>
     </tr>
     {{/_next}}
+    </tbody>
 </table>
 {{/hasnext}}
 {{/intervals}}

@@ -16,6 +16,7 @@
     "report.issueact.kind_consumables": "Расходники",
     "report.issueact.kind_equipment": "Оборудование (по договорам)",
     "report.issueact.names1c": "Названия позиций — как в 1С (из импорта ведомости), даже если позиция переименована в программе; одноимённые позиции 1С — одна строка.",
+    "report.issueact.print_part": "колонки {from}–{to}",
     "report.issueact.title": "Акт списания за месяц",
     "report.issueact.title_consumables": "Списание расходников",
     "report.issueact.title_equipment": "Списание оборудования",

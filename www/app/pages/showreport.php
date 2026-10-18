@@ -148,7 +148,9 @@ class ShowReport extends \Zippy\Html\WebPage
     // таблица длиннее PDF_SPLIT строк без вложенных таблиц и rowspan — куски по PDF_ROWS строк, строки шапки (с <th>) повторяются в каждом
     private static function splitTables(string $html): string {
         return preg_replace_callback('~<table\b[^>]*>.*?</table>~is', function ($m) {
+            // <thead>/<tbody> (шапка отчета повторяется на листах печати) не мешают: куски собираются из строк
             if (!preg_match('~^(<table\b[^>]*>)(.*)</table>$~is', $m[0], $t)
+                || ($t[2] = preg_replace('~</?t(?:head|body|foot)\b[^>]*>~i', '', $t[2])) === null
                 || stripos($t[2], '<table') !== false || stripos($t[2], 'rowspan') !== false
                 || trim(preg_replace('~<tr\b.*?</tr>~is', '', $t[2])) !== '') {
                 return $m[0];

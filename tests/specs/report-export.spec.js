@@ -64,6 +64,8 @@ test('большой отчет: длинная таблица в PDF режет
   expect(w.reduce((a, b) => a + b)).toBeCloseTo(100, 0);
   // короткий хвост («Итого») — в последний кусок, а не отдельной таблицей с одной шапкой
   expect(JSON.parse(pdfReport(605, 6, 'split'))).toMatchObject({ tables: 12, heads: 12, rows: 605 });
+  // шапка в <thead>, строки в <tbody> (отчеты модулей — для повтора шапки на листах печати): режется так же
+  expect(JSON.parse(pdfReport(600, 6, 'split', 'thead')), 'с thead/tbody').toMatchObject({ tables: 12, heads: 12, rows: 600, fixed: 12 });
   expect(pdfReport(600, 6)).toMatch(/^%PDF \d+$/);
 
   const logged = logCount('PDF report is too big: test: 33001 cells');
