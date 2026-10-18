@@ -10,7 +10,7 @@
  *   customers: [{ name, type = 1 (1 — получатель, 2 — поставщик), phone, address }]
  *   contracts: [{ number, customer, from, to, note }] — в состоянии «В работе»; customer — имя контрагента
  *   docs:      [{ type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem | MoveItem, date, customer, contract,
- *                 tostore, notes, draft, rows: [{ code, qty, price = 0, sn, sdate }] }]
+ *                 tostore, notes, draft, disc (скидка прихода GoodsReceipt), rows: [{ code, qty, price = 0, sn, sdate }] }]
  * Документы проводятся по порядку; первый отказ проведения — конец работы (этот документ не сохраняется).
  * Вывод (JSON): { items: {code: id}, customers: {name: id}, contracts: {number: id}, docs: [{ id, number }], error }
  */
@@ -190,11 +190,12 @@ try {
             $doc->payamount = $total;
             $doc->payed = 0;
         } elseif ($type == 'GoodsReceipt') {
-            // значения пустой формы: доставка «самовывоз» (1), стоимость доставки 0, валюта своя (0, курс 1)
+            // значения пустой формы: доставка «самовывоз» (1), стоимость доставки 0, валюта своя (0, курс 1); скидка — из disc
+            $disc = doubleval($d['disc'] ?? 0);
             $h += ['contract_id' => $contract, 'deliverytype' => 1, 'delivery' => 0, 'storename' => $storeName($store), 'payment' => 0,
-                   'val' => 0, 'valname' => '', 'rate' => 1, 'nds' => 0, 'disc' => 0, 'outnumber' => '', 'basedoc' => '',
-                   'comission' => 0, 'payreq' => '', 'payamount' => $total, 'payed' => 0];
-            $doc->payamount = $total;
+                   'val' => 0, 'valname' => '', 'rate' => 1, 'nds' => 0, 'disc' => $disc, 'outnumber' => '', 'basedoc' => '',
+                   'comission' => 0, 'payreq' => '', 'payamount' => $total - $disc, 'payed' => 0];
+            $doc->payamount = $total - $disc;
             $doc->payed = 0;
         } elseif ($type == 'MoveItem') {
             $to = intval($d['tostore'] ?? 0);

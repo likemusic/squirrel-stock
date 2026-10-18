@@ -81,7 +81,9 @@ class Stock extends \ZCL\DB\Entity
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0,$emp_id=0) {
         $store_id =intval($store_id);
         $item_id =intval($item_id);
-        $price = doubleval($price);
+        // SquirrelStock: цена — как она будет храниться (H::fp, 2 или 6 знаков): иначе партия с той же ценой 33,333…
+        // не находится (в базе 33,33) и каждый приход создает новую
+        $price = \App\Helper::fp($price);
     
         $conn = \ZDB\DB::getConnect();
 
@@ -100,7 +102,7 @@ class Stock extends \ZCL\DB\Entity
         }
 
 
-        $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
+        $stock = self::getFirst($where . " and partion = " . number_format($price, 6, '.', ''), 'stock_id desc');
   
 
         if ($stock == null && $create == true) {

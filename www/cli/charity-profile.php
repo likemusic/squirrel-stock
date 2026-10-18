@@ -7,7 +7,7 @@
  *    остальное (касса, продажи, производство, кафе, зарплата и т.д.) выключается — включить обратно можно
  *    в «Система → Настройки → Настройка меню» или этим скриптом с --back;
  *  - настройки: учет по серийным номерам (оборудование по инвентарным номерам), без минусовых остатков,
- *    закупки без учета денег, цена выдачи по умолчанию 0, копейки;
+ *    закупки без учета денег, цена выдачи по умолчанию 0, копейки, точная цена партии (сумма остатков совпадает с приходом и ведомостью 1С);
  *  - флаг профиля (App\SQS\Profile): на главной нет денежных плиток и графиков, журнал выдач открывается со статусом «Все»,
  *    расходная накладная и возврат печатаются формами «Выдал / Получатель» и «Вернул / Принял», в журнале выдач нет кнопок доставки,
  *    ТТН и гарантийного талона, в формах выдачи и возврата — «Получатель», без кассы, цен и оплаты (цена выдачи 0);
@@ -17,6 +17,7 @@
  *
  * php cli/charity-profile.php          (в docker-стенде: docker exec -u www-data squirrelstock-web-1 php cli/charity-profile.php)
  * php cli/charity-profile.php --back   включить в меню все выключенные профилем пункты, снять флаг профиля, вернуть названия
+ *                                      и цену партии до копейки (уже записанные точные цены остаются)
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -32,7 +33,7 @@ const KEEP = [
     4 => ['CategoryList', 'ItemList', 'StoreList', 'CustomerList', 'ContractList'],
     5 => ['Import', 'Export'],
 ];
-const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1', 'sqs_charity' => 1];
+const OPTIONS = ['usesnumber' => '3', 'allowminus' => 0, 'allowminusmf' => 1, 'defprice' => '0', 'amdigits' => '1', 'sqs_partion_exact' => 1, 'sqs_charity' => 1];
 // названия в metadata: [тип, meta_name ('' — все пункты типа), поле, [язык по умолчанию => профиль]] для uk и ru (cli/localize-db.php
 // переводит и профильные названия). Меняется только название по умолчанию: переименованное вручную остается; --back — обратно
 const RENAME = [
@@ -76,7 +77,7 @@ if (in_array('--back', $argv, true)) {
     }
     $conn->query("DELETE FROM keyval WHERE keyd = 'sqs_profile_disabled'");
     rename_items($conn, true);
-    setCommon($conn, fn(array $c) => array_diff_key($c, ['sqs_charity' => 1]));
+    setCommon($conn, fn(array $c) => array_diff_key($c, ['sqs_charity' => 1, 'sqs_partion_exact' => 1]));   // цена партии — снова до копейки
     echo 'Включено пунктов меню: ' . count($ids) . "\n";
     exit;
 }

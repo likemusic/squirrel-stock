@@ -185,10 +185,12 @@ class Import1C extends \App\Pages\Base
             $pending = count($list) - 1;
         }
 
-        // одноименные позиции 1С: строки ведомости с одинаковым названием сопоставляются позициям по цене (App\SQS\Item1C)
+        // одноименные позиции 1С: строки ведомости с одинаковым названием сопоставляются позициям по цене (App\SQS\Item1C) до копейки:
+        // точная цена от ведомости к ведомости «плавает» в 3–6 знаке, 1С округляет сумму остатка. Цена партии — cost (H::fp)
         $groups = [];
         foreach ($list as $i => $p) {
-            $p['price'] = ($p['qty'] ?? 0) > 0 ? H::fa(($p['sum'] ?? 0) / $p['qty']) : null;
+            $p['price'] = ($p['qty'] ?? 0) > 0 ? number_format(($p['sum'] ?? 0) / $p['qty'], 2, '.', '') : null;
+            $p['cost'] = ($p['qty'] ?? 0) > 0 ? H::fp(($p['sum'] ?? 0) / $p['qty']) : null;
             $groups[$p['name']][$i] = $p;
         }
         $created = 0;
@@ -231,7 +233,7 @@ class Import1C extends \App\Pages\Base
                 }
                 if (($p['qty'] ?? 0) > 0) {
                     $item->quantity = $p['qty'];
-                    $item->price = $p['price'];
+                    $item->price = $p['cost'];
                     $item->snumber = '';
                     $item->sdate = 0;
                     $details[] = $item;
