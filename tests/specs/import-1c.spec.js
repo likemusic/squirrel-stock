@@ -32,6 +32,11 @@ test('импорт ведомости 1С: материалы', async ({ page })
   // цена = сумма / количество, дата документа — из формы
   expect(value(`select round(s.partion, 2) from store_stock s join items i on i.item_id = s.item_id where i.itemname = '${syringe}' order by s.stock_id desc limit 1`)).toBe('118.75');
   expect(value(`select date(d.document_date) from documents d where d.notes like 'Імпорт відомості 1С%' order by d.document_id desc limit 1`)).toBe('2026-07-01');
+  // строка с суммой без количества (остаток округления в 1С) не переносится, но не пропадает молча: сводка и таблица
+  expect(text).toMatch(/оприбутковано 2 з 3, пропущено рядків без кількості: 1 на суму 12\.00/);
+  const skipped = page.locator('#i1c-skipped');
+  await expect(skipped.locator('tr', { hasText: 'Салфетки тестовые' })).toContainText(/10\.1\s*\/\s*14\s*12\.00/);
+  await expect(skipped.locator('tfoot')).toContainText('12.00');
 });
 
 test('импорт ведомости 1С: основные средства по инвентарным номерам, повторный импорт не дублирует', async ({ page }) => {

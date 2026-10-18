@@ -158,10 +158,15 @@ class Import1C extends \App\Pages\Base
         $list = [];
         $pending = null;
         $started = false;
-        foreach ($rows as $r) {
+        $sub = '';   // субсчет из строки «10.1 (по счету: 10)»
+        foreach ($rows as $n => $r) {
             $a = trim((string)($r[0] ?? ''));
             if (in_array('Дебет', array_map(fn($v) => trim((string)$v), $r), true)) {
                 $started = true;
+                continue;
+            }
+            if ($started && preg_match('/^(.*?)\s*\(по сч[её]ту:\s*(\d+)/u', $a, $m)) {
+                $sub = $m[1] !== '' ? $m[1] : $m[2];
                 continue;
             }
             if (!$started || $a === '' || preg_match('/по сч[её]ту:/u', $a)) {
@@ -181,9 +186,19 @@ class Import1C extends \App\Pages\Base
             if ($a === 'Показатели') {
                 continue;
             }
-            $list[] = ['name' => preg_replace('/\s+/u', ' ', $a), 'sum' => self::num($r[1] ?? ''), 'qty' => null];
+            $list[] = ['name' => preg_replace('/\s+/u', ' ', $a), 'sum' => self::num($r[1] ?? ''), 'qty' => null, 'account' => $sub, 'row' => $n + 1];
             $pending = count($list) - 1;
         }
+
+        // сумма без количества — обычно остаток округления в 1С: не переносится, показывается после импорта
+        $this->_skipped = [];
+        foreach ($list as $i => $p) {
+            if (($p['qty'] ?? 0) <= 0 && abs($p['sum'] ?? 0) >= 0.005) {
+                $this->_skipped[] = $p;
+                unset($list[$i]);
+            }
+        }
+        $total = count($list) + count($this->_skipped);
 
         // одноименные позиции 1С: строки ведомости с одинаковым названием сопоставляются позициям по цене (App\SQS\Item1C) до копейки:
         // точная цена от ведомости к ведомости «плавает» в 3–6 знаке, 1С округляет сумму остатка. Цена партии — cost (H::fp)
@@ -242,12 +257,19 @@ class Import1C extends \App\Pages\Base
         }
         $doc = $this->receipt($details, $store, $filename);
 
-        return __('service.import1c.done_materials', ['items' => count($list), 'created' => $created, 'received' => count($details), 'doc' => $doc])
+        $skipped = count($this->_skipped) ? ', ' . __('service.import1c.skipped_count', ['n' => count($this->_skipped), 'sum' => self::sum(array_sum(array_column($this->_skipped, 'sum')))]) : '';
+        return __('service.import1c.done_materials', ['items' => $total, 'created' => $created, 'received' => count($details), 'doc' => $doc, 'skipped' => $skipped])
             . (count($this->_ambiguous) ? '. ' . __('service.import1c.ambiguous_count', ['n' => array_sum(array_map(fn($a) => count($a['rows']), $this->_ambiguous))]) : '');
     }
 
     public array $_ambiguous = [];   // [['name', 'rows' => [строки ведомости], 'cands' => [позиции]]]
     public array $_notes = [];
+    public array $_skipped = [];   // строки ведомости с суммой без количества: ['name', 'sum', 'account', 'row']
+
+    // сумма из ведомости — всегда до копейки, независимо от округления стоимости в настройках
+    private static function sum($v): string {
+        return number_format(round($v, 2), 2, '.', '');
+    }
 
     private function importFixed(array $rows, int $store, string $filename): string {
         $conn = \ZDB\DB::getConnect();
@@ -352,9 +374,19 @@ class Import1C extends \App\Pages\Base
         return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
     }
 
-    // неоднозначные одноименные позиции (не оприходованы) и заметки
+    // строки с суммой без количества, неоднозначные одноименные позиции (не оприходованы) и заметки
     private function reportHtml(): string {
         $h = '';
+        if (count($this->_skipped)) {
+            $h .= '<h6>' . __('service.import1c.skipped_title') . '</h6><p class="text-muted">' . __('service.import1c.skipped_help') . '</p>';
+            $h .= '<table class="table table-sm w-auto" id="i1c-skipped"><thead><tr><th>' . __('service.import1c.col_item') . '</th><th>'
+                . __('service.import1c.col_row') . '</th><th class="text-end">' . __('service.import1c.col_sum') . '</th></tr></thead><tbody>';
+            foreach ($this->_skipped as $p) {
+                $h .= '<tr><td>' . self::e($p['name']) . '</td><td>' . self::e($p['account'] . ' / ' . $p['row']) . '</td><td class="text-end">' . self::sum($p['sum']) . '</td></tr>';
+            }
+            $h .= '</tbody><tfoot><tr><th colspan="2">' . __('service.import1c.skipped_total') . '</th><th class="text-end">'
+                . self::sum(array_sum(array_column($this->_skipped, 'sum'))) . '</th></tr></tfoot></table>';
+        }
         if (count($this->_ambiguous)) {
             $h .= '<h6>' . __('service.import1c.ambiguous_title') . '</h6><p class="text-muted">' . __('service.import1c.ambiguous_help') . '</p>';
             $h .= '<table class="table table-sm w-auto" id="i1c-ambiguous">';
