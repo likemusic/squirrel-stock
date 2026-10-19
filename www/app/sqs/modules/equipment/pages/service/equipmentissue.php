@@ -26,7 +26,7 @@ use Zippy\Html\Link\ClickLink;
  * При оформлении создаются штатные сущности Zippy: договор в состоянии «В работе» (срок — дата окончания,
  * «до востребования» — 31.12.2099, «кем направлен» — краткое описание) и проведенная расходная накладная
  * по этому договору с ценой 0. «Договор заключен с» — представитель получателя (Contract::sqs_holder), пусто — с самим получателем. Новый получатель создается контрагентом; телефон и адрес, если указаны, обновляются.
- * При выборе получателя подставляются его телефон, адрес и «кем направлен» из последнего договора.
+ * При выборе получателя подставляются его телефон, адрес, «кем направлен» и «Договор заключен с» из последнего договора.
  */
 class EquipmentIssue extends \App\Pages\Base
 {
@@ -34,6 +34,7 @@ class EquipmentIssue extends \App\Pages\Base
 
     public array $_units = [];   // ['item_id|snumber' => DataItem(item_id, snumber, label)]
     public string $_autoref = '';   // «кем направлен», подставленный из договора: его можно заменить при смене получателя
+    public string $_autoholder = '';   // «Договор заключен с», подставленный из договора, — так же
 
     public function __construct() {
         parent::__construct();
@@ -89,6 +90,12 @@ class EquipmentIssue extends \App\Pages\Base
                 $this->iform->referrer->setText($ref);
             }
             $this->_autoref = $ref;
+            $holder = self::lastHolder((int)$c->customer_id);
+            $now = trim($this->iform->holder->getText());
+            if ($now === '' || $now === $this->_autoholder) {
+                $this->iform->holder->setText($holder);
+            }
+            $this->_autoholder = $holder;
         }
     }
 
@@ -97,6 +104,16 @@ class EquipmentIssue extends \App\Pages\Base
         foreach (Contract::find("customer_id = {$customer_id}", 'createdon desc, contract_id desc') as $contract) {
             if (trim((string)$contract->shortdesc) !== '') {
                 return trim((string)$contract->shortdesc);
+            }
+        }
+        return '';
+    }
+
+    // «Договор заключен с» последнего договора получателя, где оно заполнено; '' — нет
+    public static function lastHolder(int $customer_id): string {
+        foreach (Contract::find("customer_id = {$customer_id}", 'createdon desc, contract_id desc') as $contract) {
+            if (trim((string)$contract->sqs_holder) !== '') {
+                return trim((string)$contract->sqs_holder);
             }
         }
         return '';
@@ -235,6 +252,7 @@ class EquipmentIssue extends \App\Pages\Base
         $f->referrer->setText('');
         $f->holder->setText('');
         $this->_autoref = '';
+        $this->_autoholder = '';
         $f->notes->setText('');
         $f->contract_number->setText(self::nextContractNumber());
     }
