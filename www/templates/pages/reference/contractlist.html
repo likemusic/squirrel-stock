@@ -142,6 +142,10 @@
                         <label  required="on"  for="editshortdesc">{{#t}}reference.contractlist.skorochenyi_opys_pryznachennia{{/t}}</label>
                         <input class="form-control" zippy="editshortdesc"/>
                     </div>
+                    <div class="mb-2"><!-- SquirrelStock -->
+                        <label for="sqs_editholder">{{#t}}sqs.contract.holder{{/t}}</label>
+                        <input class="form-control" zippy="sqs_editholder" placeholder="{{#t}}sqs.contract.holder_ph{{/t}}"/>
+                    </div>
                     <div class="mb-2">
                         <label for="editdesc">{{#t}}reference.contractlist.detalnyi_opys{{/t}}</label>
                         <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
@@ -189,6 +193,15 @@
                             <div class="col-auto  ">
                          <button zippy="buser" class="btn btn-success  me-2"> {{#t}}common.perevesty{{/t}}</button>
                         </div>
+                       </div>
+                       <div class="row mt-2"><!-- SquirrelStock -->
+                         <label class="col-form-label col-auto" for="sqs_holder">{{#t}}sqs.contract.holder{{/t}}</label>
+                         <div class="col">
+                         <input zippy="sqs_holder" class="form-control" placeholder="{{#t}}sqs.contract.holder_ph{{/t}}">
+                         </div>
+                         <div class="col-auto">
+                         <button zippy="sqs_bholder" class="btn btn-success me-2">{{#t}}common.zberehty{{/t}}</button>
+                         </div>
                        </div>
                     </form>
               
