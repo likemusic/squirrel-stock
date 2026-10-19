@@ -50,6 +50,18 @@ class ReturnIssue extends Document
                         "payamount"           => H::fa($this->payamount),
                         "payed"           => H::fa($this->headerdata['payed'])
         );
+        // SquirrelStock: договор выдачи-основания (возврат его не переносит) и «Договор заключен с» — для формы профиля charity/doc/returnissue.tpl
+        $sqsContract = intval($this->headerdata['contract_id'] ?? 0);
+        if ($sqsContract == 0 && $this->parent_id > 0) {
+            $sqsContract = intval(Document::load($this->parent_id)->headerdata['contract_id'] ?? 0);
+        }
+        $sqsContract = $sqsContract > 0 ? \App\Entity\Contract::load($sqsContract) : null;
+        if ($sqsContract) {
+            $header['iscontract'] = true;
+            $header['contract'] = $sqsContract->contract_number;
+            $header['createdon'] = H::fd($sqsContract->createdon);
+            $header['sqs_holder'] = (string)$sqsContract->sqs_holder;
+        }
         $header["nds"] = false;
         if ($this->getHD('nds',0) > 0) {
             $header["nds"] = H::fa($this->getHD('nds' )) ;
