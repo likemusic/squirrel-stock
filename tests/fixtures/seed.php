@@ -8,7 +8,7 @@
  * Вход (JSON):
  *   items:     [{ code, name, msr = 'шт', serial, snmode, minqty, cat_id }]
  *   customers: [{ name, type = 1 (1 — получатель, 2 — поставщик), phone, address }]
- *   contracts: [{ number, customer, from, to, note }] — в состоянии «В работе»; customer — имя контрагента
+ *   contracts: [{ number, customer, from, to, note, holder }] — в состоянии «В работе»; customer — имя контрагента; holder — «Договор заключен с»
  *   docs:      [{ type: IncomeItem | GoodsReceipt | GoodsIssue | OutcomeItem | MoveItem, date, customer, contract,
  *                 tostore, notes, draft, disc (скидка прихода GoodsReceipt), rows: [{ code, qty, price = 0, sn, sdate }] }]
  * Документы проводятся по порядку; первый отказ проведения — конец работы (этот документ не сохраняется).
@@ -104,6 +104,7 @@ try {
         $k->enddate = empty($r['to']) ? 0 : $date($r['to']);
         $k->shortdesc = $r['note'] ?? '';
         $k->desc = '';
+        $k->sqs_holder = $r['holder'] ?? '';
         $k->user_id = 0;   // ответственный не выбран
         $k->username = '';
         $k->save();

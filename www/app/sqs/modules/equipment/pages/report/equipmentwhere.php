@@ -119,7 +119,7 @@ class EquipmentWhere extends \App\Pages\Base
                 }
                 $contract = $doc ? ($contracts[$doc['contract_id']] ?? null) : null;
                 if ($contract) {
-                    $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);
+                    $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]) . \App\SQS\Units::holderNote($contract);
                     $row['sent'] = $contract->shortdesc;
                     $end = intval($contract->enddate);
                     $row['term'] = ($end == 0 || date('Y', $end) >= 2099) ? __('report.equipmentwhere.until_demand') : H::fd($end);
@@ -163,7 +163,7 @@ class EquipmentWhere extends \App\Pages\Base
             $contract = $contracts[$r['contract_id']] ?? null;
             if ($contract) {
                 $end = intval($contract->enddate);
-                $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]);
+                $row['contract'] = __('report.equipmentwhere.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]) . \App\SQS\Units::holderNote($contract);
                 $row['sent'] = $contract->shortdesc;
                 $row['term'] = ($end == 0 || date('Y', $end) >= 2099) ? __('report.equipmentwhere.until_demand') : H::fd($end);
                 $row['overdue'] = $end > 0 && date('Y', $end) < 2099 && $end < strtotime(date('Y-m-d'));

@@ -135,7 +135,7 @@ class RecipientCard extends \App\Pages\Base
         }
         $end = intval($ct->enddate);
         $ondemand = $end == 0 || date('Y', $end) >= \App\SQS\Units::ON_DEMAND_YEAR;
-        $row['contract'] = __('report.recipientcard.contract_of', ['number' => $ct->contract_number, 'date' => H::fd($ct->createdon)]);
+        $row['contract'] = __('report.recipientcard.contract_of', ['number' => $ct->contract_number, 'date' => H::fd($ct->createdon)]) . \App\SQS\Units::holderNote($ct);
         $row['sent'] = $ct->shortdesc;
         $row['term'] = $ondemand ? __('report.recipientcard.until_demand') : H::fd($end);
         $row['overdue'] = !$ondemand && $end < strtotime(date('Y-m-d'));
@@ -266,7 +266,7 @@ class RecipientCard extends \App\Pages\Base
             $contract = intval($doc->headerdata['contract_id'] ?? 0) > 0 ? \App\Entity\Contract::load($doc->headerdata['contract_id']) : null;
             $out[] = ['date' => H::fd($doc->document_date), 'type' => $doc->meta_desc, 'number' => $doc->document_number, 'docurl' => self::docUrl($doc->document_id),
                       'state' => Document::getStateName($doc->state), '_lines' => $lines, 'notes' => (string)$doc->notes,
-                      'contract' => $contract ? __('report.recipientcard.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]) : ''];
+                      'contract' => $contract ? __('report.recipientcard.contract_of', ['number' => $contract->contract_number, 'date' => H::fd($contract->createdon)]) . \App\SQS\Units::holderNote($contract) : ''];
         }
         return $out;
     }
