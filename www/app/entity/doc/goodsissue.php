@@ -144,6 +144,7 @@ class GoodsIssue extends Document
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
+            $header['sqs_holder'] = (string)$contract->sqs_holder;   // SquirrelStock: «Договор заключен с» (форма профиля charity/doc/goodsissue.tpl)
         }
 
         if ($this->getHD('nds',0) > 0) {

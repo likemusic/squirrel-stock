@@ -37,6 +37,7 @@ class Contract extends \ZCL\DB\Entity
         $this->creator_id = (int)($xml->creator_id[0]);
      
         $this->enddate = (int)($xml->enddate[0]);
+        $this->sqs_holder = (string)($xml->sqs_holder[0] ?? '');   // SquirrelStock: «Договор заключен с» — представитель получателя; пусто — с самим получателем
 
         parent::afterLoad();
     }
@@ -62,6 +63,7 @@ class Contract extends \ZCL\DB\Entity
         $this->details .= "<user_id>{$this->user_id}</user_id>";
        
         $this->details .= "<enddate>{$this->enddate}</enddate>";
+        $this->details .= "<sqs_holder><![CDATA[" . str_replace(']]>', '', (string)$this->sqs_holder) . "]]></sqs_holder>";   // SquirrelStock: без этого правка договора стирала бы поле
         $this->details .= "</details>";
 
         return true;

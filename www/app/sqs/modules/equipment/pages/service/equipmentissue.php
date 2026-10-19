@@ -25,7 +25,7 @@ use Zippy\Html\Link\ClickLink;
  * SquirrelStock: выдача оборудования одной формой — получатель, договор и единицы.
  * При оформлении создаются штатные сущности Zippy: договор в состоянии «В работе» (срок — дата окончания,
  * «до востребования» — 31.12.2099, «кем направлен» — краткое описание) и проведенная расходная накладная
- * по этому договору с ценой 0. Новый получатель создается контрагентом; телефон и адрес, если указаны, обновляются.
+ * по этому договору с ценой 0. «Договор заключен с» — представитель получателя (Contract::sqs_holder), пусто — с самим получателем. Новый получатель создается контрагентом; телефон и адрес, если указаны, обновляются.
  * При выборе получателя подставляются его телефон, адрес и «кем направлен» из последнего договора.
  */
 class EquipmentIssue extends \App\Pages\Base
@@ -51,6 +51,7 @@ class EquipmentIssue extends \App\Pages\Base
         $f->add(new Date('enddate'));
         $f->add(new CheckBox('ondemand', true));
         $f->add(new TextInput('referrer'));
+        $f->add(new TextInput('holder'));
         $f->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
         $f->add(new AutocompleteTextInput('unit'))->onText($this, 'onAutoUnit');
         $f->add(new SubmitButton('addunit'))->onClick($this, 'onAddUnit');   // не Button: тот уходит GET-запросом без данных формы
@@ -182,6 +183,7 @@ class EquipmentIssue extends \App\Pages\Base
             $contract->createdon = $date;
             $contract->enddate = $enddate;
             $contract->shortdesc = trim($f->referrer->getText());
+            $contract->sqs_holder = trim($f->holder->getText());
             $contract->creator_id = \App\System::getUser()->user_id;
             $contract->user_id = \App\System::getUser()->user_id;
             $contract->username = \App\System::getUser()->username;
@@ -231,6 +233,7 @@ class EquipmentIssue extends \App\Pages\Base
         $f->phone->setText('');
         $f->address->setText('');
         $f->referrer->setText('');
+        $f->holder->setText('');
         $this->_autoref = '';
         $f->notes->setText('');
         $f->contract_number->setText(self::nextContractNumber());

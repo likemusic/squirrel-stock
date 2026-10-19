@@ -27,6 +27,13 @@
         <td valign="top"><b>{{#t}}common.dohovir{{/t}}</b></td>
         <td colspan="4">{{#t}}common.vid{{/t}}</td>
     </tr>
+    {{#sqs_holder}}
+    <tr>
+        <td></td>
+        <td valign="top">{{#t}}sqs.contract.holder{{/t}}</td>
+        <td colspan="4">{{sqs_holder}}</td>
+    </tr>
+    {{/sqs_holder}}
     {{/iscontract}}
     <tr>
         <td></td>

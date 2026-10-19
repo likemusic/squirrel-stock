@@ -107,6 +107,18 @@ class Units
         return count($ids) ? \App\Entity\Customer::find('customer_id IN (' . implode(',', $ids) . ')') : [];
     }
 
+    // «Договор заключен с» (Contract::sqs_holder): представитель получателя, обычно родитель; '' — договор с самим получателем
+    public static function holder(int $contract_id): string {
+        $c = $contract_id > 0 ? \App\Entity\Contract::load($contract_id) : null;
+        return $c ? trim((string)$c->sqs_holder) : '';
+    }
+
+    // дописка к строке договора в отчетах: «, заключен с …» или ''
+    public static function holderNote(?\App\Entity\Contract $c): string {
+        $h = $c ? trim((string)$c->sqs_holder) : '';
+        return $h === '' ? '' : __('sqs.contract.holder_note', ['name' => $h]);
+    }
+
     // договоры одним запросом: [contract_id => Contract]
     public static function contracts(array $ids): array {
         $ids = array_unique(array_filter(array_map('intval', $ids)));

@@ -58,6 +58,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new Date('editenddate', strtotime("+1 month", time())));
         $this->contractdetail->add(new TextInput('editshortdesc'));
         $this->contractdetail->add(new TextArea('editdesc'));
+        $this->contractdetail->add(new TextInput('sqs_editholder'));   // SquirrelStock: «Договор заключен с»
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
 
@@ -79,6 +80,8 @@ class ContractList extends \App\Pages\Base
         $statusform->add(new DropDownChoice('musers',   User::findArray('username', 'disabled<>1', 'username'), 0));
         $statusform->add(new SubmitButton('bstatus'))->onClick($this, 'bstatusOnClick');
         $statusform->add(new SubmitButton('buser'))->onClick($this, 'buserOnClick');
+        $statusform->add(new TextInput('sqs_holder'));   // SquirrelStock: «Договор заключен с» — правится и у договора «В работе» (форма правки ему недоступна)
+        $statusform->add(new SubmitButton('sqs_bholder'))->onClick($this, 'sqsHolderOnClick');
      
         $this->docpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->docpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -143,6 +146,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcontract_number->setText($this->_contract->contract_number);
         $this->contractdetail->editshortdesc->setText($this->_contract->shortdesc);
         $this->contractdetail->editdesc->setText($this->_contract->desc);
+        $this->contractdetail->sqs_editholder->setText($this->_contract->sqs_holder);
    
         $this->contractdetail->editcust->setKey($this->_contract->customer_id);
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
@@ -190,6 +194,7 @@ class ContractList extends \App\Pages\Base
         $this->_contract->enddate = $this->contractdetail->editenddate->getDate();
         $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
         $this->_contract->desc = $this->contractdetail->editdesc->getText();
+        $this->_contract->sqs_holder = trim($this->contractdetail->sqs_editholder->getText());
 
         $this->_contract->user_id = $this->contractdetail->editemp->getValue();
         $this->_contract->username = $this->contractdetail->editemp->getValueName();
@@ -208,6 +213,28 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->setVisible(false);
         $this->docpan->setVisible(false);
     }
+    // SquirrelStock: «Договор заключен с»; было → стало — в историю договора
+    public function sqsHolderOnClick($sender) {
+        if (false == \App\ACL::checkEditRef('ContractList')) {
+            return;
+        }
+        $old = trim((string)$this->_contract->sqs_holder);
+        $new = trim($this->docpan->statusform->sqs_holder->getText());
+        if ($old !== $new) {
+            $this->_contract->sqs_holder = $new;
+            $this->_contract->save();
+            $msg = new \App\Entity\Message();
+            $msg->message = __('sqs.contract.holder_changed', ['from' => $old === '' ? '—' : $old, 'to' => $new === '' ? '—' : $new]);
+            $msg->created = time();
+            $msg->user_id = \App\System::getUser()->user_id;
+            $msg->item_id = $this->_contract->contract_id;
+            $msg->item_type = \App\Entity\Message::TYPE_CONTRACT;
+            $msg->save();
+            $this->updateMessages();
+        }
+        $this->setSuccess(__('sqs.contract.holder_saved'));
+    }
+
     public function bstatusOnClick($sender) {
         $this->contracttable->setVisible(true);
         $this->docpan->setVisible(false);
@@ -260,6 +287,7 @@ class ContractList extends \App\Pages\Base
         $this->docpan->setVisible(true);
         $this->docpan->cname->setText($this->_contract->contract_number);
         $this->docpan->showdesc->setText($this->_contract->desc);
+        $this->docpan->statusform->sqs_holder->setText((string)$this->_contract->sqs_holder);
 
         $this->docpan->statusform->mstates->setValue($this->_contract->state);
         $this->docpan->statusform->musers->setValue($this->_contract->user_id);
