@@ -3,6 +3,7 @@
 namespace App\Pages\Service;
 
 use App\Helper as H;
+use App\SQS\EqFix;
 use App\SQS\EqHistory;
 use App\SQS\EqItemMap;
 use Zippy\Html\Form\CheckBox;
@@ -20,13 +21,14 @@ use Zippy\Html\Label;
  * с тех пор поменяли — разбирает заново) частями по ~20 секунд: после каждой части страница сама продолжает запись
  * (на хостинге запрос обрывается через 30–60 с). После обрыва — «Проверить» и «Записать» снова: записанное не дублируется.
  * Соответствия «написание → позиция» для мелочи без номеров (App\SQS\EqItemMap) правятся тут же и сохраняются
- * при проверке и записи; написания, которых в них нет, — в отчете с кнопкой «добавить в соответствия».
+ * при проверке и записи; написания, которых в них нет, — в отчете с кнопкой «добавить в соответствия». Так же —
+ * список исправлений строк таблиц (App\SQS\EqFix: ФИО, номер договора, задвоенные строки).
  */
 class ImportEquipmentHistory extends \App\Pages\Base
 {
     public array $_files = [];   // [имя файла => путь к копии во временной папке]
     public string $_state = '';  // разбор проверки и ход записи (App\SQS\EqHistory) — файл во временной папке: в таблицах ПДн
-    public string $_mapText = ''; // соответствия, с которыми сделан разбор
+    public string $_mapText = ''; // соответствия и исправления, с которыми сделан разбор
     public bool $_lift = false;
     public int $_store = 0;
 
@@ -42,6 +44,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $form->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
         $form->add(new CheckBox('liftperiod', false));
         $form->add(new TextArea('itemmap', EqItemMap::toText(EqItemMap::all())));
+        $form->add(new TextArea('fixes', EqFix::text()));
         $form->add(new SubmitButton('check'))->onClick($this, 'onCheck');
         $form->add(new SubmitButton('write'))->onClick($this, 'onWrite');
         $form->write->setVisible(false);
@@ -90,7 +93,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
             return;
         }
         // разбор проверки, если соответствия с тех пор не меняли; иначе — заново
-        $eh = $this->_mapText === $this->iform->itemmap->getText() ? $this->loadState() : null;
+        $eh = $this->_mapText === $this->settingsText() ? $this->loadState() : null;
         $eh = $eh ?? $this->analyze();
         if (!$eh) {
             return;
@@ -143,7 +146,11 @@ class ImportEquipmentHistory extends \App\Pages\Base
             $this->_state = tempnam(sys_get_temp_dir(), 'sqs-eqh-');
         }
         file_put_contents($this->_state, serialize($eh));
-        $this->_mapText = $this->iform->itemmap->getText();
+        $this->_mapText = $this->settingsText();
+    }
+
+    private function settingsText(): string {
+        return $this->iform->itemmap->getText() . "\n=====\n" . $this->iform->fixes->getText();
     }
 
     private function loadState(): ?EqHistory {
@@ -168,15 +175,21 @@ class ImportEquipmentHistory extends \App\Pages\Base
         return $eh;
     }
 
-    // соответствия из поля: с ошибкой в строке — не сохранять и не разбирать файлы
+    // соответствия и исправления из полей: с ошибкой в строке — не сохранять и не разбирать файлы
     private function saveMap(): bool {
         $p = EqItemMap::parse($this->iform->itemmap->getText());
         if (count($p['errors'])) {
             $this->setError(__('sqs.eqhist.map_bad_lines', ['lines' => implode(', ', array_keys($p['errors']))]));
             return false;
         }
+        $f = EqFix::parse($this->iform->fixes->getText());
+        if (count($f['errors'])) {
+            $this->setError(__('sqs.eqhist.fix_bad_lines', ['lines' => implode(', ', array_keys($f['errors']))]));
+            return false;
+        }
         EqItemMap::save($p['map']);
         $this->iform->itemmap->setText(EqItemMap::toText($p['map']));
+        EqFix::save($this->iform->fixes->getText());
         return true;
     }
 
@@ -205,7 +218,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
         $s = $eh->stat;
         $rows = ['issues' => $s['issues'], 'merged' => $s['merged'], 'customers' => $s['customers'], 'contracts' => $s['contracts'],
                  'income' => $s['income'], 'issue' => $s['issue'], 'return' => $s['return'], 'writeoff' => $s['writeoff'],
-                 'done' => $s['done'], 'noinv' => $s['noinv'], 'errors' => $s['errors'], 'notes' => $s['notes']];
+                 'done' => $s['done'], 'noinv' => $s['noinv'], 'consumable' => $s['consumable'], 'fixed' => $s['fixed'], 'errors' => $s['errors'], 'notes' => $s['notes']];
         if ($res !== null) {
             $rows = ['income' => $res['income'], 'issue' => $res['issue'], 'return' => $res['return'], 'writeoff' => $res['writeoff'], 'failed' => $res['failed'], 'skipped' => $res['skipped'],
                      'done' => $s['done'], 'errors' => count(array_filter($eh->problems, fn($p) => $p['level'] == 'error')), 'notes' => $s['notes']];
@@ -252,6 +265,13 @@ class ImportEquipmentHistory extends \App\Pages\Base
             $h .= '<h6>' . __('sqs.eqhist.onhand_title') . '</h6><table class="table table-sm w-auto" id="eqh-onhand">';
             foreach ($eh->onhand as $item => $n) {
                 $h .= '<tr><td>' . self::e($item) . '</td><td class="text-end">' . $n . '</td></tr>';
+            }
+            $h .= '</table>';
+        }
+        if (count($eh->consumables)) {
+            $h .= '<h6>' . __('sqs.eqhist.consumable_title') . '</h6><table class="table table-sm w-auto" id="eqh-consumable">';
+            foreach ($eh->consumables as $w => $n) {
+                $h .= '<tr><td>' . self::e($w) . '</td><td class="text-end">' . $n . '</td></tr>';
             }
             $h .= '</table>';
         }
