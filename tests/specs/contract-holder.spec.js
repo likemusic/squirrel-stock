@@ -1,7 +1,7 @@
 // «Договор заключен с» (ответ хосписа 5.18): договор на оборудование заключен с представителем (обычно родителем) в пользу получателя.
 // Получатель выдач — подопечный; представитель — поле договора (Contract::sqs_holder, тег <sqs_holder> в contracts.details), пусто — с самим получателем.
 const { test, expect } = require('../fixtures');
-const { pickAuto, clickWait, login, printForm } = require('../helpers/zippy');
+const { pickAuto, clickWait, login, printForm, messages } = require('../helpers/zippy');
 const { seed } = require('../helpers/seed');
 const { value, esc } = require('../helpers/db');
 const { webPhp } = require('../helpers/stand');
@@ -110,4 +110,54 @@ test('«Где сейчас» и карточка получателя: пред
   const card = page.locator('#preview');
   await expect(card.locator('tr', { hasText: inv(1) }).first()).toContainText(`укладено з Представитель ${uniq}`);
   await expect(card.locator('tr', { hasText: inv(2) }).first()).not.toContainText('укладено з');
+});
+
+test('«Договор заключен с» подставляется из последнего договора получателя, вписанное вручную не затирается', async ({ page, uniq }) => {
+  const who = 'Подопечный ' + uniq, other = 'Подопечный другой ' + uniq;
+  seed({ customers: [{ name: who, type: 1 }, { name: other, type: 1 }],
+         contracts: [{ number: 'A' + uniq, customer: who, from: '2026-09-01', to: '2099-12-31', holder: 'Представитель Прежний' },
+                     { number: 'B' + uniq, customer: who, from: '2026-10-01', to: '2099-12-31', holder: 'Представитель Последний' },
+                     { number: 'C' + uniq, customer: who, from: '2026-10-02', to: '2099-12-31' }] });   // договор без поля не затирает прежнее значение
+  await page.goto('/index.php?p=App/Pages/Service/EquipmentIssue');
+  const holder = page.locator('#iform #holder');
+  await pickAuto(page, '#iform #customer', who, who);
+  await expect(holder, 'из последнего договора с заполненным полем').toHaveValue('Представитель Последний');
+
+  await pickAuto(page, '#iform #customer', other, other);
+  await expect(holder, 'подставленное снимается при смене получателя без представителя').toHaveValue('');
+
+  await holder.fill('Представитель Вписанный');
+  await pickAuto(page, '#iform #customer', who, who);
+  await expect(holder, 'вписанное вручную не перезаписывается').toHaveValue('Представитель Вписанный');
+});
+
+test('печать возврата в профиле: договор выдачи и «Договор заключен с»', async ({ page, browser, uniq }) => {
+  const code = 'CR-' + uniq, who = 'Подопечный ' + uniq, parent = 'Представитель ' + uniq;
+  const { docs } = seed({
+    items: [{ name: 'Позиция ' + code, code }],
+    customers: [{ name: who, type: 1 }],
+    contracts: [{ number: 'A' + uniq, customer: who, from: '2026-10-01', to: '2099-12-31', holder: parent }],
+    docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 5, price: 0 }] },
+           { type: 'GoodsIssue', date: '2026-10-02', customer: who, contract: 'A' + uniq, rows: [{ code, qty: 2, price: 0 }] },
+           { type: 'GoodsIssue', date: '2026-10-02', customer: who, rows: [{ code, qty: 1, price: 0 }] }],
+  });
+  const ret = async issueId => {
+    await page.goto('/index.php?p=App/Pages/Doc/ReturnIssue&arg=0/' + issueId);
+    await page.locator('#document_date').fill('2026-10-03');
+    await page.locator('#docform #notes').fill('Возврат ' + uniq);
+    await clickWait(page, '#execdoc');
+    expect(await page.locator('#docform #execdoc:visible').count(), (await messages(page)).join(' ')).toBe(0);
+    return value(`select max(document_id) from documents where parent_id = ${issueId}`);
+  };
+  const withContract = await ret(docs[1].id), without = await ret(docs[2].id);
+
+  webPhp('cli/charity-profile.php');
+  const p = await freshPage(browser);
+  let text = await printForm(p, withContract);
+  expect(text).toContain('Повернув ' + who);
+  expect(text).toContain(`Договір A${uniq} від 01.10.2026`);
+  expect(text).toContain('Договір укладено з ' + parent);
+  text = await printForm(p, without);
+  expect(text, 'возврат выдачи без договора — без строк договора').not.toMatch(/Договір/);
+  await p.context().close();
 });

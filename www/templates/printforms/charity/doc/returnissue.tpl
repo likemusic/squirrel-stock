@@ -19,6 +19,20 @@
         <td colspan="3">{{firm_name}}</td>
     </tr>
     {{/firm_name}}
+    {{#iscontract}}
+    <tr>
+        <td></td>
+        <td valign="top"><b>{{#t}}common.dohovir{{/t}}</b></td>
+        <td colspan="3">{{#t}}common.vid{{/t}}</td>
+    </tr>
+    {{/iscontract}}
+    {{#sqs_holder}}
+    <tr>
+        <td></td>
+        <td valign="top">{{#t}}sqs.contract.holder{{/t}}</td>
+        <td colspan="3">{{sqs_holder}}</td>
+    </tr>
+    {{/sqs_holder}}
     <tr>
         <td colspan="5">{{{notes}}}</td>
     </tr>
