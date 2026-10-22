@@ -22,6 +22,10 @@ use App\Entity\Item;
  * единица только с заводским номером создается товаром «по листу». Без номеров (мелочь) — на руках количеством на позицию по соответствиям «написание → позиция» (EqItemMap), остальное — пропуск со сводкой.
  * Позиция с инвентарными номерами (отметка «*» в соответствиях или товар с серийным учетом) без номера мелочью не заводится:
  * такие выдачи — списком «без инвентарного номера» для ручного ввода номера (ответ хосписа 5.12).
+ * Ответы хосписа на сверку таблиц (19.10.2026): ФИО, номера договоров, задвоенные строки и номер на двух листах — списком
+ * исправлений (App\SQS\EqFix); повторная выдача раньше даты возврата по прошлой — выдача сдвигается на дату возврата (5.19);
+ * инвентарного номера из переписи нет в базе, а он в пределах номеров ведомости 1С — единица переносится списанной (в 1С списана, 5.21); расходник по соответствиям
+ * (позиция «-», 5.17) не переносится.
  * Одна выдача в обеих таблицах склеивается по единице и дате. Документы: приход единицы, которой нет в базе (накануне
  * первой выдачи), выдача по договору, возврат, списание — проводятся в хронологическом порядке. Что уже импортировано
  * (таблица sqs_eqhistory), повторно не создается.
@@ -42,6 +46,8 @@ class EqHistory
     public array $unmapped = [];  // написания мелочи, которых нет в соответствиях (App\SQS\EqItemMap): [написание => строк]
     public array $noInv = [];     // выдачи на руках позиций с инвентарными номерами, где номера нет: [sheet, row, contract, date, name, written, item]
     public ?array $itemMap = null; // соответствия «написание → позиция»; null — из базы
+    public ?string $fixText = null; // список исправлений (App\SQS\EqFix); null — из базы
+    public array $consumables = []; // строки-расходники (позиция «-» в соответствиях), не переносятся: [написание => строк]
     public int $blocked = 0;      // дата актуальности из настроек, если она позже первого документа импорта
 
     // ---------- чтение ----------
@@ -584,10 +590,40 @@ class EqHistory
         return count($rows) == 1 ? ['item_id' => (int)$rows[0]['item_id'], 'snumber' => $rows[0]['snumber'], 'itemname' => $rows[0]['itemname']] : null;
     }
 
-    private function resolveUnits(): void {
+    private ?array $invRanges = null;
+    private array $off1c = [];   // единицы, списанные в 1С: [номер => единица]
+
+    /**
+     * Номер — в пределах инвентарных номеров ведомости 1С в базе (те же первые 4 цифры, между наименьшим и наибольшим),
+     * но его там нет: единица была и списана в 1С до даты ведомости (ответ 5.21). Номер больше наибольшего — единица
+     * появилась после ведомости, не в формате номеров базы — описка или заводской номер в колонке инвентарного: ошибка.
+     */
+    private function inStatementRange(string $n): bool {
+        if ($this->invRanges === null) {
+            $this->invRanges = [];
+            foreach (\ZDB\DB::getConnect()->Execute("SELECT LEFT(snumber, 4) p, MIN(snumber) lo, MAX(snumber) hi FROM store_stock
+                                                       WHERE snumber REGEXP '^[0-9]{8}$' GROUP BY LEFT(snumber, 4)") as $r) {
+                $this->invRanges[$r['p']] = [$r['lo'], $r['hi']];
+            }
+        }
+        if (preg_match('/^\d{7}$/', $n)) {
+            $n = '0' . $n;   // ведущий ноль, потерянный в таблице
+        }
+        if (!preg_match('/^\d{8}$/', $n) || !isset($this->invRanges[substr($n, 0, 4)])) {
+            return false;
+        }
+        [$lo, $hi] = $this->invRanges[substr($n, 0, 4)];
+        return strcmp($n, $lo) > 0 && strcmp($n, $hi) < 0;
+    }
+
+    private function resolveUnits(array $map): void {
         // перепись: инв. номер — единица в базе; только заводской — в базе или новая «по листу»
         foreach ($this->records as $i => &$rec) {
-            if ($rec['src'] != 'census' || $rec['error']) {
+            if ($rec['src'] != 'census' || $rec['error'] || !empty($rec['skip'])) {
+                continue;
+            }
+            if ($rec['itemtext'] !== '' && EqItemMap::consumable($map, $rec['itemtext'])) {
+                $this->consumable($rec);
                 continue;
             }
             if ($rec['inv'] === '' && $rec['factory'] === '') {
@@ -598,9 +634,16 @@ class EqHistory
                 $u = self::findUnit(self::num($rec['inv']));
                 if ($u === 'many') {
                     $this->fail($rec, __('sqs.eqhist.unit_ambiguous', ['value' => $rec['inv']]));
-                } elseif ($u === null) {
+                } elseif ($u === null && !$this->inStatementRange(self::num($rec['inv']))) {
                     $this->fail($rec, __('sqs.eqhist.inv_not_in_db', ['value' => $rec['inv']]));
                     $this->missing[$rec['inv']] = [$rec['sheet'], $rec['itemtext']];
+                } elseif ($u === null) {
+                    // в 1С единица списана (ответ 5.21): переносится новой единицей по листу и списывается в конце цепочки;
+                    // номер на нескольких листах — одна единица (по первому листу)
+                    $k = self::num($rec['inv']);
+                    $this->off1c[$k] = $this->off1c[$k] ?? ['item_id' => 0, 'snumber' => $rec['inv'], 'itemname' => $rec['sheet'], 'new' => true, 'off1c' => true];
+                    $rec['unit'] = $this->off1c[$k];
+                    $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], $rec['inv'], __('sqs.eqhist.off_in_1c', ['item' => $rec['sheet']]));
                 } else {
                     $rec['unit'] = $u;
                 }
@@ -628,7 +671,11 @@ class EqHistory
         }
         // журнал и лист «СПИСАНО»: номер — в базе или в переписи
         foreach ($this->records as &$rec) {
-            if ($rec['src'] == 'census' || $rec['error']) {
+            if ($rec['src'] == 'census' || $rec['error'] || !empty($rec['skip'])) {
+                continue;
+            }
+            if ($rec['src'] == 'journal' && $rec['itemtext'] !== '' && EqItemMap::consumable($map, $rec['itemtext'])) {
+                $this->consumable($rec);
                 continue;
             }
             $nums = $rec['src'] == 'journal' ? ($rec['number'] === '' ? [] : [self::num($rec['number'])]) : $rec['nums'];
@@ -638,6 +685,7 @@ class EqHistory
             }
             $found = [];
             $censusFailed = null;   // строка переписи с этим номером, где единица не найдена
+            $censusConsumable = null;   // строка переписи расходника с этим номером
             foreach ($nums as $n) {
                 $u = self::findUnit($n);
                 if (is_array($u)) {
@@ -650,7 +698,9 @@ class EqHistory
                     $cu = $this->records[$j]['unit'];
                     if (is_array($cu)) {
                         $units[self::ukey($cu)] = $cu;
-                    } else {
+                    } elseif (!empty($this->records[$j]['consumable'])) {
+                        $censusConsumable = $this->records[$j];
+                    } elseif (empty($this->records[$j]['skip'])) {
                         $censusFailed = $this->records[$j];
                     }
                 }
@@ -662,6 +712,9 @@ class EqHistory
                 $rec['unit'] = reset($found);
             } elseif (count($found) > 1) {
                 $this->fail($rec, __('sqs.eqhist.unit_ambiguous', ['value' => implode(', ', $nums)]));
+            } elseif ($censusConsumable && $rec['src'] == 'journal') {
+                $this->consumable($rec);
+                $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], $rec['number'], __('sqs.eqhist.consumable_by_census', ['sheet' => $censusConsumable['sheet'], 'row' => $censusConsumable['row']]));
             } elseif ($censusFailed) {
                 $this->fail($rec, __('sqs.eqhist.census_unit_failed', ['sheet' => $censusFailed['sheet'], 'row' => $censusFailed['row']]));
             } else {
@@ -672,6 +725,92 @@ class EqHistory
             }
         }
         unset($rec);
+    }
+
+    // расходник (позиция «-» в соответствиях): не переносится ни единицей, ни количеством
+    private function consumable(array &$rec): void {
+        $w = $rec['itemtext'] !== '' ? $rec['itemtext'] : '-';
+        $this->consumables[$w] = ($this->consumables[$w] ?? 0) + 1;
+        $rec['skip'] = true;
+        $rec['consumable'] = true;
+    }
+
+    /**
+     * Список исправлений (App\SQS\EqFix): ФИО и номер договора, пропуск задвоенных строк, верный лист для номера.
+     * Строка, которая ни к чему не подошла, — заметка: в таблице уже исправили или в списке опечатка.
+     */
+    private function applyFixes(): void {
+        $p = EqFix::parse($this->fixText ?? EqFix::text());
+        $used = [];
+        $byKind = [];
+        foreach ($p['fixes'] as $f) {
+            $byKind[$f['kind']][] = $f;
+        }
+        $this->stat['fixed'] = 0;
+        foreach ($this->records as &$rec) {
+            if ($rec['error'] || $rec['src'] == 'writeoff') {
+                continue;
+            }
+            $fixed = [];
+            // номер на нескольких листах переписи: строки не того листа не переносятся
+            if ($rec['src'] == 'census') {
+                foreach ($byKind['sheet'] ?? [] as $f) {
+                    if (in_array($f['number'], [self::num($rec['inv']), self::num($rec['factory'])], true)) {
+                        $used[$f['line']] = 1;
+                        if (EqItemMap::key($rec['sheet']) !== EqItemMap::key($f['sheet'])) {
+                            $rec['skip'] = true;
+                            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.fix_other_sheet', ['sheet' => $f['sheet'], 'line' => $f['line']]));
+                        }
+                    }
+                }
+            }
+            if (!empty($rec['skip'])) {
+                continue;
+            }
+            $who = EqItemMap::key($rec['name']);
+            foreach (array_merge($byKind['skip'] ?? [], $byKind['move'] ?? []) as $f) {
+                if ($f['contract'] === $rec['contract'] && $f['who'] === $who) {
+                    $used[$f['line']] = 1;
+                    if ($f['kind'] == 'skip') {
+                        $rec['skip'] = true;
+                        $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.fix_skip', ['line' => $f['line']]));
+                        continue 2;
+                    }
+                    $rec['contract'] = $f['to'];
+                    $fixed[] = $f['line'];
+                    break;
+                }
+            }
+            foreach ($byKind['recipient'] ?? [] as $f) {
+                if ($f['contract'] === $rec['contract']) {
+                    $used[$f['line']] = 1;
+                    if ($rec['name'] !== $f['name'] || $f['holder'] !== '') {
+                        $rec['name'] = $f['name'];
+                        $rec['holder'] = $f['holder'];
+                        $fixed[] = $f['line'];
+                    }
+                }
+            }
+            if (count($fixed)) {
+                $this->stat['fixed']++;
+                $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.fix_applied', ['lines' => implode(', ', array_unique($fixed))]));
+            }
+        }
+        unset($rec);
+        // ФИО одного договора, различающиеся только регистром, «ё» и пробелами («Иванова /Петрова» и «Иванова/ Петрова»), —
+        // одно лицо: написание первой строки
+        $canon = [];
+        foreach ($this->records as &$rec) {
+            if (!$rec['error'] && empty($rec['skip']) && $rec['src'] != 'writeoff' && $rec['contract'] !== '' && $rec['name'] !== '') {
+                $rec['name'] = $canon[$rec['contract'] . '|' . EqItemMap::key($rec['name'])] ??= $rec['name'];
+            }
+        }
+        unset($rec);
+        foreach ($p['fixes'] as $f) {
+            if (!isset($used[$f['line']])) {
+                $this->problem('note', '', 0, $f['contract'] ?? '', $f['number'] ?? '', __('sqs.eqhist.fix_unused', ['line' => $f['line']]));
+            }
+        }
     }
 
     /**
@@ -704,7 +843,9 @@ class EqHistory
      * Разобрать прочитанное: найти единицы, склеить дубли, составить план документов (без записи)
      */
     public function analyze(): void {
-        $this->resolveUnits();
+        $map = $this->itemMap ?? EqItemMap::all();
+        $this->applyFixes();
+        $this->resolveUnits($map);
 
         // выдачи: одна выдача из обеих таблиц (или с двух листов) — по единице и дате
         $issues = [];
@@ -777,8 +918,10 @@ class EqHistory
                     continue;
                 }
                 if ($is['idate'] < $busy) {
-                    $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_before_return', ['date' => date('d.m.Y', $busy)]));
-                    continue;
+                    // верна дата возврата прошлой выдачи (ответ 5.19): выдача — в день возврата
+                    $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issue_moved', ['was' => date('d.m.Y', $is['idate']), 'date' => date('d.m.Y', $busy)]));
+                    $is['notes'][] = __('sqs.eqhist.issue_moved_doc', ['was' => date('d.m.Y', $is['idate'])]);
+                    $is['idate'] = $busy;
                 }
                 if ($is['ret'] && $is['ret'] < $is['idate']) {
                     $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.return_before_issue'));
@@ -829,6 +972,16 @@ class EqHistory
                 $events[] = ['kind' => 'writeoff', 'date' => $today, 'unit' => $offToday['unit'], 'rec' => $offToday, 'extra' => __('sqs.eqhist.off_unknown_doc'), 'nodate' => true];
                 $out = null;
             }
+            // списана в 1С (5.21): списание датой последнего события; на руках по таблицам — возврат и списание датой импорта
+            $last = end($list);
+            if (!empty($last['unit']['off1c']) && $out !== null && !isset($offs[$uk]) && !$first) {
+                $lastDate = max(array_map(fn($ev) => $ev['date'], array_filter($events, fn($ev) => self::ukey($ev['unit']) === $uk)));
+                if ($out) {
+                    $events[] = ['kind' => 'return', 'date' => $today, 'unit' => $last['unit'], 'rec' => $last, 'extra' => __('sqs.eqhist.ret_unknown_doc'), 'nodate' => true];
+                }
+                $events[] = ['kind' => 'writeoff', 'date' => $out ? $today : $lastDate, 'unit' => $last['unit'], 'rec' => $last, 'extra' => __('sqs.eqhist.off_in_1c_doc'), 'nodate' => $out];
+                $out = null;
+            }
             foreach ($offs[$uk] ?? [] as $o) {
                 if ($out === null) {
                     continue;   // уже списана по статусу в переписи
@@ -862,10 +1015,13 @@ class EqHistory
         $this->onhand = [];
         $this->unmapped = [];
         $this->noInv = [];
-        $map = $this->itemMap ?? EqItemMap::all();
         foreach ($qtyRecs as $r) {
             if ($r['src'] == 'journal' && isset($censusQty[$r['contract'] . '|' . date('Y-m-d', $r['idate'])])) {
                 $this->stat['qtymerged'] = ($this->stat['qtymerged'] ?? 0) + 1;
+                continue;
+            }
+            if (EqItemMap::consumable($map, $r['written'])) {
+                $this->consumables[$r['written']] = ($this->consumables[$r['written']] ?? 0) + 1;
                 continue;
             }
             // варианты написания одного вида — одна позиция; неизвестное написание не заводится, а идет в отчет
@@ -900,7 +1056,8 @@ class EqHistory
         // уже импортированное
         $done = self::doneKeys();
         $this->stat = ['records' => count($this->records), 'issues' => count($issues), 'merged' => $this->stat['qtymerged'] ?? 0, 'errors' => 0, 'notes' => 0,
-                       'income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'done' => 0, 'customers' => 0, 'contracts' => 0, 'noinv' => count($this->noInv)];
+                       'income' => 0, 'issue' => 0, 'return' => 0, 'writeoff' => 0, 'done' => 0, 'customers' => 0, 'contracts' => 0, 'noinv' => count($this->noInv),
+                       'fixed' => $this->stat['fixed'] ?? 0, 'consumable' => array_sum($this->consumables)];
         $this->plan = [];
         $newCustomers = [];
         $newContracts = [];
@@ -1262,9 +1419,13 @@ class EqHistory
             $contract->user_id = \App\System::getUser()->user_id;
             $contract->username = \App\System::getUser()->username;
             $contract->state = Contract::STATE_INWORK;
+            $contract->sqs_holder = $rec['holder'] ?? '';   // договор заключен с представителем в пользу получателя (ответ 5.18)
             $contract->save();
         } elseif ($contract->customer_id != $customer->customer_id) {
             throw new \Exception(__('sqs.eqhist.contract_other_customer', ['number' => $rec['contract']]));
+        } elseif (($rec['holder'] ?? '') !== '' && trim((string)$contract->sqs_holder) === '') {
+            $contract->sqs_holder = $rec['holder'];
+            $contract->save();
         }
 
         $unit = $e['unit'];

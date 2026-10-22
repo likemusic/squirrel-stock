@@ -11,6 +11,8 @@ namespace App\SQS;
  * Правится на странице импорта текстом: строка «написание = позиция». Позиция со «*» в конце — оборудование
  * с инвентарными номерами (кровати, концентраторы): строка такой позиции без номера не заводится мелочью количеством,
  * а идет в список «без инвентарного номера» для ручного ввода номера. Отметка хранится в позиции (в базе — «позиция *»).
+ * Позиция «-» — расходник («Beurer Medical = -», ответ хосписа 5.17: пальчиковые пульсоксиметры): строки с таким
+ * наименованием не переносятся, даже с номером в строке — список «расходники» в отчете.
  */
 class EqItemMap
 {
@@ -27,6 +29,9 @@ class EqItemMap
 
     // позиция и отметка «с инвентарными номерами» из текста «позиция *»
     private static function entry(string $w, string $item): array {
+        if (self::clean($item) === '-') {
+            return ['written' => $w, 'item' => '-', 'serial' => false, 'consumable' => true];
+        }
         $serial = str_ends_with($item, '*');
         return ['written' => $w, 'item' => self::clean(rtrim($item, '* ')), 'serial' => $serial];
     }
@@ -51,14 +56,21 @@ class EqItemMap
             return null;
         }
         if (isset($map[$k])) {
-            return $map[$k]['item'];
+            return empty($map[$k]['consumable']) ? $map[$k]['item'] : null;
         }
         foreach ($map as $m) {
-            if (self::key($m['item']) === $k) {
+            if (empty($m['consumable']) && self::key($m['item']) === $k) {
                 return $m['item'];
             }
         }
         return null;
+    }
+
+    /**
+     * Написание — расходник (позиция «-»): строка не переносится
+     */
+    public static function consumable(array $map, string $written): bool {
+        return !empty($map[self::key($written)]['consumable']);
     }
 
     /**

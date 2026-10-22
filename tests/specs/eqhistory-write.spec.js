@@ -1,6 +1,6 @@
 // Импорт истории оборудования: то, что нашлось на репетиции переноса реальных данных (16.10.2026).
-//  - единица выдана повторно раньше даты возврата по прошлой выдаче — ошибка проверки (раньше проходило молча
-//    или роняло запись);
+//  - единица выдана повторно раньше даты возврата по прошлой выдаче — выдача сдвигается на дату возврата с заметкой
+//    (ответ хосписа 5.19; раньше проходило молча или роняло запись);
 //  - договор, записанный на другое ФИО, — ошибка проверки, а не сбой при записи;
 //  - возврат будущим числом — заметка: единица на руках, дата — срок договора;
 //  - событие, которое не записалось, — в отчете с причиной и с тем, что из-за него пропущено; остальное записывается;
@@ -55,15 +55,16 @@ test('импорт истории: пересечения, договор с д�
     await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
     await clickWait(page, '#iform #check');
 
-    // проверка: две ошибки, план без строк с ошибками
+    // проверка: одна ошибка, план без строки с ошибкой; пересечение — заметка
     const problems = (await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n');
-    expect(problems).toContain('Одиницю видано повторно раніше повернення за попередньою видачею (повернення 01.05.2025)');
     expect(problems).toContain(`Договір ${cn(4, '25')} уже є з іншим отримувачем`);
-    expect(await page.locator('#eqh-problems tr.error').count()).toBe(2);
+    expect(await page.locator('#eqh-problems tr.error').count()).toBe(1);
     const fut = future.split('-').reverse().join('.');
-    expect((await page.locator('#eqh-problems tr.note').allInnerTexts()).join('\n')).toContain(`Повернення майбутньою датою (${fut})`);
-    expect(await stat('issue')).toBe(5);    // строки 3, 5, 6, 8, 9; строки 4 и 7 — ошибки
-    expect(await stat('return')).toBe(2);   // строки 3 и 9; будущий возврат строки 8 — не возврат
+    const notes = (await page.locator('#eqh-problems tr.note').allInnerTexts()).join('\n');
+    expect(notes).toContain(`Повернення майбутньою датою (${fut})`);
+    expect(notes).toContain('Видача 01.03.2025 раніше повернення за попередньою видачею: дата видачі — 01.05.2025');
+    expect(await stat('issue')).toBe(6);    // строки 3, 4, 5, 6, 8, 9; строка 7 — ошибка
+    expect(await stat('return')).toBe(3);   // строки 3, 4 и 9; будущий возврат строки 8 — не возврат
 
     // к записи единицы одиночной модели на складе уже нет
     query(`update store_stock set qty = 0 where snumber = '${inv(4)}'`);
@@ -79,10 +80,10 @@ test('импорт истории: пересечения, договор с д�
     });
     await clickWait(page, '#iform #write');
     await expect(page.locator('#eqh-summary tr[data-stat=failed]')).toBeVisible({ timeout: 60_000 });
-    expect(parts).toEqual(['2/7', '4/7', '6/7']);
+    expect(parts).toEqual(['2/9', '4/9', '6/9', '8/9']);
     await expect(page.locator('#eqh-progress')).toHaveCount(0);
-    expect(await stat('issue')).toBe(4);
-    expect(await stat('return')).toBe(1);
+    expect(await stat('issue')).toBe(5);
+    expect(await stat('return')).toBe(2);
     expect(await stat('failed')).toBe(1);
     expect(await stat('skipped')).toBe(1);
     const failed = (await page.locator('#eqh-problems tr.error', { hasText: 'Не записано' }).allInnerTexts()).join('\n');
@@ -107,7 +108,7 @@ test('импорт истории: пересечения, договор с д�
     await page.locator('#iform #census').setInputFiles(path.join(dir, 'census.xlsx'));
     await clickWait(page, '#iform #check');
     expect((await page.locator('#eqh-problems tr.error').allInnerTexts()).join('\n')).not.toContain(`Договір ${cn(3, '25')}`);
-    expect(await stat('done')).toBe(5);    // 4 выдачи и возврат
+    expect(await stat('done')).toBe(7);    // 5 выдач и 2 возврата
     expect(await stat('issue')).toBe(1);   // незаписанная выдача строки 9 — снова в плане, с возвратом
     expect(await stat('return')).toBe(1);
   } finally {
