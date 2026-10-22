@@ -79,7 +79,8 @@ test('одноименные позиции 1С: повторный импорт
   await page.locator('#filter #year').selectOption('2026');
   await page.locator('#filter #month').selectOption('9');
   await clickWait(page, '#filter #onreport');
-  const rows = page.locator('#preview table tr', { hasText: band });
+  // больше 10 выдач — рядом скрытые куски для печати (table.d-print-table); считаем по экранной таблице
+  const rows = page.locator('#preview table:not(.d-print-table) tr', { hasText: band });
   expect(await rows.count()).toBe(1);
   expect(await rows.first().innerText()).not.toContain('переименована');
   const cells = await rows.first().locator('td').allInnerTexts();
