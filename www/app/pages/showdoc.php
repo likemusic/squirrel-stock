@@ -114,7 +114,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Disposition: attachment;Filename={$filename}.pdf");
                 header("Content-Transfer-Encoding: binary");
 
-                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+                $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
                 $dompdf->loadHtml($html);
 
                 // (Optional) Setup the paper size and orientation
