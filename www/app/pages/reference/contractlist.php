@@ -439,7 +439,9 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
         }
         
         $user=\App\System::getUser() ;
-        if($user->rolename!='admins') {
+        // SquirrelStock: только свои договоры — по отметке пользователя «Только свои документы» (onlymy), как в документах и
+        // оплатах; было — у любого не-admin: роль «Склад» видела пустой справочник договоров
+        if($user->rolename!='admins' && $user->onlymy == 1) {
            $where = $where .  " and (details like '%<creator_id>{$user->user_id}</creator_id>%' or  details like '%<user_id>{$user->user_id}</user_id>%' ) ";
            
         }

@@ -31,6 +31,11 @@ class Main extends Base
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
         $this->_tvars['dashboard'] =  (($user->dashboard ==1 ) ||  ($user->rolename=='admins') );
+        // SquirrelStock: в профиле благотворительной организации денежных плиток и графиков нет (sqs_money), остаются «Ниже
+        // минимального остатка» и просроченные партии — их видит каждый пользователь, без галочки «Дашборд» у роли
+        if (\App\SQS\Profile::charity()) {
+            $this->_tvars['dashboard'] = true;
+        }
         // SquirrelStock: блоки модулей (напоминания о сроках оборудования, о резервных копиях и т. п.) — App\SQS\Hooks
         $this->_tvars['sqs_blocks'] = implode('', \App\SQS\Hooks::emit('mainBlocks'));
  

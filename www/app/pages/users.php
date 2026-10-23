@@ -34,7 +34,8 @@ class Users extends \App\Pages\Base
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', 'disabled<>1', 'rolename'), 0));
+        // SquirrelStock: coalesce — у admins из db.sql disabled = NULL, а «NULL <> 1» не истина: роли admins не было в списках
+        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', 'coalesce(disabled, 0) <> 1', 'rolename'), 0));
 
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
@@ -45,7 +46,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
         $this->editpan->editform->add(new TextInput('editphone'));
-        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'disabled<>1', 'rolename')))->onChange($this,'onRole');
+        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'coalesce(disabled, 0) <> 1', 'rolename')))->onChange($this,'onRole');
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));

@@ -37,6 +37,11 @@ try {
     if(strlen($user->mainpage ??'')>0) {
         $mainpage = $user->mainpage;
     }
+    // SquirrelStock: «Не указано» (пустая страница, так у каждого нового пользователя) — главная: на пустой только
+    // оперативное меню, а напоминания о сроках оборудования и «Ниже минимального остатка» — на главной
+    if ($mainpage == '\App\Pages\Blank') {
+        $mainpage = '\App\Pages\Main';
+    }
 
     $app = new \App\Application();
     \App\SQS\PageGuard::check($app);   // SquirrelStock: страница выключенного пункта меню — «нет права доступа»
