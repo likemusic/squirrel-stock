@@ -55,6 +55,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
     }
 
     public function onCheck($sender) {
+        \App\SQS\Limits::raise('equipment history check');   // разбор больших таблиц — дольше 30 с и больше 128 МБ хостинга по умолчанию
         $this->dropFiles();
         // копии файлов от проверок, после которых не было записи (в таблицах персональные данные): старше суток — удалить;
         // то же при каждом входе (App\SQS\LoginGuard::purge), если импортом больше не пользуются
@@ -92,18 +93,22 @@ class ImportEquipmentHistory extends \App\Pages\Base
         if (!$this->saveMap()) {
             return;
         }
+        \App\SQS\Limits::raise('equipment history write');   // если соответствия поменяли — разбор заново, и только потом часть записи
         // разбор проверки, если соответствия с тех пор не меняли; иначе — заново
         $eh = $this->_mapText === $this->settingsText() ? $this->loadState() : null;
+        $again = $eh === null;
         $eh = $eh ?? $this->analyze();
         if (!$eh) {
             return;
         }
         $this->_store = $store;
         $this->_lift = $this->iform->liftperiod->isChecked();
-        $this->writePart($eh);
+        // после разбора заново — одно событие, остальное следующими частями: разбор и часть записи вместе не уложились бы в 30 с хостинга
+        $this->writePart($eh, $again ? 0 : 20);
     }
 
     public function onNext($sender) {
+        \App\SQS\Limits::raise('equipment history write');
         $eh = $this->loadState();
         if (!$eh) {
             $this->iform->next->setVisible(false);
@@ -115,10 +120,10 @@ class ImportEquipmentHistory extends \App\Pages\Base
     }
 
     // часть записи; если осталось — на странице ход и скрипт, который нажимает «дальше»
-    private function writePart(EqHistory $eh): void {
+    private function writePart(EqHistory $eh, float $seconds = 20): void {
         $limit = \App\Helper::getKeyValInt('sqs_eqh_chunk');   // событий за часть (0 — без ограничения, только по времени); для тестов
         try {
-            $res = $eh->apply($this->_store, $this->_lift, 20, $limit);
+            $res = $eh->apply($this->_store, $this->_lift, $seconds, $limit);
         } catch (\Throwable $e) {
             $this->iform->next->setVisible(false);
             $this->progress->setText('');

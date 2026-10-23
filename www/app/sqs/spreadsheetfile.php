@@ -37,6 +37,7 @@ class SpreadsheetFile
     }
 
     private static function reader(string $path): \PhpOffice\PhpSpreadsheet\Reader\IReader {
+        Limits::raise(null);   // таблица на тысячи строк читается дольше 30 с и больше 128 МБ хостинга по умолчанию (импорт 1С, Excel, истории)
         try {
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path, self::READERS);
         } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {

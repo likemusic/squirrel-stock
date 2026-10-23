@@ -98,6 +98,7 @@ class Backup extends \App\Pages\Base
     }
 
     public function onCreate($sender) {
+        \App\SQS\Limits::raise('backup create');   // большая база: дамп и архив дольше 30 с хостинга
         try {
             $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
         } catch (\Throwable $e) {
@@ -145,6 +146,7 @@ class Backup extends \App\Pages\Base
         if ($this->isError()) {
             return;
         }
+        \App\SQS\Limits::raise('backup run');
         $result = BackupJob::run();
         $lines = [];
         foreach ($result as $place => $r) {
@@ -164,6 +166,7 @@ class Backup extends \App\Pages\Base
             $this->setError(__('service.backup.no_folder'));
             return;
         }
+        \App\SQS\Limits::raise('backup copy');
         try {
             $file = BackupJob::copyTo($dir);
         } catch (\Throwable $e) {
@@ -198,6 +201,7 @@ class Backup extends \App\Pages\Base
             $this->setError(__('service.backup.confirm_needed'));
             return;
         }
+        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore');
         try {
             $newerOk = $this->rform->newerpanel->isVisible() && $this->rform->newerpanel->confirmnewer->isChecked();
             [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText(), $newerOk);
