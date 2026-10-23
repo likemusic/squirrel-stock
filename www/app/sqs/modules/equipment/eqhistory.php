@@ -56,11 +56,10 @@ class EqHistory
      * Прочитать файл .xlsx: распознать формат и разобрать строки
      */
     public function readFile(string $path, string $filename): void {
-        $book = \App\SQS\SpreadsheetFile::load($path);
-        $titles = array_map(fn($s) => mb_strtolower(trim($s->getTitle())), $book->getAllSheets());
+        $titles = array_map(fn($t) => mb_strtolower(trim($t)), \App\SQS\SpreadsheetFile::sheetNames($path));
         $journal = in_array('обычные', $titles, true);
         $this->rowsRead[$filename] = 0;
-        foreach ($book->getAllSheets() as $sheet) {
+        foreach (\App\SQS\SpreadsheetFile::sheets($path) as $sheet) {   // по листу: вся книга большой таблицы не помещается в память
             $rows = self::sheetRows($sheet);
             if (count($rows) == 0) {
                 continue;
@@ -580,6 +579,11 @@ class EqHistory
                                    WHERE REPLACE(LOWER(u.factory_no), ' ', '') = {$q}");
             return $rows;
         };
+        return self::oneUnit($find, $number);
+    }
+
+    // единица по номеру через поиск $find (номер => строки item_id, snumber, itemname): с потерянным ведущим нулем, 'many' — неоднозначно
+    private static function oneUnit(callable $find, string $number) {
         $rows = $find($number);
         if (count($rows) == 0 && preg_match('/^\d{7}$/', $number)) {
             $rows = $find('0' . $number);
@@ -588,6 +592,29 @@ class EqHistory
             return 'many';
         }
         return count($rows) == 1 ? ['item_id' => (int)$rows[0]['item_id'], 'snumber' => $rows[0]['snumber'], 'itemname' => $rows[0]['itemname']] : null;
+    }
+
+    private ?array $unitIndex = null;   // на время разбора: [номер без пробелов в нижнем регистре => [единица => строка]]
+
+    /**
+     * То же, что findUnit, по номерам базы, прочитанным одним запросом: поиск номером по таблице — полный просмотр
+     * store_stock (сравнение без пробелов индекс не использует), а строк в таблицах импорта тысячи (TODO 2.25)
+     */
+    private function unitInDb(string $number) {
+        if ($this->unitIndex === null) {
+            $this->unitIndex = [];
+            $add = function (array $r, string $n) {
+                $this->unitIndex[str_replace(' ', '', mb_strtolower($n))][$r['item_id'] . '|' . $r['snumber'] . '|' . $r['itemname']] = $r;
+            };
+            $conn = \ZDB\DB::getConnect();
+            foreach ($conn->Execute("SELECT DISTINCT s.item_id, s.snumber, i.itemname FROM store_stock s JOIN items i ON i.item_id = s.item_id WHERE s.snumber <> ''") as $r) {
+                $add($r, $r['snumber']);
+            }
+            foreach ($conn->Execute("SELECT u.item_id, u.snumber, i.itemname, u.factory_no FROM sqs_unit u JOIN items i ON i.item_id = u.item_id WHERE u.factory_no <> ''") as $r) {
+                $add(['item_id' => $r['item_id'], 'snumber' => $r['snumber'], 'itemname' => $r['itemname']], $r['factory_no']);
+            }
+        }
+        return self::oneUnit(fn(string $n) => array_values($this->unitIndex[$n] ?? []), $number);
     }
 
     private ?array $invRanges = null;
@@ -631,7 +658,7 @@ class EqHistory
                 continue;
             }
             if ($rec['inv'] !== '') {
-                $u = self::findUnit(self::num($rec['inv']));
+                $u = $this->unitInDb(self::num($rec['inv']));
                 if ($u === 'many') {
                     $this->fail($rec, __('sqs.eqhist.unit_ambiguous', ['value' => $rec['inv']]));
                 } elseif ($u === null && !$this->inStatementRange(self::num($rec['inv']))) {
@@ -648,7 +675,7 @@ class EqHistory
                     $rec['unit'] = $u;
                 }
             } else {
-                $u = self::findUnit(self::num($rec['factory']));
+                $u = $this->unitInDb(self::num($rec['factory']));
                 if ($u === 'many') {
                     $this->fail($rec, __('sqs.eqhist.unit_ambiguous', ['value' => $rec['factory']]));
                 } elseif ($u === null) {
@@ -687,7 +714,7 @@ class EqHistory
             $censusFailed = null;   // строка переписи с этим номером, где единица не найдена
             $censusConsumable = null;   // строка переписи расходника с этим номером
             foreach ($nums as $n) {
-                $u = self::findUnit($n);
+                $u = $this->unitInDb($n);
                 if (is_array($u)) {
                     $found[Units::key($u['item_id'], $u['snumber'])] = $u;
                     continue;
@@ -846,6 +873,7 @@ class EqHistory
         $map = $this->itemMap ?? EqItemMap::all();
         $this->applyFixes();
         $this->resolveUnits($map);
+        $this->unitIndex = null;   // в разбор, который сохраняется между запросами, не попадает
 
         // выдачи: одна выдача из обеих таблиц (или с двух листов) — по единице и дате
         $issues = [];
@@ -1032,7 +1060,7 @@ class EqHistory
                 continue;
             }
             // кровати, концентраторы без номера — не мелочь: номер вписывается вручную, потом импорт повторяется
-            if (EqItemMap::serial($map, $item) || self::serialItem($item)) {
+            if (EqItemMap::serial($map, $item) || $this->serialItem($item)) {
                 $this->noInv[] = ['sheet' => $r['sheet'], 'row' => $r['row'], 'contract' => $r['contract'], 'date' => $r['idate'], 'name' => $r['name'], 'written' => $r['written'], 'item' => $item];
                 $this->problem('error', $r['sheet'], $r['row'], $r['contract'], $r['written'], __('sqs.eqhist.no_inv_number', ['item' => $item]));
                 continue;
@@ -1061,6 +1089,10 @@ class EqHistory
         $this->plan = [];
         $newCustomers = [];
         $newContracts = [];
+        // договоры и получатели базы — одним запросом, а не запросом на каждую выдачу (сравнение без учета регистра, как в базе)
+        $conn = \ZDB\DB::getConnect();
+        $dbContracts = array_flip(array_map('mb_strtolower', $conn->GetCol("SELECT contract_number FROM contracts")));
+        $dbCustomers = array_flip(array_map(fn($n) => mb_strtolower(trim($n)), $conn->GetCol("SELECT customer_name FROM customers")));
         foreach ($events as $e) {
             $e['key'] = self::eventKey($e);
             if (isset($done[$e['key']])) {
@@ -1073,11 +1105,11 @@ class EqHistory
             }
             if ($e['kind'] == 'issue') {
                 $c = $e['rec']['contract'];
-                if (!isset($newContracts[$c]) && \ZDB\DB::getConnect()->GetOne("SELECT COUNT(*) FROM contracts WHERE contract_number = " . \ZDB\DB::getConnect()->qstr($c)) == 0) {
+                if (!isset($newContracts[$c]) && !isset($dbContracts[mb_strtolower($c)])) {
                     $newContracts[$c] = 1;
                 }
                 $n = mb_strtolower($e['rec']['name']);
-                if (!isset($newCustomers[$n]) && self::findCustomer($e['rec']['name']) == null) {
+                if (!isset($newCustomers[$n]) && !isset($dbCustomers[mb_strtolower(trim(preg_replace('/\s+/u', ' ', $e['rec']['name'])))])) {
                     $newCustomers[$n] = 1;
                 }
             }
@@ -1136,9 +1168,14 @@ class EqHistory
     }
 
     // товар с этим названием ведется по серийным (инвентарным) номерам, а не партиями
-    private static function serialItem(string $name): bool {
-        $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');   // признак — в detail (XML), не колонка
-        return $item != null && $item->serialMode() == 3;
+    private array $serialItems = [];
+
+    private function serialItem(string $name): bool {
+        if (!isset($this->serialItems[$name])) {
+            $item = Item::getFirst('itemname = ' . Item::qstr($name) . ' and disabled <> 1');   // признак — в detail (XML), не колонка
+            $this->serialItems[$name] = $item != null && $item->serialMode() == 3;
+        }
+        return $this->serialItems[$name];
     }
 
     // одна выдача из двух источников: номер договора — из переписи, кем направлен — из журнала, остальное дополняется
