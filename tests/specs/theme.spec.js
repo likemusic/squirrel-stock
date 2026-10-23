@@ -155,3 +155,21 @@ test('select2 в тёмной теме — тёмный, в светлой — �
     await expect.poll(bg).toBe('rgb(255, 255, 255)');
   });
 });
+
+// main.html (и customerlist.html) ветвились по {{#darkmode}}, а в шаблон шла строка "dark"/"light" — непустая, то есть «истина»
+// и в светлой теме: подписи графиков белые на светлом фоне. Теперь цвета берутся из фактической темы (sqsTheme.current())
+// и графики перерисовываются при ее смене.
+test('графики на главной: цвета подписей по фактической теме', async ({ browser, uniq }) => {
+  for (const [i, [mode, scheme, font, bg]] of [['light', 'dark', '#000', '#fff'], ['dark', 'light', '#fff', '#333'], ['auto', 'dark', '#fff', '#333']].entries()) {
+    await withUser(browser, uniq + i, { theme: mode }, async page => {
+      await page.emulateMedia({ colorScheme: scheme });
+      const colors = () => page.evaluate(() => [window.fontcolor, window.bgcolor]);
+      await page.goto('/index.php?p=App/Pages/Main');
+      expect(await colors(), mode).toEqual([font, bg]);
+      if (mode == 'auto') {
+        await page.emulateMedia({ colorScheme: 'light' });
+        await expect.poll(colors, 'системная тема сменилась — графики следом').toEqual(['#000', '#fff']);
+      }
+    });
+  }
+});

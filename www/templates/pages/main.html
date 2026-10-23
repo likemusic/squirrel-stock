@@ -211,10 +211,15 @@
       
     var fontcolor='#000' ;
     var bgcolor='#fff' ;
-        {{#darkmode}}
+        if (window.sqsTheme && sqsTheme.current() == 'dark') {   // SquirrelStock: по фактической теме (секция darkmode шаблона была истиной и в светлой)
             fontcolor='#fff' ;
             bgcolor='#333' ;
-        {{/darkmode}}            
+        }
+        window.addEventListener('sqs:theme', function (e) {   // SquirrelStock: смена темы на лету — перерисовать
+            fontcolor = e.detail == 'dark' ? '#fff' : '#000';
+            bgcolor = e.detail == 'dark' ? '#333' : '#fff';
+            drawChart();
+        });            
       
       
       
