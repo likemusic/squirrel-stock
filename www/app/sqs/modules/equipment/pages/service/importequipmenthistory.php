@@ -64,7 +64,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
             if (strlen($file['tmp_name'] ?? '') == 0) {
                 continue;
             }
-            $copy = tempnam(sys_get_temp_dir(), 'sqs-eqh-');
+            $copy = \App\SQS\TempFiles::file('sqs-eqh-');
             move_uploaded_file($file['tmp_name'], $copy) || copy($file['tmp_name'], $copy);
             $this->_files[basename($file['name'])] = $copy;
         }
@@ -143,7 +143,7 @@ class ImportEquipmentHistory extends \App\Pages\Base
 
     private function saveState(EqHistory $eh): void {
         if ($this->_state === '') {
-            $this->_state = tempnam(sys_get_temp_dir(), 'sqs-eqh-');
+            $this->_state = \App\SQS\TempFiles::file('sqs-eqh-');
         }
         file_put_contents($this->_state, serialize($eh));
         $this->_mapText = $this->settingsText();
