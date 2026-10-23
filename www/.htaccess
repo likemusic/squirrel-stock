@@ -6,9 +6,10 @@ DirectoryIndex index.php
 RewriteEngine on
 RewriteBase / 
 
-# SquirrelStock: служебные файлы не отдаются браузеру (списки библиотек и их версий, словари, консольные скрипты, примеры)
+# SquirrelStock: служебные файлы не отдаются браузеру (списки библиотек и их версий, словари, консольные скрипты, примеры,
+# tmp/ — временная папка программы, когда системная недоступна: App\SQS\TempFiles)
 RewriteRule ^(composer\.(json|lock)|script_examples\.zip|init\.php|[^/]*\.md)$ - [F,L]
-RewriteRule ^(lang|cli)(/|$) - [F,L]
+RewriteRule ^(lang|cli|tmp)(/|$) - [F,L]
 # из vendor/ — только статика, которую подключают страницы (css, js, картинки, шрифты)
 RewriteCond %{REQUEST_URI} !\.(css|js|png|gif|jpe?g|svg|ico|woff2?|ttf|eot|map)$ [NC]
 RewriteRule ^vendor/ - [F,L]
