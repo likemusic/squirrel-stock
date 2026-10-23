@@ -16,11 +16,13 @@ class Backup extends \App\Pages\Base
 {
     public function __construct() {
         parent::__construct();
-        if (\App\System::getUser()->rolename != 'admins') {
-            \App\System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
-            \App\Application::RedirectError();
+        // роль с правом на страницу (роль «Склад», cli/role-warehouse.php) — создать копию и копию на флешку; восстановление
+        // и настройки автокопии (места, пароль, rclone) — только admins
+        if (!\App\ACL::checkShowSer('Backup')) {
             return;
         }
+        $admin = self::isAdmin();
+        $this->_tvars['backupadmin'] = $admin;
         $this->add(new Form('bform'));
         $this->bform->add(new SubmitButton('create'))->onClick($this, 'onCreate');
 
@@ -48,8 +50,23 @@ class Backup extends \App\Pages\Base
         $this->rform->add(new \Zippy\Html\Panel('newerpanel'))->setVisible(false);
         $this->rform->newerpanel->add(new CheckBox('confirmnewer'));
         $this->rform->add(new SubmitButton('restore'))->onClick($this, 'onRestore');
+        $this->sform->setVisible($admin);
+        $this->rform->setVisible($admin);
 
         $this->updateStatus();
+    }
+
+    private static function isAdmin(): bool {
+        return \App\System::getUser()->rolename == 'admins';
+    }
+
+    // восстановление и настройки — только admins; формы скрыты, а запрос мимо формы — отказ здесь
+    private function adminOnly(): bool {
+        if (self::isAdmin()) {
+            return true;
+        }
+        $this->setError(__('common.do_storinky_maie_dostup_tilky'));
+        return false;
     }
 
     private function updateStatus(): void {
@@ -96,6 +113,9 @@ class Backup extends \App\Pages\Base
     }
 
     public function onSave($sender) {
+        if (!$this->adminOnly()) {
+            return;
+        }
         $f = $this->sform;
         $s = ['local' => $f->local->getText(), 'network' => $f->network->getText(), 'cloud' => $f->cloud->getText(),
               'rclone' => $f->rclone->getText(), 'rclone_conf' => $f->rclone_conf->getText(), 'keep' => $f->keep->getText()];
@@ -118,6 +138,9 @@ class Backup extends \App\Pages\Base
     }
 
     public function onRunNow($sender) {
+        if (!$this->adminOnly()) {
+            return;
+        }
         $this->onSave($sender);
         if ($this->isError()) {
             return;
@@ -163,6 +186,9 @@ class Backup extends \App\Pages\Base
     }
 
     public function onRestore($sender) {
+        if (!$this->adminOnly()) {
+            return;
+        }
         $file = $this->rform->rfile->getFile();
         if (strlen($file['tmp_name'] ?? '') == 0) {
             $this->setError(__('common.ne_obrano_fail'));
