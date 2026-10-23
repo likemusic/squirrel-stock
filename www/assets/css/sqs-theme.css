@@ -56,3 +56,11 @@
   color: #fff;
   background-color: var(--bs-primary);
 }
+
+/* Документ и отчет на экране (#preview) — из печатных форм с рамками "solid black" в атрибуте style: на тёмном фоне
+   они почти не видны. Только на экране; печать и PDF — как были (всегда светлые). */
+@media screen {
+  [data-bs-theme=dark] #preview [style*="black"] {
+    border-color: var(--bs-border-color) !important;
+  }
+}

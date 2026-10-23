@@ -173,3 +173,21 @@ test('графики на главной: цвета подписей по фа�
     });
   }
 });
+
+test('документ и отчет на экране: рамки печатной формы видны в тёмной теме, печать — без изменений', async ({ page, uniq }) => {
+  const { seed } = require('../helpers/seed');
+  const code = 'TH-' + uniq, inv = 'INV-' + uniq, who = 'Подопечный ' + uniq;
+  seed({ items: [{ name: 'Кровать ' + uniq, code, serial: true }], customers: [{ name: who, type: 1 }],
+         docs: [{ type: 'IncomeItem', date: '2026-09-01', rows: [{ code, qty: 1, price: 0, sn: inv }] },
+                { type: 'GoodsIssue', date: '2026-10-02', customer: who, rows: [{ code, qty: 1, price: 0, sn: inv }] }] });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/index.php?p=App/Pages/Report/EquipmentWhere');
+  expect(await theme(page)).toMatch(/\/dark$/);   // admin: darkmode=1 или auto при тёмной системной
+  await page.locator('#filter #searchtext').fill(uniq);
+  await clickWait(page, '#filter #onreport');
+  const cell = page.locator('#preview td[style*="solid black"]', { hasText: inv }).first();
+  const border = () => cell.evaluate(e => getComputedStyle(e).borderTopColor);
+  expect(await border()).not.toBe('rgb(0, 0, 0)');
+  await page.emulateMedia({ media: 'print' });
+  expect(await border(), 'печать').toBe('rgb(0, 0, 0)');
+});
