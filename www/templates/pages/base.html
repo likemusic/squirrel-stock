@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="{{lang}}">
+<html  lang="{{lang}}" data-sqs-theme="{{theme}}">
     <head>
         <title>Zippy CRM</title>
 
@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="{{lang}}">
+        <script src="/assets/js/sqs-theme.js?v=1"></script>   <!-- SquirrelStock: тема до отрисовки (data-bs-theme на <html>) -->
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css?v=825">
       
 
@@ -19,6 +20,7 @@
         <link rel="stylesheet" href="/assets/css/select2-bootstrap-5-theme.css?v=825">
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs5.css?v=825">
         <link rel="stylesheet" href="/assets/css/app.css?v=828-sqs2">
+        <link rel="stylesheet" href="/assets/css/sqs-theme.css?v=1">   <!-- SquirrelStock: цвета тёмной темы -->
 
 
         <script src="/assets/js/bootstrap.bundle.js?v=827" type="text/javascript"></script>
@@ -78,7 +80,7 @@
   
     </head>
    
-    <body class="  bg-body-tertiary"   data-bs-theme="{{darkmode}}">
+    <body class="  bg-body-tertiary"  >
       
     
          
@@ -863,6 +865,15 @@
                     </li>
                     {{/taskcnt}}
 
+                    <li class="nav-item dropdown" id="sqs-theme">   <!-- SquirrelStock: тема -->
+                        <a href="#" class="nav-link" data-bs-toggle="dropdown" title="{{#t}}sqs.theme.title{{/t}}" aria-label="{{#t}}sqs.theme.title{{/t}}">
+                            <i class="fa fa-circle-half-stroke"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-sqs-theme="light"><i class="fa fa-sun fa-fw"></i> {{#t}}sqs.theme.light{{/t}}</a></li>
+                            <li><a class="dropdown-item" href="#" data-sqs-theme="dark"><i class="fa fa-moon fa-fw"></i> {{#t}}sqs.theme.dark{{/t}}</a></li>
+                            <li><a class="dropdown-item" href="#" data-sqs-theme="auto"><i class="fa fa-desktop fa-fw"></i> {{#t}}sqs.theme.auto{{/t}}</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i title="{{#t}}common.povidomlennia{{/t}}" class="fa fa-bell "></i>
@@ -1130,22 +1141,24 @@
             
             $(document).ready(function (){
                
-                {{#darkmodecss}}
-                 
-                 $('.select2').select2({theme:'bootstrap-5-dark'});
-                
-               //  $('[data-bs-toggle="tooltip"]').attr('data-bs-custom-class','custom-tooltip') 
-        
-                 
-                {{/darkmodecss}}
-               
-               {{^darkmodecss}}
-                 
+                 // SquirrelStock: одна тема select2 для светлой и тёмной — цвета тёмной из sqs-theme.css по data-bs-theme,
+                 // поэтому смена темы на лету не требует пересоздавать списки
                  $('.select2').select2({theme:'bootstrap-5'});
-                 
-                {{/darkmodecss}}
-             
-             
+
+                 // SquirrelStock: переключатель темы в верхней панели — применяется сразу, сохраняется у пользователя
+                 var sqsThemeMark = function () {
+                     $('#sqs-theme [data-sqs-theme]').each(function () {
+                         $(this).toggleClass('active', $(this).data('sqs-theme') == sqsTheme.mode());
+                     });
+                 };
+                 sqsThemeMark();
+                 $('#sqs-theme [data-sqs-theme]').on('click', function (e) {
+                     e.preventDefault();
+                     sqsTheme.set($(this).data('sqs-theme'));
+                     sqsThemeMark();
+                     callPM('sqsSetTheme', [sqsTheme.mode()], {});   // POST
+                 });
+
                 
              
              //  $('[data-bs-toggle="tooltip"]').each(function (index, value) {

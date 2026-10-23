@@ -23,6 +23,7 @@ class User extends \ZCL\DB\Entity
         $this->defpaytype = 0;
         $this->defsalesource = 0;
         $this->collapsesidebar = 1;
+        $this->theme = 'auto';
         $this->usebotfornotify = 0;
        
         $this->usemobileprinter = 0;
@@ -109,6 +110,11 @@ class User extends \ZCL\DB\Entity
         $this->viber = $options['viber']?? '';
      
         $this->darkmode = $options['darkmode']?? 1;
+        // SquirrelStock: тема light|dark|auto; до нее была только галочка darkmode (1 — тёмная, 0 — светлая), без настройки — как в системе
+        $this->theme = $options['theme'] ?? (isset($options['darkmode']) ? ($options['darkmode'] == 1 ? 'dark' : 'light') : 'auto');
+        if (!in_array($this->theme, ['light', 'dark', 'auto'], true)) {
+            $this->theme = 'auto';
+        }
         $this->lang = $options['lang'] ?? '';   // язык интерфейса, пусто — из config.php
 
         $this->collapsesidebar =  $options['collapsesidebar'] ?? 1;
@@ -165,7 +171,11 @@ class User extends \ZCL\DB\Entity
         $options['pagesize'] = $this->pagesize;
         $options['collapsesidebar'] = $this->collapsesidebar;
         $options['usebotfornotify'] = $this->usebotfornotify;
+        if (in_array($this->theme ?? '', ['light', 'dark'], true)) {
+            $this->darkmode = $this->theme == 'dark' ? 1 : 0;   // для прежних версий, которые знают только галочку
+        }
         $options['darkmode'] = $this->darkmode;
+        $options['theme'] = in_array($this->theme ?? '', ['light', 'dark', 'auto'], true) ? $this->theme : 'auto';
         $options['lang'] = $this->lang ?? '';
 
         $options['usemobileprinter'] = $this->usemobileprinter;
