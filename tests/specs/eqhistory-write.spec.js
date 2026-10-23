@@ -4,7 +4,8 @@
 //  - договор, записанный на другое ФИО, — ошибка проверки, а не сбой при записи;
 //  - возврат будущим числом — заметка: единица на руках, дата — срок договора;
 //  - событие, которое не записалось, — в отчете с причиной и с тем, что из-за него пропущено; остальное записывается;
-//  - запись частями: страница сама продолжает запись, пока не запишет всё (хостинг обрывает долгий запрос).
+//  - запись частями: страница сама продолжает запись, пока не запишет всё (хостинг обрывает долгий запрос); после
+//    разбора заново (исправления поменяли после проверки) первая часть — одно событие.
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
@@ -78,9 +79,12 @@ test('импорт истории: пересечения, договор с д�
       const m = (await r.text().catch(() => '')).match(/id="eqh-progress"[^>]*>Запис: (\d+) з (\d+)/);
       if (m) parts.push(m[1] + '/' + m[2]);
     });
+    // список исправлений поменяли после проверки (пустая строка в конце) — «Записать» разбирает таблицы заново и в том же
+    // запросе пишет одно событие: разбор и часть записи вместе не уложились бы в 30 с хостинга (TODO 2.25)
+    await page.locator('#iform #fixes').fill((await page.locator('#iform #fixes').inputValue()) + '\n');
     await clickWait(page, '#iform #write');
     await expect(page.locator('#eqh-summary tr[data-stat=failed]')).toBeVisible({ timeout: 60_000 });
-    expect(parts).toEqual(['2/9', '4/9', '6/9', '8/9']);
+    expect(parts).toEqual(['1/9', '3/9', '5/9', '7/9']);
     await expect(page.locator('#eqh-progress')).toHaveCount(0);
     expect(await stat('issue')).toBe(5);
     expect(await stat('return')).toBe(2);
