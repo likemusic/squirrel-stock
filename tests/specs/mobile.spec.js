@@ -46,6 +46,8 @@ for (const [width, height] of [[375, 667], [414, 896]]) {
       await page.locator('#barbtn').tap();
       await expect(page.locator('#sidebar')).toHaveClass(/collapsed/);
       await page.locator('#barbtn').tap();
+      // меню доехало: иначе Playwright прокручивает к пункту, который еще за левым краем, прокрутка плавная — касание мимо
+      await expect.poll(async () => (await page.locator('#sidebar').boundingBox()).x).toBeGreaterThanOrEqual(0);
       await Promise.all([page.waitForURL(/EquipmentUnits/), link.tap()]);   // переход по пункту меню касанием
     });
 
