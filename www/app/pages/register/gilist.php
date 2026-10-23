@@ -47,7 +47,18 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.gilist.vidpravleni'), 5 => __('register.gilist.hotovi_do_vidpravky'), 3 => __('common.vsi')), \App\SQS\Profile::charity() ? 3 : 0));   // SquirrelStock: в профиле благотворительной организации — «Все»: проведенные выдачи (возврат делается отсюда)
+        // SquirrelStock: в профиле благотворительной организации — «Все» (проведенные выдачи: возврат делается отсюда), «Проведенные»,
+        // «Не проведенные»; статусов отгрузки и доставки нет. Вверху — кнопки форм выдачи расходников и оборудования (если они есть
+        // у пользователя), без них — «Новая выдача» (накладная)
+        if (\App\SQS\Profile::charity()) {
+            $this->listpan->filter->add(new DropDownChoice('status', array(3 => __('common.vsi'), 6 => __('sqs.charity.status_executed'), 7 => __('sqs.charity.status_drafts')), 3));
+            $ser = fn($name) => \ZDB\DB::getConnect()->GetOne("SELECT COUNT(*) FROM metadata WHERE disabled = 0 AND meta_type = 5 AND meta_name = '{$name}'") > 0
+                && \App\ACL::checkShowSer($name, false);   // пункт модуля в меню (модуль есть) и право на страницу
+            $this->_tvars['sqs_cissue'] = $ser('ConsumablesIssue');
+            $this->_tvars['sqs_eqissue'] = $ser('EquipmentIssue');
+        } else {
+            $this->listpan->filter->add(new DropDownChoice('status', array(0 => __('common.vidkryti'), 1 => __('common.novi'), 2 => __('register.gilist.vidpravleni'), 5 => __('register.gilist.hotovi_do_vidpravky'), 3 => __('common.vsi')), 0));
+        }
         $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();
 
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
@@ -401,6 +412,11 @@ class GIList extends \App\Pages\Base
             $i++;
             $data['A' . $i] = H::fd($d->document_date);
             $data['B' . $i] = $d->document_number;
+            if (\App\SQS\Profile::charity()) {   // SquirrelStock: в профиле без заказа и суммы (выдача бесплатная)
+                $data['C' . $i] = $d->customer_name;
+                $data['D' . $i] = $d->notes;
+                continue;
+            }
             $data['C' . $i] = $d->headerdata['order'];
             $data['D' . $i] = $d->customer_name;
             $data['E' . $i] = $d->amount;
@@ -1006,6 +1022,12 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($status == 5) {
             $where .= " and state = " . Document::STATE_READYTOSHIP;
+        }
+        if ($status == 6) {   // SquirrelStock: профиль — «Проведенные» (проведен и дальше: закрыт, возвращен и т. п.)
+            $where .= " and state >= " . Document::STATE_EXECUTED . " and state not in (" . Document::STATE_DELETED . ", " . Document::STATE_REFUSED . ", " . Document::STATE_FAIL . ")";
+        }
+        if ($status == 7) {   // SquirrelStock: профиль — «Не проведенные» (новые и отредактированные)
+            $where .= " and state in (" . Document::STATE_NEW . ", " . Document::STATE_EDITED . ")";
         }
 
       

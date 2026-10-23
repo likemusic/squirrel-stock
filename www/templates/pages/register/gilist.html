@@ -61,7 +61,7 @@
                         <div class="col-12">
                            <div class="input-group">
                                
-                                <label    for="searchcust">{{#t}}common.kontrahent{{/t}}</label>
+                                <label    for="searchcust">{{#sqs_charity}}{{#t}}sqs.charity.recipient{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.kontrahent{{/t}}{{/sqs_charity}}</label>
                                  
                                     <input placeholder="{{#t}}common.pochnit_vvodyty{{/t}}"  class="form-control  " zippy="searchcust" >
                                
@@ -76,8 +76,13 @@
                               </div>
                             </form>
                          
-                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_vn{{/t}}</a>&nbsp;
+                        {{#sqs_charity}}
+                        {{#sqs_cissue}}<a href="/index.php?p=App/Pages/Service/ConsumablesIssue" class="btn btn-primary mt-2 mb-3">{{#t}}sqs.charity.issue_consumables{{/t}}</a>&nbsp;{{/sqs_cissue}}
+                        {{#sqs_eqissue}}<a href="/index.php?p=App/Pages/Service/EquipmentIssue" class="btn btn-primary mt-2 mb-3">{{#t}}sqs.charity.issue_equipment{{/t}}</a>&nbsp;{{/sqs_eqissue}}
+                        {{^sqs_cissue}}<a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">{{#t}}sqs.charity.new_issue{{/t}}</a>&nbsp;{{/sqs_cissue}}
+                        {{/sqs_charity}}
                         {{^sqs_charity}}
+                        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_vn{{/t}}</a>&nbsp;
                         <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_rf{{/t}}</a>
                         <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-primary mt-2 mb-3">{{#t}}register.gilist.stvoryty_ttn{{/t}}</a>
                         {{/sqs_charity}}
@@ -89,16 +94,16 @@
 
                                 <th>{{#t}}common.nomer{{/t}}</th>
                                 <th>{{#t}}common.data{{/t}}</th>
-                                <th class="d-none d-md-table-cell">{{#t}}common.zamovlennia{{/t}}</th>
-                                <th>{{#t}}common.kliient{{/t}}</th>
+                                <th class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}">{{#t}}common.zamovlennia{{/t}}</th>
+                                <th>{{#sqs_charity}}{{#t}}sqs.charity.recipient{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}common.kliient{{/t}}{{/sqs_charity}}</th>
 
                                
 
-                                <th class="text-end d-none d-md-table-cell">{{#t}}common.suma{{/t}}</th>
+                                <th class="text-end {{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}">{{#t}}common.suma{{/t}}</th>
 
                                 <th class="d-none d-md-table-cell">{{#t}}common.status{{/t}}</th>
-                          <th class="d-none d-md-table-cell"> </th>
-                        <th class="d-none d-md-table-cell"> </th>
+                          <th class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"> </th>
+                        <th class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"> </th>
 
                                 <th class="d-none d-md-table-cell">{{#t}}common.prymitka{{/t}}</th>
 
@@ -110,16 +115,16 @@
 
                                 <td ><a zippy="number"></a></td>
                                 <td class="text-nowrap" zippy="date"></td>
-                                <td zippy="order" class="d-none d-md-table-cell"></td>
+                                <td zippy="order" class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"></td>
                                 <td class="text-md-nowrap text-break"><a zippy="customer"></a></td>
 
                                 
 
-                                <td zippy="amount" class="text-end d-none d-md-table-cell"></td>
+                                <td zippy="amount" class="text-end {{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"></td>
 
                                 <td class="text-nowrap d-none d-md-table-cell" zippy="state"></td>
-                       <td style="width:20px" class="d-none d-md-table-cell"><i zippy="ispay" title="{{#t}}common.ochikuie_oplatu{{/t}}" class="fa fa-credit-card"></i></td>
-                        <td style="width:20px" class="d-none d-md-table-cell"><i zippy="istruck" title="{{#t}}register.gilist.ochikuie_vidpravku{{/t}}" class="fa fa-truck"></i></td>
+                       <td style="width:20px" class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"><i zippy="ispay" title="{{#t}}common.ochikuie_oplatu{{/t}}" class="fa fa-credit-card"></i></td>
+                        <td style="width:20px" class="{{#sqs_charity}}d-none{{/sqs_charity}}{{^sqs_charity}}d-none d-md-table-cell{{/sqs_charity}}"><i zippy="istruck" title="{{#t}}register.gilist.ochikuie_vidpravku{{/t}}" class="fa fa-truck"></i></td>
                                 
                                 <td zippy="onotes" class="d-none d-md-table-cell"></td>
 
