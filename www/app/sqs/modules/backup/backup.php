@@ -339,7 +339,14 @@ class Backup
                 continue;
             }
             $stmt .= $line;
-            if (str_ends_with(rtrim($line), $delimiter)) {
+            $end = rtrim($line);
+            // хвостовой комментарий после разделителя («…;   -- текст», «…; # текст»; так писала сборка пакета, так пишут и
+            // вручную): оператор закончен. Только без кавычек в комментарии — «--» внутри строки данных не комментарий
+            if (!str_ends_with($end, $delimiter) && preg_match('/^(.*' . preg_quote($delimiter, '/') . ')\s+(?:--\s|#)[^\'"`]*$/s', $end, $m)) {
+                $stmt = substr($stmt, 0, -strlen($line)) . $m[1];
+                $end = $m[1];
+            }
+            if (str_ends_with($end, $delimiter)) {
                 $sql = substr(rtrim($stmt), 0, -strlen($delimiter));
                 if (!$this->db->query($sql)) {
                     throw new \Exception('Ошибка восстановления: ' . $this->db->error . ' — ' . mb_substr($sql, 0, 200));
