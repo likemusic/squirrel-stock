@@ -143,6 +143,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
         $this->_tvars["sqsversion"] = \App\SQS\Release::version();   // SquirrelStock: версия программы внизу меню
+        $this->_tvars["sqscurpage"] = str_replace('\\', '/', static::class);   // SquirrelStock: пункт меню текущей страницы раскрыт и подсвечен
         $this->_tvars["isemp"] = $user->employee_id>0 ;
         $this->_tvars["showtimesheet"] = ($user->rolename == 'admins' || $user->employee_id>0);
 

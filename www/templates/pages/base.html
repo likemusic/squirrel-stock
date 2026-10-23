@@ -89,10 +89,10 @@
             
              
            {{#collapsesidebar}}  
-         <aside   class="collapsed"  id="sidebar"  data-sqspinned="0" >
+         <aside   class="collapsed"  id="sidebar"  data-sqspinned="0"  data-sqscurpage="{{sqscurpage}}" >
           {{/collapsesidebar}}
            {{^collapsesidebar}}  
-         <aside  id="sidebar"  data-sqspinned="1" >
+         <aside  id="sidebar"  data-sqspinned="1"  data-sqscurpage="{{sqscurpage}}" >
           {{/collapsesidebar}}
          
             <div class="h-100 d-flex flex-column">
@@ -809,11 +809,27 @@
         </aside>            
         <script>
         // SquirrelStock: боковое меню до отрисовки страницы. На телефоне закрепленное меню тоже свернуто: оно выезжает поверх страницы.
+        // Раскрыт путь к пункту текущей страницы (раздел → группа → пункт), пункт подсвечен. Страницы, которой нет в меню (профиль,
+        // «Продлить»), — ничего: родитель у них неоднозначен. Документ всегда в меню: форма требует то же право aclview, что и пункт.
         (function () {
             var side = document.getElementById('sidebar'), pin = document.getElementById('sqspin');
             var pinned = side.dataset.sqspinned === '1';
             pin.setAttribute('aria-pressed', pinned ? 'true' : 'false');
             if (window.matchMedia('(max-width: 767.98px)').matches) side.classList.add('collapsed');
+
+            var norm = function (p) { return String(p || '').replace(/^\/+/, '').toLowerCase(); };
+            var cur = norm(side.dataset.sqscurpage);
+            var link = cur && [].find.call(side.querySelectorAll('a.sidebar-link[href*="p="]'), function (a) {
+                return norm(new URL(a.href, location.href).searchParams.get('p')) === cur;
+            });
+            if (!link) return;
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+            for (var ul = link.closest('ul.collapse'); ul; ul = ul.parentElement.closest('ul.collapse')) {
+                ul.classList.add('show');
+                var head = side.querySelector('a[data-bs-target="#' + ul.id + '"]');
+                if (head) { head.classList.remove('collapsed'); head.setAttribute('aria-expanded', 'true'); head.classList.add('sqs-path'); }
+            }
         })();
         </script>
             
