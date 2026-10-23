@@ -133,7 +133,7 @@ class ProdProcList extends \App\Pages\Base
         
         $this->add(new Form('optionsform'))->setVisible(false);        
         $this->optionsform->onSubmit($this, 'saveopt');
-        $this->optionsform->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' && disabled<>1 ", 'rolename'),0));          
+        $this->optionsform->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' && coalesce(disabled, 0) <> 1 ", 'rolename'),0));          
         $this->optionsform->add(new ClickLink('cancelopt'))->onClick($this, 'cancelopt');
         
         
