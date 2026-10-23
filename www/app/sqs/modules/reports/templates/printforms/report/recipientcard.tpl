@@ -5,6 +5,7 @@
     {{#phone}}<tr><td style="width: 180px;">{{#t}}common.telefon{{/t}}</td><td>{{phone}}</td></tr>{{/phone}}
     {{#email}}<tr><td>Email</td><td>{{email}}</td></tr>{{/email}}
     {{#address}}<tr><td>{{#t}}report.recipientcard.address{{/t}}</td><td>{{address}}</td></tr>{{/address}}
+    {{#mark}}<tr><td>{{#t}}sqs.mark.label{{/t}}</td><td>{{mark}}</td></tr>{{/mark}}
     {{#tags}}<tr><td>{{#t}}report.recipientcard.tags{{/t}}</td><td>{{tags}}</td></tr>{{/tags}}
     {{#comment}}<tr><td>{{#t}}report.recipientcard.comment{{/t}}</td><td>{{comment}}</td></tr>{{/comment}}
     {{#_sent}}<tr><td>{{#t}}report.recipientcard.sent_by{{/t}}</td><td>{{sent}} ({{contract}})</td></tr>{{/_sent}}

@@ -790,6 +790,7 @@
                       
                       
                       
+                      {{^sqsprofile}}
                       <li class="sidebar-item  ">
                                      
                          <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/contacts"     >
@@ -797,10 +798,11 @@
                                 {{#t}}app.base.tekh_pidtrymka{{/t}}   
                         </a>
                      </li>   
+                      {{/sqsprofile}}
                         {{/isadmins}}  
                      <li class="sidebar-item  ">
                                      
-                         <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/zstoreusage"     >
+                         <a class="sidebar-link  " target="_blank" rel="noopener" href="{{#sqsprofile}}https://github.com/likemusic/squirrel-stock/blob/main/docs/USER_GUIDE.ru.md{{/sqsprofile}}{{^sqsprofile}}https://zippy.com.ua/zstoreusage{{/sqsprofile}}"     >
                             <i class="nav-icon fa fa-info-circle"></i>
                                  {{#t}}app.base.dokumentatsiia{{/t}}    
                         </a>

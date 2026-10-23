@@ -88,13 +88,15 @@ class RecipientCard extends \App\Pages\Base
             'email'    => (string)$c->email,
             'address'  => (string)$c->address,
             'comment'  => trim(strip_tags((string)$c->comment)),
-            'tags'     => implode(', ', \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER, $cid)),
+            'tags'     => '',
             'period'   => H::fd(strtotime($from)) . ' - ' . H::fd(strtotime($to)),
             'date'     => H::fd(time()),
             '_sent'    => $this->referrers($cid),
             'equipment' => in_array('equipment', $modules, true),
             'intervals' => in_array('consumables', $modules, true),
         ];
+        [$data['mark'], $rest] = \App\SQS\RecipientMark::split(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_CUSTOMER, $cid));   // признак отдельно от остальных тегов
+        $data['tags'] = implode(', ', $rest);
         $data['hassent'] = count($data['_sent']) > 0;
         if ($data['equipment']) {
             $data['_units'] = $this->units($cid);

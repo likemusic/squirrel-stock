@@ -133,8 +133,10 @@
          
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>{{#t}}app.main.krytychna_kilkist{{/t}} </h4>
-                        <small>{{#t}}app.main.tovary_dlia_iakykh_zadana_minimalna{{/t}}</small>
+                        {{#sqs_charity}}<h4 id="sqs-belowmin">{{#sqs_belowmin}}<a href="/index.php?p=App/Pages/Report/BelowMinimum">{{/sqs_belowmin}}{{#t}}sqs.charity.below_min{{/t}}{{#sqs_belowmin}}</a>{{/sqs_belowmin}}</h4>
+                        <small>{{#t}}sqs.charity.below_min_hint{{/t}}</small>{{/sqs_charity}}
+                        {{^sqs_charity}}<h4>{{#t}}app.main.krytychna_kilkist{{/t}} </h4>
+                        <small>{{#t}}app.main.tovary_dlia_iakykh_zadana_minimalna{{/t}}</small>{{/sqs_charity}}
                         <br><a zippy="mqcsv">{{#t}}common.eksport_u_excel{{/t}}</a>
                         <div class="table-responsive">
                         <table class="table   table-sm">
@@ -143,7 +145,7 @@
                            
                                 <th>{{#t}}common.tovar{{/t}}</th>
                                 <th>{{#t}}common.kod{{/t}}</th>
-                                <th>{{#t}}app.main.postavyv{{/t}}</th>
+                                <th class="{{#sqs_charity}} d-none{{/sqs_charity}}">{{#t}}app.main.postavyv{{/t}}</th>
 
                                 <th class="text-end">{{#t}}app.main.fakt{{/t}}</th>
                                 <th class="text-end">{{#t}}app.main.min{{/t}}</th>
@@ -152,7 +154,7 @@
                                
                                 <td zippy="wmq_itemname"></td>
                                 <td zippy="wmq_item_code"></td>
-                                <td zippy="wmq_cust"></td>
+                                <td zippy="wmq_cust" class="{{#sqs_charity}} d-none{{/sqs_charity}}"></td>
                                 <td zippy="wmq_qty" class="text-end"></td>
                                 <td zippy="wmq_minqty" class="text-end"></td>
                             </tr>
