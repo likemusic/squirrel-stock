@@ -10,6 +10,8 @@
 #   SQS_CHECK_USER — логин для проверки входа (по умолчанию admin);
 #   SQS_CHECK_PASS — его пароль; не задан — проверки после входа пропускаются. Неверный пароль считается программой
 #                    как неудачная попытка входа;
+#   SQS_CHECK_DELAY — пауза между запросами в секундах (по умолчанию 0.2): у хостинга бывает ограничение частоты запросов
+#                    («защита от DDoS»), при превышении он отвечает 503 или рвёт соединение; такие ответы повторяются до 3 раз;
 #   CURL_CA_BUNDLE — свой корневой сертификат (самоподписанный на тестовом стенде), стандартная переменная curl.
 # Код выхода: 0 — ошибок нет (предупреждения возможны), 1 — есть ошибки, 2 — неверный запуск.
 set -uo pipefail
@@ -34,11 +36,24 @@ WARN() { warn=$((warn + 1)); echo "ПРЕДУПРЕЖДЕНИЕ $*"; }
 SKIP() { skip=$((skip + 1)); echo "пропущено     $*"; }
 section() { echo; echo "== $*"; }
 
-# GET без перехода по перенаправлениям (запросы только к этому сайту): заголовки в $tmp/h, тело в $tmp/b, код в $code
+delay=${SQS_CHECK_DELAY:-0.2}
+# GET без перехода по перенаправлениям (запросы только к этому сайту): заголовки в $tmp/h, тело в $tmp/b, код в $code,
+# код выхода curl в $cexit. Пауза перед каждым запросом; 503 и сбой соединения (нет связи, таймаут, обрыв TLS) — повтор
+# через 2 и 4 с: так срабатывает ограничение частоты запросов на хостинге
 get() {
-  : > "$tmp/b"; : > "$tmp/h"
-  code=$(curl -sS --max-time 30 -o "$tmp/b" -D "$tmp/h" -w '%{http_code}' -b "$jar" -c "$jar" "$@" 2>"$tmp/e") || code=000
+  local try
+  for try in 1 2 3; do
+    sleep "$delay"
+    : > "$tmp/b"; : > "$tmp/h"
+    cexit=0
+    code=$(curl -sS --max-time 30 -o "$tmp/b" -D "$tmp/h" -w '%{http_code}' -b "$jar" -c "$jar" "$@" 2>"$tmp/e") || cexit=$?
+    (( cexit )) && code=000
+    [[ $code == 503 ]] || [[ $cexit =~ ^(6|7|28|35|56)$ ]] || return 0
+    (( try < 3 )) && sleep $((try * 2))
+  done
 }
+# сервер оборвал соединение, не ответив (nginx «return 444»; по HTTP/2 curl видит это как ошибку протокола)
+dropped() { [[ $code == 000 && $cexit =~ ^(52|92)$ ]]; }
 summary() { echo; echo "Итого: OK $ok, ошибок $err, предупреждений $warn, пропущено $skip"; (( err == 0 )); }
 header() { grep -i "^$1:" "$tmp/h" | head -1 | sed -E 's/^[^:]+:[[:space:]]*//; s/\r$//'; }
 
@@ -59,7 +74,7 @@ if (( https )); then
     summary; exit
   fi
   r=$(curl -s --max-time 30 -o /dev/null -w '%{http_code} %{redirect_url}' "http://$host/") || r="000 "
-  if [[ $r =~ ^30[1278]\ https://${host//./\\.}(/|$) ]]; then OK "HTTP перенаправляет на HTTPS (${r%% *})"
+  if [[ $r =~ ^30[1278]\ https://${host//./\\.}(:443)?(/|$) ]]; then OK "HTTP перенаправляет на HTTPS (${r%% *})"
   else ERR "HTTP не перенаправляет на HTTPS (ответ: ${r:-нет}): включите «Перенаправлять HTTP-запросы в HTTPS» (INSTALL_HOSTING 2.2)"; fi
 else
   WARN "сайт открыт по HTTP: в интернете — только по HTTPS (INSTALL_HOSTING 6)"
@@ -100,9 +115,10 @@ section "3. Служебные файлы закрыты"
 closed=(config/config.php config/ app/system.php app/ templates/pages/base.html templates/ logs/ cli/ cli/backup.php
   vendor/autoload.php vendor/composer/installed.json composer.json composer.lock init.php lang/ru.json lang/uk.json
   upload/ upload/sqs-check.txt upload/sqs-check.php .htaccess upload/.htaccess db/ db/db.sql script_examples.zip README.md)
-bad=0
+bad=0 drop=()
 for p in "${closed[@]}"; do
   get "$base/$p"
+  if dropped; then drop+=("/$p"); continue; fi
   case $code in
     403|404) ;;
     200) bad=1
@@ -111,7 +127,8 @@ for p in "${closed[@]}"; do
     *) bad=1; WARN "/$p: ответ $code (ждали 403 или 404)" ;;
   esac
 done
-(( bad )) || OK "${#closed[@]} служебных адресов отвечают 403 или 404"
+(( bad )) || OK "${#closed[@]} служебных адресов не отдаются (403 или 404${drop:+; у ${#drop[@]} — обрыв соединения без ответа})"
+(( ${#drop[@]} )) && echo "              сервер обрывает соединение без ответа (так делает nginx хостинга, содержимое не отдаётся): ${drop[*]}"
 bad=0
 for p in assets/css/app.css vendor/leon-mbs/zippy/assets/css/zippy-bundle.css vendor/leon-mbs/zippy/assets/js/jquery.js; do
   get "$base/$p"
