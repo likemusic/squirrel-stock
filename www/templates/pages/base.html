@@ -89,16 +89,17 @@
             
              
            {{#collapsesidebar}}  
-         <aside   class="collapsed"  id="sidebar"  >
+         <aside   class="collapsed"  id="sidebar"  data-sqspinned="0" >
           {{/collapsesidebar}}
            {{^collapsesidebar}}  
-         <aside  id="sidebar"  >
+         <aside  id="sidebar"  data-sqspinned="1" >
           {{/collapsesidebar}}
          
             <div class="h-100 d-flex flex-column">
-                <div class="sidebar-logo">
+                <div class="sidebar-logo d-flex align-items-center">
                    <a href="/index.php">  <i class="fa fa-home"></i> </a>
-                   
+                   <!-- SquirrelStock: булавка — закрепленное меню открыто на каждой странице (= галочка «Скрывать боковое меню» в профиле) -->
+                   <button type="button" id="sqspin" class="btn btn-link ms-auto p-0" aria-pressed="false" title="{{#t}}sqs.sidebar.pin{{/t}}" aria-label="{{#t}}sqs.sidebar.pin{{/t}}"><i class="fa fa-thumbtack"></i></button>
                 </div>
               
                 <ul class="sidebar-nav">
@@ -806,6 +807,15 @@
               <div id="sqs-version" class="mt-auto" title="SquirrelStock">SquirrelStock {{sqsversion}}</div>
             </div>
         </aside>            
+        <script>
+        // SquirrelStock: боковое меню до отрисовки страницы. На телефоне закрепленное меню тоже свернуто: оно выезжает поверх страницы.
+        (function () {
+            var side = document.getElementById('sidebar'), pin = document.getElementById('sqspin');
+            var pinned = side.dataset.sqspinned === '1';
+            pin.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+            if (window.matchMedia('(max-width: 767.98px)').matches) side.classList.add('collapsed');
+        })();
+        </script>
             
             
          <div class="main mb-4" >
@@ -1164,6 +1174,15 @@
 toggler.addEventListener("click",function(){
     document.querySelector("#sidebar").classList.toggle("collapsed");
 });              
+     // SquirrelStock: булавка сохраняет закрепление у пользователя сразу; в профиле переставляет и галочку «Скрывать боковое меню»
+     $('#sqspin').on('click', function () {
+         var pin = this, on = pin.getAttribute('aria-pressed') !== 'true';
+         callPM('sqsPinSidebar', [on ? 1 : 0], null, function () {
+             pin.setAttribute('aria-pressed', on ? 'true' : 'false');
+             document.getElementById('sidebar').dataset.sqspinned = on ? '1' : '0';
+             $('input[type=checkbox]#collapsesidebar').prop('checked', !on);
+         });
+     });
                              
             })              
  

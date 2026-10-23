@@ -1273,4 +1273,23 @@ class Base extends \Zippy\Html\WebPage
     protected function isAjaxRequest( ) {
        return App::$app->getRequest()->isAjaxRequest()   ;
     }   
+
+    /**
+     * SquirrelStock: булавка бокового меню. Закреплено (1) — меню открыто на каждой странице: та же настройка, что галочка
+     * «Скрывать боковое меню» в профиле (collapsesidebar = 0); откреплено (0) — collapsesidebar = 1.
+     */
+    public function sqsPinSidebar($args, $post = null) {
+        $pin = $args[0] ?? '';
+        if ($pin !== '0' && $pin !== '1' && $pin !== 0 && $pin !== 1) {
+            return $this->jsonError('pin: 0|1');
+        }
+        $user = System::getUser();
+        if ($user->user_id == 0) {
+            return $this->jsonError('user');
+        }
+        $user->collapsesidebar = $pin == 1 ? 0 : 1;
+        $user->save();
+        System::setUser($user);
+        return $this->jsonOK();
+    }
 }
