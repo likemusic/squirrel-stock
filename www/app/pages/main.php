@@ -99,6 +99,12 @@ class Main extends Base
             $mqlist->setPageSize(10);
             $this->add(new Paginator("mqpag", $mqlist));
             $mqlist->Reload();
+            // SquirrelStock: в профиле блок называется как отчет «Ниже минимального остатка» и ведет на него, без поставщика
+            if (\App\SQS\Profile::charity()) {
+                $this->_tvars['sqs_charity'] = true;
+                $this->_tvars['sqs_belowmin'] = $conn->GetOne("SELECT COUNT(*) FROM metadata WHERE disabled = 0 AND meta_type = 2 AND meta_name = 'BelowMinimum'") > 0
+                    && \App\ACL::checkShowReport('BelowMinimum', false);
+            }
        
 
     
@@ -304,7 +310,7 @@ class Main extends Base
         $row->add(new Label('wmq_item_code', $item->item_code));
         
         
-        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
+        $d = \App\SQS\Profile::charity() ? null : \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;   // SquirrelStock: в профиле колонки поставщика нет
         
         $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
