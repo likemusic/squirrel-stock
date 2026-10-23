@@ -34,10 +34,11 @@ class Stock extends \ZCL\DB\Entity
         $criteria = "qty > 0 and itemdisabled <> 1 and store_id=" . $store;
      //   $criteria .= "  and item_id in( select ss.item_id  from store_stock ss where ss.store_id={$store} group by ss.item_id having sum(ss.qty) > 0  ) "  ;
         if (strlen($partname) > 0) {
-            $like = self::qstr('%' . $partname . '%');
+            // SquirrelStock: название — по словам в любом порядке, было — подстрока целиком
+            $words = \App\SQS\Search::words($partname, \App\SQS\Search::columns(['itemname']));
             $partname = self::qstr($partname);
 
-            $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
+            $criteria .= "  and  ({$words} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
         $entitylist = self::find($criteria, " itemname asc,stock_id desc");
