@@ -29,6 +29,7 @@ class StoreItems extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('StoreItems')) {
             return;
         }
+        $this->_tvars['sqs_charity'] = \App\SQS\Profile::charity();   // SquirrelStock: подзаголовок «Остатки позиций на складах»
 
         $this->add(new Form('filter')) ;
         $this->filter->add(new CheckBox('fminus'));
@@ -192,6 +193,7 @@ class StoreItems extends \App\Pages\Base
                         "storescol"         => \App\Util::tokv($storelist)
         );
 
+        $this->sqsColumns($header);
         $report = new \App\Report('report/storeitems.tpl');
 
         $html = $report->generate($header);
@@ -337,6 +339,7 @@ class StoreItems extends \App\Pages\Base
                         
         );
 
+        $this->sqsColumns($header);
         $report = new \App\Report('report/storeitems.tpl');
 
         $html = $report->generate($header);
@@ -345,4 +348,18 @@ class StoreItems extends \App\Pages\Base
     }
 
 
+
+    /**
+     * SquirrelStock: в профиле благотворительной организации колонки «Артикул» и «Бренд» — только если они где-то заполнены
+     * (у хосписа их нет: две пустые колонки). Без профиля — как было
+     */
+    private function sqsColumns(array &$header): void {
+        $rows = $header['ver'] ? array_merge([], ...array_column($header['_detail'], 'items')) : $header['_detail'];
+        foreach (['showcode' => 'item_code', 'showbrand' => 'brand'] as $flag => $field) {
+            $header[$flag] = !\App\SQS\Profile::charity() || count(array_filter(array_column($rows, $field), fn($v) => trim((string)$v) !== '')) > 0;
+            if (!$header[$flag]) {
+                $header['colspan']--;
+            }
+        }
+    }
 }

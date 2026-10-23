@@ -10,8 +10,8 @@
     <tr style="font-weight: bolder;">
 
         <th style="border: solid black 1px">{{#t}}common.naimenuvannia{{/t}}</th>
-        <th style="border: solid black 1px">{{#t}}common.artykul{{/t}}</th>
-        <th style="border: solid black 1px">{{#t}}common.brend{{/t}}</th>
+        {{#showcode}}<th style="border: solid black 1px">{{#t}}common.artykul{{/t}}</th>{{/showcode}}
+        {{#showbrand}}<th style="border: solid black 1px">{{#t}}common.brend{{/t}}</th>{{/showbrand}}
         <th style="border: solid black 1px">{{#t}}common.min_kil{{/t}}</th>
         {{#cfnames}}
         <th style="border: solid black 1px">{{value}} </th>
@@ -30,8 +30,8 @@
     <tr>
 
         <td>{{itemname}}</td>
-        <td data-type="s">{{item_code}}</td>
-        <td>{{brand}}</td>
+        {{#showcode}}<td data-type="s">{{item_code}}</td>{{/showcode}}
+        {{#showbrand}}<td>{{brand}}</td>{{/showbrand}}
         <td align="right">{{minqty}}</td>
         {{#cfcol}}
           <td align="right">{{val}}</td>
@@ -55,8 +55,8 @@
     <tr>
 
         <td>{{itemname}}</td>
-        <td data-type="s">{{item_code}}</td>
-        <td>{{brand}}</td>
+        {{#showcode}}<td data-type="s">{{item_code}}</td>{{/showcode}}
+        {{#showbrand}}<td>{{brand}}</td>{{/showbrand}}
         <td align="right">{{minqty}}</td>
         {{#cfcol}}
           <td align="right">{{val}}</td>

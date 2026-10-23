@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>{{#t}}report.storeitems.stan_skladiv{{/t}}</h3>
-                <small>{{#t}}report.storeitems.kilkist_tmts_na_skladakh{{/t}}</small>
+                <small>{{#sqs_charity}}{{#t}}sqs.charity.storeitems_hint{{/t}}{{/sqs_charity}}{{^sqs_charity}}{{#t}}report.storeitems.kilkist_tmts_na_skladakh{{/t}}{{/sqs_charity}}</small>
                 <div class="navbar">
                     <form zippy="filter"  >
                         <div class="row  ">

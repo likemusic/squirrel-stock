@@ -3925,6 +3925,7 @@
     "sqs.charity.new_issue": "Нова видача",
     "sqs.charity.status_drafts": "Не проведені",
     "sqs.charity.status_executed": "Проведені",
+    "sqs.charity.storeitems_hint": "Залишки позицій на складах",
     "sqs.contract.holder": "Договір укладено з",
     "sqs.contract.holder_changed": "Договір укладено з: {from} → {to}",
     "sqs.contract.holder_saved": "Збережено",
