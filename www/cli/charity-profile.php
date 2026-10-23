@@ -12,7 +12,11 @@
  *    расходная накладная и возврат печатаются формами «Выдал / Получатель» и «Вернул / Принял», в журнале выдач нет кнопок доставки,
  *    ТТН и гарантийного талона, в формах выдачи и возврата — «Получатель», без кассы, цен и оплаты (цена выдачи 0);
  *  - названия (RENAME): журнал «Продажи» — «Выдачи», группы документов «Продажи» — «Выдача», «Закупки» — «Поступление»,
- *    «Расходная накладная» — «Выдача (накладная)», «Возврат от покупателя» — «Возврат от получателя», группа отчетов и отчет «Закупки» — «Поступление».
+ *    «Расходная накладная» — «Выдача (накладная)», «Возврат от покупателя» — «Возврат от получателя», группа отчетов и отчет «Закупки» — «Поступление»;
+ *  - оперативное меню (кнопки вверху страниц, настройка роли): у ролей со стандартным «Номенклатура / Общий журнал» —
+ *    «Выдачи», «Выдача расходников», «Выдача оборудования» (SMART); настроенное вручную остается; --back — обратно;
+ *  - служебный контрагент Zippy «Фiз. особа» / «Физ. лицо» (розничный покупатель из db.sql) выключается, если по нему нет документов:
+ *    в справочнике и подсказках его нет; --back — включается.
  * Повторный запуск безопасен. Настройки кэшируются в сессии: изменения видны после повторного входа.
  *
  * php cli/charity-profile.php          (в docker-стенде: docker exec -u www-data squirrelstock-web-1 php cli/charity-profile.php)
@@ -45,6 +49,11 @@ const RENAME = [
     [2, '', 'menugroup', ['Закупівлі' => 'Надходження', 'Закупки' => 'Поступление']],
     [2, 'Income', 'description', ['Закупівлі' => 'Надходження', 'Закупки' => 'Поступление']],
 ];
+// оперативное меню: [тип, meta_name] стандартное (у роли admins в db.sql) => в профиле (пункты, которых нет в меню, пропускаются)
+const SMART_DEFAULT = [[4, 'ItemList'], [3, 'DocList']];
+const SMART = [[3, 'GIList'], [5, 'ConsumablesIssue'], [5, 'EquipmentIssue']];
+// служебный контрагент из db.sql (имя на украинском и после cli/localize-db.php ru)
+const RETAIL_CUSTOMER = ['Фiз. особа', 'Физ. лицо'];
 
 $_config = [];
 require __DIR__ . '/../config/config.php';
@@ -77,6 +86,8 @@ if (in_array('--back', $argv, true)) {
     }
     $conn->query("DELETE FROM keyval WHERE keyd = 'sqs_profile_disabled'");
     rename_items($conn, true);
+    smartmenu($conn, true);
+    retailCustomer($conn, true);
     setCommon($conn, fn(array $c) => array_diff_key($c, ['sqs_charity' => 1, 'sqs_partion_exact' => 1]));   // цена партии — снова до копейки
     echo 'Включено пунктов меню: ' . count($ids) . "\n";
     exit;
@@ -94,6 +105,8 @@ if ($ids) {
 $conn->query("UPDATE metadata SET disabled = 0 WHERE {$inKeep}");
 
 rename_items($conn, false);
+smartmenu($conn, false);
+retailCustomer($conn, false);
 setCommon($conn, fn(array $c) => array_merge($c, OPTIONS));
 
 echo 'Выключено пунктов меню: ' . count($ids) . ", настройки обновлены. Изменения видны после повторного входа в программу\n";
@@ -106,6 +119,65 @@ function rename_items(mysqli $conn, bool $back): void {
             $stmt->execute();
         }
     }
+}
+
+// оперативное меню ролей: стандартное => профиля (--back — обратно). Меняется только роль, у которой меню ровно стандартное (или ровно профиля)
+function smartmenu(mysqli $conn, bool $back): void {
+    $ids = function (array $items) use ($conn): array {
+        $ids = [];
+        foreach ($items as [$type, $name]) {
+            $id = $conn->query("SELECT meta_id FROM metadata WHERE disabled = 0 AND meta_type = {$type} AND meta_name = '" . $conn->real_escape_string($name) . "'")->fetch_row()[0] ?? null;
+            if ($id !== null) {
+                $ids[] = (int)$id;
+            }
+        }
+        return $ids;
+    };
+    [$from, $to] = $back ? [$ids(SMART), $ids(SMART_DEFAULT)] : [$ids(SMART_DEFAULT), $ids(SMART)];
+    if (!$from || !$to) {
+        return;
+    }
+    $key = fn(array $a) => implode(',', array_unique(array_map('intval', array_filter($a, 'strlen'))));
+    sort($from);
+    $stmt = $conn->prepare('UPDATE roles SET acl = ? WHERE role_id = ?');
+    foreach ($conn->query('SELECT role_id, acl FROM roles')->fetch_all() as [$id, $raw]) {
+        $acl = @unserialize((string)$raw, ['allowed_classes' => false]);
+        if (!is_array($acl)) {
+            continue;
+        }
+        $cur = explode(',', (string)($acl['smartmenu'] ?? ''));
+        sort($cur);
+        if ($key($cur) !== $key($from)) {
+            continue;
+        }
+        $acl['smartmenu'] = implode(',', $to);
+        $value = serialize($acl);
+        $stmt->bind_param('si', $value, $id);
+        $stmt->execute();
+    }
+}
+
+// служебный контрагент: выключить (если по нему нет документов) и запомнить в keyval; --back — включить запомненных
+function retailCustomer(mysqli $conn, bool $back): void {
+    $saved = array_filter(array_map('intval', explode(',', $conn->query("SELECT vald FROM keyval WHERE keyd = 'sqs_profile_customers_off'")->fetch_row()[0] ?? '')));
+    if ($back) {
+        if ($saved) {
+            $conn->query('UPDATE customers SET status = 0 WHERE status = 1 AND customer_id IN (' . implode(',', $saved) . ')');
+        }
+        $conn->query("DELETE FROM keyval WHERE keyd = 'sqs_profile_customers_off'");
+        return;
+    }
+    $names = implode(', ', array_map(fn($n) => "'" . $conn->real_escape_string($n) . "'", RETAIL_CUSTOMER));
+    $ids = array_map(fn($r) => (int)$r[0], $conn->query("SELECT customer_id FROM customers c WHERE status = 0 AND customer_name IN ({$names})
+        AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.customer_id = c.customer_id)")->fetch_all());
+    if (!$ids) {
+        return;
+    }
+    $conn->query('UPDATE customers SET status = 1 WHERE customer_id IN (' . implode(',', $ids) . ')');
+    $all = implode(',', array_unique(array_merge($saved, $ids)));
+    $stmt = $conn->prepare("REPLACE INTO keyval (keyd, vald) VALUES ('sqs_profile_customers_off', ?)");
+    $stmt->bind_param('s', $all);
+    $stmt->execute();
 }
 
 function setCommon(mysqli $conn, callable $change): void {
