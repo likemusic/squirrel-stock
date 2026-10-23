@@ -347,3 +347,35 @@ a.sidebar-link {
     color: #adb5bd;
     font-size: .8rem;
 }
+
+/* SquirrelStock: боковое меню (TODO 6.1, 6.2). Булавка закрепления: прозрачная, пока меню не закреплено; на телефоне ее нет —
+   там меню всегда выезжает поверх страницы. Пункт текущей страницы подсвечен, заголовки раздела и группы на пути к нему —
+   полужирные. Цвета — от --bs-primary: читаемо в светлой и темной теме. */
+#sqspin {
+    color: #e9ecef;
+    opacity: .45;
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+#sqspin:hover {
+    opacity: .8;
+}
+#sqspin[aria-pressed="true"] {
+    color: var(--bs-primary);
+    opacity: 1;
+    transform: none;
+}
+@media (max-width: 767.98px) {
+    #sqspin {
+        display: none !important;
+    }
+}
+#sidebar a.sidebar-link.active {
+    background-color: rgba(var(--bs-primary-rgb), .35);
+    border-left: 3px solid var(--bs-primary);
+    padding-left: calc(1.625rem - 3px);
+    font-weight: 600;
+}
+#sidebar a.sidebar-link.sqs-path {
+    font-weight: 600;
+}
