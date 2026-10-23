@@ -39,7 +39,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('phone', $this->user->phone));
         $form->add(new TextInput('viber', $this->user->viber));
 
-        $form->add(new CheckBox('darkmode', $this->user->darkmode));
+        $form->add(new DropDownChoice('theme', ['auto' => __('sqs.theme.auto'), 'light' => __('sqs.theme.light'), 'dark' => __('sqs.theme.dark')], $this->user->theme));   // SquirrelStock: вместо галочки «Ночная тема»
         $form->add(new DropDownChoice('lang', ['' => __('common.default')] + \App\Translator::getLanguages(), $this->user->lang ?? ''));
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('collapsesidebar', $this->user->collapsesidebar));
@@ -169,7 +169,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->phone = $sender->phone->getText();
         $this->user->viber = $sender->viber->getText();
 
-        $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
+        $this->user->theme = $sender->theme->getValue();
         $this->user->lang = $sender->lang->getValue();
         $this->user->collapsesidebar = $sender->collapsesidebar->isChecked() ? 1 : 0;
         $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
@@ -190,6 +190,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
+        $this->_tvars["theme"] = $this->user->theme;   // SquirrelStock: страница после сохранения — уже в новой теме
         \App\Translator::reset();
        
     }
@@ -285,6 +286,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
+        $this->_tvars["theme"] = $this->user->theme;   // SquirrelStock: страница после сохранения — уже в новой теме
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
@@ -341,6 +343,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
+        $this->_tvars["theme"] = $this->user->theme;   // SquirrelStock: страница после сохранения — уже в новой теме
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
@@ -350,6 +353,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess(__('common.zberezheno'));
         System::setUser($this->user);
+        $this->_tvars["theme"] = $this->user->theme;   // SquirrelStock: страница после сохранения — уже в новой теме
         App::Redirect("\\App\\Pages\\UserProfile");               
          
     }

@@ -272,11 +272,12 @@ class Base extends \Zippy\Html\WebPage
          $this->_tvars["collapsesidebar"] = $user->collapsesidebar == 1 ;
       
 
-        $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";
+        // SquirrelStock: тема light|dark|auto — фактическую (с учетом системной) ставит assets/js/sqs-theme.js до отрисовки
+        $this->_tvars["theme"] = $user->theme ?? 'auto';
+        $this->_tvars["darkmode"] = $user->theme == 'dark';   // остался в шаблонах магазина (modules/shop); фактическую тему знает только браузер
         $this->_tvars["t"] = new \App\Translator();   // перевод в шаблонах: {{#t}}ключ{{/t}}
         $this->_tvars["lang"] = \App\Translator::lang();
         $this->_tvars["lang_" . \App\Translator::lang()] = true;   // {{#lang_ru}} — локали JS-библиотек
-        $this->_tvars["darkmodecss"] = $user->darkmode == 1 ?true:false;
      
 
     
@@ -640,6 +641,20 @@ class Base extends \Zippy\Html\WebPage
         $ret =  \App\Comm::sendSMS($args[0], $args[1])  ;
         return $this->jsonOK($ret ?? "") ;
 
+    }
+
+    // SquirrelStock: тема из переключателя в верхней панели (light|dark|auto)
+    public function sqsSetTheme($args, $post = null) {
+        $theme = (string)($args[0] ?? '');
+        $user = System::getUser();
+        if (!in_array($theme, ['light', 'dark', 'auto'], true) || $user->user_id == 0) {
+            return $this->jsonError(__('sqs.theme.bad'));
+        }
+        if ($user->theme !== $theme) {
+            $user->theme = $theme;
+            $user->save();
+        }
+        return $this->jsonOK();
     }
 
 
