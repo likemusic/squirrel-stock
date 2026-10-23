@@ -3905,6 +3905,8 @@
     "sqs.2fa.step_scan": "Отсканируйте QR-код приложением или введите ключ вручную.",
     "sqs.2fa.title": "Двухфакторный вход",
     "sqs.charity.accepted_by": "Принял",
+    "sqs.charity.below_min": "Ниже минимального остатка",
+    "sqs.charity.below_min_hint": "Позиции, остаток которых меньше минимального, заданного в карточке позиции",
     "sqs.charity.gilist_title": "Журнал выдач",
     "sqs.charity.income_by_categories": "Поступление по категориям",
     "sqs.charity.income_by_dates": "Поступление по датам",
