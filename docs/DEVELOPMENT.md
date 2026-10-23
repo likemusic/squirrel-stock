@@ -29,6 +29,12 @@ For another stand: `SQS_BASE`, `SQS_DB_CONTAINER`, `SQS_WEB_CONTAINER`. Tests cr
 
 `tests/tools/`: `seed-demo.js` builds the demo database (`db/demo/`, see [GUIDE.ru.md](GUIDE.ru.md), «Демо-база»), `equipment-volume.js` measures the equipment reports on ~700 fictional units, `dump-texts.js` takes a snapshot of the visible text of all menu pages to compare the interface before and after automatic changes (such as the key converter).
 
+## Release
+
+1. `tools/release/build.sh` — the package `dist/squirrel-stock-<version>.zip` with `-empty.sql` and `-demo.sql` ([INSTALL_HOSTING.ru.md](INSTALL_HOSTING.ru.md)).
+2. `tools/release/accept.sh dist/squirrel-stock-<version>.zip` — acceptance of this very package before it goes to a server. A clean copy of a hosting: Apache + PHP 8.4 without stand settings, `open_basedir` limited to the site root, `upload_tmp_dir` and the backup folder (no `/tmp`), a separate MariaDB 11.4 with the binary log and an ordinary database user; the package is unpacked into the site root, `-demo.sql` is loaded with the console client, the warehouse role and user `sklad` are created (`cli/role-warehouse.php`). Then `check-site.sh` and `tests/accept/demo.spec.js` (not part of `npm test`) walk the demo scenario as `admin` and as `sklad`: the main page, every menu item, consumables and equipment issue, return, extension, the act in Excel, PDF, backup and restore of that backup; closed pages for `sklad`. Screenshots of the main page and the menu of both roles are in `tests/test-results/accept/shots/`. `--keep` leaves the containers for a manual look (port `SQS_TEST_PORT`, 8096 by default; the passwords are printed at the end).
+3. Only an accepted package is handed over for deployment. Updating an existing installation is checked by `tools/install/test-update.sh hosting --zip=…`.
+
 ## Interface languages
 
 Interface texts are English keys: `__('key')` in PHP, `{{#t}}key{{/t}}` in templates (`{|#t|}key{|/t|}` where a template switches Mustache delimiters for Vue). Texts are in `www/lang/<lang>.json`: `uk` (the original Ukrainian text of Zippy) and `ru`; modules keep their keys in `lang/<lang>.json` of the module. The language is chosen in the user profile; the default is `$_config['common']['lang']` in `config/config.php`.
