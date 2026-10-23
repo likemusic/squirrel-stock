@@ -339,3 +339,11 @@ a.sidebar-link {
         display: none !important;
     }
 }
+
+/* SquirrelStock: версия программы — внизу меню (на коротких страницах прижата к низу экрана), с отступом пунктов меню.
+   Раньше: сразу под последним пунктом, без отступа и почти черным по черному (text-muted) */
+#sqs-version {
+    padding: 1.5rem 1.625rem 1rem;
+    color: #adb5bd;
+    font-size: .8rem;
+}
