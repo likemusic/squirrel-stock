@@ -56,11 +56,10 @@ class EqHistory
      * Прочитать файл .xlsx: распознать формат и разобрать строки
      */
     public function readFile(string $path, string $filename): void {
-        $book = \App\SQS\SpreadsheetFile::load($path);
-        $titles = array_map(fn($s) => mb_strtolower(trim($s->getTitle())), $book->getAllSheets());
+        $titles = array_map(fn($t) => mb_strtolower(trim($t)), \App\SQS\SpreadsheetFile::sheetNames($path));
         $journal = in_array('обычные', $titles, true);
         $this->rowsRead[$filename] = 0;
-        foreach ($book->getAllSheets() as $sheet) {
+        foreach (\App\SQS\SpreadsheetFile::sheets($path) as $sheet) {   // по листу: вся книга большой таблицы не помещается в память
             $rows = self::sheetRows($sheet);
             if (count($rows) == 0) {
                 continue;
