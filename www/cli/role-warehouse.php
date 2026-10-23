@@ -6,6 +6,7 @@
  * «Обновления программы». Раздел «Система» (Общие, Администратор, Настройка меню, Данные компании, Пользователи, Роли,
  * Кассы, Подписки, Планировщик, Системный журнал), восстановление из копии и настройки автокопии программа и так
  * открывает только роли admins. Права даются и на пункты, выключенные в меню: включенный потом пункт роль видит сразу.
+ * Оперативное меню новой роли — «Выдачи», «Выдача расходников», «Выдача оборудования» (SMART); настроенное — не меняется.
  * То же можно сделать в интерфейсе: «Система → Роли» (docs/USER_GUIDE.ru.md). Повторный запуск обновляет права роли.
  *
  * php cli/role-warehouse.php                         роль «Склад» (создать или обновить права)
@@ -24,6 +25,8 @@ if (PHP_SAPI !== 'cli') {
 const DENY = [
     5 => ['Import', 'Import1C', 'ImportEquipmentHistory', 'AppUpdate'],
 ];
+// оперативное меню (кнопки вверху страницы) — как у ролей в cli/charity-profile.php; ставится, только если у роли его нет
+const SMART = [[3, 'GIList'], [5, 'ConsumablesIssue'], [5, 'EquipmentIssue']];
 
 $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ?? 'localhost';
 require __DIR__ . '/../init.php';
@@ -53,6 +56,13 @@ foreach ($conn->Execute('SELECT meta_id, meta_type, meta_name FROM metadata ORDE
     }
 }
 $all = implode(',', $ids);
+$smart = [];
+foreach (SMART as [$type, $meta]) {
+    $id = $conn->GetOne('SELECT meta_id FROM metadata WHERE disabled = 0 AND meta_type = ' . $type . ' AND meta_name = ' . $conn->qstr($meta));
+    if ($id) {
+        $smart[] = (int)$id;
+    }
+}
 
 $role = \App\Entity\UserRole::getFirst('rolename = ' . $conn->qstr($name)) ?? new \App\Entity\UserRole();
 $new = $role->role_id == 0;
@@ -66,7 +76,7 @@ $role->canevent = 1;
 $role->dashboard = 0;
 $role->noshowpartion = 0;
 $role->modules = $role->modules ?? '';
-$role->smartmenu = $role->smartmenu ?? '';
+$role->smartmenu = strlen($role->smartmenu ?? '') ? $role->smartmenu : implode(',', $smart);
 $role->save();
 echo ($new ? 'Создана роль' : 'Обновлена роль') . " «{$name}» (id {$role->role_id}): пунктов с доступом " . count($ids) . "\n";
 

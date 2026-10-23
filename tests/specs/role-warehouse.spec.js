@@ -29,6 +29,10 @@ test('роль «Склад»: меню и страницы без «Систе�
     // повторный запуск — обновление, не вторая роль
     execFileSync('docker', ['exec', '-u', 'www-data', WEB, 'php', 'cli/role-warehouse.php', '--name=' + role, '--user=' + login]);
     expect(value(`select count(*) from roles where rolename = '${esc(role)}'`)).toBe('1');
+    // оперативное меню — выдачи и формы выдачи (как в cli/charity-profile.php)
+    const smart = execFileSync('docker', ['exec', WEB, 'php', '-r', `require "init.php"; $r = \\App\\Entity\\UserRole::getFirst("rolename = " . \\ZDB\\DB::getConnect()->qstr($argv[1]));
+      echo implode(",", \\ZDB\\DB::getConnect()->GetCol("SELECT meta_name FROM metadata WHERE meta_id IN (" . ($r->smartmenu ?: "0") . ") ORDER BY meta_name"));`, "--", role], { encoding: 'utf8' }).trim();
+    expect(smart).toBe('ConsumablesIssue,EquipmentIssue,GIList');
 
     let page;
     ({ context, page } = await loginAs(browser, login, pass));
