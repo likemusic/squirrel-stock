@@ -16,6 +16,7 @@ class TwoFactorLogin extends \Zippy\Html\WebPage
     public function __construct() {
         parent::__construct();
         $this->_tvars['t'] = new \App\Translator();
+        $this->_tvars['lang'] = \App\Translator::lang();   // SquirrelStock: <html lang> — язык интерфейса (было всегда uk)
         $common = \App\System::getOptions('common');
         $this->_tvars['appname'] = $common['shopname'] ?? '';
         $this->_tvars['alerterror'] = '';
