@@ -26,7 +26,7 @@ class Users extends \App\Pages\Base
 
         if (System::getUser()->rolename != 'admins') {
 
-            $this->setError('onlyadmisaccess');
+            $this->setError(__('common.do_storinky_maie_dostup_tilky'));   // SquirrelStock: был ключ без перевода «onlyadmisaccess»
             App::RedirectError();
             return  ;
         }
@@ -119,7 +119,7 @@ class Users extends \App\Pages\Base
     public function saveOnClick($sender) {
         if (System::getUser()->rolename != 'admins') {
 
-            $this->setError('onlyadmisaccess');
+            $this->setError(__('common.do_storinky_maie_dostup_tilky'));   // SquirrelStock: был ключ без перевода «onlyadmisaccess»
             App::RedirectError();
             return false;
         }

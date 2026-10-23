@@ -895,10 +895,11 @@ class Item extends \ZCL\DB\Entity
         }
 
         if (strlen($partname) > 0) {
-            $like = self::qstr('%' . $partname . '%');
+            // SquirrelStock: слова в любом порядке («Зонд 14» — «Зонд гастростомический 14 Fr»), было — подстрока целиком
+            $words = \App\SQS\Search::words($partname, \App\SQS\Search::columns(['itemname', 'item_code', 'bar_code']));
             $start = self::qstr($partname . '%');
             $partname = self::qstr($partname);
-            $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+            $criteria .= "  and  {$words}";
         }
         if (strlen($where) > 0) {
             $criteria .= "  and  ". $where;

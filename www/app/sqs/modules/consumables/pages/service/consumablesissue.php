@@ -60,17 +60,17 @@ class ConsumablesIssue extends \App\Pages\Base
     }
 
     /**
-     * Расходники с остатком на складе: id => «название, код — остаток N ед.». Расходник — позиция без серийного учета или
+     * Расходники с остатком на складе: id => «название, код — остаток N ед.»; поиск по словам в любом порядке. Расходник — позиция без серийного учета или
      * с учетом партиями (Item::serialMode() 1 или 2; просроченные партии не считаются); оборудование по номерам — нет.
      */
     public static function findInStock(int $store, string $text, int $limit = 30): array {
         $conn = \ZDB\DB::getConnect();
-        $like = $conn->qstr('%' . trim($text) . '%');
+        $words = \App\SQS\Search::words($text, \App\SQS\Search::columns(['i.itemname', 'i.item_code', 'i.bar_code']));
         $sql = "SELECT i.item_id, i.itemname, i.item_code, i.msr, SUM(s.qty) AS qty
                 FROM items i JOIN store_stock s ON s.item_id = i.item_id AND s.store_id = {$store}
                 WHERE i.disabled <> 1 AND (COALESCE(i.detail, '') NOT LIKE '%<useserial>1</useserial>%' OR " . \App\SQS\SerialStock::batchSql() . ")
                   AND " . self::usableSql() . "
-                  AND (i.itemname LIKE {$like} OR i.item_code LIKE {$like} OR i.bar_code LIKE {$like})
+                  AND {$words}
                 GROUP BY i.item_id, i.itemname, i.item_code, i.msr
                 HAVING SUM(s.qty) > 0
                 ORDER BY i.itemname, i.item_id

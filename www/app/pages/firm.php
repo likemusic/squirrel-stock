@@ -29,6 +29,12 @@ class Firm extends \App\Pages\Base
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
         }
+        // SquirrelStock: только роль admins, как пункт в меню («Система»); раньше страница открывалась и сохраняла данные у любого пользователя по прямому адресу
+        if ($user->rolename != 'admins') {
+            System::setErrorMsg(__('common.do_storinky_maie_dostup_tilky'));
+            App::RedirectError();
+            return;
+        }
 
         $firm = System::getOptions("firm");
         if (count($firm)==0) {

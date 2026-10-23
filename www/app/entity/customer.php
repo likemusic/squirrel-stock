@@ -199,12 +199,13 @@ class Customer extends \ZCL\DB\Entity
         if (strlen($search) > 0) {
             $edrpou = Customer::qstr('%<edrpou>' . $search . '</edrpou>%');
 
-            $search = Customer::qstr('%' . $search . '%');
+            // SquirrelStock: слова в любом порядке, каждое — в названии, телефоне или почте; было — подстрока целиком
+            $words = \App\SQS\Search::words($search, \App\SQS\Search::columns(['customer_name', 'phone', 'email']));
 
             if ($searchedrpou) {
-                $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} or detail like {$edrpou}  ) ";
+                $where .= " and  ({$words} or detail like {$edrpou}  ) ";
             } else {
-                $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";
+                $where .= " and  {$words} ";
             }
 
 

@@ -14,6 +14,7 @@
                     <input zippy="create" type="submit" class="btn btn-primary" value="{{#t}}service.backup.create{{/t}}">
                 </form>
 
+                {{#backupadmin}}
                 <h4 class="mt-4">{{#t}}service.backup.auto_title{{/t}}</h4>
                 <p class="text-muted">{{#t}}service.backup.auto_help{{/t}}</p>
                 <div class="table-responsive">
@@ -34,6 +35,7 @@
                     {{/places}}
                 </table>
                 </div>
+                {{/backupadmin}}
 
                 <form zippy="sform">
                     <div class="mb-2">
@@ -73,11 +75,13 @@
                     <input zippy="save" type="submit" class="btn btn-primary me-2" value="{{#t}}common.zberehty{{/t}}">
                     <input zippy="runnow" type="submit" class="btn btn-outline-primary" value="{{#t}}service.backup.run_now{{/t}}">
                 </form>
+                {{#backupadmin}}
                 <div class="mt-3">
                     <p class="mb-1">{{#t}}service.backup.schedule_help{{/t}}</p>
                     <p class="mb-1"><b>{{schedule_os}}</b>:</p>
                     <pre class="bg-body-tertiary p-2" style="white-space: pre-wrap; word-break: break-all;"><code id="schedule-cmd">{{schedule_cmd}}</code></pre>
                 </div>
+                {{/backupadmin}}
 
                 <h4 class="mt-4">{{#t}}service.backup.usb_title{{/t}}</h4>
                 <form zippy="uform">
@@ -92,7 +96,7 @@
                     </div>
                 </form>
 
-                <h4 class="mt-4">{{#t}}service.backup.restore_title{{/t}}</h4>
+                {{#backupadmin}}<h4 class="mt-4">{{#t}}service.backup.restore_title{{/t}}</h4>{{/backupadmin}}
                 <form zippy="rform" enctype="multipart/form-data">
                     <div class="mb-2">
                         <input type="file" zippy="rfile" class="form-control" accept=".zip,.sql">

@@ -8,6 +8,9 @@
  *  - Enter/Tab, нажатые, пока показан список не для текущего текста поля, откладываются и выбирают первый вариант,
  *    когда придет ответ на этот текст (если текст до того изменился — отложенный выбор отменяется); щелчок мышью
  *    по варианту выбирает его сразу.
+ * Пауза и повтор (TODO 2.9): у Zippy delay = 0 — запрос на каждое нажатие; при быстром наборе защита хостинга отвечала 503
+ * на последние буквы, и список оставался от старого текста. Пауза по умолчанию — 250 мс (Typeahead.defaults.delay; поле
+ * со своей опцией delay ее сохраняет), запрос на последний текст при ошибке ответа повторяется один раз через 500 мс.
  * Еще: вариант списка вставляется как HTML (render → .html(highlighter(...))), а highlighter Zippy возвращает название
  * из справочника как есть — разметка в названии позиции или получателя становилась элементами страницы. Результат
  * highlighter экземпляра экранируется (у Zippy это просто текст, видимое название не меняется).
@@ -20,14 +23,19 @@
     }
     var P = T.prototype, lookup = P.lookup, select = P.select, keyup = P.keyup, render = P.render;
     var text = function (t) { return t.$element.val() || t.$element.text() || ''; };
+    var RETRY = 500;
+
+    if (T.defaults && !T.defaults.delay) {
+        T.defaults.delay = 250;
+    }
 
     P.lookup = function () {
         if (!this.sqsWrapped && $.isFunction(this.source)) {
             var self = this, source = this.source;
             self.sqsSeq = 0;
             this.source = function (query, done) {
-                var seq = ++self.sqsSeq;
-                return source.call(this, query, function (items) {
+                var seq = ++self.sqsSeq, that = this, tries = 0;
+                var got = function (items) {
                     if (seq !== self.sqsSeq) {
                         return;   // ответ на устаревший запрос
                     }
@@ -41,7 +49,22 @@
                         }
                     }
                     return r;
-                });
+                };
+                // у Zippy source возвращает $.getJSON — при ошибке ответа (503 и т.п.) повторить один раз, если текст тот же
+                var run = function () {
+                    var xhr = source.call(that, query, got);
+                    if (xhr && $.isFunction(xhr.fail) && tries++ < 1) {
+                        xhr.fail(function () {
+                            setTimeout(function () {
+                                if (seq === self.sqsSeq) {
+                                    run();
+                                }
+                            }, RETRY);
+                        });
+                    }
+                    return xhr;
+                };
+                return run();
             };
             this.sqsWrapped = true;
         }

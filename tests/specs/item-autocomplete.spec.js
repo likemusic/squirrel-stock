@@ -43,3 +43,45 @@ test('Enter до ответа на полный код выбирает това
   expect(await page.locator('#edititem_id').inputValue()).toBe(id039);
   await expect(inp).toHaveValue(new RegExp(`${base}-039`));
 });
+
+// Пауза перед запросом (TODO 2.9): у Zippy delay = 0 — запрос на каждое нажатие; на демо при быстром наборе защита
+// хостинга отвечала 503 на последние буквы. Теперь пауза 250 мс: быстрый набор — один-два запроса, а не на каждую букву.
+test('быстрый набор: запросы подсказки не на каждое нажатие', async ({ page, uniq }) => {
+  const base = 'TD' + uniq;
+  seed({ items: [{ name: 'Позиция ' + base + '-039', code: base + '-039' }] });
+  const texts = [];
+  page.on('request', r => {
+    const u = new URL(r.url());
+    if (/ajax=true/.test(u.search) && u.searchParams.has('text')) texts.push(u.searchParams.get('text'));
+  });
+  await page.goto('/index.php?p=App/Pages/Doc/GoodsReceipt');
+  await clickWait(page, '#addrow');
+  const inp = page.locator('#edititem');
+  await inp.pressSequentially(base + '-039', { delay: 60 });
+  await expect(page.locator('li a.dropdown-item:visible')).toHaveCount(1);
+  expect(texts.length, texts.join(' | ')).toBeLessThanOrEqual(2);
+  expect(texts[texts.length - 1]).toBe(base + '-039');
+});
+
+// Ошибка ответа (503 защиты хостинга) на запрос по последнему тексту — один повтор: список не остается от старого
+// текста, и Enter, нажатый до ответа, выбирает вариант по полному тексту.
+test('ответ 503 на полный текст: повтор запроса, Enter выбирает по полному тексту', async ({ page, uniq }) => {
+  const base = 'RT' + uniq;
+  seed({ items: [{ name: 'Позиция ' + base + '-030', code: base + '-030' }, { name: 'Позиция ' + base + '-039', code: base + '-039' }] });
+  const id039 = value(`select item_id from items where item_code = '${base}-039'`);
+  let fails = 0;
+  await page.route(u => /ajax=true/.test(u.href) && u.searchParams.get('text') === base + '-039', async r => {
+    if (fails++ == 0) return r.fulfill({ status: 503, body: 'Service Unavailable' });
+    await r.continue();
+  });
+  await page.goto('/index.php?p=App/Pages/Doc/GoodsReceipt');
+  await clickWait(page, '#addrow');
+  const inp = page.locator('#edititem');
+  await inp.pressSequentially(base + '-03', { delay: 40 });
+  await expect(page.locator('li a.dropdown-item:visible')).toHaveCount(2);
+  await inp.press('9');
+  await inp.press('Enter');
+  await expect.poll(() => page.locator('#edititem_id').inputValue(), { timeout: 5000 }).toBe(id039);
+  expect(fails, 'первый ответ 503, затем повтор').toBe(2);
+  await expect(inp).toHaveValue(new RegExp(`${base}-039`));
+});

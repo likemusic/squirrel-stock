@@ -131,7 +131,7 @@ class EquipmentWhere extends \App\Pages\Base
                 continue;
             }
             // поиск: модель, инвентарный или заводской номер, получатель
-            if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['snumber'] . ' ' . $row['factory'] . ' ' . $row['customer']), $text)) {
+            if (!\App\SQS\Search::matches($row['itemname'] . ' ' . $row['snumber'] . ' ' . $row['factory'] . ' ' . $row['customer'], $text)) {   // слова в любом порядке
                 continue;
             }
             $row['order'] = ['out' => 0, 'store' => 1, 'off' => 2][$kind];
@@ -170,7 +170,7 @@ class EquipmentWhere extends \App\Pages\Base
                 $row['extend'] = self::extendUrl($contract->contract_id);
             }
             // поиск тот же, что у единиц: позиция или получатель
-            if ($text != '' && !str_contains(mb_strtolower($row['itemname'] . ' ' . $row['customer']), $text)) {
+            if (!\App\SQS\Search::matches($row['itemname'] . ' ' . $row['customer'], $text)) {
                 continue;
             }
             $row['n'] = $r['qty'];
