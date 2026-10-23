@@ -83,8 +83,8 @@ class Backup extends \App\Pages\Base
     public function onCreate($sender) {
         try {
             $zip = (new \App\SQS\Backup())->create(_ROOT . 'upload');
-        } catch (\App\SQS\BackupException $e) {
-            $this->setError($e->getMessage());   // нет прав у пользователя базы и т. п. — на странице, а не вместо нее
+        } catch (\Throwable $e) {
+            $this->failed($e);   // нет прав у пользователя базы, нет временной папки и т. п. — на странице, а не вместо нее
             return;
         }
         header('Content-Type: application/zip');
@@ -144,10 +144,22 @@ class Backup extends \App\Pages\Base
         try {
             $file = BackupJob::copyTo($dir);
         } catch (\Throwable $e) {
-            $this->setError($e->getMessage());
+            $this->failed($e);
             return;
         }
         $this->setSuccess(__('service.backup.copied', ['file' => $file]));
+    }
+
+    // ошибка копии на странице: своя (BackupException, TempFilesException) — ее текстом, иная — общим текстом, а сама
+    // (с путями сервера) — в журнал; без перехвата фреймворк выводил текст исключения с путем вместо страницы
+    private function failed(\Throwable $e): void {
+        if ($e instanceof \App\SQS\BackupException || $e instanceof \App\SQS\TempFilesException) {
+            $this->setError($e->getMessage());
+            return;
+        }
+        global $logger;
+        $logger?->error($e);
+        $this->setError(__('service.backup.create_failed'));
     }
 
     public function onRestore($sender) {

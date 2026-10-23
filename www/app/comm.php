@@ -33,7 +33,7 @@ class Comm
                 }
                 
                 
-                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+                $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
                 $dompdf->loadHtml($html);
 
                 $dompdf->render();
@@ -146,7 +146,7 @@ class Comm
         if($doc!= null) {
             $filename = strtolower($doc->meta_name) . ".pdf";
             $html = $doc->cast()->generateReport();
-            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
             $dompdf->loadHtml($html);
 
             $dompdf->render();

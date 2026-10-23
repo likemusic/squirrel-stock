@@ -1139,7 +1139,7 @@ class Document extends \ZCL\DB\Entity
         $html = $doc->generateReport();
 
         try {
-            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
             $dompdf->loadHtml($html);
 
             $dompdf->render();
