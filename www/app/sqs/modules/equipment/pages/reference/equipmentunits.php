@@ -66,7 +66,7 @@ class EquipmentUnits extends \App\Pages\Base
             if ($u['customer_id'] > 0) {
                 $u['customer'] = $customers[$u['customer_id']]->customer_name ?? '';
             }
-            if ($text !== '' && !str_contains(mb_strtolower($u['itemname'] . ' ' . $u['snumber'] . ' ' . $u['factory_no'] . ' ' . $u['customer']), $text)) {
+            if (!\App\SQS\Search::matches($u['itemname'] . ' ' . $u['snumber'] . ' ' . $u['factory_no'] . ' ' . $u['customer'], $text)) {   // слова в любом порядке
                 continue;
             }
             $list[] = new \App\DataItem($u);

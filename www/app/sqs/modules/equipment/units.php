@@ -42,16 +42,11 @@ class Units
     }
 
     /**
-     * Условие SQL «единица s (store_stock) с товаром i подходит под поиск»: название, инвентарный или заводской номер
+     * Условие SQL «единица s (store_stock) с товаром i подходит под поиск»: каждое слово — в названии, инвентарном или
+     * заводском номере, в любом порядке («кровать 0114»)
      */
     public static function searchWhere(string $text): string {
-        $text = trim($text);
-        if ($text === '') {
-            return '1=1';
-        }
-        $conn = \ZDB\DB::getConnect();
-        $like = $conn->qstr('%' . $text . '%');
-        return "(i.itemname LIKE {$like} OR s.snumber LIKE {$like} OR EXISTS (SELECT 1 FROM sqs_unit u WHERE u.item_id = s.item_id AND u.snumber = s.snumber AND u.factory_no LIKE {$like}))";
+        return Search::words($text, fn($like) => "(i.itemname LIKE {$like} OR s.snumber LIKE {$like} OR EXISTS (SELECT 1 FROM sqs_unit u WHERE u.item_id = s.item_id AND u.snumber = s.snumber AND u.factory_no LIKE {$like}))");
     }
 
     /**
