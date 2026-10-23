@@ -62,7 +62,7 @@ while not lines[i].rstrip().endswith(';'):
     i += 1
 lines[i + 1:i + 1] = ['', '-- пакет: пароль admin и соль, созданные при сборке', f"UPDATE users SET userpass = '{hash}' WHERE userlogin = 'admin';",
                       f"REPLACE INTO keyval (keyd, vald) VALUES ('salt', '{salt}');",
-                      "DELETE FROM keyval WHERE keyd IN ('sqs_version', 'sqs_versions');   -- история версий стенда, где собиралась демо-база", '']
+                      "-- история версий стенда, где собиралась демо-база (комментарий — своей строкой: восстановление старых версий", "-- не понимало комментарий после «;»)", "DELETE FROM keyval WHERE keyd IN ('sqs_version', 'sqs_versions');", '']
 open(f, 'w', encoding='utf-8').write('\n'.join(lines))
 PY
 done

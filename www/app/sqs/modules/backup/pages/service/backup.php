@@ -202,6 +202,8 @@ class Backup extends \App\Pages\Base
             $newerOk = $this->rform->newerpanel->isVisible() && $this->rform->newerpanel->confirmnewer->isChecked();
             [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText(), $newerOk);
         } catch (\App\SQS\BackupException $e) {
+            global $logger;
+            $logger?->warning('SquirrelStock restore: ' . $e->getMessage());
             if ($e->key == 'service.backup.newer') {
                 $this->rform->newerpanel->setVisible(true);
                 $this->rform->newerpanel->confirmnewer->setChecked(false);
@@ -209,6 +211,9 @@ class Backup extends \App\Pages\Base
             $this->setError($e->getMessage());
             return;
         } catch (\Throwable $e) {
+            // в журнал — до вывода на страницу: после сбоя посреди дампа базы может не хватать таблиц, и страница не отрисуется
+            global $logger;
+            $logger?->error('SquirrelStock restore: ' . $e->getMessage());
             $this->setError($e->getMessage());
             return;
         }
