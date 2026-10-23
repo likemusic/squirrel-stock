@@ -137,7 +137,7 @@ class DocList extends \App\Pages\Base
             $name = $doc->document_number;
             //pdf
             $html = $doc->generateReport();
-            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'landscape');
             $dompdf->render();

@@ -123,7 +123,7 @@ class ShowReport extends \Zippy\Html\WebPage
             }
         });
 
-        $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
+        $dompdf = new \Dompdf\Dompdf(\App\SQS\Pdf::options(array('defaultFont' => 'DejaVu Sans')));   // SquirrelStock: временная папка программы (open_basedir хостинга)
         $dompdf->loadHtml(self::splitTables($html));
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();

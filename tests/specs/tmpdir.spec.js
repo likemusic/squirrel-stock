@@ -8,8 +8,8 @@ const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('../fixtures');
-const { clickWait, messages } = require('../helpers/zippy');
-const { query, esc } = require('../helpers/db');
+const { clickWait, messages, runReport } = require('../helpers/zippy');
+const { query, value, esc } = require('../helpers/db');
 
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
 const H = '/var/www/sqs-hosting', BK = '/var/www/squirrelstock-backup', CONF = '/etc/apache2/conf-enabled/zz-sqs-basedir.conf';
@@ -127,4 +127,32 @@ test('нет временной папки: понятная ошибка на �
     await context.close();
     sh('rm -rf /var/www/html/tmp');
   }
+});
+
+// PDF (TODO 2.19): dompdf брал временную папку sys_get_temp_dir() — на демо «Path must not be empty» из php-font-lib
+// (подмножество шрифта) вместо файла. Отчет и печатная форма документа — application/pdf и в контексте хостинга.
+test('PDF отчета и документа при open_basedir без /tmp', async ({ browser, uniq }) => {
+  test.setTimeout(3 * 60_000);
+  const { seed } = require('../helpers/seed');
+  const code = 'PDF-' + uniq;
+  // отчет по своей категории: по всей базе стенда PDF долгий
+  query(`insert into item_cat (cat_name, parent_id) values ('PDF ${uniq}', 0)`);
+  const cat = value(`select max(cat_id) from item_cat where cat_name = 'PDF ${uniq}'`);
+  const { docs } = seed({ items: [{ name: 'Позиция ' + code, code, cat_id: cat }], docs: [{ type: 'IncomeItem', date: '2026-10-01', rows: [{ code, qty: 2, price: 0 }] }] });
+  for (const mode of ['up', 'own']) {
+    const { context, page } = await hosting(browser, mode);
+    try {
+      await runReport(page, 'Report/StoreItems', { selects: { searchcat: cat } });
+      await expect(page.locator('#preview')).toContainText(code);
+      for (const url of ['/index.php?p=App/Pages/ShowReport&arg=pdf/storeitems', '/index.php?p=App/Pages/ShowDoc&arg=pdf/' + docs[0].id]) {
+        const resp = await context.request.get(url);
+        const body = await resp.body();
+        expect(body.subarray(0, 5).toString(), `${mode} ${url}: ${body.subarray(0, 200).toString()}`).toBe('%PDF-');
+        expect(resp.headers()['content-type']).toContain('application/pdf');
+      }
+    } finally {
+      await context.close();
+    }
+  }
+  expect(ls(`${H}/tmp`).filter(f => f.startsWith('cpdf_')), 'временные файлы шрифта удалены').toEqual([]);
 });
