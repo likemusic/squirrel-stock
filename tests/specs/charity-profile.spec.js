@@ -161,7 +161,7 @@ test('журнал выдач в профиле: без доставки, ТТН
   }
   await expect(p.locator('a[href$="Doc/Invoice"]:visible, a[href$="Doc/TTN"]:visible')).toHaveCount(0);   // «Створити РФ / ТТН»
   await expect(p.locator('#filter #salesource')).toBeHidden();   // «Джерело продажів»
-  await expect(p.locator('a.btn[href$="Doc/GoodsIssue"]')).toBeVisible();
+  await expect(p.locator('a.btn-primary[href$="Service/ConsumablesIssue"]')).toBeVisible();   // вместо «Створити ВН» — формы выдачи (profile-polish.spec.js)
   await p.context().close();
 
   webPhp('cli/charity-profile.php', '--back');
