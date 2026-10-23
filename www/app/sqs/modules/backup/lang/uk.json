@@ -54,5 +54,6 @@
     "service.backup.usb_path": "Папка або диск (наприклад, E:\\)",
     "service.backup.usb_title": "Копія на флешку",
     "service.backup.write_failed": "Не вдалося записати копію в {dir}",
-    "sqs.due.backup_link": "Резервна копія"
+    "sqs.due.backup_link": "Резервна копія",
+    "service.backup.create_failed": "Копію зробити не вдалося. Подробиці — у журналі програми (logs/)"
 }

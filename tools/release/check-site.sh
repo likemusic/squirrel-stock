@@ -112,7 +112,7 @@ else
 fi
 
 section "3. Служебные файлы закрыты"
-closed=(config/config.php config/ app/system.php app/ templates/pages/base.html templates/ logs/ cli/ cli/backup.php
+closed=(config/config.php config/ app/system.php app/ templates/pages/base.html templates/ logs/ tmp/ cli/ cli/backup.php
   vendor/autoload.php vendor/composer/installed.json composer.json composer.lock init.php lang/ru.json lang/uk.json
   upload/ upload/sqs-check.txt upload/sqs-check.php .htaccess upload/.htaccess db/ db/db.sql script_examples.zip README.md)
 bad=0 drop=()

@@ -31,7 +31,7 @@ class Backup
      * С паролем — каждый файл архива зашифрован AES-256 (открывается 7-Zip, WinRAR и этой же страницей восстановления).
      */
     public function create(string $uploadDir, string $password = ''): string {
-        $sql = tempnam(sys_get_temp_dir(), 'sqs');
+        $sql = TempFiles::file();
         try {
             return $this->createZip($sql, $uploadDir, $password);
         } finally {
@@ -41,9 +41,8 @@ class Backup
 
     private function createZip(string $sql, string $uploadDir, string $password): string {
         $this->dump($sql);
-        $base = tempnam(sys_get_temp_dir(), 'sqs');
-        $zipFile = $base . '.zip';
-        @unlink($base);
+        // без расширения .zip: в запасной папке tmp/ внутри сайта nginx хостинга отдал бы .zip сам, мимо .htaccess
+        $zipFile = TempFiles::file();
         $zip = new \ZipArchive();
         $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile($sql, self::SQL_NAME);
@@ -238,7 +237,7 @@ class Backup
                     $total += $st['size'];
                 }
                 // распакованный размер — по заголовкам архива: не больше свободного места (дамп во временную папку, файлы в upload/)
-                $free = min(@disk_free_space(sys_get_temp_dir()) ?: PHP_INT_MAX, is_dir($uploadDir) ? (@disk_free_space($uploadDir) ?: PHP_INT_MAX) : PHP_INT_MAX);
+                $free = min(@disk_free_space(TempFiles::dir()) ?: PHP_INT_MAX, is_dir($uploadDir) ? (@disk_free_space($uploadDir) ?: PHP_INT_MAX) : PHP_INT_MAX);
                 if ($zip->numFiles > self::RESTORE_MAX_FILES || $total > $free) {
                     throw new BackupException('service.backup.too_big', ['files' => $zip->numFiles, 'mb' => round($total / 1048576)]);
                 }
@@ -246,7 +245,7 @@ class Backup
                     $zip->setPassword($password);
                 }
                 // дамп — потоком во временный файл: целиком в памяти большая база не помещается
-                $tmp = tempnam(sys_get_temp_dir(), 'sqs');
+                $tmp = TempFiles::file();
                 $in = $zip->getStream(self::SQL_NAME);
                 $out = fopen($tmp, 'w');
                 $copied = $in ? stream_copy_to_stream($in, $out) : false;

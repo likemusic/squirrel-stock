@@ -20,10 +20,10 @@ class Release
     public const VERSION_FILE = 'config/version.txt';
     public const MANIFEST_FILE = 'config/manifest.txt';
     // папки пакета, в которых лишние файлы — остатки старых версий и удаляются кнопкой; в остальных местах (корень сайта,
-    // config/, upload/, logs/) лишнее показывается, но не трогается: это настройки, файлы пользователей, файлы хостинга
+    // config/, upload/, logs/, tmp/) лишнее показывается, но не трогается: это настройки, файлы пользователей, файлы хостинга
     public const CODE_DIRS = ['app', 'assets', 'cli', 'lang', 'templates', 'vendor'];
     private const KEEP = ['config/config.php', self::MANIFEST_FILE];   // список файлов пакета в самом себе не записан
-    private const KEEP_DIRS = ['upload', 'logs'];
+    private const KEEP_DIRS = ['upload', 'logs', 'tmp'];   // tmp/ — временные файлы (App\SQS\TempFiles)
 
     private static ?string $version = null;
 
@@ -149,7 +149,7 @@ class Release
         return [$done, $failed];
     }
 
-    // все файлы сайта (пути от корня, через /), без upload/ и logs/ — там файлы пользователей и журналы
+    // все файлы сайта (пути от корня, через /), без upload/, logs/ и tmp/ — там файлы пользователей, журналы, временные
     private static function files(): array {
         $root = rtrim(_ROOT, '/\\');
         $ret = [];
