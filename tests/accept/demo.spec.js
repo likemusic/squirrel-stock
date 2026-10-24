@@ -62,6 +62,7 @@ for (const [login, pass] of [['admin', process.env.SQS_PASS], ['sklad', process.
     });
 
     test('меню: каждый пункт открывается без ошибки', async () => {
+      test.setTimeout(600_000);   // 50 страниц admin: 1 мин на свободной машине, 2,5–5 мин под нагрузкой
       await page.goto('/');
       // меню выдвинуто и все разделы раскрыты — для снимка
       await page.evaluate(() => {
