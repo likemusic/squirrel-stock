@@ -17,13 +17,15 @@ class Limits
 
     private static ?string $what = null;
     private static ?string $hint = null;
+    private static array $hintParams = [];
     private static string $reserve = '';
 
     /**
      * $what — операция для журнала (null — оставить ту, что задана раньше в этом запросе); $hint — ключ перевода с тем,
-     * что делать после обрыва (например, восстановить копию снова)
+     * что делать после обрыва (например, восстановить копию снова), $params — его параметры. Повторный вызов с $what
+     * начинает отсчет времени заново: так у каждого этапа долгой операции (страховочная копия, восстановление) свой предел
      */
-    public static function raise(?string $what, ?string $hint = null): void {
+    public static function raise(?string $what, ?string $hint = null, array $params = []): void {
         if ($what === null && self::$what !== null) {
             return;
         }
@@ -40,6 +42,7 @@ class Limits
         }
         self::$what = $what ?? 'spreadsheet import';
         self::$hint = $hint;
+        self::$hintParams = $params;
     }
 
     // нехватка времени или памяти — фатальная ошибка, ее не поймать: сообщение — из завершения скрипта
@@ -50,8 +53,10 @@ class Limits
             || !(str_contains($e['message'], 'Maximum execution time') || str_contains($e['message'], 'Allowed memory size'))) {
             return;
         }
+        $hintText = self::$hint ? __(self::$hint, self::$hintParams) : '';
         \App\Helper::logerror('SquirrelStock limits: ' . self::$what . ': ' . $e['message']
-            . ' (max_execution_time ' . ini_get('max_execution_time') . ', memory_limit ' . ini_get('memory_limit') . ')');
+            . ' (max_execution_time ' . ini_get('max_execution_time') . ', memory_limit ' . ini_get('memory_limit') . ')'
+            . ($hintText !== '' ? ' — ' . $hintText : ''));
         if (headers_sent() || PHP_SAPI == 'cli') {
             return;
         }
@@ -61,7 +66,7 @@ class Limits
         http_response_code(200);   // как у сообщения о слишком большом PDF: код ошибки хостинг может подменить своей страницей
         header('Content-Type: text/html;charset=UTF-8');
         $text = __('sqs.limits.exceeded', ['seconds' => self::SECONDS, 'memory' => self::MEMORY]);
-        $hint = self::$hint ? '<p>' . htmlspecialchars(__(self::$hint)) . '</p>' : '';
+        $hint = $hintText !== '' ? '<p>' . htmlspecialchars($hintText) . '</p>' : '';
         // назад — на страницу, с которой отправлена форма (адрес обработчика Zippy повторил бы операцию); только путь своего сайта
         $ref = parse_url((string)($_SERVER['HTTP_REFERER'] ?? ''));
         $back = htmlspecialchars(($ref['path'] ?? '/') . (isset($ref['query']) ? '?' . $ref['query'] : ''));

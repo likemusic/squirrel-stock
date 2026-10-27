@@ -201,7 +201,7 @@ class Backup extends \App\Pages\Base
             $this->setError(__('service.backup.confirm_needed'));
             return;
         }
-        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore');
+        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore_unchanged');
         try {
             $newerOk = $this->rform->newerpanel->isVisible() && $this->rform->newerpanel->confirmnewer->isChecked();
             [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText(), $newerOk);
