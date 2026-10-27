@@ -18,6 +18,10 @@ const { logCount } = require('../helpers/stand');
 const WEB = process.env.SQS_WEB_CONTAINER || 'squirrelstock-web-1';
 const CONF = '/etc/apache2/conf-enabled/zz-sqs-limit.conf';
 const ROWS = 400;   // строк на лист: старый код читал такие таблицы дольше 2 с
+// «хостинг не дает»: предел должен быть исчерпан наверняка — таблицы по 400 строк на незагруженной машине проверяются
+// быстрее 2 с и в 20 МБ, обрыва не было; по 4000 строк не хватает памяти при любой нагрузке. Так же проверяется, что
+// страница с сообщением выводится и после нехватки памяти (раньше второй раз падал переводчик)
+const ROWS_LOCKED = 4000;
 const sh = cmd => execFileSync('docker', ['exec', WEB, 'sh', '-c', cmd], { encoding: 'utf8' });
 const graceful = () => {
   sh('apache2ctl graceful 2>/dev/null');
@@ -36,10 +40,12 @@ test.beforeAll(async ({}, testInfo) => {
   const tmp = '/tmp/sqs-timelimit';
   sh(`rm -rf ${tmp} && mkdir -p ${tmp}`);
   execFileSync('docker', ['cp', path.join(__dirname, '..', 'fixtures', 'make-eqhistory-big.php'), `${WEB}:${tmp}/make.php`]);
-  sh(`php ${tmp}/make.php ${tmp} ${ROWS} TL`);
   dir = testInfo.outputPath('eqh');
-  fs.mkdirSync(dir, { recursive: true });
-  for (const f of ['census-big.xlsx', 'issues-big.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${f}`, path.join(dir, f)]);
+  for (const [sub, rows] of [['low', ROWS], ['locked', ROWS_LOCKED]]) {
+    sh(`mkdir -p ${tmp}/${sub} && php ${tmp}/make.php ${tmp}/${sub} ${rows} TL`);
+    fs.mkdirSync(path.join(dir, sub), { recursive: true });
+    for (const f of ['census-big.xlsx', 'issues-big.xlsx']) execFileSync('docker', ['cp', `${WEB}:${tmp}/${sub}/${f}`, path.join(dir, sub, f)]);
+  }
   sh(`rm -rf ${tmp}`);
   execFileSync('docker', ['exec', '-i', WEB, 'sh', '-c', `cat > ${CONF}`], { input: block('low', 'php_value') + block('locked', 'php_admin_value') });
   graceful();
@@ -63,9 +69,9 @@ async function hosting(browser, mode) {
   return { context, page };
 }
 
-async function check(page) {
-  await page.locator('#iform #census').setInputFiles(path.join(dir, 'census-big.xlsx'));
-  await page.locator('#iform #journal').setInputFiles(path.join(dir, 'issues-big.xlsx'));
+async function check(page, sub) {
+  await page.locator('#iform #census').setInputFiles(path.join(dir, sub, 'census-big.xlsx'));
+  await page.locator('#iform #journal').setInputFiles(path.join(dir, sub, 'issues-big.xlsx'));
   await clickWait(page, '#iform #check');
 }
 
@@ -73,7 +79,7 @@ test('проверка истории оборудования при заниж
   test.setTimeout(3 * 60_000);
   const { context, page } = await hosting(browser, 'low');
   try {
-    await check(page);
+    await check(page, 'low');
     const body = await page.locator('body').innerText();
     expect(body, 'не Fatal').not.toMatch(/Maximum execution time|Allowed memory size/);
     await expect(page.locator('#eqh-summary'), (await messages(page)).join(' ')).toBeVisible();
@@ -90,7 +96,7 @@ test('хостинг не дает поднять пределы: сообщен
   const was = logCount(mark);
   const { context, page } = await hosting(browser, 'locked');
   try {
-    await check(page);
+    await check(page, 'locked');
     await expect(page.locator('#sqs-limits')).toContainText('max_execution_time = 300');
     await expect(page.locator('#sqs-limits')).toContainText('memory_limit = 512M');
     expect(await page.locator('body').innerText(), 'без текста Fatal и путей сервера').not.toMatch(/Fatal|\/var\/www/);

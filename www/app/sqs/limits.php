@@ -16,8 +16,9 @@ class Limits
     public const MEMORY = '512M';
 
     private static ?string $what = null;
-    private static ?string $hint = null;
-    private static array $hintParams = [];
+    // тексты страницы — переведены заранее: после нехватки памяти переводчик догружал словарь и падал второй раз,
+    // страница с сообщением не выводилась
+    private static array $text = [];
     private static string $reserve = '';
 
     /**
@@ -41,8 +42,11 @@ class Limits
             self::$reserve = str_repeat(' ', 1 << 20);   // на сообщение после нехватки памяти
         }
         self::$what = $what ?? 'spreadsheet import';
-        self::$hint = $hint;
-        self::$hintParams = $params;
+        self::$text = [
+            'exceeded' => __('sqs.limits.exceeded', ['seconds' => self::SECONDS, 'memory' => self::MEMORY]),
+            'hint' => $hint ? __($hint, $params) : '',
+            'back' => __('sqs.limits.back'),
+        ];
     }
 
     // нехватка времени или памяти — фатальная ошибка, ее не поймать: сообщение — из завершения скрипта
@@ -53,7 +57,7 @@ class Limits
             || !(str_contains($e['message'], 'Maximum execution time') || str_contains($e['message'], 'Allowed memory size'))) {
             return;
         }
-        $hintText = self::$hint ? __(self::$hint, self::$hintParams) : '';
+        $hintText = self::$text['hint'];
         \App\Helper::logerror('SquirrelStock limits: ' . self::$what . ': ' . $e['message']
             . ' (max_execution_time ' . ini_get('max_execution_time') . ', memory_limit ' . ini_get('memory_limit') . ')'
             . ($hintText !== '' ? ' — ' . $hintText : ''));
@@ -65,13 +69,13 @@ class Limits
         }
         http_response_code(200);   // как у сообщения о слишком большом PDF: код ошибки хостинг может подменить своей страницей
         header('Content-Type: text/html;charset=UTF-8');
-        $text = __('sqs.limits.exceeded', ['seconds' => self::SECONDS, 'memory' => self::MEMORY]);
+        $text = self::$text['exceeded'];
         $hint = $hintText !== '' ? '<p>' . htmlspecialchars($hintText) . '</p>' : '';
         // назад — на страницу, с которой отправлена форма (адрес обработчика Zippy повторил бы операцию); только путь своего сайта
         $ref = parse_url((string)($_SERVER['HTTP_REFERER'] ?? ''));
         $back = htmlspecialchars(($ref['path'] ?? '/') . (isset($ref['query']) ? '?' . $ref['query'] : ''));
         echo '<!doctype html><html><head><meta charset="UTF-8"><title>SquirrelStock</title></head><body style="font-family:sans-serif;margin:2em;max-width:50em">'
-            . '<p id="sqs-limits">' . htmlspecialchars($text) . '</p>' . $hint . '<p><a href="' . $back . '">' . htmlspecialchars(__('sqs.limits.back')) . '</a></p></body></html>';
+            . '<p id="sqs-limits">' . htmlspecialchars($text) . '</p>' . $hint . '<p><a href="' . $back . '">' . htmlspecialchars(self::$text['back']) . '</a></p></body></html>';
     }
 
     public static function bytes(string $v): int {
