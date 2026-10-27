@@ -6,12 +6,15 @@
 #   tools/release/accept.sh dist/squirrel-stock-<версия>.zip --keep   контейнеры не удаляются — для осмотра руками
 #   tools/release/accept.sh dist/squirrel-stock-<версия>.zip --limits пределы PHP хостинга по умолчанию, закрепленные
 #                                                                     php_admin_value: max_execution_time 30, memory_limit 128M
+#   tools/release/accept.sh dist/squirrel-stock-<версия>.zip --db=mysql:8.4  сервер базы — образ Docker mariadb:<версия>
+#                                                                     или mysql:<версия> (по умолчанию mariadb:11.4)
 #
 # Копия хостинга ISPmanager: Apache + PHP 8.4 без своих настроек (образ squirrelstock-web:release из build.sh без
 # squirrelstock.ini и правил upload/ — их дает .htaccess пакета), open_basedir — корень сайта, upload_tmp_dir (там же
-# сессии) и папка копий, без /tmp; отдельная MariaDB 11.4 с бинарным журналом, пользователь базы — только со своей базой.
-# Пакет распаковывается в корень сайта, config.php — из config.example.php, -demo.sql грузится консольным mariadb от
-# пользователя базы (как phpMyAdmin), пароль admin — свой, известный; затем cli/role-warehouse.php --user=sklad.
+# сессии) и папка копий, без /tmp; отдельный сервер базы (MariaDB 11.4 или --db) с бинарным журналом, пользователь базы —
+# только со своей базой. Пакет распаковывается в корень сайта, config.php — из config.example.php, -demo.sql грузится
+# консольным клиентом сервера (mariadb или mysql) от пользователя базы (как phpMyAdmin), пароль admin — свой, известный;
+# затем cli/role-warehouse.php --user=sklad.
 # Проверки: tools/release/check-site.sh и Playwright tests/accept/demo.spec.js (в npm test не входит). Снимки главной и
 # меню обеих ролей — tests/test-results/accept/shots/. Нужен Playwright из tests/ (npm ci в tests/).
 # Перед проверками настройки хостинга сверяются изнутри Apache (временный файл в корне сайта): open_basedir и остальные
@@ -19,30 +22,31 @@
 # Порт на этом компьютере — SQS_TEST_PORT (по умолчанию 8096). Прогон — несколько минут.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-ZIP= KEEP=0 LIMITS=0
+ZIP= KEEP=0 LIMITS=0 DBIMAGE=mariadb:11.4
 for a in "$@"; do
   case $a in
     --keep) KEEP=1 ;;
     --limits) LIMITS=1 ;;
+    --db=mariadb:*|--db=mysql:*) DBIMAGE=${a#--db=} ;;
     *.zip) ZIP=$(realpath "$a") ;;
     *) echo "неизвестный параметр: $a" >&2; exit 2 ;;
   esac
 done
-[[ -f $ZIP ]] || { sed -n '2,20p' "$0"; exit 2; }
+[[ -f $ZIP ]] || { sed -n '2,22p' "$0"; exit 2; }
 SQL=${ZIP%.zip}-demo.sql
 [[ -f $SQL ]] || { echo "нет $SQL (собирается вместе с пакетом: tools/release/build.sh)" >&2; exit 2; }
 [[ -d tests/node_modules/@playwright ]] || { echo "нет tests/node_modules (cd tests && npm ci)" >&2; exit 2; }
 PORT=${SQS_TEST_PORT:-8096}
 NET=sqs-accept WEB=sqs-accept-web DB=sqs-accept-db IMAGE=squirrelstock-web:release
 SITE=/var/www/html TMPD=/var/www/mod-tmp BK=/var/www/squirrelstock-backup
-DBNAME=u1_demo DBUSER=u1_demo
+DBNAME=u1_demo DBUSER=u1_demo DBCLI=${DBIMAGE%%:*}
 rnd() { python3 -I -c 'import secrets; print(secrets.token_urlsafe(12))'; }
 DBPASS=$(rnd) ADMIN_PASS=Admin-$(rnd) SKLAD_PASS=Sklad-$(rnd)
 ok() { echo "OK   $*"; }
 fail() { echo "FAIL $*"; exit 1; }
 dx() { docker exec $WEB "$@"; }
 dxi() { docker exec -i $WEB "$@"; }   # с вводом: без -i heredoc и pipe в контейнер не доходят, файл получается пустым
-dbq() { docker exec -i $DB mariadb -h127.0.0.1 -u$DBUSER -p"$DBPASS" -N $DBNAME "$@"; }
+dbq() { docker exec -i $DB $DBCLI -h127.0.0.1 -u$DBUSER -p"$DBPASS" -N $DBNAME "$@"; }
 cleanup() { docker rm -f $WEB $DB >/dev/null 2>&1 || true; docker network rm $NET >/dev/null 2>&1 || true; }
 
 cleanup
@@ -53,11 +57,13 @@ else
 fi
 docker image inspect $IMAGE >/dev/null 2>&1 || docker build -q -f docker/Dockerfile -t $IMAGE . >/dev/null
 docker network create $NET >/dev/null
-docker run -d --name $DB --network $NET -e MARIADB_ROOT_PASSWORD="$(rnd)" -e MARIADB_DATABASE=$DBNAME -e MARIADB_USER=$DBUSER \
-  -e MARIADB_PASSWORD="$DBPASS" mariadb:11.4 --log-bin=mysql-bin --log-bin-trust-function-creators=1 >/dev/null
+# переменные образов: MARIADB_* у mariadb, MYSQL_* у mysql; бинарный журнал включен везде (MySQL 5.7 без server-id не стартует)
+E=${DBIMAGE%%:*}; E=${E^^}
+docker run -d --name $DB --network $NET -e ${E}_ROOT_PASSWORD="$(rnd)" -e ${E}_DATABASE=$DBNAME -e ${E}_USER=$DBUSER \
+  -e ${E}_PASSWORD="$DBPASS" $DBIMAGE --server-id=1 --log-bin=mysql-bin --log-bin-trust-function-creators=1 >/dev/null
 docker run -d --name $WEB --network $NET -p "127.0.0.1:$PORT:80" --entrypoint sleep $IMAGE infinity >/dev/null
 
-echo "--- пакет $(basename "$ZIP"), копия хостинга на http://127.0.0.1:$PORT"
+echo "--- пакет $(basename "$ZIP"), база $DBIMAGE, копия хостинга на http://127.0.0.1:$PORT"
 # PHP и Apache без настроек стенда; корень сайта пустой, как у новой площадки
 dx sh -c "rm -f /usr/local/etc/php/conf.d/squirrelstock.ini /etc/apache2/conf-enabled/squirrelstock-upload.conf && rm -rf $SITE/* $SITE/.htaccess $BK/*"
 # как в настройках сайта ISPmanager: PHP видит только корень сайта, свою временную папку и папку копий
@@ -74,8 +80,8 @@ ok "пакет распакован, версия $ver"
 
 # база: пока сервер не принимает пользователя по сети, он еще создается
 for i in $(seq 60); do dbq -e 'select 1' >/dev/null 2>&1 && break; sleep 2; done
-dbq -e 'select 1' >/dev/null 2>&1 || fail "MariaDB не отвечает"
-out=$(dbq < "$SQL" 2>&1) && ok "-demo.sql загружен консольным mariadb от пользователя базы" || { echo "$out" | tail -5; fail "загрузка -demo.sql"; }
+dbq -e 'select 1' >/dev/null 2>&1 || fail "$DBIMAGE не отвечает"
+out=$(dbq < "$SQL" 2>&1) && ok "-demo.sql загружен консольным $DBCLI от пользователя базы ($(dbq -e 'select version()'))" || { echo "$out" | tail -5; fail "загрузка -demo.sql"; }
 [[ $(dbq -e "select count(*) from information_schema.triggers where trigger_schema = '$DBNAME'") == 2 ]] && ok "триггеры созданы" || fail "триггеров нет"
 hash=$(printf '%s' "$ADMIN_PASS" | docker exec -i $WEB php -r 'echo password_hash(stream_get_contents(STDIN), PASSWORD_DEFAULT);')
 dbq -e "update users set userpass = '$hash' where userlogin = 'admin'"
