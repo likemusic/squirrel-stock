@@ -201,13 +201,18 @@ class Backup extends \App\Pages\Base
             $this->setError(__('service.backup.confirm_needed'));
             return;
         }
-        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore');
+        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore_unchanged');
         try {
             $newerOk = $this->rform->newerpanel->isVisible() && $this->rform->newerpanel->confirmnewer->isChecked();
             [$n, $skipped] = (new \App\SQS\Backup())->restore($file['tmp_name'], _ROOT . 'upload', $this->rform->rpassword->getText(), $newerOk);
         } catch (\App\SQS\BackupException $e) {
             global $logger;
             $logger?->warning('SquirrelStock restore: ' . $e->getMessage());
+            if ($e->key == 'service.backup.rollback_failed') {
+                // база неполная: страница программы не отрисуется, сообщение с путем к страховочной копии потерялось бы
+                \App\SQS\Limits::page('sqs-restore-failed', $e->getMessage(), '', __('sqs.limits.back'));
+                exit;
+            }
             if ($e->key == 'service.backup.newer') {
                 $this->rform->newerpanel->setVisible(true);
                 $this->rform->newerpanel->confirmnewer->setChecked(false);

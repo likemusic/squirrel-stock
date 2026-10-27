@@ -19,6 +19,10 @@ class Backup
     private \mysqli $db;
 
     public function __construct() {
+        $this->connect();
+    }
+
+    private function connect(): void {
         global $_config;
         $c = $_config['db'];
         [$host, $port] = array_pad(explode(':', $c['host']), 2, 3306);
@@ -74,8 +78,30 @@ class Backup
 
     public function dump(string $file): void {
         $out = fopen($file, 'w');
+        if ($out === false) {
+            throw new \Exception('Не удалось открыть для записи ' . $file);
+        }
+        try {
+            $this->dumpTo($out);
+        } finally {
+            $closed = fclose($out);
+        }
+        if (!$closed) {
+            throw new \Exception('Не удалось записать ' . $file . ': нет места на диске?');
+        }
+    }
+
+    // кончилось место на диске — ошибка, а не обрезанный дамп без предупреждения (копия на флешку и в облако,
+    // страховочная копия перед восстановлением)
+    private function put($out, string $s): void {
+        if (fwrite($out, $s) !== strlen($s)) {
+            throw new \Exception('Не удалось записать дамп базы: нет места на диске?');
+        }
+    }
+
+    private function dumpTo($out): void {
         // версия программы — в первой строке: восстановление копии новой версии на старой предупреждает (newerThan)
-        fwrite($out, "-- SquirrelStock backup " . date('Y-m-d H:i:s') . ' version ' . Release::version() . "\nSET NAMES utf8;\nSET FOREIGN_KEY_CHECKS = 0;\n\n");
+        $this->put($out, "-- SquirrelStock backup " . date('Y-m-d H:i:s') . ' version ' . Release::version() . "\nSET NAMES utf8;\nSET FOREIGN_KEY_CHECKS = 0;\n\n");
         $tables = [];
         $views = [];
         foreach ($this->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
@@ -88,24 +114,24 @@ class Backup
         foreach ($tables as $t) {
             $create = $this->query("SHOW CREATE TABLE `{$t}`")->fetch_row()[1];
             if (in_array($t, self::LOCAL_TABLES, true)) {
-                fwrite($out, preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create) . ";\n");
+                $this->put($out, preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create) . ";\n");
                 continue;
             }
-            fwrite($out, "DROP TABLE IF EXISTS `{$t}`;\n{$create};\n");
+            $this->put($out, "DROP TABLE IF EXISTS `{$t}`;\n{$create};\n");
             $res = $this->query("SELECT * FROM `{$t}`", MYSQLI_USE_RESULT);
             $batch = [];
             while ($row = $res->fetch_row()) {
                 $batch[] = '(' . implode(',', array_map(fn($v) => $v === null ? 'NULL' : "'" . $this->db->real_escape_string($v) . "'", $row)) . ')';
                 if (count($batch) == 200) {
-                    fwrite($out, "INSERT INTO `{$t}` VALUES " . implode(",\n", $batch) . ";\n");
+                    $this->put($out, "INSERT INTO `{$t}` VALUES " . implode(",\n", $batch) . ";\n");
                     $batch = [];
                 }
             }
             $res->free();
             if ($batch) {
-                fwrite($out, "INSERT INTO `{$t}` VALUES " . implode(",\n", $batch) . ";\n");
+                $this->put($out, "INSERT INTO `{$t}` VALUES " . implode(",\n", $batch) . ";\n");
             }
-            fwrite($out, "\n");
+            $this->put($out, "\n");
         }
         // представления: сначала те, что не ссылаются на еще не созданные представления
         $defs = [];
@@ -122,7 +148,7 @@ class Backup
                 }
                 $deps = array_filter(array_keys($defs), fn($o) => $o != $v && !isset($done[$o]) && str_contains($create, "`{$o}`"));
                 if (!$deps) {
-                    fwrite($out, "DROP VIEW IF EXISTS `{$v}`;\n{$create};\n");
+                    $this->put($out, "DROP VIEW IF EXISTS `{$v}`;\n{$create};\n");
                     $done[$v] = true;
                     $progress = true;
                 }
@@ -133,16 +159,15 @@ class Backup
         }
         $triggers = $this->query('SHOW TRIGGERS')->fetch_all(MYSQLI_ASSOC);
         if ($triggers) {
-            fwrite($out, "\nDELIMITER ;;\n");
+            $this->put($out, "\nDELIMITER ;;\n");
             foreach ($triggers as $tr) {
                 $create = $this->query("SHOW CREATE TRIGGER `{$tr['Trigger']}`")->fetch_assoc()['SQL Original Statement'];
                 $create = preg_replace('/^CREATE .*?TRIGGER/s', 'CREATE TRIGGER', $create);
-                fwrite($out, "DROP TRIGGER IF EXISTS `{$tr['Trigger']}`;;\n{$create};;\n");
+                $this->put($out, "DROP TRIGGER IF EXISTS `{$tr['Trigger']}`;;\n{$create};;\n");
             }
-            fwrite($out, "DELIMITER ;\n");
+            $this->put($out, "DELIMITER ;\n");
         }
-        fwrite($out, "\nSET FOREIGN_KEY_CHECKS = 1;\n");
-        fclose($out);
+        $this->put($out, "\nSET FOREIGN_KEY_CHECKS = 1;\n");
     }
 
     // запрос дампа: отказ в правах (у пользователя базы нет SHOW VIEW и т. п.) — понятная ошибка вместо падения на false
@@ -267,16 +292,10 @@ class Backup
             if (!$newerOk && $copyVersion !== null && self::newerThan($copyVersion, Release::version())) {
                 throw new BackupException('service.backup.newer', ['copy' => $copyVersion, 'installed' => Release::version()]);
             }
+            // обрезанный или недокачанный дамп (кончается посреди оператора) и дамп без таблиц — до удаления текущих таблиц
+            self::check($sqlFile);
             $this->checkRights();
-            // текущие таблицы и представления удаляются: база становится такой, какой была в копии
-            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
-            foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
-                if (in_array($name, self::LOCAL_TABLES, true)) {
-                    continue;
-                }
-                $this->db->query(($type == 'VIEW' ? 'DROP VIEW' : 'DROP TABLE') . " IF EXISTS `{$name}`");
-            }
-            $n = $this->execute($sqlFile);
+            $n = $this->replaceDb($sqlFile);
             $skipped = 0;
             if ($isZip) {
                 for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -322,13 +341,131 @@ class Backup
     }
 
     /**
-     * Выполнить SQL-файл по операторам с учетом строк DELIMITER (как консольный mysql)
+     * Заменить базу дампом. До удаления текущих таблиц — страховочный дамп текущей базы: ошибка посреди дампа копии
+     * (ошибка SQL, оборванное соединение) иначе оставляла базу без части таблиц, и сайт показывал «Ошибка базы данных».
+     * После ошибки база возвращается из страховочного дампа. Транзакция не помогает (CREATE и DROP в MySQL ее
+     * завершают), временная база — нет права CREATE DATABASE на хостинге.
+     * Обрыв по пределу времени или памяти PHP (fatal, finally не выполняется) — сообщение App\SQS\Limits, страховочный
+     * дамп остается во временной папке и удаляется через сутки (TempFiles::purge).
+     */
+    private function replaceDb(string $sqlFile): int {
+        $this->checkSpace();
+        \App\SQS\Limits::raise('backup restore: safety dump', 'sqs.limits.restore_unchanged');
+        $safety = TempFiles::file();
+        try {
+            $this->dump($safety);
+        } catch (\Throwable $e) {
+            @unlink($safety);
+            throw new BackupException('service.backup.safety_failed', ['error' => $e->getMessage()]);
+        }
+        // свой отсчет времени у восстановления: страховочный дамп его не съедает
+        \App\SQS\Limits::raise('backup restore', 'sqs.limits.restore_kept', ['file' => $safety]);
+        try {
+            $this->dropAll();
+            $n = $this->execute($sqlFile);
+        } catch (\Throwable $e) {
+            $this->rollback($safety, $e);
+        }
+        @unlink($safety);   // в нем персональные данные
+
+        return $n;
+    }
+
+    // вернуть базу из страховочного дампа; исключение — всегда: с исходной ошибкой и тем, удался ли возврат
+    private function rollback(string $safety, \Throwable $error): never {
+        global $logger;
+        \App\SQS\Limits::raise('backup restore: rollback', 'sqs.limits.restore_kept', ['file' => $safety]);
+        try {
+            try {
+                $alive = $this->db->query('SELECT 1') !== false;
+            } catch (\mysqli_sql_exception) {
+                $alive = false;
+            }
+            if (!$alive) {
+                $this->connect();   // соединение оборвалось посреди дампа (max_allowed_packet, перезапуск сервера)
+            }
+            $this->dropAll();
+            $this->execute($safety);
+        } catch (\Throwable $e) {
+            // страховочный дамп не удаляется: это единственная копия базы до восстановления (удалится через сутки)
+            $logger?->error('SquirrelStock restore: rollback failed: ' . $e->getMessage() . '; safety dump kept: ' . $safety);
+            throw new BackupException('service.backup.rollback_failed', ['error' => $error->getMessage(), 'rollback' => $e->getMessage(), 'file' => $safety]);
+        }
+        @unlink($safety);
+        throw new BackupException('service.backup.rolled_back', ['error' => $error->getMessage()]);
+    }
+
+    // текущие таблицы и представления удаляются (кроме LOCAL_TABLES): база становится такой, какой была в дампе
+    private function dropAll(): void {
+        $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+        foreach ($this->db->query('SHOW FULL TABLES')->fetch_all() as [$name, $type]) {
+            if (in_array($name, self::LOCAL_TABLES, true)) {
+                continue;
+            }
+            $this->db->query(($type == 'VIEW' ? 'DROP VIEW' : 'DROP TABLE') . " IF EXISTS `{$name}`");
+        }
+    }
+
+    // место под страховочный дамп — вдвое больше данных таблиц (data_length): дамп бывает и меньше, и больше их
+    // (на стенде 12,7 МБ при 10,5 МБ), а data_length — статистика InnoDB, она отстает от данных
+    private function checkSpace(): void {
+        $need = 2 * (int)$this->db->query('SELECT COALESCE(SUM(data_length), 0) FROM information_schema.tables WHERE table_schema = DATABASE()')->fetch_row()[0];
+        $free = @disk_free_space(TempFiles::dir());
+        if ($free !== false && $need > $free) {
+            throw new BackupException('service.backup.no_space_safety', ['mb' => round($need / 1048576), 'free' => round($free / 1048576)]);
+        }
+    }
+
+    /**
+     * Дамп целиком «вхолостую», тем же разбором, что и выполнение, без запросов к базе: файл обрывается посреди
+     * оператора (недокачан, обрезан) — ошибка; ни одного CREATE TABLE — не копия
+     */
+    public static function check(string $file): void {
+        $tables = 0;
+        $last = '';
+        foreach (self::statements($file) as $sql) {
+            if (preg_match('/^\s*CREATE\s+TABLE\b/i', $sql)) {
+                $tables++;
+            }
+            $last = $sql;
+        }
+        if ($tables == 0) {
+            throw new BackupException('service.backup.not_backup');
+        }
+        // копия этой программы всегда кончается этим оператором: обрыв сразу после «;» внутри строки данных разбор по
+        // строкам принимает за конец оператора
+        $head = (string)@file_get_contents($file, false, null, 0, 64);
+        if (str_starts_with($head, '-- SquirrelStock backup ') && !preg_match('/^\s*SET FOREIGN_KEY_CHECKS\s*=\s*1\s*$/i', $last)) {
+            throw new BackupException('service.backup.truncated');
+        }
+    }
+
+    /**
+     * Выполнить SQL-файл по операторам
      */
     private function execute(string $file): int {
+        $n = 0;
+        foreach (self::statements($file) as $sql) {
+            if (!$this->db->query($sql)) {
+                throw new \Exception('Ошибка восстановления: ' . $this->db->error . ' — ' . mb_substr($sql, 0, 200));
+            }
+            $n++;
+        }
+
+        return $n;
+    }
+
+    /**
+     * Операторы SQL-файла по одному, с учетом строк DELIMITER (как консольный mysql). Файл кончается недописанным
+     * оператором — BackupException truncated
+     */
+    private static function statements(string $file): \Generator {
         $in = fopen($file, 'r');
+        if ($in === false) {
+            throw new BackupException('service.backup.not_backup');
+        }
         $delimiter = ';';
         $stmt = '';
-        $n = 0;
         while (($line = fgets($in)) !== false) {
             $trim = trim($line);
             if ($stmt === '' && ($trim === '' || str_starts_with($trim, '-- '))) {
@@ -347,16 +484,13 @@ class Backup
                 $end = $m[1];
             }
             if (str_ends_with($end, $delimiter)) {
-                $sql = substr(rtrim($stmt), 0, -strlen($delimiter));
-                if (!$this->db->query($sql)) {
-                    throw new \Exception('Ошибка восстановления: ' . $this->db->error . ' — ' . mb_substr($sql, 0, 200));
-                }
-                $n++;
+                yield substr(rtrim($stmt), 0, -strlen($delimiter));
                 $stmt = '';
             }
         }
         fclose($in);
-
-        return $n;
+        if (trim($stmt) !== '') {
+            throw new BackupException('service.backup.truncated');
+        }
     }
 }
