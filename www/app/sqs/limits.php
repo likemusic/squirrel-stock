@@ -64,18 +64,25 @@ class Limits
         if (headers_sent() || PHP_SAPI == 'cli') {
             return;
         }
+        self::page('sqs-limits', self::$text['exceeded'], $hintText, self::$text['back']);
+    }
+
+    /**
+     * Страница с сообщением без шаблонов и без базы: после обрыва по пределу и когда база неполная (восстановление
+     * копии, возврат которого не удался) страница программы не отрисуется. $back — текст ссылки назад
+     */
+    public static function page(string $id, string $text, string $hint, string $back): void {
         while (ob_get_level() > 0) {
             ob_end_clean();
         }
         http_response_code(200);   // как у сообщения о слишком большом PDF: код ошибки хостинг может подменить своей страницей
         header('Content-Type: text/html;charset=UTF-8');
-        $text = self::$text['exceeded'];
-        $hint = $hintText !== '' ? '<p>' . htmlspecialchars($hintText) . '</p>' : '';
+        $hint = $hint !== '' ? '<p>' . htmlspecialchars($hint) . '</p>' : '';
         // назад — на страницу, с которой отправлена форма (адрес обработчика Zippy повторил бы операцию); только путь своего сайта
         $ref = parse_url((string)($_SERVER['HTTP_REFERER'] ?? ''));
-        $back = htmlspecialchars(($ref['path'] ?? '/') . (isset($ref['query']) ? '?' . $ref['query'] : ''));
+        $href = htmlspecialchars(($ref['path'] ?? '/') . (isset($ref['query']) ? '?' . $ref['query'] : ''));
         echo '<!doctype html><html><head><meta charset="UTF-8"><title>SquirrelStock</title></head><body style="font-family:sans-serif;margin:2em;max-width:50em">'
-            . '<p id="sqs-limits">' . htmlspecialchars($text) . '</p>' . $hint . '<p><a href="' . $back . '">' . htmlspecialchars(self::$text['back']) . '</a></p></body></html>';
+            . '<p id="' . $id . '">' . htmlspecialchars($text) . '</p>' . $hint . '<p><a href="' . $href . '">' . htmlspecialchars($back) . '</a></p></body></html>';
     }
 
     public static function bytes(string $v): int {

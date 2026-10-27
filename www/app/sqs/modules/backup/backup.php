@@ -349,7 +349,7 @@ class Backup
      * дамп остается во временной папке и удаляется через сутки (TempFiles::purge).
      */
     private function replaceDb(string $sqlFile): int {
-        $this->checkSpace($sqlFile);
+        $this->checkSpace();
         \App\SQS\Limits::raise('backup restore: safety dump', 'sqs.limits.restore_unchanged');
         $safety = TempFiles::file();
         try {
@@ -406,9 +406,10 @@ class Backup
         }
     }
 
-    // место под страховочный дамп: данные таблиц занимают в дампе примерно столько же, сколько в базе (data_length)
-    private function checkSpace(string $sqlFile): void {
-        $need = (int)$this->db->query('SELECT COALESCE(SUM(data_length), 0) FROM information_schema.tables WHERE table_schema = DATABASE()')->fetch_row()[0];
+    // место под страховочный дамп — вдвое больше данных таблиц (data_length): дамп бывает и меньше, и больше их
+    // (на стенде 12,7 МБ при 10,5 МБ), а data_length — статистика InnoDB, она отстает от данных
+    private function checkSpace(): void {
+        $need = 2 * (int)$this->db->query('SELECT COALESCE(SUM(data_length), 0) FROM information_schema.tables WHERE table_schema = DATABASE()')->fetch_row()[0];
         $free = @disk_free_space(TempFiles::dir());
         if ($free !== false && $need > $free) {
             throw new BackupException('service.backup.no_space_safety', ['mb' => round($need / 1048576), 'free' => round($free / 1048576)]);
@@ -421,13 +422,21 @@ class Backup
      */
     public static function check(string $file): void {
         $tables = 0;
+        $last = '';
         foreach (self::statements($file) as $sql) {
             if (preg_match('/^\s*CREATE\s+TABLE\b/i', $sql)) {
                 $tables++;
             }
+            $last = $sql;
         }
         if ($tables == 0) {
             throw new BackupException('service.backup.not_backup');
+        }
+        // копия этой программы всегда кончается этим оператором: обрыв сразу после «;» внутри строки данных разбор по
+        // строкам принимает за конец оператора
+        $head = (string)@file_get_contents($file, false, null, 0, 64);
+        if (str_starts_with($head, '-- SquirrelStock backup ') && !preg_match('/^\s*SET FOREIGN_KEY_CHECKS\s*=\s*1\s*$/i', $last)) {
+            throw new BackupException('service.backup.truncated');
         }
     }
 

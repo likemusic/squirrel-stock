@@ -208,6 +208,11 @@ class Backup extends \App\Pages\Base
         } catch (\App\SQS\BackupException $e) {
             global $logger;
             $logger?->warning('SquirrelStock restore: ' . $e->getMessage());
+            if ($e->key == 'service.backup.rollback_failed') {
+                // база неполная: страница программы не отрисуется, сообщение с путем к страховочной копии потерялось бы
+                \App\SQS\Limits::page('sqs-restore-failed', $e->getMessage(), '', __('sqs.limits.back'));
+                exit;
+            }
             if ($e->key == 'service.backup.newer') {
                 $this->rform->newerpanel->setVisible(true);
                 $this->rform->newerpanel->confirmnewer->setChecked(false);
