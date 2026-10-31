@@ -26,6 +26,8 @@ use App\Entity\Item;
  * исправлений (App\SQS\EqFix); повторная выдача раньше даты возврата по прошлой — выдача сдвигается на дату возврата (5.19);
  * инвентарного номера из переписи нет в базе, а он в пределах номеров ведомости 1С — единица переносится списанной (в 1С списана, 5.21); расходник по соответствиям
  * (позиция «-», 5.17) не переносится.
+ * Номера и даты возврата части старых договоров не восстановить (5.33): договор «б/н» или без номера — «б/н ДД.ММ.ГГГГ»,
+ * свой на получателя и дату; единица, выданная повторно без возврата, — прошлая выдача закрывается возвратом в день новой.
  * Одна выдача в обеих таблицах склеивается по единице и дате. Документы: приход единицы, которой нет в базе (накануне
  * первой выдачи), выдача по договору, возврат, списание — проводятся в хронологическом порядке. Что уже импортировано
  * (таблица sqs_eqhistory), повторно не создается.
@@ -33,6 +35,7 @@ use App\Entity\Item;
 class EqHistory
 {
     public const ON_DEMAND = '2099-12-31';
+    public const NO_NUMBER = 'б/н';   // начало номера договора, номер которого неизвестен
 
     public array $records = [];    // разобранные строки
     public array $problems = [];   // [level (error|note), sheet, row, contract, unit, text]
@@ -393,8 +396,8 @@ class EqHistory
         // договор
         if (preg_match('/^(\d+)\s*[\/\\\\]\s*(\d{2})$/', $rec['contract_raw'], $m)) {
             $rec['contract'] = intval($m[1]) . '/' . $m[2];
-        } elseif ($rec['contract_raw'] === '') {
-            $this->fail($rec, __('sqs.eqhist.no_contract'));
+        } elseif (self::noNumberContract($rec['contract_raw'])) {
+            $rec['nonum'] = true;
         } else {
             $this->fail($rec, __('sqs.eqhist.bad_contract', ['value' => $rec['contract_raw']]));
         }
@@ -406,6 +409,9 @@ class EqHistory
             $this->fail($rec, __('sqs.eqhist.bad_year', ['value' => date('d.m.Y', $d)]));
         } else {
             $rec['cdate'] = $rec['idate'] = $d;
+            if (!empty($rec['nonum'])) {
+                self::provisionalNumber($rec);
+            }
         }
         $this->parseUnitCells($rec);
         $this->parseStatus($rec);
@@ -422,6 +428,11 @@ class EqHistory
             $rec['contract'] = intval($rec['no']) . '/' . date('y', $cd);
         } elseif (preg_match('/^(\d+)\s*[\/\\\\]\s*(\d{2})$/', $rec['no'], $m)) {
             $rec['contract'] = intval($m[1]) . '/' . $m[2];
+        } elseif (self::noNumberContract($rec['no'])) {
+            $rec['nonum'] = true;
+            if ($cd) {
+                self::provisionalNumber($rec);
+            }
         } elseif (!$rec['error']) {
             $this->fail($rec, __('sqs.eqhist.bad_contract', ['value' => $rec['no']]));
         }
@@ -442,6 +453,17 @@ class EqHistory
             $this->fail($rec, __('sqs.eqhist.several_units', ['value' => $rec['number']]));
         }
         $this->parseStatus($rec);
+    }
+
+    // номер договора неизвестен (ответ 5.33): «б/н», «б\н», «бн» или пустая ячейка
+    private static function noNumberContract(string $v): bool {
+        return in_array(mb_strtolower(preg_replace('/\s+/u', '', $v)), ['', 'б/н', 'б\\н', 'бн'], true);
+    }
+
+    // номер договора без номера до разбора (по нему подходят строки исправлений); окончательный, с номером повтора
+    // у другого получателя той же даты, — в numberless()
+    private static function provisionalNumber(array &$rec): void {
+        $rec['contract'] = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
     }
 
     // несколько номеров в одной ячейке
@@ -804,6 +826,7 @@ class EqHistory
                         continue 2;
                     }
                     $rec['contract'] = $f['to'];
+                    unset($rec['nonum']);   // номер договора без номера нашелся
                     $fixed[] = $f['line'];
                     break;
                 }
@@ -859,6 +882,52 @@ class EqHistory
         $rec['unit'] = ['item_id' => 0, 'snumber' => '', 'itemname' => $name, 'new' => true, 'qty' => true];
     }
 
+    /**
+     * Договоры без номера (ответ 5.33): не один на всех, а свой на получателя и дату договора — «б/н ДД.ММ.ГГГГ»; у другого
+     * получателя той же даты — «б/н ДД.ММ.ГГГГ (2)». Номер, уже записанный в базе на этого получателя или прошлым импортом
+     * на эту выдачу (ФИО потом поправили в программе), берется снова: повторный импорт не заводит второй договор.
+     */
+    private function numberless(): void {
+        $who = fn(string $name) => mb_strtolower(trim(preg_replace('/\s+/u', ' ', $name)));
+        $conn = \ZDB\DB::getConnect();
+        $taken = [];   // номер => получатель
+        foreach ($conn->Execute("SELECT c.contract_number, cu.customer_name FROM contracts c JOIN customers cu ON cu.customer_id = c.customer_id
+                                 WHERE c.contract_number LIKE " . $conn->qstr(self::NO_NUMBER . ' %')) as $r) {
+            $taken[$r['contract_number']] = $who((string)$r['customer_name']);
+        }
+        $done = self::doneKeys();
+        $given = [];   // дата|получатель => номер
+        foreach ($this->records as &$rec) {
+            if (empty($rec['nonum']) || $rec['error'] || !empty($rec['skip']) || $rec['src'] == 'writeoff') {
+                continue;
+            }
+            $base = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
+            $k = $base . '|' . $who($rec['name']);
+            if (!isset($given[$k])) {
+                $free = null;
+                for ($n = 1; ; $n++) {
+                    $c = $n == 1 ? $base : "$base ($n)";
+                    if (empty($rec['qty']) && $rec['unit'] && isset($done['issue|' . $c . '|' . self::ukey($rec['unit']) . '|' . date('Y-m-d', $rec['idate'])])) {
+                        $free = $c;
+                        break;
+                    }
+                    if (!isset($taken[$c]) || $taken[$c] === $who($rec['name'])) {
+                        $free ??= $c;
+                    }
+                    if (!isset($taken[$c])) {
+                        break;
+                    }
+                }
+                $taken[$free] = $who($rec['name']);
+                $given[$k] = $free;
+            }
+            $rec['contract'] = $given[$k];
+            $rec['notes'][] = __('sqs.eqhist.nonum_doc');
+            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.nonum_contract', ['number' => $rec['contract']]));
+        }
+        unset($rec);
+    }
+
     // ---------- склейка и план ----------
 
     // ключ единицы: название товара и номер — одинаков до и после создания новой единицы (повторный импорт)
@@ -874,6 +943,7 @@ class EqHistory
         $this->applyFixes();
         $this->resolveUnits($map);
         $this->unitIndex = null;   // в разбор, который сохраняется между запросами, не попадает
+        $this->numberless();
 
         // выдачи: одна выдача из обеих таблиц (или с двух листов) — по единице и дате
         $issues = [];
@@ -942,8 +1012,11 @@ class EqHistory
                     continue;
                 }
                 if ($out) {
-                    $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.issued_twice'));
-                    continue;
+                    // выдана повторно без возврата (ответ 5.33): прошлая выдача закрывается возвратом в день новой, как возврат без даты
+                    $this->problem('note', $prev['sheet'], $prev['row'], $prev['contract'], self::unitLabel($prev), __('sqs.eqhist.ret_at_next', ['date' => date('d.m.Y', $is['idate'])]));
+                    $events[] = ['kind' => 'return', 'date' => $is['idate'], 'unit' => $prev['unit'], 'rec' => $prev, 'extra' => __('sqs.eqhist.ret_unknown_doc')];
+                    $out = false;
+                    $busy = $is['idate'];
                 }
                 if ($is['idate'] < $busy) {
                     // верна дата возврата прошлой выдачи (ответ 5.19): выдача — в день возврата
@@ -961,6 +1034,7 @@ class EqHistory
                 $first = false;
                 $events[] = ['kind' => 'issue', 'date' => $is['idate'], 'unit' => $is['unit'], 'rec' => $is];
                 $out = true;
+                $prev = $is;
                 $ret = $is['ret'];
                 $retExtra = '';
                 $retNodate = false;
