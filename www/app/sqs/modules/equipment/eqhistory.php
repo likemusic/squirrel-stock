@@ -394,8 +394,8 @@ class EqHistory
 
     private function parseCommon(array &$rec): void {
         // договор
-        if (preg_match('/^(\d+)\s*[\/\\\\]\s*(\d{2})$/', $rec['contract_raw'], $m)) {
-            $rec['contract'] = intval($m[1]) . '/' . $m[2];
+        if (($c = self::contractNumber($rec['contract_raw'])) !== null) {
+            $rec['contract'] = $c;
         } elseif (self::noNumberContract($rec['contract_raw'])) {
             $rec['nonum'] = true;
         } else {
@@ -424,10 +424,8 @@ class EqHistory
         } else {
             $rec['cdate'] = $cd;
         }
-        if (preg_match('/^\d+$/', $rec['no']) && $cd) {
-            $rec['contract'] = intval($rec['no']) . '/' . date('y', $cd);
-        } elseif (preg_match('/^(\d+)\s*[\/\\\\]\s*(\d{2})$/', $rec['no'], $m)) {
-            $rec['contract'] = intval($m[1]) . '/' . $m[2];
+        if (($c = self::contractNumber($rec['no'], $cd ?: null)) !== null) {
+            $rec['contract'] = $c;
         } elseif (self::noNumberContract($rec['no'])) {
             $rec['nonum'] = true;
             if ($cd) {
@@ -453,6 +451,23 @@ class EqHistory
             $this->fail($rec, __('sqs.eqhist.several_units', ['value' => $rec['number']]));
         }
         $this->parseStatus($rec);
+    }
+
+    // номер договора в виде, как он заводится в программе («№/ГГ»), или null. Год — двумя или четырьмя цифрами («01/2026» —
+    // «1/26»); часть через дефис — задублированный договор, разбитый хосписом на части («12-1/25», «12-2/25»).
+    // $date — дата регистрации для номера без года (таблица выдачи: «12», «12-1»)
+    public static function contractNumber(string $v, ?int $date = null): ?string {
+        if (!preg_match('/^(\d+)(?:\s*[-–]\s*(\d+))?(?:\s*[\/\\\\]\s*(\d{2}|(?:19|20)\d{2}))?$/u', trim($v), $m)) {
+            return null;
+        }
+        $year = $m[3] ?? '';
+        if ($year === '') {
+            if ($date === null) {
+                return null;
+            }
+            $year = date('y', $date);
+        }
+        return intval($m[1]) . (($m[2] ?? '') !== '' ? '-' . intval($m[2]) : '') . '/' . substr($year, -2);
     }
 
     // номер договора неизвестен (ответ 5.33): «б/н», «б\н», «бн» или пустая ячейка

@@ -18,7 +18,8 @@ namespace App\SQS;
 class EqFix
 {
     public const KEY = 'sqs_eqfix';
-    private const CONTRACT = '\d+\/\d{2}(?:\/\d+)?';
+    // «12/25», часть разбитого договора «12-1/25», год четырьмя цифрами «12/2025» (как в таблицах, EqHistory::contractNumber)
+    private const CONTRACT = '\d+(?:[-–]\d+)?\/(?:\d{2}|(?:19|20)\d{2})(?:\/\d+)?';
 
     public static function text(): string {
         return (string)\App\Helper::getKeyVal(self::KEY);
@@ -26,6 +27,11 @@ class EqFix
 
     public static function save(string $text): void {
         \App\Helper::setKeyVal(self::KEY, trim($text) === '' ? null : trim($text));
+    }
+
+    // номер — как его заводит EqHistory, иначе как записан
+    private static function contract(string $s): string {
+        return EqHistory::contractNumber($s) ?? $s;
     }
 
     private static function clean(string $s): string {
@@ -57,12 +63,12 @@ class EqFix
                 if (preg_match('/^(.+?)\s*;\s*(?:договор с|договір з)\s+(.+)$/iu', $right, $m)) {
                     [$right, $holder] = [self::clean($m[1]), self::clean($m[2])];
                 }
-                $res['fixes'][] = ['line' => $n, 'kind' => 'recipient', 'contract' => $left, 'name' => $right, 'holder' => $holder];
+                $res['fixes'][] = ['line' => $n, 'kind' => 'recipient', 'contract' => self::contract($left), 'name' => $right, 'holder' => $holder];
             } elseif (preg_match("/^({$c})\s+(.+)$/u", $left, $m)) {
                 if ($right === '-') {
-                    $res['fixes'][] = ['line' => $n, 'kind' => 'skip', 'contract' => $m[1], 'who' => EqItemMap::key($m[2])];
+                    $res['fixes'][] = ['line' => $n, 'kind' => 'skip', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2])];
                 } elseif (preg_match("/^{$c}$/u", $right)) {
-                    $res['fixes'][] = ['line' => $n, 'kind' => 'move', 'contract' => $m[1], 'who' => EqItemMap::key($m[2]), 'to' => $right];
+                    $res['fixes'][] = ['line' => $n, 'kind' => 'move', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2]), 'to' => self::contract($right)];
                 } else {
                     $res['errors'][$n] = $line;
                 }
