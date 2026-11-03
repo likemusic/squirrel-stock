@@ -24,8 +24,9 @@ use App\Entity\Item;
  * такие выдачи — списком «без инвентарного номера» для ручного ввода номера (ответ хосписа 5.12).
  * Ответы хосписа на сверку таблиц (19.10.2026): ФИО, номера договоров, задвоенные строки и номер на двух листах — списком
  * исправлений (App\SQS\EqFix); повторная выдача раньше даты возврата по прошлой — выдача сдвигается на дату возврата (5.19);
- * инвентарного номера из переписи нет в базе, а он в пределах номеров ведомости 1С — единица переносится списанной (в 1С списана, 5.21); расходник по соответствиям
- * (позиция «-», 5.17) не переносится.
+ * инвентарного номера из переписи нет в базе, а он в пределах номеров ведомости 1С — единица переносится списанной (в 1С списана, 5.21);
+ * номер и вне пределов ведомости — единица списана до нее (решение 03.11.2026): переносится так же, если по таблицам не на руках,
+ * иначе ошибка; расходник по соответствиям (позиция «-», 5.17) не переносится.
  * Номера и даты возврата части старых договоров не восстановить (5.33): договор «б/н» или без номера — «б/н ДД.ММ.ГГГГ»,
  * свой на получателя и дату; единица, выданная повторно без возврата, — прошлая выдача закрывается возвратом в день новой.
  * Одна выдача в обеих таблицах склеивается по единице и дате. Документы: приход единицы, которой нет в базе (накануне
@@ -698,9 +699,16 @@ class EqHistory
                 $u = $this->unitInDb(self::num($rec['inv']));
                 if ($u === 'many') {
                     $this->fail($rec, __('sqs.eqhist.unit_ambiguous', ['value' => $rec['inv']]));
-                } elseif ($u === null && !$this->inStatementRange(self::num($rec['inv']))) {
+                } elseif ($u === null && preg_match('/^\d{1,2}[.,\/]\d{1,2}[.,\/]\d{2,4}$/u', trim($rec['inv']))) {
+                    // дата в колонке инвентарного номера — описка, не номер
                     $this->fail($rec, __('sqs.eqhist.inv_not_in_db', ['value' => $rec['inv']]));
                     $this->missing[$rec['inv']] = [$rec['sheet'], $rec['itemtext']];
+                } elseif ($u === null && !$this->inStatementRange(self::num($rec['inv']))) {
+                    // нет ни в базе, ни в пределах номеров ведомости: единица списана до ведомости (решение 03.11.2026) — переносится,
+                    // если по таблицам она не на руках; это проверяется при составлении цепочки единицы
+                    $k = self::num($rec['inv']);
+                    $this->off1c[$k] = $this->off1c[$k] ?? ['item_id' => 0, 'snumber' => $rec['inv'], 'itemname' => $rec['sheet'], 'new' => true, 'off1c' => true, 'old' => true];
+                    $rec['unit'] = $this->off1c[$k];
                 } elseif ($u === null) {
                     // в 1С единица списана (ответ 5.21): переносится новой единицей по листу и списывается в конце цепочки;
                     // номер на нескольких листах — одна единица (по первому листу)
@@ -1017,6 +1025,24 @@ class EqHistory
         $events = [];
         foreach ($byUnit as $uk => $list) {
             usort($list, fn($a, $b) => $a['idate'] <=> $b['idate']);
+            if (!empty($list[0]['unit']['old'])) {
+                // списана до ведомости (решение 03.11.2026): переносится, если закрыта последняя выдача (дата возврата, «вернули»)
+                // или в строке, на листе «СПИСАНО» есть списание; на руках без «списан» — ошибка по всем строкам единицы
+                $last = end($list);
+                $closed = isset($offs[$uk]) || $last['ret'] || !empty($last['retunknown']);
+                foreach ($list as $is) {
+                    $closed = $closed || $is['off'] || !empty($is['offunknown']);
+                }
+                $head = reset($list);
+                if (!$closed) {
+                    foreach ($list as $is) {
+                        $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.off_old_on_hands', ['value' => $is['unit']['snumber']]));
+                    }
+                    $this->missing[$head['unit']['snumber']] = [$head['sheet'], $head['itemtext']];
+                    continue;
+                }
+                $this->problem('note', $head['sheet'], $head['row'], $head['contract'], self::unitLabel($head), __('sqs.eqhist.off_old', ['item' => $head['unit']['itemname']]));
+            }
             $out = false;
             $busy = 0;          // дата возврата по прошлой выдаче: раньше нее единица у прежнего получателя
             $first = true;
@@ -1096,7 +1122,8 @@ class EqHistory
                 if ($out) {
                     $events[] = ['kind' => 'return', 'date' => $today, 'unit' => $last['unit'], 'rec' => $last, 'extra' => __('sqs.eqhist.ret_unknown_doc'), 'nodate' => true];
                 }
-                $events[] = ['kind' => 'writeoff', 'date' => $out ? $today : $lastDate, 'unit' => $last['unit'], 'rec' => $last, 'extra' => __('sqs.eqhist.off_in_1c_doc'), 'nodate' => $out];
+                $events[] = ['kind' => 'writeoff', 'date' => $out ? $today : $lastDate, 'unit' => $last['unit'], 'rec' => $last,
+                             'extra' => __(empty($last['unit']['old']) ? 'sqs.eqhist.off_in_1c_doc' : 'sqs.eqhist.off_old_doc'), 'nodate' => $out];
                 $out = null;
             }
             foreach ($offs[$uk] ?? [] as $o) {
