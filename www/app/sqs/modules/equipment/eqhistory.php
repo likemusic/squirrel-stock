@@ -37,6 +37,7 @@ class EqHistory
 {
     public const ON_DEMAND = '2099-12-31';
     public const NO_NUMBER = 'б/н';   // начало номера договора, номер которого неизвестен
+    public const ACT = 'акт';         // начало номера выдачи по акту без номера
 
     public array $records = [];    // разобранные строки
     public array $problems = [];   // [level (error|note), sheet, row, contract, unit, text]
@@ -399,6 +400,8 @@ class EqHistory
             $rec['contract'] = $c;
         } elseif (self::noNumberContract($rec['contract_raw'])) {
             $rec['nonum'] = true;
+        } elseif (self::actContract($rec['contract_raw'])) {
+            $rec['nonum'] = $rec['act'] = true;
         } else {
             $this->fail($rec, __('sqs.eqhist.bad_contract', ['value' => $rec['contract_raw']]));
         }
@@ -427,8 +430,9 @@ class EqHistory
         }
         if (($c = self::contractNumber($rec['no'], $cd ?: null)) !== null) {
             $rec['contract'] = $c;
-        } elseif (self::noNumberContract($rec['no'])) {
+        } elseif (self::noNumberContract($rec['no']) || self::actContract($rec['no'])) {
             $rec['nonum'] = true;
+            $rec['act'] = self::actContract($rec['no']);
             if ($cd) {
                 self::provisionalNumber($rec);
             }
@@ -447,7 +451,12 @@ class EqHistory
             }
             $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], $rec['number'], __('sqs.eqhist.idate_is_cdate'));
         }
-        // номер единицы — инвентарный или заводской, разбирается при поиске единицы
+        // номер единицы — инвентарный или заводской, разбирается при поиске единицы; «б/н» — номера нет (ответ 11.11.2026:
+        // не восстановить или не присваивается), строка — как без номера
+        if ($rec['number'] !== '' && self::noNumberContract($rec['number'])) {
+            $rec['notes'][] = $rec['number'];
+            $rec['number'] = '';
+        }
         if (self::several($rec['number'])) {
             $this->fail($rec, __('sqs.eqhist.several_units', ['value' => $rec['number']]));
         }
@@ -471,15 +480,25 @@ class EqHistory
         return intval($m[1]) . (($m[2] ?? '') !== '' ? '-' . intval($m[2]) : '') . '/' . substr($year, -2);
     }
 
-    // номер договора неизвестен (ответ 5.33): «б/н», «б\н», «бн» или пустая ячейка
+    // номер неизвестен: договора (ответ 5.33), единицы в таблице выдачи (ответ 11.11.2026) — «б/н», «б\н», «бн» или пустая ячейка
     private static function noNumberContract(string $v): bool {
         return in_array(mb_strtolower(preg_replace('/\s+/u', '', $v)), ['', 'б/н', 'б\\н', 'бн'], true);
+    }
+
+    // выдача по акту без номера (ответ 11.11.2026): «акт» в ячейке номера договора
+    private static function actContract(string $v): bool {
+        return mb_strtolower(trim($v)) === self::ACT;
+    }
+
+    // начало номера договора без номера: «б/н», по акту — «акт»
+    private static function noNumberPrefix(array $rec): string {
+        return empty($rec['act']) ? self::NO_NUMBER : self::ACT;
     }
 
     // номер договора без номера до разбора (по нему подходят строки исправлений); окончательный, с номером повтора
     // у другого получателя той же даты, — в numberless()
     private static function provisionalNumber(array &$rec): void {
-        $rec['contract'] = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
+        $rec['contract'] = self::noNumberPrefix($rec) . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
     }
 
     // несколько номеров в одной ячейке
@@ -840,6 +859,7 @@ class EqHistory
                 continue;
             }
             $who = EqItemMap::key($rec['name']);
+            $was = $rec['contract'];
             foreach (array_merge($byKind['skip'] ?? [], $byKind['move'] ?? []) as $f) {
                 if ($f['contract'] === $rec['contract'] && $f['who'] === $who) {
                     $used[$f['line']] = 1;
@@ -849,9 +869,16 @@ class EqHistory
                         continue 2;
                     }
                     $rec['contract'] = $f['to'];
-                    unset($rec['nonum']);   // номер договора без номера нашелся
+                    unset($rec['nonum'], $rec['act']);   // номер договора без номера нашелся
                     $fixed[] = $f['line'];
                     break;
+                }
+            }
+            // возврат, дата которого не восстанавливается: проводится датой выдачи, если дата возврата раньше (в analyze)
+            foreach ($byKind['noret'] ?? [] as $f) {
+                if (in_array($f['contract'], [$was, $rec['contract']], true) && $f['who'] === $who) {
+                    $used[$f['line']] = 1;
+                    $rec['noret'] = $f['line'];
                 }
             }
             foreach ($byKind['recipient'] ?? [] as $f) {
@@ -915,7 +942,7 @@ class EqHistory
         $conn = \ZDB\DB::getConnect();
         $taken = [];   // номер => получатель
         foreach ($conn->Execute("SELECT c.contract_number, cu.customer_name FROM contracts c JOIN customers cu ON cu.customer_id = c.customer_id
-                                 WHERE c.contract_number LIKE " . $conn->qstr(self::NO_NUMBER . ' %')) as $r) {
+                                 WHERE c.contract_number LIKE " . $conn->qstr(self::NO_NUMBER . ' %') . " OR c.contract_number LIKE " . $conn->qstr(self::ACT . ' %')) as $r) {
             $taken[$r['contract_number']] = $who((string)$r['customer_name']);
         }
         $done = self::doneKeys();
@@ -924,7 +951,7 @@ class EqHistory
             if (empty($rec['nonum']) || $rec['error'] || !empty($rec['skip']) || $rec['src'] == 'writeoff') {
                 continue;
             }
-            $base = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
+            $base = self::noNumberPrefix($rec) . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
             $k = $base . '|' . $who($rec['name']);
             if (!isset($given[$k])) {
                 $free = null;
@@ -945,8 +972,8 @@ class EqHistory
                 $given[$k] = $free;
             }
             $rec['contract'] = $given[$k];
-            $rec['notes'][] = __('sqs.eqhist.nonum_doc');
-            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.nonum_contract', ['number' => $rec['contract']]));
+            $rec['notes'][] = __(empty($rec['act']) ? 'sqs.eqhist.nonum_doc' : 'sqs.eqhist.act_doc');
+            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __(empty($rec['act']) ? 'sqs.eqhist.nonum_contract' : 'sqs.eqhist.act_contract', ['number' => $rec['contract']]));
         }
         unset($rec);
     }
@@ -1065,6 +1092,14 @@ class EqHistory
                     $is['notes'][] = __('sqs.eqhist.issue_moved_doc', ['was' => date('d.m.Y', $is['idate'])]);
                     $is['idate'] = $busy;
                 }
+                if ($is['ret'] && $is['ret'] < $is['idate'] && !empty($is['noret'])) {
+                    // дата возврата не восстанавливается (список исправлений, решение 11.11.2026): возврат датой выдачи
+                    $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_lost', ['line' => $is['noret'], 'date' => date('d.m.Y', $is['idate'])]));
+                    $is['ret'] = $is['idate'];
+                    $is['retlost'] = true;
+                } elseif (!empty($is['noret'])) {
+                    $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_lost_unneeded', ['line' => $is['noret']]));
+                }
                 if ($is['ret'] && $is['ret'] < $is['idate']) {
                     $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.return_before_issue'));
                     continue;
@@ -1077,7 +1112,7 @@ class EqHistory
                 $out = true;
                 $prev = $is;
                 $ret = $is['ret'];
-                $retExtra = '';
+                $retExtra = empty($is['retlost']) ? '' : __('sqs.eqhist.ret_lost_doc');
                 $retNodate = false;
                 if (!$ret && (!empty($is['retunknown']) || !empty($is['offunknown']))) {
                     // возврат без даты: накануне следующей выдачи этой единицы, иначе датой импорта
@@ -1315,6 +1350,9 @@ class EqHistory
             if (!empty($b[$f])) {
                 $a[$f] = true;
             }
+        }
+        if (empty($a['noret']) && !empty($b['noret'])) {
+            $a['noret'] = $b['noret'];
         }
         $a['off'] = $a['off'] ?: $b['off'];
         if ($a['enddate'] === null) {
