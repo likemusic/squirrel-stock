@@ -1367,14 +1367,19 @@ class EqHistory
         $a['notes'] = array_values(array_unique(array_merge($a['notes'], $b['notes'])));
         $a['also'] = trim(($a['also'] ?? '') . ' ' . $b['sheet'] . ':' . $b['row']);
         $a['rows'] = array_merge($a['rows'] ?? [[$a['sheet'], $a['row']]], $b['rows'] ?? [[$b['sheet'], $b['row']]]);
+        $a['journal'] = !empty($a['journal']) || !empty($b['journal']) || $b['src'] == 'journal';   // среди строк есть таблица выдачи
         return $a;
     }
 
     /**
      * Одна выдача (единица и договор) в нескольких строках с разными датами, а прошлая к дате следующей не закрыта
-     * (возврат позже или его нет): таблицы противоречат друг другу — ошибка всех таких строк, они не импортируются (решение
-     * 11.11.2026). Иначе это две выдачи, и сдвиг выдачи на возврат прошлой (5.19) с возвратом в день новой (5.33) дают
-     * возврат и повторную выдачу тому же получателю. Выдача по тому же договору после возврата — две выдачи, как раньше.
+     * (возврат позже или его нет): таблицы противоречат друг другу (решение 11.11.2026). Иначе это две выдачи, и сдвиг выдачи
+     * на возврат прошлой (5.19) с возвратом в день новой (5.33) дают возврат и повторную выдачу тому же получателю.
+     *  - даты расходятся не больше чем на 5 дней — одна выдача датой таблицы выдачи (если ее среди строк нет — более ранней);
+     *  - следующая строка ровно через 1 или 3 месяца (±1 день) тому же получателю — продление: одна выдача с первой датой, срок
+     *    договора по следующей строке (не указан — еще на столько же);
+     *  - прочее — ошибка всех таких строк, они не импортируются.
+     * Выдача по тому же договору после возврата — две выдачи, как раньше.
      */
     private function conflictingDates(array &$issues): void {
         $groups = [];
@@ -1383,18 +1388,76 @@ class EqHistory
                 $groups[self::ukey($is['unit']) . '|' . $is['contract']][] = $key;
             }
         }
+        $rows = fn(array $is) => $is['rows'] ?? [[$is['sheet'], $is['row']]];
+        $place = fn(array $is) => implode(', ', array_map(fn($r) => $r[0] . ':' . $r[1], $rows($is)));
+        $journal = fn(array $is) => $is['src'] == 'journal' || !empty($is['journal']);
         $bad = [];   // строка => true
         foreach ($groups as $keys) {
             if (count($keys) < 2) {
                 continue;
             }
             usort($keys, fn($a, $b) => $issues[$a]['idate'] <=> $issues[$b]['idate']);
+            $head = $keys[0];   // выдача, к которой сводятся следующие строки
             $wrong = [];
             for ($i = 1; $i < count($keys); $i++) {
-                $a = $issues[$keys[$i - 1]];
-                $closed = $a['ret'] ? $a['ret'] <= $issues[$keys[$i]]['idate'] : (!empty($a['retunknown']) || $a['off'] || !empty($a['offunknown']));
-                if (!$closed) {
-                    $wrong[$keys[$i - 1]] = $wrong[$keys[$i]] = true;
+                $k = $keys[$i];
+                $a = $issues[$head];
+                $b = $issues[$k];
+                $closed = $a['ret'] ? $a['ret'] <= $b['idate'] : (!empty($a['retunknown']) || $a['off'] || !empty($a['offunknown']));
+                if ($closed) {
+                    $head = $k;
+                    continue;
+                }
+                $last = $a['lastdate'] ?? $a['idate'];   // дата предыдущей строки (у сведенной в выдачу — ее собственная)
+                $months = 0;
+                foreach ([1, 3] as $n) {
+                    if (abs(strtotime("+{$n} month", $last) - $b['idate']) <= 86400) {
+                        $months = $n;
+                    }
+                }
+                if (!isset($wrong[$head]) && $b['idate'] - $last <= 5 * 86400) {
+                    // одна выдача, даты расходятся: дата таблицы выдачи, без нее — более ранняя
+                    $dates = array_merge($a['dates'] ?? [[$a['idate'], $journal($a), $place($a)]], [[$b['idate'], $journal($b), $place($b)]]);
+                    $m = $this->merge($a, $b);
+                    $m['dates'] = $dates;
+                    $jd = array_column(array_filter($dates, fn($d) => $d[1]), 0);
+                    $m['idate'] = $jd ? min($jd) : min(array_column($dates, 0));
+                    $m['journal'] = $journal($a) || $journal($b);
+                    $m['lastdate'] = $b['idate'];
+                    $issues[$head] = $m;
+                    unset($issues[$k]);
+                } elseif (!isset($wrong[$head]) && $months && EqItemMap::key($a['name']) === EqItemMap::key($b['name'])) {
+                    // продление новой строкой: одна выдача с первой датой, срок по следующей строке
+                    $end = $b['enddate'] ?? strtotime("+{$months} month", $b['idate']);
+                    $m = $this->merge($a, $b);
+                    $m['idate'] = $a['idate'];
+                    $m['dates'] = $a['dates'] ?? null;
+                    $m['journal'] = $journal($a) || $journal($b);
+                    $m['enddate'] = $end;
+                    $m['ret'] = $b['ret'] ?: $a['ret'];
+                    $m['lastdate'] = $b['idate'];
+                    $text = __('sqs.eqhist.issue_extended', ['place' => $place($b), 'date' => date('d.m.Y', $a['idate']), 'end' => $end ? date('d.m.Y', $end) : __('sqs.eqhist.ondemand_term')]);
+                    foreach ($rows($m) as [$sheet, $row]) {
+                        $this->problem('note', $sheet, $row, $m['contract'], self::unitLabel($m), $text);
+                    }
+                    $m['notes'][] = __('sqs.eqhist.issue_extended_doc', ['place' => $place($b)]);
+                    $issues[$head] = $m;
+                    unset($issues[$k]);
+                } else {
+                    $wrong[$head] = $wrong[$k] = true;
+                    $head = $k;
+                }
+            }
+            // заметки сведенных выдач — после всех строк группы, с итоговой датой
+            foreach ($keys as $k) {
+                if (isset($issues[$k]) && !isset($wrong[$k]) && count($issues[$k]['dates'] ?? []) > 1) {
+                    $is = $issues[$k];
+                    $list = implode(', ', array_map(fn($d) => date('d.m.Y', $d[0]) . ' (' . __($d[1] ? 'sqs.eqhist.src_journal' : 'sqs.eqhist.src_census') . ', ' . $d[2] . ')', $is['dates']));
+                    $text = __('sqs.eqhist.issue_dates_merged', ['contract' => $is['contract'], 'dates' => $list, 'date' => date('d.m.Y', $is['idate'])]);
+                    foreach ($rows($is) as [$sheet, $row]) {
+                        $this->problem('note', $sheet, $row, $is['contract'], self::unitLabel($is), $text);
+                    }
+                    $issues[$k]['notes'][] = __('sqs.eqhist.issue_dates_merged_doc', ['dates' => implode(', ', array_map(fn($d) => date('d.m.Y', $d[0]), $is['dates']))]);
                 }
             }
             if (!$wrong) {
@@ -1403,11 +1466,11 @@ class EqHistory
             $wrong = array_fill_keys(array_values(array_filter($keys, fn($k) => isset($wrong[$k]))), true);   // по дате
             $places = [];
             foreach (array_keys($wrong) as $k) {
-                $places[] = date('d.m.Y', $issues[$k]['idate']) . ' (' . implode(', ', array_map(fn($r) => $r[0] . ':' . $r[1], $issues[$k]['rows'] ?? [[$issues[$k]['sheet'], $issues[$k]['row']]])) . ')';
+                $places[] = date('d.m.Y', $issues[$k]['idate']) . ' (' . $place($issues[$k]) . ')';
             }
             $text = __('sqs.eqhist.issue_dates_differ', ['contract' => $issues[array_key_first($wrong)]['contract'], 'dates' => implode(', ', $places)]);
             foreach (array_keys($wrong) as $k) {
-                foreach ($issues[$k]['rows'] ?? [[$issues[$k]['sheet'], $issues[$k]['row']]] as [$sheet, $row]) {
+                foreach ($rows($issues[$k]) as [$sheet, $row]) {
                     $this->problem('error', $sheet, $row, $issues[$k]['contract'], self::unitLabel($issues[$k]), $text);
                     $bad[$sheet . '|' . $row] = true;
                 }
