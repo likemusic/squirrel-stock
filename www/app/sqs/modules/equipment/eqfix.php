@@ -10,6 +10,8 @@ namespace App\SQS;
  *  - «12/25 = Иванов Иван Иванович; договор с Петрова Анна Сергеевна» — то же, и договор заключен с другим лицом
  *    (представитель) в пользу получателя: поле договора «Договор заключен с»;
  *  - «12/25 Петров = 13/25» — строки договора 12/25 с этим ФИО относятся к договору 13/25 (опечатка в номере);
+ *  - «12/25 Петров = б/н» (или «б\н», «бн») — номер договора в этих строках ошибочный, верный не восстановить (ответ
+ *    11.11.2026): строки переносятся в договор без номера, как строка с «б/н» в ячейке договора («б/н ДД.ММ.ГГГГ»);
  *  - «12/25 Петров = -» — строки договора 12/25 с этим ФИО не переносить (запись задвоена);
  *  - «12/25 Петров = возврат без даты» (или «повернення без дати») — дата возврата раньше выдачи и не восстанавливается
  *    (решение 11.11.2026): возврат проводится датой выдачи, в примечании возврата — «дата возврата не восстановлена»;
@@ -52,7 +54,7 @@ class EqFix
 
     /**
      * Разобрать текст. Возвращает ['fixes' => [['line' => номер строки, 'kind' => recipient|move|skip|noret|sheet, ...]], 'errors' => [номер строки => текст]]
-     *  recipient: contract, name, holder; move: contract, who, to; skip, noret: contract, who; sheet: number, sheet
+     *  recipient: contract, name, holder; move: contract, who, to (пусто и nonum — в договор без номера); skip, noret: contract, who; sheet: number, sheet
      */
     public static function parse(string $text): array {
         $res = ['fixes' => [], 'errors' => []];
@@ -82,6 +84,8 @@ class EqFix
                     $res['fixes'][] = ['line' => $n, 'kind' => 'skip', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2])];
                 } elseif (preg_match('/^(?:возврат без даты|повернення без дати)$/iu', $right)) {
                     $res['fixes'][] = ['line' => $n, 'kind' => 'noret', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2])];
+                } elseif (EqHistory::noNumberContract($right)) {
+                    $res['fixes'][] = ['line' => $n, 'kind' => 'move', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2]), 'to' => '', 'nonum' => true];
                 } elseif (preg_match("/^{$c}$/u", $right)) {
                     $res['fixes'][] = ['line' => $n, 'kind' => 'move', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2]), 'to' => self::contract($right)];
                 } else {

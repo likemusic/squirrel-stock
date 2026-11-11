@@ -481,7 +481,7 @@ class EqHistory
     }
 
     // номер неизвестен: договора (ответ 5.33), единицы в таблице выдачи (ответ 11.11.2026) — «б/н», «б\н», «бн» или пустая ячейка
-    private static function noNumberContract(string $v): bool {
+    public static function noNumberContract(string $v): bool {
         return in_array(mb_strtolower(preg_replace('/\s+/u', '', $v)), ['', 'б/н', 'б\\н', 'бн'], true);
     }
 
@@ -868,8 +868,13 @@ class EqHistory
                         $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.fix_skip', ['line' => $f['line']]));
                         continue 2;
                     }
-                    $rec['contract'] = $f['to'];
                     unset($rec['nonum'], $rec['act']);   // номер договора без номера нашелся
+                    $rec['contract'] = $f['to'];
+                    if (!empty($f['nonum'])) {
+                        // номер ошибочный и не восстанавливается (ответ 11.11.2026): договор без номера, как «б/н» в ячейке
+                        $rec['nonum'] = true;
+                        self::provisionalNumber($rec);
+                    }
                     $fixed[] = $f['line'];
                     break;
                 }
