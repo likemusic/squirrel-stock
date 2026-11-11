@@ -447,7 +447,12 @@ class EqHistory
             }
             $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], $rec['number'], __('sqs.eqhist.idate_is_cdate'));
         }
-        // номер единицы — инвентарный или заводской, разбирается при поиске единицы
+        // номер единицы — инвентарный или заводской, разбирается при поиске единицы; «б/н» — номера нет (ответ 11.11.2026:
+        // не восстановить или не присваивается), строка — как без номера
+        if ($rec['number'] !== '' && self::noNumberContract($rec['number'])) {
+            $rec['notes'][] = $rec['number'];
+            $rec['number'] = '';
+        }
         if (self::several($rec['number'])) {
             $this->fail($rec, __('sqs.eqhist.several_units', ['value' => $rec['number']]));
         }
@@ -471,7 +476,7 @@ class EqHistory
         return intval($m[1]) . (($m[2] ?? '') !== '' ? '-' . intval($m[2]) : '') . '/' . substr($year, -2);
     }
 
-    // номер договора неизвестен (ответ 5.33): «б/н», «б\н», «бн» или пустая ячейка
+    // номер неизвестен: договора (ответ 5.33), единицы в таблице выдачи (ответ 11.11.2026) — «б/н», «б\н», «бн» или пустая ячейка
     private static function noNumberContract(string $v): bool {
         return in_array(mb_strtolower(preg_replace('/\s+/u', '', $v)), ['', 'б/н', 'б\\н', 'бн'], true);
     }
