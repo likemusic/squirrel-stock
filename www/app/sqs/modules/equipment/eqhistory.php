@@ -1018,6 +1018,7 @@ class EqHistory
             }
             $issues[$key] = $this->merge($issues[$key], $rec);
         }
+        $this->conflictingDates($issues);
 
         // получатели: одно ФИО с разными адресами или телефонами
         $people = [];
@@ -1365,7 +1366,60 @@ class EqHistory
         }
         $a['notes'] = array_values(array_unique(array_merge($a['notes'], $b['notes'])));
         $a['also'] = trim(($a['also'] ?? '') . ' ' . $b['sheet'] . ':' . $b['row']);
+        $a['rows'] = array_merge($a['rows'] ?? [[$a['sheet'], $a['row']]], $b['rows'] ?? [[$b['sheet'], $b['row']]]);
         return $a;
+    }
+
+    /**
+     * Одна выдача (единица и договор) в нескольких строках с разными датами, а прошлая к дате следующей не закрыта
+     * (возврат позже или его нет): таблицы противоречат друг другу — ошибка всех таких строк, они не импортируются (решение
+     * 11.11.2026). Иначе это две выдачи, и сдвиг выдачи на возврат прошлой (5.19) с возвратом в день новой (5.33) дают
+     * возврат и повторную выдачу тому же получателю. Выдача по тому же договору после возврата — две выдачи, как раньше.
+     */
+    private function conflictingDates(array &$issues): void {
+        $groups = [];
+        foreach ($issues as $key => $is) {
+            if ($is['contract'] !== '') {
+                $groups[self::ukey($is['unit']) . '|' . $is['contract']][] = $key;
+            }
+        }
+        $bad = [];   // строка => true
+        foreach ($groups as $keys) {
+            if (count($keys) < 2) {
+                continue;
+            }
+            usort($keys, fn($a, $b) => $issues[$a]['idate'] <=> $issues[$b]['idate']);
+            $wrong = [];
+            for ($i = 1; $i < count($keys); $i++) {
+                $a = $issues[$keys[$i - 1]];
+                $closed = $a['ret'] ? $a['ret'] <= $issues[$keys[$i]]['idate'] : (!empty($a['retunknown']) || $a['off'] || !empty($a['offunknown']));
+                if (!$closed) {
+                    $wrong[$keys[$i - 1]] = $wrong[$keys[$i]] = true;
+                }
+            }
+            if (!$wrong) {
+                continue;
+            }
+            $wrong = array_fill_keys(array_values(array_filter($keys, fn($k) => isset($wrong[$k]))), true);   // по дате
+            $places = [];
+            foreach (array_keys($wrong) as $k) {
+                $places[] = date('d.m.Y', $issues[$k]['idate']) . ' (' . implode(', ', array_map(fn($r) => $r[0] . ':' . $r[1], $issues[$k]['rows'] ?? [[$issues[$k]['sheet'], $issues[$k]['row']]])) . ')';
+            }
+            $text = __('sqs.eqhist.issue_dates_differ', ['contract' => $issues[array_key_first($wrong)]['contract'], 'dates' => implode(', ', $places)]);
+            foreach (array_keys($wrong) as $k) {
+                foreach ($issues[$k]['rows'] ?? [[$issues[$k]['sheet'], $issues[$k]['row']]] as [$sheet, $row]) {
+                    $this->problem('error', $sheet, $row, $issues[$k]['contract'], self::unitLabel($issues[$k]), $text);
+                    $bad[$sheet . '|' . $row] = true;
+                }
+                unset($issues[$k]);
+            }
+        }
+        foreach ($this->records as &$rec) {
+            if (isset($bad[$rec['sheet'] . '|' . $rec['row']])) {
+                $rec['error'] = true;
+            }
+        }
+        unset($rec);
     }
 
     // ключ события для повторного импорта; дата импорта (возврат, списание без даты) в ключ не входит — завтра она другая
