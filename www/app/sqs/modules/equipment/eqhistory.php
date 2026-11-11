@@ -37,6 +37,7 @@ class EqHistory
 {
     public const ON_DEMAND = '2099-12-31';
     public const NO_NUMBER = 'б/н';   // начало номера договора, номер которого неизвестен
+    public const ACT = 'акт';         // начало номера выдачи по акту без номера
 
     public array $records = [];    // разобранные строки
     public array $problems = [];   // [level (error|note), sheet, row, contract, unit, text]
@@ -399,6 +400,8 @@ class EqHistory
             $rec['contract'] = $c;
         } elseif (self::noNumberContract($rec['contract_raw'])) {
             $rec['nonum'] = true;
+        } elseif (self::actContract($rec['contract_raw'])) {
+            $rec['nonum'] = $rec['act'] = true;
         } else {
             $this->fail($rec, __('sqs.eqhist.bad_contract', ['value' => $rec['contract_raw']]));
         }
@@ -427,8 +430,9 @@ class EqHistory
         }
         if (($c = self::contractNumber($rec['no'], $cd ?: null)) !== null) {
             $rec['contract'] = $c;
-        } elseif (self::noNumberContract($rec['no'])) {
+        } elseif (self::noNumberContract($rec['no']) || self::actContract($rec['no'])) {
             $rec['nonum'] = true;
+            $rec['act'] = self::actContract($rec['no']);
             if ($cd) {
                 self::provisionalNumber($rec);
             }
@@ -481,10 +485,20 @@ class EqHistory
         return in_array(mb_strtolower(preg_replace('/\s+/u', '', $v)), ['', 'б/н', 'б\\н', 'бн'], true);
     }
 
+    // выдача по акту без номера (ответ 11.11.2026): «акт» в ячейке номера договора
+    private static function actContract(string $v): bool {
+        return mb_strtolower(trim($v)) === self::ACT;
+    }
+
+    // начало номера договора без номера: «б/н», по акту — «акт»
+    private static function noNumberPrefix(array $rec): string {
+        return empty($rec['act']) ? self::NO_NUMBER : self::ACT;
+    }
+
     // номер договора без номера до разбора (по нему подходят строки исправлений); окончательный, с номером повтора
     // у другого получателя той же даты, — в numberless()
     private static function provisionalNumber(array &$rec): void {
-        $rec['contract'] = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
+        $rec['contract'] = self::noNumberPrefix($rec) . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
     }
 
     // несколько номеров в одной ячейке
@@ -855,7 +869,7 @@ class EqHistory
                         continue 2;
                     }
                     $rec['contract'] = $f['to'];
-                    unset($rec['nonum']);   // номер договора без номера нашелся
+                    unset($rec['nonum'], $rec['act']);   // номер договора без номера нашелся
                     $fixed[] = $f['line'];
                     break;
                 }
@@ -928,7 +942,7 @@ class EqHistory
         $conn = \ZDB\DB::getConnect();
         $taken = [];   // номер => получатель
         foreach ($conn->Execute("SELECT c.contract_number, cu.customer_name FROM contracts c JOIN customers cu ON cu.customer_id = c.customer_id
-                                 WHERE c.contract_number LIKE " . $conn->qstr(self::NO_NUMBER . ' %')) as $r) {
+                                 WHERE c.contract_number LIKE " . $conn->qstr(self::NO_NUMBER . ' %') . " OR c.contract_number LIKE " . $conn->qstr(self::ACT . ' %')) as $r) {
             $taken[$r['contract_number']] = $who((string)$r['customer_name']);
         }
         $done = self::doneKeys();
@@ -937,7 +951,7 @@ class EqHistory
             if (empty($rec['nonum']) || $rec['error'] || !empty($rec['skip']) || $rec['src'] == 'writeoff') {
                 continue;
             }
-            $base = self::NO_NUMBER . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
+            $base = self::noNumberPrefix($rec) . ' ' . date('d.m.Y', $rec['cdate'] ?: $rec['idate']);
             $k = $base . '|' . $who($rec['name']);
             if (!isset($given[$k])) {
                 $free = null;
@@ -958,8 +972,8 @@ class EqHistory
                 $given[$k] = $free;
             }
             $rec['contract'] = $given[$k];
-            $rec['notes'][] = __('sqs.eqhist.nonum_doc');
-            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __('sqs.eqhist.nonum_contract', ['number' => $rec['contract']]));
+            $rec['notes'][] = __(empty($rec['act']) ? 'sqs.eqhist.nonum_doc' : 'sqs.eqhist.act_doc');
+            $this->problem('note', $rec['sheet'], $rec['row'], $rec['contract'], self::unitLabel($rec), __(empty($rec['act']) ? 'sqs.eqhist.nonum_contract' : 'sqs.eqhist.act_contract', ['number' => $rec['contract']]));
         }
         unset($rec);
     }
