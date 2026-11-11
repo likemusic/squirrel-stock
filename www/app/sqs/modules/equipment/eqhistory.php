@@ -840,6 +840,7 @@ class EqHistory
                 continue;
             }
             $who = EqItemMap::key($rec['name']);
+            $was = $rec['contract'];
             foreach (array_merge($byKind['skip'] ?? [], $byKind['move'] ?? []) as $f) {
                 if ($f['contract'] === $rec['contract'] && $f['who'] === $who) {
                     $used[$f['line']] = 1;
@@ -852,6 +853,13 @@ class EqHistory
                     unset($rec['nonum']);   // номер договора без номера нашелся
                     $fixed[] = $f['line'];
                     break;
+                }
+            }
+            // возврат, дата которого не восстанавливается: проводится датой выдачи, если дата возврата раньше (в analyze)
+            foreach ($byKind['noret'] ?? [] as $f) {
+                if (in_array($f['contract'], [$was, $rec['contract']], true) && $f['who'] === $who) {
+                    $used[$f['line']] = 1;
+                    $rec['noret'] = $f['line'];
                 }
             }
             foreach ($byKind['recipient'] ?? [] as $f) {
@@ -1065,6 +1073,14 @@ class EqHistory
                     $is['notes'][] = __('sqs.eqhist.issue_moved_doc', ['was' => date('d.m.Y', $is['idate'])]);
                     $is['idate'] = $busy;
                 }
+                if ($is['ret'] && $is['ret'] < $is['idate'] && !empty($is['noret'])) {
+                    // дата возврата не восстанавливается (список исправлений, решение 11.11.2026): возврат датой выдачи
+                    $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_lost', ['line' => $is['noret'], 'date' => date('d.m.Y', $is['idate'])]));
+                    $is['ret'] = $is['idate'];
+                    $is['retlost'] = true;
+                } elseif (!empty($is['noret'])) {
+                    $this->problem('note', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.ret_lost_unneeded', ['line' => $is['noret']]));
+                }
                 if ($is['ret'] && $is['ret'] < $is['idate']) {
                     $this->problem('error', $is['sheet'], $is['row'], $is['contract'], self::unitLabel($is), __('sqs.eqhist.return_before_issue'));
                     continue;
@@ -1077,7 +1093,7 @@ class EqHistory
                 $out = true;
                 $prev = $is;
                 $ret = $is['ret'];
-                $retExtra = '';
+                $retExtra = empty($is['retlost']) ? '' : __('sqs.eqhist.ret_lost_doc');
                 $retNodate = false;
                 if (!$ret && (!empty($is['retunknown']) || !empty($is['offunknown']))) {
                     // возврат без даты: накануне следующей выдачи этой единицы, иначе датой импорта
@@ -1315,6 +1331,9 @@ class EqHistory
             if (!empty($b[$f])) {
                 $a[$f] = true;
             }
+        }
+        if (empty($a['noret']) && !empty($b['noret'])) {
+            $a['noret'] = $b['noret'];
         }
         $a['off'] = $a['off'] ?: $b['off'];
         if ($a['enddate'] === null) {

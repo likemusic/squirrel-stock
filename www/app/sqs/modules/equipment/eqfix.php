@@ -11,8 +11,12 @@ namespace App\SQS;
  *    (представитель) в пользу получателя: поле договора «Договор заключен с»;
  *  - «12/25 Петров = 13/25» — строки договора 12/25 с этим ФИО относятся к договору 13/25 (опечатка в номере);
  *  - «12/25 Петров = -» — строки договора 12/25 с этим ФИО не переносить (запись задвоена);
+ *  - «12/25 Петров = возврат без даты» (или «повернення без дати») — дата возврата раньше выдачи и не восстанавливается
+ *    (решение 11.11.2026): возврат проводится датой выдачи, в примечании возврата — «дата возврата не восстановлена»;
  *  - «№ 1234 = эл. отс. В-40+АКБ» — номер записан на нескольких листах переписи, верный — этот; строки других листов
  *    не переносятся.
+ * В строках «договор ФИО = …» договор без номера пишется, как в отчете: «б/н 15.03.2022 Петров = …» (номер повтора
+ * «(2)» можно не писать — строки отличаются по ФИО).
  * ФИО сравнивается без учета регистра, «ё» и пробелов (как написания в EqItemMap). Пустые строки и строки с «#» — пропуск.
  */
 class EqFix
@@ -20,6 +24,8 @@ class EqFix
     public const KEY = 'sqs_eqfix';
     // «12/25», часть разбитого договора «12-1/25», год четырьмя цифрами «12/2025» (как в таблицах, EqHistory::contractNumber)
     private const CONTRACT = '\d+(?:[-–]\d+)?\/(?:\d{2}|(?:19|20)\d{2})(?:\/\d+)?';
+    // договор без номера, как его заводит EqHistory: «б/н 15.03.2022», «б/н 15.03.2022 (2)»
+    private const NONUM = '(?:б\s*[\/\\\\]?\s*н)\s+\d{1,2}\.\d{1,2}\.\d{4}(?:\s*\(\d+\))?';
 
     public static function text(): string {
         return (string)\App\Helper::getKeyVal(self::KEY);
@@ -31,6 +37,10 @@ class EqFix
 
     // номер — как его заводит EqHistory, иначе как записан
     private static function contract(string $s): string {
+        if (preg_match('/^(?:б\s*[\/\\\\]?\s*н)\s+(\d{1,2})\.(\d{1,2})\.(\d{4})/iu', $s, $m)) {
+            // без номера повтора: до разбора у всех договоров без номера одной даты один номер (EqHistory::provisionalNumber)
+            return sprintf('%s %02d.%02d.%04d', EqHistory::NO_NUMBER, $m[1], $m[2], $m[3]);
+        }
         return EqHistory::contractNumber($s) ?? $s;
     }
 
@@ -39,12 +49,13 @@ class EqFix
     }
 
     /**
-     * Разобрать текст. Возвращает ['fixes' => [['line' => номер строки, 'kind' => recipient|move|skip|sheet, ...]], 'errors' => [номер строки => текст]]
-     *  recipient: contract, name, holder; move: contract, who, to; skip: contract, who; sheet: number, sheet
+     * Разобрать текст. Возвращает ['fixes' => [['line' => номер строки, 'kind' => recipient|move|skip|noret|sheet, ...]], 'errors' => [номер строки => текст]]
+     *  recipient: contract, name, holder; move: contract, who, to; skip, noret: contract, who; sheet: number, sheet
      */
     public static function parse(string $text): array {
         $res = ['fixes' => [], 'errors' => []];
         $c = self::CONTRACT;
+        $cw = '(?:' . self::CONTRACT . '|' . self::NONUM . ')';   // договор слева от ФИО
         foreach (preg_split('/\r\n|\r|\n/', $text) as $i => $line) {
             $line = self::clean($line);
             if ($line === '' || $line[0] == '#') {
@@ -64,9 +75,11 @@ class EqFix
                     [$right, $holder] = [self::clean($m[1]), self::clean($m[2])];
                 }
                 $res['fixes'][] = ['line' => $n, 'kind' => 'recipient', 'contract' => self::contract($left), 'name' => $right, 'holder' => $holder];
-            } elseif (preg_match("/^({$c})\s+(.+)$/u", $left, $m)) {
+            } elseif (preg_match("/^({$cw})\s+(.+)$/iu", $left, $m)) {
                 if ($right === '-') {
                     $res['fixes'][] = ['line' => $n, 'kind' => 'skip', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2])];
+                } elseif (preg_match('/^(?:возврат без даты|повернення без дати)$/iu', $right)) {
+                    $res['fixes'][] = ['line' => $n, 'kind' => 'noret', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2])];
                 } elseif (preg_match("/^{$c}$/u", $right)) {
                     $res['fixes'][] = ['line' => $n, 'kind' => 'move', 'contract' => self::contract($m[1]), 'who' => EqItemMap::key($m[2]), 'to' => self::contract($right)];
                 } else {
